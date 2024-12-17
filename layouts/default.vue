@@ -1,5 +1,29 @@
+<script setup>
+
+    const router = useRouter();
+
+    const links = ref([
+    {
+        to: "/edit/menus",
+        title: "edit menus"
+    },
+    {
+        to:"/edit/sections",
+        title: "edit sections"
+    },{
+        to:"/edit/items",
+        title: "edit items"
+    },
+    {
+        to:"/orders",
+        title: "list orders"
+    }])
+    function navigate(path) {
+        router.push(path); // Use router.push() to navigate
+    }
+</script>
 <template>
-    <v-layout id="app">
+    <v-app id="app">
         <v-app-bar app id="app-bar">
             <template>
                 <div id="header">
@@ -9,16 +33,30 @@
                 </div>
             </template>
                 <template v-slot:append>
-                    <v-btn to="/editMenu">Edit Menu</v-btn>
+                    <v-btn v-bind="props">Log In</v-btn>
+                    <v-menu>
+                        <template v-slot:activator="{ props }">
+                            <v-btn v-bind="props">Edit Menu</v-btn>
+                        </template>
+                        <v-list>
+                            <v-list-item 
+                                v-for="(link, i) in links"
+                                :key="i"
+                                @click="navigate(link.to)"
+                            >
+                                <v-list-item-title>{{ link.title }}</v-list-item-title>
+                            </v-list-item>
+                        </v-list>
+                    </v-menu>
                 </template>
         </v-app-bar>
         <v-main app id="main">
             <NuxtPage/>
         </v-main>
         <v-footer app id="footer">
-            <span id="footer-text">John Kallis websites jtkallis@gmail.com</span>
+            <span id="footer-text">John Kallis websites johnkallis01@gmail.com</span>
         </v-footer> 
-    </v-layout>
+    </v-app>
 </template>
 <style>
 /* Ensure the entire app layout uses flexbox for full height */

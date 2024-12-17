@@ -4,6 +4,13 @@ export default defineNuxtConfig({
   build: {
     transpile: ['vuetify'],
   },
+  components: {
+    dirs: [
+      '~/components', // Main components folder
+      '~/components/new', // Include any subdirectories you want to auto-import from
+      // Add more folders if needed
+    ]
+  },
   modules: [
     (_options, nuxt) => {
       nuxt.hooks.hook('vite:extendConfig', (config) => {
@@ -11,8 +18,10 @@ export default defineNuxtConfig({
         config.plugins.push(vuetify({ autoImport: true }))
       })
     },
-    //...
   ],
+  runtimeConfig: {
+    MONGO_URI: process.env.MONGO_URI
+  },
   vite: {
     vue: {
       template: {
@@ -20,4 +29,6 @@ export default defineNuxtConfig({
       },
     },
   },
+
+  compatibilityDate: '2024-12-14',
 })
