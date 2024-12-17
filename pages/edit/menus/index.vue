@@ -49,6 +49,7 @@ const titles = ref(['New Menu', 'Edit Menus', 'View All']);
 /* Fullscreen layout with padding for toolbar and tabs */
 .content-window {
   height: calc(100vh - 112px); /* 64px for toolbar + 48px for tabs */
+  width: 1000px;
   overflow-y: auto; /* Enable scrolling if content overflows */
 }
 
@@ -58,5 +59,6 @@ const titles = ref(['New Menu', 'Edit Menus', 'View All']);
   align-items: center;
   height: 100%; /* Fill remaining height */
   text-align: center;
+  width: 100%;
 }
 </style>

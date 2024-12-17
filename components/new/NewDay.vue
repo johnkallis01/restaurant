@@ -22,163 +22,175 @@ function sendDaysTimes() {
 </script>
 
 <template>
-  <v-card class="card">
-    <v-list>
-      <!-- Iterate through each day's schedule -->
-      <v-list-item v-for="(day, i) in schedule" :key="i">
-        <v-card class="day-card">
-          <span id="day" class="day-name">{{ day.day }}</span>
-          
-          <!-- Start Time Selection -->
-          <div class="time-group">
-            <v-switch
-              v-model="day.open"
-              class="open-closed-switch"
-              :false-value="false"
-              :true-value="true"
-              inset
-              :label="day.open ? 'Open' : 'Closed'"
-            ></v-switch>
+  <div class="card">
+    <!-- Iterate through each day's schedule -->
+    <div v-for="(day, i) in schedule" :key="i" class="day-card">
+      <span class="day-name">{{ day.day }}</span>
 
-            <!-- Start Time Hour -->
-            <v-menu>
-              <template v-slot:activator="{ props }">
-                <v-btn v-bind="props">{{ day.startTime.hour }}</v-btn>
-              </template>
-              <v-list>
-                <v-list-item
-                  v-for="(hour) in 12"
-                  :key="hour"
-                  @click="day.startTime.hour = hour"
-                >
-                  <v-list-item-title>{{ hour }}</v-list-item-title>
-                </v-list-item>
-              </v-list>
-            </v-menu>
-            
-            :
-            
-            <!-- Start Time Minute -->
-            <v-menu>
-              <template v-slot:activator="{ props }">
-                <v-btn v-bind="props">{{ day.startTime.min }}0</v-btn>
-              </template>
-              <v-list>
-                <v-list-item
-                  v-for="(min) in 6"
-                  :key="min"
-                  @click="day.startTime.min = min - 1"
-                >
-                  <v-list-item-title>{{ min - 1 }}0</v-list-item-title>
-                </v-list-item>
-              </v-list>
-            </v-menu>
-            
-            <!-- Start Time AM/PM Switch -->
-            <v-switch
-              v-model="day.startTime.pm"
-              class="am-pm-switch"
-              :false-value="false"
-              :true-value="true"
-              inset
-              :label="day.startTime.pm ? 'PM' : 'AM'"
-            ></v-switch>
-          </div>
+      <!-- Start Time Selection -->
+      <div class="time-group">
+        <v-switch
+          v-model="day.open"
+          class="open-switch"
+          :false-value="false"
+          :true-value="true"
+          :label="day.open ? 'Open' : 'Closed'"
+        ></v-switch>
 
-          <!-- End Time Selection -->
-          <div class="time-group">
-            <!-- End Time Hour -->
-            <v-menu>
-              <template v-slot:activator="{ props }">
-                <v-btn v-bind="props">{{ day.endTime.hour }}</v-btn>
-              </template>
-              <v-list>
-                <v-list-item
-                  v-for="(hour) in 12"
-                  :key="hour"
-                  @click="day.endTime.hour = hour"
-                >
-                  <v-list-item-title>{{ hour }}</v-list-item-title>
-                </v-list-item>
-              </v-list>
-            </v-menu>
-            
-            :
-            
-            <!-- End Time Minute -->
-            <v-menu>
-              <template v-slot:activator="{ props }">
-                <v-btn v-bind="props">{{ day.endTime.min }}0</v-btn>
-              </template>
-              <v-list>
-                <v-list-item
-                  v-for="(min) in 6"
-                  :key="min"
-                  @click="day.endTime.min = min - 1"
-                >
-                  <v-list-item-title>{{ min - 1 }}0</v-list-item-title>
-                </v-list-item>
-              </v-list>
-            </v-menu>
-            
-            <!-- End Time AM/PM Switch -->
-            <v-switch
-              v-model="day.endTime.pm"
-              class="am-pm-switch"
-              :false-value="false"
-              :true-value="true"
-              inset
-              :label="day.endTime.pm ? 'PM' : 'AM'"
-            ></v-switch>
-          </div>
-        </v-card>
-      </v-list-item>
-    </v-list>
+        <!-- Start Time Hour -->
+        <v-menu>
+          <template v-slot:activator="{ props }">
+            <v-btn small v-bind="props">{{ day.startTime.hour }}</v-btn>
+          </template>
+          <v-list>
+            <v-list-item
+              v-for="(hour) in 12"
+              :key="hour"
+              @click="day.startTime.hour = hour"
+            >
+              <v-list-item-title>{{ hour }}</v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+
+        <!-- Separator -->
+        <span class="separator">:</span>
+
+        <!-- Start Time Minute -->
+        <v-menu>
+          <template v-slot:activator="{ props }">
+            <v-btn small v-bind="props">{{ day.startTime.min }}0</v-btn>
+          </template>
+          <v-list>
+            <v-list-item
+              v-for="(min) in 6"
+              :key="min"
+              @click="day.startTime.min = min - 1"
+            >
+              <v-list-item-title>{{ min - 1 }}0</v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+
+        <!-- AM/PM Switch -->
+        <v-switch
+          v-model="day.startTime.pm"
+          class="pm-switch"
+          :false-value="false"
+          :true-value="true"
+          :label="day.startTime.pm ? 'PM' : 'AM'"
+        ></v-switch>
+      </div>
+
+      <!-- End Time Selection -->
+      <div class="time-group">
+        <!-- End Time Hour -->
+        <v-menu>
+          <template v-slot:activator="{ props }">
+            <v-btn small v-bind="props">{{ day.endTime.hour }}</v-btn>
+          </template>
+          <v-list>
+            <v-list-item
+              v-for="(hour) in 12"
+              :key="hour"
+              @click="day.endTime.hour = hour"
+            >
+              <v-list-item-title>{{ hour }}</v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+
+        <!-- Separator -->
+        <span class="separator">:</span>
+
+        <!-- End Time Minute -->
+        <v-menu>
+          <template v-slot:activator="{ props }">
+            <v-btn small v-bind="props">{{ day.endTime.min }}0</v-btn>
+          </template>
+          <v-list>
+            <v-list-item
+              v-for="(min) in 6"
+              :key="min"
+              @click="day.endTime.min = min - 1"
+            >
+              <v-list-item-title>{{ min - 1 }}0</v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+
+        <!-- AM/PM Switch -->
+        <v-switch
+          v-model="day.endTime.pm"
+          class="pm-switch"
+          :false-value="false"
+          :true-value="true"
+          :label="day.endTime.pm ? 'PM' : 'AM'"
+        ></v-switch>
+      </div>
+    </div>
 
     <!-- Submit Button -->
-    <v-btn text="Submit Schedule" @click="sendDaysTimes" class="submit-btn"/>
-  </v-card>
+    <v-btn
+      text="Submit Schedule"
+      @click="sendDaysTimes"
+      class="submit-btn"
+    />
+  </div>
 </template>
 
 <style scoped>
 .card {
-  margin-bottom: -;
-  padding: 16px; /* Remove extra space around card */
+  padding: 8px; /* Reduced padding around the card */
 }
 
 .day-card {
   display: flex;
-  flex-direction: row;
   align-items: center;
-  justify-content: flex-start;
-  gap: 8px; /* Reduce gap between elements */
-  padding: 8px;
-  margin-bottom: -20px; /* Reduced bottom margin for compactness */
-  margin-top: -20px;
+  justify-content: space-between;
+  gap: 12px; /* Adjust the gap between items */
+  margin-bottom: 20px; /* Reduce space between day rows */
 }
 
 .day-name {
   font-weight: bold;
-  width: 100px; /* Adjust width to reduce space */
+  width: 100px; /* Adjust width to fit the content tightly */
 }
 
 .time-group {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px; /* Reduce spacing between elements */
+}
+.open-switch {
+  height: 36px; /* Make switches taller */
+  line-height: 36px; /* Align the text vertically */
+  display: flex;
+  align-items: center;
+  width: 110px;
+}
+.pm-switch {
+  height: 36px; /* Make switches taller */
+  line-height: 36px; /* Align the text vertically */
+  display: flex;
+  align-items: center; /* Reduce switch height */
 }
 
-.open-closed-switch {
-  align-self: center;
-  margin-top: 20px; /* Remove unnecessary margin */
+.v-btn {
+  min-width: 36px; /* Smaller button width */
+  height: 30px; /* Reduce button height */
+  font-size: 12px; /* Smaller font size for buttons */
 }
 
-.am-pm-switch {
-  align-self: center;
-  margin-top: 16px; /* Remove unnecessary margin */
+.separator {
+  font-size: 16px;
+  font-weight: bold;
+  margin: 0 4px; /* Reduce space around separators */
 }
 
 .submit-btn {
-  margin-top: 16px;
+  margin-top: 12px;
+  font-size: 14px;
+  width: 100%;
 }
 </style>
