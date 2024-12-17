@@ -19,15 +19,16 @@ function sendDaysTimes() {
   console.log('Schedule:', schedule);
   emit('daysTimes', schedule);
 }
-
 </script>
+
 <template>
-  <v-card>
+  <v-card class="card">
     <v-list>
       <!-- Iterate through each day's schedule -->
       <v-list-item v-for="(day, i) in schedule" :key="i">
         <v-card class="day-card">
           <span id="day" class="day-name">{{ day.day }}</span>
+          
           <!-- Start Time Selection -->
           <div class="time-group">
             <v-switch
@@ -38,6 +39,8 @@ function sendDaysTimes() {
               inset
               :label="day.open ? 'Open' : 'Closed'"
             ></v-switch>
+
+            <!-- Start Time Hour -->
             <v-menu>
               <template v-slot:activator="{ props }">
                 <v-btn v-bind="props">{{ day.startTime.hour }}</v-btn>
@@ -52,7 +55,10 @@ function sendDaysTimes() {
                 </v-list-item>
               </v-list>
             </v-menu>
+            
             :
+            
+            <!-- Start Time Minute -->
             <v-menu>
               <template v-slot:activator="{ props }">
                 <v-btn v-bind="props">{{ day.startTime.min }}0</v-btn>
@@ -67,6 +73,8 @@ function sendDaysTimes() {
                 </v-list-item>
               </v-list>
             </v-menu>
+            
+            <!-- Start Time AM/PM Switch -->
             <v-switch
               v-model="day.startTime.pm"
               class="am-pm-switch"
@@ -79,6 +87,7 @@ function sendDaysTimes() {
 
           <!-- End Time Selection -->
           <div class="time-group">
+            <!-- End Time Hour -->
             <v-menu>
               <template v-slot:activator="{ props }">
                 <v-btn v-bind="props">{{ day.endTime.hour }}</v-btn>
@@ -93,7 +102,10 @@ function sendDaysTimes() {
                 </v-list-item>
               </v-list>
             </v-menu>
+            
             :
+            
+            <!-- End Time Minute -->
             <v-menu>
               <template v-slot:activator="{ props }">
                 <v-btn v-bind="props">{{ day.endTime.min }}0</v-btn>
@@ -108,6 +120,8 @@ function sendDaysTimes() {
                 </v-list-item>
               </v-list>
             </v-menu>
+            
+            <!-- End Time AM/PM Switch -->
             <v-switch
               v-model="day.endTime.pm"
               class="am-pm-switch"
@@ -122,39 +136,49 @@ function sendDaysTimes() {
     </v-list>
 
     <!-- Submit Button -->
-    <v-btn text="Submit Schedule" @click="sendDaysTimes"/>
+    <v-btn text="Submit Schedule" @click="sendDaysTimes" class="submit-btn"/>
   </v-card>
 </template>
 
 <style scoped>
+.card {
+  margin-bottom: -;
+  padding: 16px; /* Remove extra space around card */
+}
+
 .day-card {
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: flex-start;
-  gap: 16px;
+  gap: 8px; /* Reduce gap between elements */
   padding: 8px;
+  margin-bottom: -20px; /* Reduced bottom margin for compactness */
+  margin-top: -20px;
 }
 
 .day-name {
   font-weight: bold;
-  width: 90px; /* To keep day names aligned */
+  width: 100px; /* Adjust width to reduce space */
 }
 
 .time-group {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 8px;
 }
 
 .open-closed-switch {
-  align-self: flex-end; /* Align the switch to the baseline of other inputs */
-  margin-top: 20px; /* Fine-tune vertical alignment */
-  width: 120px;
+  align-self: center;
+  margin-top: 20px; /* Remove unnecessary margin */
 }
+
 .am-pm-switch {
-  align-self: flex-end; /* Align the switch to the baseline of other inputs */
-  margin-top: 20px; /* Fine-tune vertical alignment */
-  width: 90px;
+  align-self: center;
+  margin-top: 16px; /* Remove unnecessary margin */
+}
+
+.submit-btn {
+  margin-top: 16px;
 }
 </style>

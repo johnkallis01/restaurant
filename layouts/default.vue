@@ -1,7 +1,6 @@
 <script setup>
 
     const router = useRouter();
-
     const links = ref([
     {
         to: "/edit/menus",
@@ -19,7 +18,7 @@
         title: "list orders"
     }])
     function navigate(path) {
-        router.push(path); // Use router.push() to navigate
+        router.push(path);
     }
 </script>
 <template>

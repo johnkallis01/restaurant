@@ -4,25 +4,36 @@
         sections: {type: Array,required: true}
     })
     const newMenu = reactive({ _id: '', name: '',days: [], sections: []})
+    const tab = ref(0);
+    const titles = ref(['Schedule', 'Sections']);
 </script>
 <template>
     <v-card>
-        <v-card-item v-if=!submitName>
+        <v-card-item>
             <v-text-field
                 v-model="newMenu.name"
                 label="new name"
             />
         </v-card-item>
-        <v-card-item v-else>
-            
-        </v-card-item>
-        <v-card-item title="Add Days:">
-            <NewDay @daysTimes="getDaysTimes"/>
-        </v-card-item>
-
+        <v-card>
+            <v-tabs
+                v-model="tab"
+                bg-color="secondary"
+                dark
+                class="d-flex justify-center"
+                fixed-tabs
+                density="compact"
+            >
+                <v-tab v-for="(title, i) in titles" :key="i">{{ title }}</v-tab>
+            </v-tabs>
+            <v-window v-model="tab">
+                <v-window-item>
+                    <NewDay @daysTimes="getDaysTimes"/>
+                </v-window-item>
+            </v-window>
+        </v-card>
 
         <v-divider/>
-        
         <v-card-item>
             Add Sections <br/>
             <v-chip

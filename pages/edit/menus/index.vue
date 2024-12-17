@@ -1,56 +1,62 @@
 <script setup>
 const { data: menus } = await useFetch("/api/menus");
-//const { data: sections } = await useFetch("/api/sections");
-const tab = ref(null)
-const titles = ref(['new menu', 'edit menus','view all'])
+const tab = ref(0);
+const titles = ref(['New Menu', 'Edit Menus', 'View All']);
 </script>
+
 <template>
-    <v-card>
-        <v-tabs
-            v-model="tab"
-        >
-            <v-tab v-for="(title, i) in titles" :key="i">{{ title }}</v-tab>
-        </v-tabs>
-        <v-window v-model="tab">
-            <v-window-item>
-                <NewMenu :sections="sections" :menus="menus" />
-            </v-window-item>
-        </v-window>
-        <v-window v-model="tab">
-            <v-window-item>
-                <DisplayMenu :menu="menu" :flag="true"/>
-            </v-window-item>
-        </v-window>
-        <v-window v-model="tab">
-            <v-window-item>
-                <DisplayMenu :menu="menu" :flag="true"/>
-            </v-window-item>
-        </v-window>
-    </v-card>
+  <!-- Tabs and Content -->
+  <v-card class="pa-0 ma-0" flat>
+    <!-- Tabs -->
+    <v-tabs
+      v-model="tab"
+      bg-color="secondary"
+      dark
+      class="d-flex justify-center"
+      fixed-tabs
+      density="compact"
+    >
+      <v-tab v-for="(title, i) in titles" :key="i">{{ title }}</v-tab>
+    </v-tabs>
+
+    <!-- Content Window -->
+    <v-window v-model="tab" class="content-window">
+      <!-- Tab 1 Content -->
+      <v-window-item>
+        <v-card flat class="content-card">
+            <NewMenu :sections="sections" :menus="menus" />
+        </v-card>
+      </v-window-item>
+
+      <!-- Tab 2 Content -->
+      <v-window-item>
+        <v-card flat class="content-card">
+          <div>Edit Menus</div>
+        </v-card>
+      </v-window-item>
+
+      <!-- Tab 3 Content -->
+      <v-window-item>
+        <v-card flat class="content-card">
+          <div>View All</div>
+        </v-card>
+      </v-window-item>
+    </v-window>
+  </v-card>
 </template>
-<script>
-export default {
-    data(){
-        return{
-            newFlag: false,
-            showFlag: false,
-            newMenu: {
-                name: '',
-                days: [{
-                    day: '',
-                    start_time: 0,
-                    end_time: 0,
-                }],
-                sections: []
-            },
-            days : ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'],
-        }
-    },
-    methods: {
-        daysLeft(){
-            let whatsLeft = this.days.filter(item => !this.newMenu.days.includes(item));
-            return whatsLeft;
-        }
-    }
+
+<style scoped>
+/* Fullscreen layout with padding for toolbar and tabs */
+.content-window {
+  height: calc(100vh - 112px); /* 64px for toolbar + 48px for tabs */
+  overflow-y: auto; /* Enable scrolling if content overflows */
 }
-</script>
+
+.content-card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%; /* Fill remaining height */
+  text-align: center;
+}
+</style>
