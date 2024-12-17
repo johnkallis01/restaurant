@@ -4,7 +4,7 @@ export default defineNuxtConfig({
   build: {
     transpile: ['vuetify'],
   },
-<<<<<<< HEAD
+
   components: {
     dirs: [
       '~/components', // Main components folder
@@ -12,8 +12,6 @@ export default defineNuxtConfig({
       // Add more folders if needed
     ]
   },
-
->>>>>>> 449f854de95e6815f731e83e4778951ee9bdcd05
   modules: [
     (_options, nuxt) => {
       nuxt.hooks.hook('vite:extendConfig', (config) => {
@@ -22,13 +20,9 @@ export default defineNuxtConfig({
       })
     },
   ],
-<<<<<<< HEAD
   runtimeConfig: {
     MONGO_URI: process.env.MONGO_URI
   },
-=======
-
->>>>>>> 449f854de95e6815f731e83e4778951ee9bdcd05
   vite: {
     vue: {
       template: {
@@ -36,10 +30,5 @@ export default defineNuxtConfig({
       },
     },
   },
-
-<<<<<<< HEAD
-  compatibilityDate: '2024-12-14',
-=======
   compatibilityDate: '2024-12-15',
->>>>>>> 449f854de95e6815f731e83e4778951ee9bdcd05
 })
