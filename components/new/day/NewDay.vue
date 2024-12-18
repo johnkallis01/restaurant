@@ -1,11 +1,11 @@
 <script setup>
-import { reactive, ref } from 'vue';
-import { defineEmits } from 'vue';
+import NewDayDialog from './NewDayDialog.vue';
 
 const emit = defineEmits(['daysTimes']);
 
+const scheduleDialogFlag = ref(false);
 const days = ref(['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']);
-const schedule = reactive(
+const schedule = ref(
   days.value.map((day) => ({
     day,
     open: false,
@@ -13,7 +13,6 @@ const schedule = reactive(
     endTime: { hour: 12, min: 0, pm: false },
   }))
 );
-
 // Function to emit the schedule data
 function sendDaysTimes() {
   console.log('Schedule:', schedule);
@@ -31,6 +30,7 @@ function sendDaysTimes() {
       <div class="time-group">
         <v-switch
           v-model="day.open"
+          color="success"
           class="open-switch"
           :false-value="false"
           :true-value="true"
@@ -38,7 +38,7 @@ function sendDaysTimes() {
         ></v-switch>
 
         <!-- Start Time Hour -->
-        <v-menu>
+        <v-menu :disabled="!day.open">
           <template v-slot:activator="{ props }">
             <v-btn small v-bind="props">{{ day.startTime.hour }}</v-btn>
           </template>
@@ -57,7 +57,7 @@ function sendDaysTimes() {
         <span class="separator">:</span>
 
         <!-- Start Time Minute -->
-        <v-menu>
+        <v-menu :disabled="!day.open">
           <template v-slot:activator="{ props }">
             <v-btn small v-bind="props">{{ day.startTime.min }}0</v-btn>
           </template>
@@ -79,13 +79,14 @@ function sendDaysTimes() {
           :false-value="false"
           :true-value="true"
           :label="day.startTime.pm ? 'PM' : 'AM'"
+          :disabled="!day.open"
         ></v-switch>
       </div>
 
       <!-- End Time Selection -->
       <div class="time-group">
         <!-- End Time Hour -->
-        <v-menu>
+        <v-menu :disabled="!day.open">
           <template v-slot:activator="{ props }">
             <v-btn small v-bind="props">{{ day.endTime.hour }}</v-btn>
           </template>
@@ -104,7 +105,7 @@ function sendDaysTimes() {
         <span class="separator">:</span>
 
         <!-- End Time Minute -->
-        <v-menu>
+        <v-menu :disabled="!day.open">
           <template v-slot:activator="{ props }">
             <v-btn small v-bind="props">{{ day.endTime.min }}0</v-btn>
           </template>
@@ -126,16 +127,19 @@ function sendDaysTimes() {
           :false-value="false"
           :true-value="true"
           :label="day.endTime.pm ? 'PM' : 'AM'"
+          :disabled="!day.open"
         ></v-switch>
       </div>
     </div>
-
     <!-- Submit Button -->
     <v-btn
       text="Submit Schedule"
-      @click="sendDaysTimes"
+      @click="scheduleDialogFlag=true"
       class="submit-btn"
-    />
+    ></v-btn>
+    <v-dialog v-model="scheduleDialogFlag" class="schedule-dialog">
+      <NewDayDialog :schedule="schedule"/>
+    </v-dialog>
   </div>
 </template>
 
@@ -192,5 +196,9 @@ function sendDaysTimes() {
   margin-top: 12px;
   font-size: 14px;
   width: 100%;
+}
+.schedule-dialog {
+  align-items: center;
+  width: 50%;
 }
 </style>
