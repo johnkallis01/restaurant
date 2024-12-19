@@ -1,7 +1,6 @@
 <script setup>
-const route = useRoute();
 const router = useRouter();
-const menu = ref(route.query);
+const menu = ref(JSON.parse(localStorage.getItem('menu')));
 const sectionsArr = ref([]);
 const newSection = ref({
     name: '',
@@ -11,10 +10,11 @@ const newSection = ref({
 function sendToItems() {
     // Update menu.sections with sectionsArr
     menu.value = { ...menu.value, sections: [...sectionsArr.value] };
+    console.log(menu.value)
+    localStorage.setItem('menu', JSON.stringify(menu.value));
     router.push({
-        path:"/edit/menus/new/items",
-        query: menu.value
-    })
+      path:'/edit/menus/new/sections/items'
+    });
 }
 function addSection(section){
     sectionsArr.value.push(section); //push to array

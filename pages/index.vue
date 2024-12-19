@@ -1,5 +1,5 @@
 <template>
-        <v-card image="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/14/8b/88/31/fiddlers-green-restaurant.jpg?w=900&h=500&s=1" id="restaurant-container">
+        <v-card id="restaurant-container">
             <div id="rest-info">
                 <v-card-title>John's Restaurant</v-card-title>
                 <v-card-subtitle>Phone: 667-940-8868 </v-card-subtitle>  
@@ -15,6 +15,10 @@ data(){
 </script>
 <style>
 #restaurant-container {
+  background-image: url("https://dynamic-media-cdn.tripadvisor.com/media/photo-o/14/8b/88/31/fiddlers-green-restaurant.jpg?w=900&h=500&s=1");
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
   display: flex; /* Enable flexbox */
   justify-content: center; /* Center content horizontally */
   align-items: center; /* Center content vertically */

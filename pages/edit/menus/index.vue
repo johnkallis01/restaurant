@@ -3,7 +3,6 @@ const { data: menus } = await useFetch("/api/menus");
 </script>
 <template>
   <v-card
-    class="mx-auto"
     max-width="448"
   >
     <v-window>
@@ -17,6 +16,12 @@ const { data: menus } = await useFetch("/api/menus");
   </v-card>
 </template>
 <style scoped>
+.card{
+  background-color: red;
+}
+.v-app-bar{
+  margin-top: 10px;
+}
 .app-bar-title{
   text-align: center;
 }

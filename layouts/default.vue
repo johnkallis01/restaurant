@@ -88,6 +88,10 @@ const menuVisible = ref(false);
 }
 
 .main {
+  background-image: url("https://i.pinimg.com/736x/e6/7d/af/e67daf68a6e8f6d4a9283cb7d64b098c.jpg");
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
   display: flex;
   justify-content: center;
   align-items: center;

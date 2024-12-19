@@ -9,11 +9,11 @@ const nameFlag = ref(false);
 //recieves schedule data from NewDay
 function getDaysTimes(daysTimes) {
   newMenu.value.days = daysTimes.map((day) => ({...day}));
+  localStorage.setItem('menu', JSON.stringify(newMenu.value))
   //check if menu name has been entered
   if(newMenu.value.name.length){
     router.push({
-      path:'/edit/menus/new/sections/',
-      query: newMenu.value
+      path:'/edit/menus/new/sections/'
     }); //redirect to add sections to menu
   }
   else{
