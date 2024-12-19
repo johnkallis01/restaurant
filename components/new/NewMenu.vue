@@ -1,31 +1,14 @@
 <script setup>
 const props = defineProps({
-  menus: { type: Array, required: true },
-  sections: { type: Array, required: true }
+  menus: { type: Array, required: true }
 });
 
-const newMenu = reactive({ _id: '', name: '', days: [], sections: [] });
+const newMenu = ref({ _id: '', name: '', days: [], sections: [] });
 const tab = ref(0);
 const titles = ['Schedule', 'Sections'];
 
 function getDaysTimes(daysTimes) {
   console.log('Received days:', daysTimes);
-}
-
-function addSection(section) {
-  const sectionHolder = {
-    name: section.name || '',
-    _id: section._id || '',
-    choice: section.choice || 0,
-    suggested: section.suggested?.length ? section.suggested : [],
-    ingr: section.ingr?.length ? section.ingr : []
-  };
-  newMenu.sections.push(sectionHolder);
-}
-
-function cancel() {
-  Object.assign(newMenu, { _id: '', name: '', days: [], sections: [] });
-  router.push('/editMenu/');
 }
 
 async function submitMenu() {
@@ -51,7 +34,7 @@ async function submitMenu() {
 <template>
     <v-card>
         <v-card-item>
-            <v-text-field v-model="newMenu.name" label="new name" />
+            <v-text-field v-model="newMenu.name" label="name" />
         </v-card-item>
 
         <v-card class="days-section">
@@ -73,29 +56,7 @@ async function submitMenu() {
                         <NewDay @daysTimes="getDaysTimes" />
                     </v-window-item>
                     <v-window-item>
-                        <v-card-item>
-                            Add Sections <br />
-                            <v-chip
-                                v-for="(section, i) in newMenu.sections"
-                                :key="i"
-                            >
-                                {{ section.name }}
-                                <v-icon
-                                    icon="mdi-close"
-                                    @click="newMenu.sections.splice(i, 1)"
-                                />
-                            </v-chip>
-                        </v-card-item>
-                        <v-card-item>
-                            Add Sections: <br />
-                            <v-chip
-                                v-for="(section, i) in sections"
-                                :key="i"
-                                @click="addSection(section)"
-                            >
-                                {{ section.name }}
-                            </v-chip>
-                        </v-card-item>
+                      <div>new sections</div>
                     </v-window-item>
                 </v-window>
             </div>

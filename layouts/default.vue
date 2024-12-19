@@ -1,98 +1,110 @@
 <script setup>
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 
-    const router = useRouter();
-    const links = ref([
-    {
-        to: "/edit/menus",
-        title: "edit menus"
-    },
-    {
-        to:"/edit/sections",
-        title: "edit sections"
-    },{
-        to:"/edit/items",
-        title: "edit items"
-    },
-    {
-        to:"/orders",
-        title: "list orders"
-    }])
-    function navigate(path) {
-        router.push(path);
-    }
+// Initialize the router and links
+const router = useRouter();
+const menuLinks = ref([
+  { to: "/edit/menus", title: "Edit Menus" },
+  { to: "/edit/sections", title: "Edit Sections" },
+  { to: "/edit/items", title: "Edit Items" },
+  { to: "/orders", title: "List Orders" }
+]);
+
+// Function to navigate to a specific path
+function navigate(path) {
+  router.push(path);
+}
+
+// State for menu visibility
+const menuVisible = ref(false);
 </script>
+
 <template>
-    <v-app id="app">
-        <v-app-bar app id="app-bar">
-            <template>
-                <div id="header">
-                    <v-btn to="/">Home</v-btn>
-                    <v-btn to="/createOrder">Order</v-btn>
-                    <v-btn to="/menu">Menu</v-btn>
-                </div>
-            </template>
-                <template v-slot:append>
-                    <v-btn v-bind="props">Log In</v-btn>
-                    <v-menu>
-                        <template v-slot:activator="{ props }">
-                            <v-btn v-bind="props">Edit Menu</v-btn>
-                        </template>
-                        <v-list>
-                            <v-list-item 
-                                v-for="(link, i) in links"
-                                :key="i"
-                                @click="navigate(link.to)"
-                            >
-                                <v-list-item-title>{{ link.title }}</v-list-item-title>
-                            </v-list-item>
-                        </v-list>
-                    </v-menu>
-                </template>
-        </v-app-bar>
-        <v-main app id="main">
-            <NuxtPage/>
-        </v-main>
-        <v-footer app id="footer">
-            <span id="footer-text">John Kallis websites johnkallis01@gmail.com</span>
-        </v-footer> 
-    </v-app>
+  <v-app class="app">
+    <!-- App Bar with Navigation Buttons -->
+    <v-app-bar app class="app-bar">
+      <div class="header">
+        <v-btn to="/">Home</v-btn>
+        <v-btn to="/createOrder">Order</v-btn>
+        <v-btn to="/menu">Menu</v-btn>
+      </div>
+
+      <!-- Right-side Menu with Dropdown -->
+      <template v-slot:append>
+        <v-btn>Log In</v-btn>
+        
+        <!-- Menu Button with Dropdown -->
+        <v-menu v-model="menuVisible" offset-y>
+          <template v-slot:activator="{props}">
+            <v-btn v-bind="props">Edit Menu</v-btn>
+          </template>
+
+          <!-- Dropdown List -->
+          <v-list>
+            <v-list-item 
+              v-for="(link, i) in menuLinks"
+              :key="i"
+              @click="navigate(link.to)"
+            >
+              <v-list-item-title>{{ link.title }}</v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+      </template>
+    </v-app-bar>
+
+    <!-- Main Content Area -->
+    <v-main app class="main">
+      <NuxtPage />
+    </v-main>
+
+    <!-- Footer -->
+    <v-footer app class="footer">
+      <span class="footer-text">John Kallis websites johnkallis01@gmail.com</span>
+    </v-footer>
+  </v-app>
 </template>
-<style>
-/* Ensure the entire app layout uses flexbox for full height */
-#app {
+
+<style scoped>
+.app {
   display: flex;
   flex-direction: column;
-  height: 100vh; /* Full height of the viewport */
+  height: 100vh;
 }
-#app-bar {
-    background-color: azure;
+
+.app-bar {
+  background-color: azure;
 }
-#header {
+
+.header {
   display: flex;
   justify-content: center;
   align-items: center;
-  flex: 1; /* Fills the available space in the app-bar */
 }
-#header > .v-btn {
-  margin: 0 10px; /* Adds spacing between buttons */
+
+.header > .v-btn {
+  margin: 0 10px;
 }
-#main {
-    display: flex; /* Ensure flexbox for alignment */
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    flex-grow: 1; /* Allows #main to grow and fill the space between app-bar and footer */
-    box-sizing: border-box; /* Include border in dimensions */
+
+.main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  flex-grow: 1;
+  box-sizing: border-box;
 }
-#footer {
-    height: 25px;
-    display: flex;
-    justify-content: center;
-    align-items: center; /* Vertical center alignment */
-    background-color: lightgray;
+
+.footer {
+  height: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: lightgray;
 }
-#footer-text {
-    overflow: auto;
-    font-size: small;
+
+.footer-text {
+  font-size: small;
 }
 </style>

@@ -1,12 +1,26 @@
 <script setup>
 const props = defineProps({
-    time: { type: Object, required: true},
-    open: { type: Boolean, required: true}
+    time: { 
+      type: Object,
+      required: true,
+      default: () => ({ hour: 12, min: 0, pm: false })
+    },
+    open: { type: Boolean, required: true, default: false}
+    
 });
-const emit=defineEmits(['[update:time]']);
-function updateTime(key, value){
-    const updateValue = { ...time, [key]:value};
-    emit('update:time', updatedTime);
+
+const emit=defineEmits(['update:time']);
+
+function updateHour(hour) {
+  emit('update:time', { ...props.time, hour });
+}
+
+function updateMinute(min) {
+  emit('update:time', { ...props.time, min });
+}
+
+function toggleAMPM() {
+  emit('update:time', { ...props.time, pm: !props.time.pm });
 }
 </script>
 <template>
@@ -19,7 +33,7 @@ function updateTime(key, value){
             <v-list-item
               v-for="(hour) in 12"
               :key="hour"
-              @click="updateTime('hour',hour)"
+              @click="updateHour(hour)"
             >
               <v-list-item-title>{{ hour }}</v-list-item-title>
             </v-list-item>
@@ -38,13 +52,12 @@ function updateTime(key, value){
             <v-list-item
               v-for="(min) in 6"
               :key="min"
-              @click="updateTime('min',min-1)"
+              @click="updateMin(min-1)"
             >
               <v-list-item-title>{{ (min - 1) + "0" }}</v-list-item-title>
             </v-list-item>
           </v-list>
         </v-menu>
-
         <!-- AM/PM Switch -->
         <v-switch
           v-model="time.pm"
@@ -53,6 +66,7 @@ function updateTime(key, value){
           :true-value="true"
           :label="time.pm ? 'PM' : 'AM'"
           :disabled="!open"
+          @click="toggleAMPM"
         ></v-switch>
     </div>
 </template>
