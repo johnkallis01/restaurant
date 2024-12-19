@@ -10,7 +10,7 @@ const { data: menus } = await useFetch("/api/menus");
       <v-app-bar>
         <v-app-bar-title class="app-bar-title">Edit Menus</v-app-bar-title>
         <template v-slot:append>
-          <v-app-bar-nav-icon icon="mdi-plus" to="/edit/menus/new"></v-app-bar-nav-icon>
+          <v-btn text="New +" to="/edit/menus/new"/>
         </template>
       </v-app-bar>
     </v-window>

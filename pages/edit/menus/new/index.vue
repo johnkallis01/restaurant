@@ -8,12 +8,13 @@ const nameFlag = ref(false);
 
 //recieves schedule data from NewDay
 function getDaysTimes(daysTimes) {
-  console.log('Received days:', daysTimes);
   newMenu.value.days = daysTimes.map((day) => ({...day}));
-  console.log('updated newMenu: ', newMenu.value)
   //check if menu name has been entered
   if(newMenu.value.name.length){
-    router.push('/edit/menus/new/sections'); //redirect to add sections to menu
+    router.push({
+      path:'/edit/menus/new/sections/',
+      query: newMenu.value
+    }); //redirect to add sections to menu
   }
   else{
     nameFlag.value=true; //open dialog box to enter name
@@ -23,7 +24,10 @@ function submitName(){
   if(newMenu.value.name.length){
     nameFlag.value=false; //close dialog
     textFlag.value=true; //disable text-field
-    router.push('/edit/menus/new/sections'); //redirect to add sections to menu
+    router.push({
+        path:'/edit/menus/new/sections/',
+        state: newMenu.value
+      }); //redirect to add sections to menu
   }
 }
 
@@ -78,7 +82,6 @@ async function submitMenu() {
   width: 80%;
   margin: 10px auto; /* Center horizontally with margin */
 }
-
 .v-card {
   margin-top: 10px;
   margin-bottom: 10px;

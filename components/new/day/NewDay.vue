@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from 'vue';
+import { onMounted } from 'vue';
 import NewDayDialog from './NewDayDialog.vue';
 import TimeInput from './TimeInput.vue';
 
@@ -25,7 +25,6 @@ onMounted(() => {
       error: false, // Track invalid schedules
     }));
   }
-  console.log(schedule)
 });
 // Function to validate the schedule
 function recieveDialogFlag(flag){
