@@ -8,35 +8,27 @@ const emit = defineEmits(['daysTimes']);
 
 // Control for the dialog visibility
 const scheduleDialogFlag = ref(false);
-
-// Days of the week
 const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-const schedule = useState('schedule', () => []);
+const schedule = ref([]);
+
 onMounted(() => {
-  if (process.client) {
-    console.log('Client side rendering');
-    
     // Initialize the schedule only on the client
-    schedule.value = days.map((day) => ({
-      day,
-      open: false,
-      startTime: { hour: 12, min: 0, pm: false },
-      endTime: { hour: 12, min: 0, pm: false },
-      error: false, // Track invalid schedules
-    }));
-  }
+  schedule.value = days.map((day) => ({
+    day,
+    open: false,
+    startTime: { hour: 12, min: 0, pm: false },
+    endTime: { hour: 12, min: 0, pm: false },
+    error: false, // Track invalid schedules
+  }));
 });
 // Function to validate the schedule
-function recieveDialogFlag(flag){
-  console.log('recieved flag: ', flag)
+const recieveDialogFlag = (flag) => {
   scheduleDialogFlag.value=false;
   if(flag){
     emit('daysTimes', schedule.value);
   }
 }
 </script>
-
-
 <template>
   <div class="card">
     <!-- Iterate through each day's schedule -->

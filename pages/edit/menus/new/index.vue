@@ -1,61 +1,38 @@
 <script setup>
-
+//menus/new/index.vue
+const menuStore = useMenuStore();
 const router = useRouter();
 
-const newMenu = ref({ _id: '', name: '', days: [], sections: [] });
+const menuName=ref("");
 const textFlag = ref(false);
 const nameFlag = ref(false);
 
 //recieves schedule data from NewDay
-function getDaysTimes(daysTimes) {
-  newMenu.value.days = daysTimes.map((day) => ({...day}));
-  localStorage.setItem('menu', JSON.stringify(newMenu.value))
+const getDaysTimes = (daysTimes) => {
+  menuStore.setDays(daysTimes);
   //check if menu name has been entered
-  if(newMenu.value.name.length){
-    router.push({
-      path:'/edit/menus/new/sections/'
-    }); //redirect to add sections to menu
+  if(menuName.value.trim().length){
+    menuStore.setName(menuName.value);
+    router.push({path:'/edit/menus/new/sections/'}); //redirect to add sections to menu
   }
   else{
     nameFlag.value=true; //open dialog box to enter name
   }
 }
-function submitName(){
-  if(newMenu.value.name.length){
+const submitName =() => {
+  if(menuName.value.trim().length){
+    menuStore.setName(menuName.value); //set name
     nameFlag.value=false; //close dialog
     textFlag.value=true; //disable text-field
-    router.push({
-        path:'/edit/menus/new/sections/',
-        state: newMenu.value
-      }); //redirect to add sections to menu
-  }
-}
-
-async function submitMenu() {
-  const payload = {
-    name: newMenu.name || '',
-    sections: newMenu.sections,
-    days: newMenu.days
-  };
-  try {
-    const res = await fetch('/api/menus', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    });
-    console.log('Menu submitted:', await res.json());
-    router.push('/editMenu/');
-  } catch (error) {
-    console.error('Error:', error);
+    router.push({path:'/edit/menus/new/sections/'}); //redirect to add sections to menu
   }
 }
 </script>
-
 <template>
     <v-card>
         <v-card-item class="menu-name">
             <v-text-field
-              v-model="newMenu.name"
+              v-model="menuName"
               label="menu name"
               :disabled="textFlag"
             />
@@ -67,7 +44,7 @@ async function submitMenu() {
           <v-card>
             <div>You didn't enter a name for the menu</div>
             <v-text-field
-              v-model="newMenu.name"
+              v-model="menuName"
               label="menu name"
             />
             <v-card-actions>

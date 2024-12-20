@@ -6,7 +6,7 @@ const emit = defineEmits(['getDialogFlag'])
 const invalidFlag = ref(false);
 const successFlag = ref(false);
 
-function validateSchedule() {
+const validateSchedule = () => {
   props.schedule.forEach((day) => {
     if (day.open) {
       const start = day.startTime.hour * 60 + day.startTime.min*10 + (day.startTime.pm ? 720 : 0);
@@ -19,8 +19,7 @@ function validateSchedule() {
     }
   });
 }
-function sendFlag(){
-  console.log("successFlag: ", successFlag)
+const sendFlag = () => {
   if(successFlag.value){emit('getDialogFlag', true)}
   else{emit('getDialogFlag', false)}
 }

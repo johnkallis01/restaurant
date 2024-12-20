@@ -1,6 +1,9 @@
 <script setup>
+//menus/new/sections/index.vue
+
+const menuStore = useMenuStore();
 const router = useRouter();
-const menu = ref(JSON.parse(localStorage.getItem('menu')));
+
 const sectionsArr = ref([]);
 const newSection = ref({
     name: '',
@@ -8,13 +11,8 @@ const newSection = ref({
     items: []
 })
 function sendToItems() {
-    // Update menu.sections with sectionsArr
-    menu.value = { ...menu.value, sections: [...sectionsArr.value] };
-    console.log(menu.value)
-    localStorage.setItem('menu', JSON.stringify(menu.value));
-    router.push({
-      path:'/edit/menus/new/sections/items'
-    });
+    menuStore.setSections(sectionsArr.value)
+    router.push({path:'/edit/menus/new/sections/items'});
 }
 function addSection(section){
     sectionsArr.value.push(section); //push to array
@@ -47,7 +45,7 @@ function addSection(section){
         </v-navigation-drawer>
         <v-main style="height: 400px">
             <v-card>
-                <v-card-title>{{"Create " + menu.name + " Sections"}}
+                <v-card-title>{{"Create " + menuStore.menu.name + " Sections"}}
                   
                 </v-card-title>
                 <v-card-item>

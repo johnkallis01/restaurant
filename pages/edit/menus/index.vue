@@ -1,4 +1,5 @@
 <script setup>
+//menus/index.vue
 const { data: menus } = await useFetch("/api/menus");
 </script>
 <template>
@@ -12,6 +13,9 @@ const { data: menus } = await useFetch("/api/menus");
           <v-btn text="New +" to="/edit/menus/new"/>
         </template>
       </v-app-bar>
+<!--  <v-card>
+        <v-card-item v-for="(menu, i) in menus" :key="i">{{ menu.name }}</v-card-item>
+      </v-card>  -->
     </v-window>
   </v-card>
 </template>
