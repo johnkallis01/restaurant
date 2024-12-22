@@ -13,16 +13,24 @@ const schedule = ref([]);
 
 onMounted(() => {
     // Initialize the schedule only on the client
+    //sample data
+  schedule.value = days.map((day) => ({
+    day,
+    open: true,
+    startTime: { hour: 1, min: 0, pm: false },
+    endTime: { hour: 12, min: 0, pm: true },
+    error: false, // Track invalid schedules
+  }));/*
   schedule.value = days.map((day) => ({
     day,
     open: false,
     startTime: { hour: 12, min: 0, pm: false },
     endTime: { hour: 12, min: 0, pm: false },
     error: false, // Track invalid schedules
-  }));
+  })); */
 });
 // Function to validate the schedule
-const recieveDialogFlag = (flag) => {
+const receiveDialogFlag = (flag) => {
   scheduleDialogFlag.value=false;
   if(flag){
     emit('daysTimes', schedule.value);
@@ -32,38 +40,38 @@ const recieveDialogFlag = (flag) => {
 <template>
   <div class="card">
     <!-- Iterate through each day's schedule -->
-    <client-only>
-      <div class="day-card" v-for="(day, i) in schedule" :key="i">
-        <span class="day-name">{{ day.day }}</span>
+   
+    <div class="day-card" v-for="(day, i) in schedule" :key="i">
+      <span class="day-name">{{ day.day }}</span>
 
-        <!-- Start Time Selection -->
-        <template class="time-group">
-          <v-switch
-            v-model="day.open"
-            color="success"
-            class="open-switch"
-            :false-value="false"
-            :true-value="true"
-            :label="day.open ? 'Open' : 'Closed'"
-          ></v-switch>
-          <TimeInput
-            :time="day.startTime"
-            :open="day.open"
-            @update:time="(value) => day.startTime = value"
-          />
-        </template>
+      <!-- Start Time Selection -->
+      <template class="time-group">
+        <v-switch
+          v-model="day.open"
+          color="success"
+          class="open-switch"
+          :false-value="false"
+          :true-value="true"
+          :label="day.open ? 'Open' : 'Closed'"
+        ></v-switch>
+        <TimeInput
+          :time="day.startTime"
+          :open="day.open"
+          @update:time="(value) => day.startTime = value"
+        />
+      </template>
 
-        <!-- End Time Selection -->
-        <template class="time-group">
-          <!-- End Time Hour -->
-          <TimeInput
-            :time="day.endTime"
-            :open="day.open"
-            @update:time="(value) => day.endTime = value"
-          />
-        </template>
-      </div>
-    </client-only>
+      <!-- End Time Selection -->
+      <template class="time-group">
+        <!-- End Time Hour -->
+        <TimeInput
+          :time="day.endTime"
+          :open="day.open"
+          @update:time="(value) => day.endTime = value"
+        />
+      </template>
+    </div>
+    
     <!-- Submit Button -->
     <v-btn
       text="Submit Schedule"
@@ -75,7 +83,7 @@ const recieveDialogFlag = (flag) => {
       persistent
       class="schedule-dialog"
     >
-      <NewDayDialog :schedule="schedule" @getDialogFlag="recieveDialogFlag"/>
+      <NewDayDialog :schedule="schedule" @getDialogFlag="receiveDialogFlag"/>
     </v-dialog>
   </div>
 </template>

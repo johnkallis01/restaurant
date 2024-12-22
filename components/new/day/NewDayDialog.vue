@@ -50,7 +50,7 @@ onMounted(()=>{
       </v-list>
       <v-card-actions>
         <v-btn color="success" :disable="invalidFlag" @click="successFlag=true; sendFlag()">Submit Schedule?</v-btn>
-        <v-btn color="error" @click="sendFlag()">Cancel</v-btn>
+        <v-btn color="error" @click="sendFlag">Cancel</v-btn>
       </v-card-actions>
     </v-card>
 </template>
