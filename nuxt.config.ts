@@ -7,8 +7,8 @@ export default defineNuxtConfig({
 
   components: {
     dirs: [
-      '~/components', // Main components folder
-      '~/components/new', // Include any subdirectories you want to auto-import from
+      '~/components',
+      '~/components/new',
       '~/components/new/day',
     ]
   },
@@ -16,13 +16,15 @@ export default defineNuxtConfig({
     '@pinia/nuxt',
     (_options, nuxt) => {
       nuxt.hooks.hook('vite:extendConfig', (config) => {
-        // @ts-expect-error
         config.plugins.push(vuetify({ autoImport: true }))
       })
     },
+    '@sidebase/nuxt-auth',
   ],
   runtimeConfig: {
-    MONGO_DB_URI: process.env.MONGO_DB_URI
+    MONGO_DB_URI: process.env.MONGO_DB_URI,
+    SIDEBASE_CLIENT: process.env.SIDEBASE_CLIENT,
+    SIDEBASE_SECRET: process.env.SIDEBASE_SECRET
   },
   vite: {
     vue: {
