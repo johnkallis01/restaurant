@@ -3,7 +3,7 @@
 const menuStore = useMenuStore();
 const router = useRouter();
 
-const menuName=ref("Dinner");
+const menuName=ref("");
 const textFlag = ref(false);
 const nameFlag = ref(false);
 
@@ -13,7 +13,7 @@ const getDaysTimes = (daysTimes) => {
   //check if menu name has been entered
   if(menuName.value.trim().length){
     menuStore.setName(menuName.value);
-    router.push({path:'/edit/menus/new/categories/'});
+    router.push({path:'/edit/menus/new/sections/'}); //redirect to add sections to menu
   }
   else{
     nameFlag.value=true; //open dialog box to enter name
@@ -24,7 +24,7 @@ const submitName =() => {
     menuStore.setName(menuName.value); //set name
     nameFlag.value=false; //close dialog
     textFlag.value=true; //disable text-field
-    router.push({path:'/edit/menus/new/categories/'});
+    router.push({path:'/edit/menus/new/sections/'}); //redirect to add sections to menu
   }
 }
 </script>

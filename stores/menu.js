@@ -2,7 +2,7 @@ import { defineStore } from 'pinia';
 
 export const useMenuStore = defineStore('menu', {
   state: () => ({
-    menu: { _id: '', name: '', days: [], categories: [] },
+    menu: { _id: '', name: '', days: [], sections: [] },
   }),
   actions: {
     setMenu(menu) {
@@ -11,14 +11,14 @@ export const useMenuStore = defineStore('menu', {
     setName(name){
       this.menu.name=name;
     },
-    setCategories(categories) {
-      this.menu.categories=categories;
+    setSections(sections) {
+      this.menu.sections=sections;
     },
     setDays(days) {
       this.menu.days = days;
     },
     resetMenu() {
-      this.menu = { _id: '', name: '', days: [], categories: [] };
+      this.menu = { _id: '', name: '', days: [], sections: [] };
     },
   },
 });

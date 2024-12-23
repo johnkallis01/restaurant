@@ -11,15 +11,15 @@ const props = defineProps({
 
 const emit=defineEmits(['update:time']);
 
-const updateHour = (hour) => {
+function updateHour(hour) {
   emit('update:time', { ...props.time, hour });
 }
 
-const updateMinute = (min) => {
+function updateMinute(min) {
   emit('update:time', { ...props.time, min });
 }
 
-const toggleAMPM = () => {
+function toggleAMPM() {
   emit('update:time', { ...props.time, pm: !props.time.pm });
 }
 </script>
