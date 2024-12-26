@@ -35,6 +35,7 @@ const menuVisible = ref(false);
         <v-btn to="/">Home</v-btn>
         <v-btn to="/createOrder">Order</v-btn>
         <v-btn to="/menu">Menu</v-btn>
+        <v-btn @click="navigate('/test')">test</v-btn>
       </div>
 
       <!-- Right-side Menu with Dropdown -->

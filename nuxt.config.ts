@@ -5,6 +5,9 @@ export default defineNuxtConfig({
     transpile: ['vuetify'],
   },
   css: ['@/assets/css/main.css',],
+  plugins: [
+    {src: '~/plugins/auth.js', mode: 'client'}
+  ],
   components: {
     dirs: [
       '~/components', // Main components folder

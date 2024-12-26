@@ -3,6 +3,11 @@ const authStore = useAuthStore();
 
 const email = ref('');
 const password = ref('');
+const showpassword = ref(false);
+const eye = ref(["mdi-eye-outline", "mdi-eye-off-outline"]);
+const togglepassword = () => {
+    showpassword.value = !showpassword.value;
+  }
 const rules = {required: (v) => !!v || 'Required'}
 const login = async () => {
   try {
@@ -22,7 +27,15 @@ const login = async () => {
     <v-form class="form">
       <v-card-item>
         <v-text-field v-model="email" label="E-mail" variant="underlined" :rules="[rules.required]"/>
-        <v-text-field v-model="password" label="Password" variant="underlined" :rules="[rules.required]" type="password"/>
+        <v-text-field
+          v-model="password"
+          label="Password"
+          variant="underlined"
+          :rules="[rules.required]"
+          :type="showpassword ? 'text' : 'password'"
+          :append-inner-icon="showpassword ? eye[0]:eye[1]"
+          @click:append-inner="togglepassword"
+        />
       </v-card-item>
       <v-card-actions class="d-flex justify-center">
         <v-btn @click="login">Sign In</v-btn>

@@ -33,10 +33,8 @@ export const useAuthStore = defineStore('auth', {
                 this.user = response.user;
                 this.token = response.token;
                 this.isAuthenticated = true;
-                if(process.client){
-                    localStorage.setItem('authToken', this.token);
-                    localStorage.setItem('authUser', JSON.stringify(this.user));
-                }
+                localStorage.setItem('authToken', this.token);
+                localStorage.setItem('authUser', JSON.stringify(this.user));
                 navigateTo('/');
             } catch (error) {
                 throw new Error('::Invalid Credentials::');
@@ -75,5 +73,16 @@ export const useAuthStore = defineStore('auth', {
                 this.logout();
             }
         },
+        loadTokenFromLocalStorage(){
+            const token = localStorage.getItem('authToken');
+            if(token){
+                console.log('has token')
+                this.token =token;
+                localStorage.setItem('authToken', token);
+            }else{
+                this.clearAuth()
+                console.log('no token')
+            }
+        }
     },
 });

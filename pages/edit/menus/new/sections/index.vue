@@ -1,6 +1,6 @@
 <script setup>
 //menus/new/sections/index.vue
-
+import { v4 as uuidv4 } from 'uuid';
 const menuStore = useMenuStore();
 const router = useRouter();
 
@@ -12,14 +12,15 @@ const newSection = ref({
 })
 function sendToItems() {
     menuStore.setSections(sectionsArr.value)
-    router.push({path:'/edit/menus/new/sections/items'});
+    router.push({path:'/edit/menus/new/sections/'});
 }
 function addSection(section){
     sectionsArr.value.push(section); //push to array
     newSection.value={
         name: '',
         description: '',
-        items: []
+        items: [],
+        _id: uuidv4()
     }; //empty for next section
 }
 </script>
