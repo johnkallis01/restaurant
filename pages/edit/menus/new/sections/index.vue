@@ -45,8 +45,8 @@ function addSection(section){
         </v-navigation-drawer>
         <v-main style="height: 400px">
             <v-card>
-                <v-card-title>{{"Create " + menuStore.menu.name + " Sections"}}
-                  
+                <v-card-title>
+                    {{"Create " + menuStore.menu.name + " Sections"}}
                 </v-card-title>
                 <v-card-item>
                     <v-text-field

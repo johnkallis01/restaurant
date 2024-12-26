@@ -9,9 +9,9 @@ const userSchema = new Schema({
         type: String,
         required: [true, 'lastName field is required'],
       },
-      userName: {
+      phone: {
         type: String,
-        required: [true, 'userName field is required'],
+        required: [true, 'phone number is required']
       },
       email: {
         type: String,

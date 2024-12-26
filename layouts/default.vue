@@ -1,6 +1,5 @@
 <script setup>
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
+const authStore = useAuthStore();
 
 // Initialize the router and links
 const router = useRouter();
@@ -14,7 +13,15 @@ const menuLinks = ref([
 // Function to navigate to a specific path
 function navigate(path) {
   router.push(path);
-}
+};
+
+const logout = () => {
+  authStore.logout();
+  navigateTo('/auth/login');
+};
+const loggedIn = computed(() => {
+  return !!authStore.getToken;
+})
 
 // State for menu visibility
 const menuVisible = ref(false);
@@ -32,12 +39,12 @@ const menuVisible = ref(false);
 
       <!-- Right-side Menu with Dropdown -->
       <template v-slot:append>
-        <v-btn>Log In</v-btn>
-        
+        <v-btn to="/auth/login" v-if="!loggedIn">Log In</v-btn>
+        <v-btn v-else @click="logout">Log Out</v-btn>
         <!-- Menu Button with Dropdown -->
         <v-menu v-model="menuVisible" offset-y>
           <template v-slot:activator="{props}">
-            <v-btn v-bind="props">Edit Menu</v-btn>
+            <v-btn v-bind="props" v-if="loggedIn">Edit Menu</v-btn>
           </template>
 
           <!-- Dropdown List -->
@@ -86,6 +93,9 @@ const menuVisible = ref(false);
 .header > .v-btn {
   margin: 0 10px;
 }
+.v-card-title{
+  background-color: green;
+}
 
 .main {
   background-image: url("https://i.pinimg.com/736x/e6/7d/af/e67daf68a6e8f6d4a9283cb7d64b098c.jpg");
@@ -101,7 +111,7 @@ const menuVisible = ref(false);
 }
 
 .footer {
-  height: 25px;
+  max-height: 1%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -109,6 +119,6 @@ const menuVisible = ref(false);
 }
 
 .footer-text {
-  font-size: small;
+  font-size: 12px;
 }
 </style>

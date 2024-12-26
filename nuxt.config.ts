@@ -4,7 +4,7 @@ export default defineNuxtConfig({
   build: {
     transpile: ['vuetify'],
   },
-
+  css: ['@/assets/css/main.css',],
   components: {
     dirs: [
       '~/components', // Main components folder
@@ -22,7 +22,8 @@ export default defineNuxtConfig({
     },
   ],
   runtimeConfig: {
-    MONGO_DB_URI: process.env.MONGO_DB_URI
+    MONGO_DB_URI: process.env.MONGO_DB_URI,
+    JWT_SECRET: process.env.JWT_SECRET,
   },
   vite: {
     vue: {
