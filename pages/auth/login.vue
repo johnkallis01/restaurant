@@ -5,10 +5,12 @@ const email = ref('');
 const password = ref('');
 const showpassword = ref(false);
 const eye = ref(["mdi-eye-outline", "mdi-eye-off-outline"]);
+const rules = {required: (v) => !!v || 'Required'};
+
 const togglepassword = () => {
-    showpassword.value = !showpassword.value;
-  }
-const rules = {required: (v) => !!v || 'Required'}
+  showpassword.value = !showpassword.value;
+};
+
 const login = async () => {
   try {
     await authStore.login({
@@ -21,7 +23,6 @@ const login = async () => {
 };
 </script>
 <template>
-
   <v-card  style="width: 400px">
     <v-card-title class="title">Login</v-card-title>
     <v-form class="form">
@@ -43,5 +44,4 @@ const login = async () => {
       </v-card-actions>
     </v-form>
   </v-card>
-
 </template>

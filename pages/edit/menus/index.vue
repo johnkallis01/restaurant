@@ -3,9 +3,7 @@
 const { data: menus } = await useFetch("/api/menus");
 </script>
 <template>
-  <v-card
-    max-width="448"
-  >
+  <v-card max-width="448">
     <v-window>
       <v-app-bar>
         <v-app-bar-title class="app-bar-title">Edit Menus</v-app-bar-title>

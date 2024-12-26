@@ -1,21 +1,8 @@
 import { addRouteMiddleware, defineNuxtPlugin, navigateTo } from "nuxt/app";
 import { useAuthStore } from '../stores/auth';
 export default defineNuxtPlugin((nuxtApp)=>{
-   /* if(process.client){
-        addRouteMiddleware('global-test', ()=>{
-            const authStore = useAuthStore();
-            const token = authStore.getToken;
-            if(token){
-                console.log('token')
-            } else{
-                console.log('no token')
-               navigateTo('/auth/login')
-            }
-        }, {global: true})
-    } */
         
-        const route = useRoute();
-        const router = nuxtApp.$router;
+    const router = nuxtApp.$router;
     const authStore=useAuthStore();
     authStore.loadTokenFromLocalStorage();
 
@@ -27,5 +14,5 @@ export default defineNuxtPlugin((nuxtApp)=>{
             } 
         }
         next();
-    })
+    });
 })

@@ -9,13 +9,14 @@ const newSection = ref({
     name: '',
     description: '',
     items: []
-})
+});
+const rules = {required: (v) => !!v || 'Required'}
 function sendToItems() {
-    menuStore.setSections(sectionsArr.value)
-    router.push({path:'/edit/menus/new/sections/'});
+    menuStore.setSections(sectionsArr.value);
+    navigateTo('/edit/menus/new/sections/'+sectionsArr[0]?._id);
 }
 function addSection(section){
-    sectionsArr.value.push(section); //push to array
+    sectionsArr.value.push(section);
     newSection.value={
         name: '',
         description: '',
@@ -53,6 +54,7 @@ function addSection(section){
                     <v-text-field
                         v-model="newSection.name"
                         label="new section name"
+                        :rules="[rules.required]"
                     /> 
                 </v-card-item>
                 <v-card-item>
@@ -61,10 +63,8 @@ function addSection(section){
                         label="new section description"
                     />
                 </v-card-item>
-                <v-card-actions>
-                   
-                    <v-btn @click="addSection(newSection)">add new section</v-btn>
-                 
+                <v-card-actions>   
+                    <v-btn @click="addSection(newSection)">add new section</v-btn>          
                 </v-card-actions>
             </v-card>
         </v-main>

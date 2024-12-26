@@ -27,6 +27,13 @@ const recieveDialogFlag = (flag) => {
   if(flag){
     emit('daysTimes', schedule.value);
   }
+};
+const submitSchedule = () => {
+  const submitFlag = schedule.value.find((day) => day.open === true);
+  console.log(submitFlag)
+  if(submitFlag){
+    scheduleDialogFlag.value = true;
+  }
 }
 </script>
 <template>
@@ -67,9 +74,9 @@ const recieveDialogFlag = (flag) => {
     <!-- Submit Button -->
     <v-btn
       text="Submit Schedule"
-      @click="scheduleDialogFlag=true"
+      @click="submitSchedule"
       class="submit-btn"
-    ></v-btn>
+    />
     <v-dialog
       v-model="scheduleDialogFlag" 
       persistent

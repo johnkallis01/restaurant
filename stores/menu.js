@@ -4,6 +4,9 @@ export const useMenuStore = defineStore('menu', {
   state: () => ({
     menu: { _id: '', name: '', days: [], sections: [] },
   }),
+  getters:{
+    getMenu: (state) => state.menu
+  },
   actions: {
     setMenu(menu) {
       this.menu = menu;
@@ -20,5 +23,12 @@ export const useMenuStore = defineStore('menu', {
     resetMenu() {
       this.menu = { _id: '', name: '', days: [], sections: [] };
     },
+    async postMenu(menu){
+      const response = await $fetch('/api/menus',{
+        method: 'POST',
+        body: menu,
+      })
+      console.log(response)
+    }
   },
 });

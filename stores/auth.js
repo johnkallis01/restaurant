@@ -11,19 +11,6 @@ export const useAuthStore = defineStore('auth', {
         getToken: (state) => state.token,
     },
     actions: {
-        initializeAuth(){
-            if(process.client){
-                const token = localStorage.getItem('authToken');
-                const user = JSON.parse(localStorage.getItem('authUser'));
-                if(token){
-                    this.token = token;
-                    this.user = user;
-                    this.isAuthenticated = true;
-                } else {
-                    this.clearAuth();
-                }
-            }
-        },
         async login(credentials) {
             try {
                 const response = await $fetch('/api/auth/login', {
@@ -76,12 +63,10 @@ export const useAuthStore = defineStore('auth', {
         loadTokenFromLocalStorage(){
             const token = localStorage.getItem('authToken');
             if(token){
-                console.log('has token')
                 this.token =token;
                 localStorage.setItem('authToken', token);
             }else{
-                this.clearAuth()
-                console.log('no token')
+                this.clearAuth();
             }
         }
     },

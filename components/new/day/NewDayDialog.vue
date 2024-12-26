@@ -4,7 +4,6 @@ const props = defineProps({
 });
 const emit = defineEmits(['getDialogFlag'])
 const invalidFlag = ref(false);
-const successFlag = ref(false);
 
 const validateSchedule = () => {
   props.schedule.forEach((day) => {
@@ -18,9 +17,10 @@ const validateSchedule = () => {
       }
     }
   });
+  console.log(invalidFlag.value)
 }
 const sendFlag = () => {
-  if(successFlag.value){emit('getDialogFlag', true)}
+  if(invalidFlag.value){emit('getDialogFlag', true)}
   else{emit('getDialogFlag', false)}
 }
 onMounted(()=>{
@@ -49,8 +49,17 @@ onMounted(()=>{
       </v-card>
       </v-list>
       <v-card-actions>
-        <v-btn color="success" :disable="invalidFlag" @click="successFlag=true; sendFlag()">Submit Schedule?</v-btn>
-        <v-btn color="error" @click="sendFlag()">Cancel</v-btn>
+        <v-btn
+          color="success"
+          :disabled="!invalidFlag"
+          text="Submit Schedule"
+          @click="sendFlag()"
+        />
+        <v-btn
+          color="error" 
+          text="Cancel"
+          @click="sendFlag()"
+        />
       </v-card-actions>
     </v-card>
 </template>
