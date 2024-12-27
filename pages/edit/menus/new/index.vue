@@ -1,7 +1,5 @@
 <script setup>
 //menus/new/index.vue
-import { v4 as uuidv4 } from 'uuid';
-
 const menuStore = useMenuStore();
 const router = useRouter();
 
@@ -10,8 +8,7 @@ const nameFlag = ref(false);
 const newMenu = ref({
   name: "",
   days: [],
-  sections: [],
-  _id: uuidv4() 
+  sections: []
 });
 const rules = {required: (v) => !!v || 'Required', name: (v) => /^[a-zA-Z]{2,}$/.test(v)};
 //recieves schedule data from NewDay

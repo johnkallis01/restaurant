@@ -17,10 +17,7 @@ const menuSchema = new Schema(
           type: Schema.Types.Mixed, //Section Objs
           required: [false,'sections is required']
         }
-      ],
-      _id:{
-        type: String, required: true
-      }
+      ]
     },
     { timestamps: true },
   );
