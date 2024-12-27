@@ -19,7 +19,6 @@ const validateSchedule = () => {
       }
     }
   });
-  console.log(correctTimes.value)
 }
 const sendSubmit = () => {
   if(correctTimes.value){emit('getDialogFlag', { submit: true, cancel: false})}

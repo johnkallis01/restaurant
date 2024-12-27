@@ -21,25 +21,19 @@ const getDaysTimes = (daysObj) => {
   }
   if(daysObj.correctTimes && newMenu.value.name.trim().length){ //if times and name are entered correctly
     newMenu.value.days = daysObj.schedule; //add days and times to newMenu
-   // postMenu(); //post menu to db 
+    menuStore.setMenu(newMenu.value);
+    postMenu(newMenu.value); //post menu to db 
     router.push({path:'/edit/menus/new/sections/'}); //redirect to add sections
   }
   else if(daysObj.correctTimes && !newMenu.value.name.length){
     nameFlag.value=true;//trigger dialog box for name entry
   }
-  //
-  //check if menu name has been entered
-  if(newMenu.value.name.length){
-     //redirect to add sections to menu
-  }
-  else{
-    nameFlag.value=true; //open dialog box to enter name
-  }
 }
-const postMenu = async () => {
+const postMenu = async (menu) => {
   try{
-    menuStore.postMenu()
-  }catch(error){}
+    console.log('post ', menu)
+    menuStore.postMenu({...menu})
+  }catch(error){console.log("menu didn't post")}
 }
 const submitName =() => {
  
@@ -53,6 +47,7 @@ const submitName =() => {
 </script>
 <template>
     <v-card>
+      <v-card-title>Create Menu</v-card-title>
         <v-card-item class="menu-name">
             <v-text-field
               v-model="newMenu.name"
@@ -86,16 +81,16 @@ const submitName =() => {
   width: 80%;
   margin: 10px auto; /* Center horizontally with margin */
 }
-.v-card-title{
-  background-color: red;
-}
 .v-dialog{
   width: 30%;
+}
+.v-card-item{
+  margin-bottom: 0;
 }
 .v-card {
   margin-top: 10px;
   margin-bottom: 10px;
-  padding: 10px;
+  
   min-height:200px; /* Ensures the card has a minimum size */
   max-height: 600px;
 }

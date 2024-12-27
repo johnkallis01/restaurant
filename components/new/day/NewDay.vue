@@ -38,7 +38,7 @@ const submitSchedule = () => {
   let submitFlag = false;
   if(props.menuName.trim().length && /^[a-zA-Z]/.test(props.menuName)){
     submitFlag = schedule.value.find((day) => day.open === true);
-    console.log(submitFlag)
+    //console.log(submitFlag)
   }
   else{
     emit('daysTimes', {enterName: false})
@@ -51,7 +51,7 @@ const submitSchedule = () => {
 
 </script>
 <template>
-  <div class="card">
+  <div>
     <!-- Iterate through each day's schedule -->
     <client-only>
       <div class="day-card" v-for="(day, i) in schedule" :key="i">
@@ -102,10 +102,6 @@ const submitSchedule = () => {
 </template>
 
 <style scoped>
-.card {
-  padding: 8px;
-  margin-top: 10px;
-}
 .day-card {
   display: flex;
   align-items: center;
