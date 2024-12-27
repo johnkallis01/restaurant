@@ -9,7 +9,7 @@ const props = defineProps({
     
 });
 
-const emit=defineEmits(['update:time']);
+const emit = defineEmits(['update:time']);
 
 function updateHour(hour) {
   emit('update:time', { ...props.time, hour });
@@ -52,7 +52,7 @@ function toggleAMPM() {
             <v-list-item
               v-for="(min) in 6"
               :key="min"
-              @click="updateMin(min-1)"
+              @click="updateMinute(min-1)"
             >
               <v-list-item-title>{{ (min - 1) + "0" }}</v-list-item-title>
             </v-list-item>

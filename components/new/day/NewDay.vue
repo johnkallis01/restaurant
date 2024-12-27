@@ -3,6 +3,9 @@ import { onMounted } from 'vue';
 import NewDayDialog from './NewDayDialog.vue';
 import TimeInput from './TimeInput.vue';
 
+const props = defineProps({
+    menuName: { type: String, required: true }
+});
 // Define emits to send data to the parent
 const emit = defineEmits(['daysTimes']);
 
@@ -22,19 +25,30 @@ onMounted(() => {
   }));
 });
 // Function to validate the schedule
-const recieveDialogFlag = (flag) => {
+const recieveDialogFlag = (correctTimes) => {
   scheduleDialogFlag.value=false;
-  if(flag){
-    emit('daysTimes', schedule.value);
+  if(correctTimes.submit){
+    emit('daysTimes', { schedule: schedule.value, correctTimes: true});
+  }
+  else{
+    emit('daysTimes', {correctTimes: false})
   }
 };
 const submitSchedule = () => {
-  const submitFlag = schedule.value.find((day) => day.open === true);
-  console.log(submitFlag)
+  let submitFlag = false;
+  if(props.menuName.trim().length && /^[a-zA-Z]/.test(props.menuName)){
+    submitFlag = schedule.value.find((day) => day.open === true);
+    console.log(submitFlag)
+  }
+  else{
+    emit('daysTimes', {enterName: false})
+  }
+  
   if(submitFlag){
     scheduleDialogFlag.value = true;
   }
 }
+
 </script>
 <template>
   <div class="card">

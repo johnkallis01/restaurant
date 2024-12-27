@@ -3,26 +3,32 @@ const props = defineProps({
     schedule: { type: Array, required: true }
 });
 const emit = defineEmits(['getDialogFlag'])
-const invalidFlag = ref(false);
 
+const correctTimes = ref(true);
 const validateSchedule = () => {
   props.schedule.forEach((day) => {
     if (day.open) {
       const start = day.startTime.hour * 60 + day.startTime.min*10 + (day.startTime.pm ? 720 : 0);
       const end = day.endTime.hour * 60 + day.endTime.min*10 + (day.endTime.pm ? 720 : 0);
-      if (start >= end) {day.error=true;}
+      if (start >= end) {
+        day.error=true;
+        correctTimes.value=false;
+      }
       else{
         day.error = false;
-        invalidFlag.value=true;
       }
     }
   });
-  console.log(invalidFlag.value)
+  console.log(correctTimes.value)
 }
-const sendFlag = () => {
-  if(invalidFlag.value){emit('getDialogFlag', true)}
-  else{emit('getDialogFlag', false)}
+const sendSubmit = () => {
+  if(correctTimes.value){emit('getDialogFlag', { submit: true, cancel: false})}
+  else{emit('getDialogFlag', { submit: false, cancel: false})}
 }
+const sendCancel = () => {
+  emit('getDialogFlag', { submit: false, cancel: true});
+}
+
 onMounted(()=>{
   validateSchedule();
 })
@@ -49,16 +55,17 @@ onMounted(()=>{
       </v-card>
       </v-list>
       <v-card-actions>
+        <!-- true disables -->
         <v-btn
           color="success"
-          :disabled="!invalidFlag"
+          :disabled="!correctTimes"
           text="Submit Schedule"
-          @click="sendFlag()"
+          @click="sendSubmit()"
         />
         <v-btn
           color="error" 
           text="Cancel"
-          @click="sendFlag()"
+          @click="sendCancel()"
         />
       </v-card-actions>
     </v-card>

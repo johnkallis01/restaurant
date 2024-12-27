@@ -13,34 +13,42 @@ const newMenu = ref({
   sections: [],
   _id: uuidv4() 
 });
-const rules = {required: (v) => !!v || 'Required'};
+const rules = {required: (v) => !!v || 'Required', name: (v) => /^[a-zA-Z]{2,}$/.test(v)};
 //recieves schedule data from NewDay
-const getDaysTimes = (daysTimes) => {
-  newMenu.value.days = daysTimes;
+const getDaysTimes = (daysObj) => {
+  if(daysObj.enterName){
+    nameFlag.value=true;
+  }
+  if(daysObj.correctTimes && newMenu.value.name.trim().length){ //if times and name are entered correctly
+    newMenu.value.days = daysObj.schedule; //add days and times to newMenu
+   // postMenu(); //post menu to db 
+    router.push({path:'/edit/menus/new/sections/'}); //redirect to add sections
+  }
+  else if(daysObj.correctTimes && !newMenu.value.name.length){
+    nameFlag.value=true;//trigger dialog box for name entry
+  }
+  //
   //check if menu name has been entered
   if(newMenu.value.name.length){
-    router.push({path:'/edit/menus/new/sections/'}); //redirect to add sections to menu
+     //redirect to add sections to menu
   }
   else{
     nameFlag.value=true; //open dialog box to enter name
   }
 }
 const postMenu = async () => {
-  if(newMenu.value.name){
-
-  }
   try{
     menuStore.postMenu()
   }catch(error){}
 }
 const submitName =() => {
-  if(menuName.value.trim().length){
-    menuStore.setName(menuName.value); //set name
+ 
+    //menuStore.setName(menuName.value); //set name
 
     nameFlag.value=false; //close dialog
-    textFlag.value=true; //disable text-field
-    router.push({path:'/edit/menus/new/sections/'}); //redirect to add sections to menu
-  }
+  //  textFlag.value=true; //disable text-field
+   // router.push({path:'/edit/menus/new/sections/'}); //redirect to add sections to menu
+  
 }
 </script>
 <template>
@@ -50,11 +58,11 @@ const submitName =() => {
               v-model="newMenu.name"
               label="menu name"
               :disabled="textFlag"
-              :rules="[rules.required]"
+              :rules="[rules.name, rules.required]"
             />
         </v-card-item>
         <v-card-item>
-          <NewDay @daysTimes="getDaysTimes" />
+          <NewDay @daysTimes="getDaysTimes" :menuName="newMenu.name"/>
         </v-card-item>
         <v-dialog v-model="nameFlag">
           <v-card>
@@ -63,7 +71,7 @@ const submitName =() => {
               <v-text-field
                 v-model="newMenu.name"
                 label="menu name"
-                :rules="[rules.required]"
+                :rules="[rules.name, rules.required]"
               />
             </v-card-item>
             <v-card-actions>
