@@ -37,29 +37,31 @@ const menuVisible = ref(false);
         <v-btn to="/menu">Menu</v-btn>
         <v-btn @click="navigate('/test')">test</v-btn>
       </div>
-
+      
       <!-- Right-side Menu with Dropdown -->
-      <template v-slot:append>
-        <v-btn to="/auth/login" v-if="!loggedIn">Log In</v-btn>
-        <v-btn v-else @click="logout">Log Out</v-btn>
-        <!-- Menu Button with Dropdown -->
-        <v-menu v-model="menuVisible" offset-y>
-          <template v-slot:activator="{props}">
-            <v-btn v-bind="props" v-if="loggedIn">Edit Menu</v-btn>
-          </template>
-
-          <!-- Dropdown List -->
-          <v-list>
-            <v-list-item 
-              v-for="(link, i) in menuLinks"
-              :key="i"
-              @click="navigate(link.to)"
-            >
-              <v-list-item-title>{{ link.title }}</v-list-item-title>
-            </v-list-item>
-          </v-list>
-        </v-menu>
-      </template>
+      <span class="right-btns">
+        <client-only>
+          
+          <!-- Menu Button with Dropdown -->
+          <v-btn v-if="loggedIn">
+            edit menu
+            <v-menu activator="parent">
+              <!-- Dropdown List -->
+              <v-list>
+                <v-list-item 
+                  v-for="(link, i) in menuLinks"
+                  :key="i"
+                  @click="navigate(link.to)"
+                >
+                  <v-list-item-title>{{ link.title }}</v-list-item-title>
+                </v-list-item>
+              </v-list>
+            </v-menu>
+          </v-btn>
+          <v-btn text="login" flat to="/auth/login" v-if="!loggedIn"/>
+          <v-btn text="log out" v-else @click="logout"/>
+        </client-only>
+      </span>
     </v-app-bar>
 
     <!-- Main Content Area -->
@@ -89,6 +91,10 @@ const menuVisible = ref(false);
   display: flex;
   justify-content: center;
   align-items: center;
+}
+.right-btns{
+  position: absolute;
+  right: 0;
 }
 
 .header > .v-btn {

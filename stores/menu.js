@@ -24,9 +24,18 @@ export const useMenuStore = defineStore('menu', {
       this.menu = { _id: '', name: '', days: [], sections: [] };
     },
     async postMenu(menu){
-      const response = await $fetch('/api/menus',{
+      const response = await $fetch('/api/menus/',{
         method: 'POST',
         body: menu,
+      })
+      console.log(response)
+    },
+    async postSection(menu){
+      console.log('post section ')
+      console.log(menu)
+      const response = await $fetch('/api/menus/'+menu._id,{
+        method: 'PUT',
+        body: menu
       })
       console.log(response)
     }
