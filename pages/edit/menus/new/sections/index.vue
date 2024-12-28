@@ -2,7 +2,6 @@
 //menus/new/sections/index.vue
 import { v4 as uuidv4 } from 'uuid';
 const menuStore = useMenuStore();
-const router = useRouter();
 
 const sectionsArr = ref([]);
 const newSection = ref({

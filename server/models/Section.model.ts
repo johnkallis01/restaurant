@@ -5,18 +5,11 @@ const sectionSchema = new Schema({
       type: String,
       required: true
     },
-    choice: {
-      type: Number,
+    description: {
+      type: String,
       required: false
     },
-    suggested: [
-      {
-        type: Schema.Types.Mixed,
-        required: false,
-        default:{}
-      }
-    ],
-    ingr: [
+    items: [
       {
         type: Schema.Types.Mixed, //Item Objs
         required: false,

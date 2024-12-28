@@ -9,7 +9,7 @@ const { data: menus } = await useFetch("/api/menus");
       <v-btn flat text="New +" to="/edit/menus/new" class="new-btn"/>
     </v-card-title>
     <v-card-item v-for="( menu, i) in menus" :key="i">
-      <DisplayMenu :menu="menu"/>
+      <EditMenu :menu="menu"/>
     </v-card-item>
   </v-card>
 </template>
@@ -19,6 +19,7 @@ const { data: menus } = await useFetch("/api/menus");
   width: 80vw;
   height: 80vh;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  overflow-y: scroll;
 }
 .v-card-title {
   display: flex;

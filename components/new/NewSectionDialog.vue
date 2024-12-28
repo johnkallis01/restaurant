@@ -1,6 +1,7 @@
 <script setup>
 import { useMenuStore } from '~/stores/menu';
-const emit = defineEmits(['getDialogFlag'])
+import { v4 as uuidv4 } from 'uuid';
+const emit = defineEmits(['getDialogFlag']);
 const props = defineProps({
     menu:{
         type: Object,
@@ -11,23 +12,29 @@ const menuStore = useMenuStore();
 const newSection = ref({
     name: '',
     description: '',
-    items: []
+    items: [],
+    _id: uuidv4()
 });
-const rules = {required: (v) => !!v || 'Required'}
-
+const rules = { required: (v) => !!v || 'Required', name: (v) => /^[a-zA-Z]{2,}$/.test(v)};
+const isEnabled = computed(() => {
+    if(/^[a-zA-Z]{2,}$/.test(newSection.value.name)) return false;
+    else return true;
+});
 const addSection = (section) => {
     props.menu.sections.push(section);
-    console.log(props.menu);
-    postSection(props.menu)
-    emit('getDialogFlag', { section: section, flag: false})
-}
+    postSection(props.menu);
+    closeDialog();
+};
+const closeDialog = () => {
+    emit('getDialogFlag', false);
+};
 const postSection = async (menu) => {
   try{
-    menuStore.postSection({...menu})
-  }catch(error){
-    console.log("section didn't post")
-}
-}
+    menuStore.updateMenu({...menu});
+  } catch(error){
+        console.log("section didn't post");
+    }
+};
 </script>
 <template>
     <v-card>
@@ -38,7 +45,7 @@ const postSection = async (menu) => {
             <v-text-field
                 v-model="newSection.name"
                 label="new section name"
-                :rules="[rules.required]"
+                :rules="[rules.name, rules.required]"
             /> 
         </v-card-item>
         <v-card-item>
@@ -48,7 +55,8 @@ const postSection = async (menu) => {
             />
         </v-card-item>
         <v-card-actions>   
-            <v-btn @click="addSection(newSection)">add new section</v-btn>          
+            <v-btn @click="addSection(newSection)" text="add new section" :disabled="isEnabled"/>
+            <v-btn text="cancel" @click="closeDialog"/>        
         </v-card-actions>
     </v-card>
 </template>
