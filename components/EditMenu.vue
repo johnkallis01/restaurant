@@ -6,6 +6,8 @@ const props = defineProps({
         required: true
     }
 });
+const menuStore = useMenuStore();
+const passSection = ref();
 //dialog flags
 const newMenuDialog = ref(false);
 const newSectionDialog = ref(false);
@@ -16,7 +18,7 @@ const editItemDialog = ref(false);
 const deleteMenuDialog = ref(false);
 const deleteSectionDialog = ref(false);
 const deleteItemDialog = ref(false);
-
+//receieve flags from emits
 const recieveNewMenuDialog = (flag) => {   
     newMenuDialog.value=flag;
 };
@@ -46,13 +48,26 @@ const recieveDeleteItemDialog = (flag) => {
 };
 const deleteMenu = (menu) => {
     console.log('delete ', menu)
+    menuStore.deleteMenu(menu._id);
 }
-const deleteSection = (menu, section) =>{
+const deleteSection = (section) =>{
     console.log("delete ",section)
+    const index = props.menu.sections.findIndex(sec => sec._id ===section._id );
+    console.log(index)
+    props.menu.sections.splice(index,1);
+    try{
+        menuStore.updateMenu(props.menu);
+    } catch(error){
+            console.log("section didn't post");
+    }
 }
 const deleteItem = (menu, section, item) =>{
-    let itemMenu = menu.find((sec) => section._id === sec._id);
+    let itemSection = menu.find((sec) => section._id === sec._id);
     console.log('delete ',item)
+}
+const addItem = (section) => {
+    passSection.value = section;
+    newItemDialog.value=true;
 }
 </script>
 <template>
@@ -60,7 +75,7 @@ const deleteItem = (menu, section, item) =>{
         <div class="menu-title">
             <span class="title-text">{{ menu.name }}</span>
             <span class="btn-group">
-                <button class="btn" @click="deleteMenu">
+                <button class="btn" @click="deleteMenu(menu)">
                     <i class="mdi mdi-close"/>
                     <span class="tooltip">delete</span>
                 </button>
@@ -94,7 +109,7 @@ const deleteItem = (menu, section, item) =>{
                                     <i class="mdi mdi-close"/>
                                     <span class="tooltip">delete</span>
                                 </button>
-                                <button class="btn" @click="newItemDialog=true">
+                                <button class="btn" @click="addItem(section)">
                                     <i class="mdi mdi-plus"/>
                                     <span class="tooltip">add item</span>
                                 </button> 
@@ -113,7 +128,7 @@ const deleteItem = (menu, section, item) =>{
             </v-card>
         </v-dialog>
         <v-dialog v-model="newItemDialog" persistent>
-            <NewItemDialog :menu="menu" :section="section" persistent @getDialogFlag="recieveNewItemDialog"/>
+            <NewItemDialog :menu="menu" :section="passSection" persistent @getDialogFlag="recieveNewItemDialog"/>
         </v-dialog>
     </v-card>
 </template>
@@ -122,11 +137,10 @@ const deleteItem = (menu, section, item) =>{
     padding: 5px;
     font-size: 15px;
 }
-
 .menu-title{
     display: flex;
-    background-color: white;
-    border: 2px solid black;
+    background-color: rgb(234, 228, 228);
+    border-bottom: 2px solid black;
     color: black;
     justify-content: center;
     align-items: center;
@@ -140,17 +154,18 @@ const deleteItem = (menu, section, item) =>{
     margin: auto;
 }
 .section-title{
-    background-color: white;
+    background-color: rgb(234, 228, 228);
     color: black;
     padding: 8px;
     border-bottom: 2px solid #333;
 }
 .v-dialog{
-    width: 60vw;
+    width: 90vw;
+    height: auto;
 }
 .btn-group{
     position: absolute;
-  right: 0
+    right: 0
 }
 .title-text{
     position: absolute;

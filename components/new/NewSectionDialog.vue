@@ -47,8 +47,6 @@ const postSection = async (menu) => {
                 label="new section name"
                 :rules="[rules.name, rules.required]"
             /> 
-        </v-card-item>
-        <v-card-item>
             <v-text-field
                 v-model="newSection.description"
                 label="new section description"
