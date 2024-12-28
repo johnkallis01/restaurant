@@ -82,11 +82,9 @@ const menuVisible = ref(false);
   flex-direction: column;
   height: 100vh;
 }
-
 .app-bar {
   background-color: azure;
 }
-
 .header {
   display: flex;
   justify-content: center;
@@ -97,9 +95,6 @@ const menuVisible = ref(false);
   right: 0;
 }
 
-.header > .v-btn {
-  margin: 0 10px;
-}
 .v-card-title{
   background-color: green;
 }
@@ -116,7 +111,10 @@ const menuVisible = ref(false);
   flex-grow: 1;
   box-sizing: border-box;
 }
-
+.name-label{
+  background-color: red;
+  padding-right: 5px;
+}
 .footer {
   max-height: 1%;
   display: flex;

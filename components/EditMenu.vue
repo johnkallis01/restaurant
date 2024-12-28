@@ -115,6 +115,7 @@ const addItem = (section) => {
                                 </button> 
                             </span>
                         </v-card-title>
+                        <div v-for="(item, i) in section.items" :key="i">{{ item.name }}</div>
                     </v-card>
                 </v-col>
             </v-row>
@@ -122,21 +123,31 @@ const addItem = (section) => {
         <v-dialog v-model="newMenuDialog" persistent>
             <newMenuDialog @getDialogFlag="recieveNewMenuDialog"/>
         </v-dialog>
-        <v-dialog v-model="newSectionDialog" persistent>
+        <v-dialog id="new-section-dialog" v-model="newSectionDialog" persistent>
             <v-card>
                 <NewSectionDialog :menu="menu" @getDialogFlag="recieveNewSectionDialog"/>
             </v-card>
         </v-dialog>
-        <v-dialog v-model="newItemDialog" persistent>
-            <NewItemDialog :menu="menu" :section="passSection" persistent @getDialogFlag="recieveNewItemDialog"/>
+        <v-dialog id="new-item-dialog" v-model="newItemDialog" persistent>
+            <v-card>
+                <NewItemDialog :menu="menu" :section="passSection" persistent @getDialogFlag="recieveNewItemDialog"/>
+            </v-card>
         </v-dialog>
     </v-card>
 </template>
 <style scoped>
+#new-section-dialog{
+    width: 80vh;
+}
+#new-item-dialog{
+    width: 90%;
+    height: 90%;
+}
 .btn{
     padding: 5px;
     font-size: 15px;
 }
+
 .menu-title{
     display: flex;
     background-color: rgb(234, 228, 228);
@@ -147,6 +158,7 @@ const addItem = (section) => {
     padding: 20px;
     position: relative;
 }
+
 .fixed-card{
     max-width: 300px;
     min-width: 250px;
@@ -159,10 +171,7 @@ const addItem = (section) => {
     padding: 8px;
     border-bottom: 2px solid #333;
 }
-.v-dialog{
-    width: 90vw;
-    height: auto;
-}
+
 .btn-group{
     position: absolute;
     right: 0
@@ -172,23 +181,5 @@ const addItem = (section) => {
     left: 50%;
     font-size: 23px;
 }
-.tooltip {
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: #333;
-  color: #fff;
-  padding: 4px 8px;
-  font-size: 12px;
-  border-radius: 4px;
-  white-space: nowrap;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.2s;
-}
-.btn:hover .tooltip{
-    opacity: 1;
-    visibility: visible;
-}
+
 </style>

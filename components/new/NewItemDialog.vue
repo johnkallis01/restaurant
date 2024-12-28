@@ -1,5 +1,7 @@
 <script setup>
 import { useMenuStore } from '~/stores/menu';
+import { v4 as uuidv4 } from 'uuid';
+const menuStore = useMenuStore();
 const emit = defineEmits(['getDialogFlag']);
 const props = defineProps({
     menu:{
@@ -11,47 +13,55 @@ const props = defineProps({
         required: true
     }
 });
-const menuStore = useMenuStore();
+
 const newItem = ref({
     name: '',
     description: '',
-    price: 0,
+    price: '00000',
     addOns: [],
     removes: [],
-    options: []
+    options: [],
+    _id: uuidv4()
 });
 const newAddOn= ref({
     name: '',
-    price: 0
+    price: '00000'
 });
 const newRemove=ref("");
-const newOption=ref({
-    name: '',
-    price: 0
-});
 
 const rules = { required: (v) => !!v || 'Required', name: (v) => /^[a-zA-Z]{2,}$/.test(v)};
 const isEnabled = computed(() => {
-    if(/^[a-zA-Z]{2,}$/.test(newItem.value.name)) return false;
-    else return true;
+    if(/^[a-zA-Z ]{2,}$/.test(newItem.value.name)) {
+        return false;
+    }
+    else {return true;}
 });
-    
 const addItem = (item) => {
-    props.menu.sections.push(item);
-    postSection(props.menu);
+    const updateSection = props.menu.sections.find((sec)=>props.section._id === sec._id);
+    if(updateSection){
+        updateSection.items.push(item);
+        console.log(props.menu)
+    };
+   // postItem(props.menu);
     closeDialog();
 };
 const closeDialog = () => {
     emit('getDialogFlag', false);
 };
-const postItem = async (menu, section, item) => {
-
-  try{
-    menuStore.postItem({...menu});
-  } catch(error){
+const getItemPrice = (newPrice) => {
+    newItem.value.price = newPrice;
+}
+const getAddOnPrice = (newPrice) => {
+    newAddOn.value.price = newPrice;
+}
+const postItem = async (menu) => {
+    try{
+        menuStore.updateMenu(menu);
+    } catch(error){
         console.log("item didn't post");
     }
 };
+const tabs = ref(null);
 </script>
 <template>
     <v-card>  
@@ -59,78 +69,77 @@ const postItem = async (menu, section, item) => {
             {{"Create " + section?.name + " Item"}}
         </v-card-title>
         <v-card-item>
-            <v-row class="item-row">
-                <v-col cols="12" md="4">
-                    <v-text-field
-                        v-model="newItem.name"
-                        label="item name"
-                        :rules="[rules.name, rules.required]"
-                    /> 
-                </v-col>
-                <v-col cols="12" md="8">
-                    <v-text-field
-                        v-model="newItem.description"
-                        label="item description"
-                    />
-                </v-col>
-            </v-row>
-            <v-row>
-                <v-col cols="12" md="4">
-                    <v-text-field
-                        v-model="newAddOn.name"
-                        label="add on this to item"
-                        :rules="[rules.name, rules.required]"
-                    />
-                    <v-text-field
-                        v-model="newAddOn.price"
-                        label="add on price"
-                        prefix="$"
-                        :rules="[rules.price, rules.required]"
-                        class="price"
-                    />
-                </v-col>
-                <v-col cols="12" md="4">
-                    <v-text-field
-                        v-model="newRemove.name"
-                        label="remove this ingrediant"
-                        :rules="[rules.name, rules.required]"
-                    />
-                </v-col>
-                <v-col cols="12" md="4">
-                    <v-text-field
-                        v-model="newAddOn.name"
-                        label="new add on name"
-                        :rules="[rules.name, rules.required]"
-                    />
-                    <v-text-field
-                        v-model="newAddOn.price"
-                        label="new add on price"
-                        prefix="$"
-                        :rules="[rules.price, rules.required]"
-                        class="price"
-                    />
-                </v-col>
-            </v-row>
-            <v-row class="btn-row">
-                <v-col cols="12" md="4">
-                    <v-btn text="add" @click="addAddOn"/>
-                </v-col>
-                <v-col cols="12" md="4">
-                    <v-btn text="add" @click="addRemove"/>
-                </v-col>
-                <v-col cols="12" md="4">
-                    <v-btn text="add" @click="addOption"/>
-                </v-col>
-            </v-row>
-            <v-row>
-                <v-col cols="12" md="4">
-                    Add Ons:
-                    <div v-for="(addOns, i) in newItem.addOns" :key="i">{{ addOns }}</div>
-                </v-col>
-                <v-col cols="12" md="4">
-                    Removes:
-                </v-col>
-            </v-row>
+            <div id="item-container">
+             
+                <div class="form-container" id="item-inputs">
+                    <div class="name-description-row">
+                        <div class="text-field name-field">
+                            <label for="item-name">Item Name</label>
+                            <input
+                                id="item-name"
+                                type="text"
+                                placeholder="Enter Item Name"
+                                v-model="newItem.name"
+                            >
+                        </div>
+                        <div class="text-field description-field" id="description-container">
+                            <label for="item-description" id="description-label">Item Description</label>
+                            <textarea
+                                id="item-description"
+                                type="text"
+                                placeholder="Enter Description"
+                                v-model="newItem.description"
+                            ></textarea>
+                        </div>
+                    </div>
+                    <PriceInput title="Item Price" :price="newItem.price" @update:price="getItemPrice"/>
+                    
+                    
+                </div>
+                <v-card>
+                    <v-tabs v-model="tabs">
+                        <v-tab :value="1">Add Ons</v-tab>
+                        <v-tab :value="2">Removes</v-tab>
+                        <v-tab :value="3">Options</v-tab>
+                    </v-tabs>
+                    <v-tabs-window v-model="tabs" class="window">
+                        <v-tabs-window-item :value="1">
+                            <div class="form-container" id="add-ons">
+                                <div class="text-field">
+                                    <label for="add-on-name">Add-On Name</label>
+                                    <input
+                                        id="add-on-name"
+                                        type="text"
+                                        placeholder="Enter Add-On Name"
+                                        v-model="newAddOn.name"
+                                    >
+                                </div>
+                                <div>
+                                    <PriceInput title="Add-on Price" :price="newAddOn.price" @update:price="getAddOnPrice"/>
+                                    <v-btn>add</v-btn>
+                                </div>
+                            </div>
+                        </v-tabs-window-item>
+                        <v-tabs-window-item :value="2">
+                            <div class="form-container" id="add-ons">
+                                <div class="text-field">
+                                    <label for="remove-name">Remove Name</label>
+                                    <input
+                                        id="remove-name"
+                                        type="text"
+                                        placeholder="Enter Remove Name"
+                                        v-model="newRemove"
+                                    >
+                                </div>
+                            </div>
+                        </v-tabs-window-item>
+                        <v-tabs-window-item :value="3">
+                            <div>options</div>
+                            
+                        </v-tabs-window-item>
+                    </v-tabs-window>
+                </v-card>
+            </div>
         </v-card-item>
         <v-card-actions>   
             <v-btn @click="addItem(newItem)" text="add new item" :disabled="isEnabled"/>
@@ -139,14 +148,31 @@ const postItem = async (menu, section, item) => {
     </v-card>
 </template>
 <style scoped>
-.btn-row{
-    margin-top: -25px;
-    margin-bottom: -25px;
+.name-field{
+    flex: 1;
 }
-.item-row{
-    margin-bottom: -45px;
+.description-field{
+    flex: 2;
 }
-.price{
-    width: 40%;
+.window{
+    display:block
+}
+.text-field
+#item-description{
+    height: 80px;
+}
+#item-inputs{
+    border: 2px solid black;
+    padding: 5px;
+    margin: 0 auto;
+}
+.name-description-row{
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+}
+#add-ons{
+    border: 2px solid black;
+    padding: 5px;
 }
 </style>
