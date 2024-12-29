@@ -50,16 +50,9 @@ const deleteMenu = (menu) => {
     console.log('delete ', menu)
     menuStore.deleteMenu(menu._id);
 }
-const deleteSection = (section) =>{
-    console.log("delete ",section)
-    const index = props.menu.sections.findIndex(sec => sec._id ===section._id );
-    console.log(index)
-    props.menu.sections.splice(index,1);
-    try{
-        menuStore.updateMenu(props.menu);
-    } catch(error){
-            console.log("section didn't post");
-    }
+const deleteSection = (section) => {
+    passSection.value = section;
+    deleteSectionDialog.value = true;
 }
 const deleteItem = (menu, section, item) =>{
     let itemSection = menu.find((sec) => section._id === sec._id);
@@ -89,7 +82,7 @@ const addItem = (section) => {
                 </button> 
             </span>
         </div>
-        <v-card-item>
+     
             <v-row dense>
                 <v-col
                     v-for="(section, i) in menu.sections"
@@ -98,14 +91,14 @@ const addItem = (section) => {
                     md="4"
                 >
                     <v-card class="fixed-card">
-                        <v-card-title class="section-title">
+                        <div class="section-title">
                             <span>{{ section.name }}</span>
                             <span class="btn-group">
                                 <button class="btn" @click="editSection">
                                     <i class="mdi mdi-square-edit-outline"/>
                                     <span class="tooltip">edit</span>
                                 </button>
-                                <button class="btn" @click="deleteSection">
+                                <button class="btn" @click="deleteSection(section)">
                                     <i class="mdi mdi-close"/>
                                     <span class="tooltip">delete</span>
                                 </button>
@@ -114,12 +107,16 @@ const addItem = (section) => {
                                     <span class="tooltip">add item</span>
                                 </button> 
                             </span>
-                        </v-card-title>
-                        <div v-for="(item, i) in section.items" :key="i">{{ item.name }}</div>
+                        </div>
+                        <div class="list-items">
+                            <div v-for="(item, i) in section.items" :key="i">
+                                {{ item.name }}
+                            </div>
+                        </div>                       
                     </v-card>
                 </v-col>
             </v-row>
-        </v-card-item>
+      
         <v-dialog v-model="newMenuDialog" persistent>
             <newMenuDialog @getDialogFlag="recieveNewMenuDialog"/>
         </v-dialog>
@@ -133,9 +130,23 @@ const addItem = (section) => {
                 <NewItemDialog :menu="menu" :section="passSection" persistent @getDialogFlag="recieveNewItemDialog"/>
             </v-card>
         </v-dialog>
+        <v-dialog v-model="deleteSectionDialog" persistent class="dialog delete-section">
+            <v-card>
+                <DeleteSectionDialog :section="passSection" :menu="menu" @getDialogFlag="recieveDeleteSectionDialog"/>
+            </v-card>
+        </v-dialog>
     </v-card>
 </template>
 <style scoped>
+.list-items{
+    padding: 0px 10px;
+    max-height: 170px;
+    overflow-y: auto;
+    overflow-x: hidden
+}
+.dialog{
+    width: 80%;
+}
 #new-section-dialog{
     width: 80vh;
 }
@@ -162,8 +173,8 @@ const addItem = (section) => {
 .fixed-card{
     max-width: 300px;
     min-width: 250px;
-    height: 200px;
-    margin: auto;
+    height: 212px;
+    margin: 10px;
 }
 .section-title{
     background-color: rgb(234, 228, 228);

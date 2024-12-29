@@ -37,7 +37,7 @@ export const useMenuStore = defineStore('menu', {
         method: 'PUT',
         body: menu
       })
-      console.log(response)
+      console.log('res ',response)
     },
     async deleteMenu(id){
       console.log('delete menu');

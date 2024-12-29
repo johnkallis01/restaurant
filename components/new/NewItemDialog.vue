@@ -67,7 +67,7 @@ const pushRemove = (ingr) => {
 }
 const postItem = async (menu) => {
     try{
-        menuStore.updateMenu(menu);
+        await menuStore.updateMenu(menu);
     } catch(error){
         console.log("item didn't post");
     }
@@ -92,7 +92,6 @@ const tabs = ref(null);
                                 placeholder="Enter Item Name"
                                 v-model="newItem.name"
                             >
-                            
                         </div>
                         <div class="text-field description-field" id="description-container">
                             <label for="item-description" id="description-label">Item Description</label>
@@ -228,9 +227,6 @@ const tabs = ref(null);
 }
 .btn.secondary:hover {
   background-color: #5a6268; /* Darker Gray */
-}
-.add-button{
-    margin-left: 20px;
 }
 .price-button-group{
     display: flex;

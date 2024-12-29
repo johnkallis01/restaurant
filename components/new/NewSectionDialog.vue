@@ -17,7 +17,7 @@ const newSection = ref({
 });
 const rules = { required: (v) => !!v || 'Required', name: (v) => /^[a-zA-Z]{2,}$/.test(v)};
 const isEnabled = computed(() => {
-    if(/^[a-zA-Z]{2,}$/.test(newSection.value.name)) return false;
+    if(/^[a-zA-Z ]{2,}$/.test(newSection.value.name)) return false;
     else return true;
 });
 const addSection = (section) => {

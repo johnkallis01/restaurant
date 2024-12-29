@@ -13,6 +13,7 @@ export default defineNuxtConfig({
       '~/components', // Main components folder
       '~/components/new', // Include any subdirectories you want to auto-import from
       '~/components/new/day',
+      '~/componets/delete'
     ]
   },
   modules: [
