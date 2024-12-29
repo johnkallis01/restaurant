@@ -36,7 +36,7 @@ const formatPriceInput = (event) => {
 };
 </script>
 <template>
-    <div class="text-field price-field">
+    <div class="text-field">
         <label for="price-input" id="item-price-label">{{ title }}</label>
         <div class="price-input">
             <span class="prefix">$</span>
@@ -53,6 +53,9 @@ const formatPriceInput = (event) => {
 <style scoped>
 #item-price{
     width: 70px;
+}
+.price-field{
+    
 }
 .price-input{
     display: flex;

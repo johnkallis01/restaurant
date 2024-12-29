@@ -54,6 +54,17 @@ const getItemPrice = (newPrice) => {
 const getAddOnPrice = (newPrice) => {
     newAddOn.value.price = newPrice;
 }
+const pushAddOn = (addOn) => {
+    newItem.value.addOns.push(addOn);
+    newAddOn.value={
+        name: '',
+        price: '00000'
+    }
+}
+const pushRemove = (ingr) => {
+    newItem.value.removes.push(ingr);
+    newRemove.value="";
+}
 const postItem = async (menu) => {
     try{
         menuStore.updateMenu(menu);
@@ -81,6 +92,7 @@ const tabs = ref(null);
                                 placeholder="Enter Item Name"
                                 v-model="newItem.name"
                             >
+                            
                         </div>
                         <div class="text-field description-field" id="description-container">
                             <label for="item-description" id="description-label">Item Description</label>
@@ -91,46 +103,66 @@ const tabs = ref(null);
                                 v-model="newItem.description"
                             ></textarea>
                         </div>
+                        
                     </div>
-                    <PriceInput title="Item Price" :price="newItem.price" @update:price="getItemPrice"/>
-                    
-                    
+                    <PriceInput title="Item Price" :price="newItem.price" @update:price="getItemPrice" class="price-field"/>
                 </div>
-                <v-card>
-                    <v-tabs v-model="tabs">
+                <v-card class="tabs-card">
+                    <v-tabs v-model="tabs" align-tabs="center">
                         <v-tab :value="1">Add Ons</v-tab>
                         <v-tab :value="2">Removes</v-tab>
                         <v-tab :value="3">Options</v-tab>
                     </v-tabs>
                     <v-tabs-window v-model="tabs" class="window">
                         <v-tabs-window-item :value="1">
-                            <div class="form-container" id="add-ons">
-                                <div class="text-field">
-                                    <label for="add-on-name">Add-On Name</label>
-                                    <input
-                                        id="add-on-name"
-                                        type="text"
-                                        placeholder="Enter Add-On Name"
-                                        v-model="newAddOn.name"
-                                    >
+                            <div class="form-container add-ons" id="add-ons">
+                                <div class="input-container">
+                                    <div class="text-field add-ons-field">
+                                        <label for="add-on-name">Add-On Name</label>
+                                        <input
+                                            id="add-on-name"
+                                            type="text"
+                                            placeholder="Enter Add-On Name"
+                                            v-model="newAddOn.name"
+                                        >
+                                    </div>
+                                    <div class="price-button-group">
+                                        <PriceInput title="Add-On Price :" :price="newAddOn.price" @update:price="getAddOnPrice"/>
+                                        <button class="btn" @click="pushAddOn(newAddOn)">Add</button>
+                                    </div>
                                 </div>
-                                <div>
-                                    <PriceInput title="Add-on Price" :price="newAddOn.price" @update:price="getAddOnPrice"/>
-                                    <v-btn>add</v-btn>
+                                <div class="list-container add-ons">
+                                    <div>Add-Ons:</div>
+                                    <div v-for="(addOn, i) in newItem.addOns" :key="i">
+                                        {{ addOn.name }} - {{"$ " + addOn.price }}
+                                    </div>
                                 </div>
                             </div>
                         </v-tabs-window-item>
                         <v-tabs-window-item :value="2">
-                            <div class="form-container" id="add-ons">
-                                <div class="text-field">
-                                    <label for="remove-name">Remove Name</label>
-                                    <input
-                                        id="remove-name"
-                                        type="text"
-                                        placeholder="Enter Remove Name"
-                                        v-model="newRemove"
-                                    >
+                            <div class="form-container removes" id="removes">
+                                <div class="removes-container">
+                                    <div class="input-container removes">
+                                        <div class="text-field removes">
+                                            <label for="remove-name">Ingredient Name:</label>
+                                            <input
+                                                id="remove-name"
+                                                type="text"
+                                                placeholder="Enter ingredient to remove"
+                                                v-model="newRemove"
+                                            >
+                                        </div>
+                                        <div class="button-container">
+                                            <button class="btn" @click="pushRemove(newRemove)">Add</button>
+                                        </div>
+                                        
+                                    </div>
+                                    <div class="list-container removes">
+                                        <div class="title">Removes: </div>
+                                        <div v-for="(ingr, i) in newItem.removes" :key="i" class="removes-list">{{ ingr }}</div>
+                                    </div>
                                 </div>
+                                
                             </div>
                         </v-tabs-window-item>
                         <v-tabs-window-item :value="3">
@@ -148,8 +180,74 @@ const tabs = ref(null);
     </v-card>
 </template>
 <style scoped>
+.removes-container{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin-top: 15px;
+}
+.list-container.removes{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+}
+.form-container.add-ons{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin-top: 15px;
+}
+.button-container{
+    padding: 10px 0;
+}
+.input-container{
+    flex: 1;
+}
+.list-container{
+    flex: 1;
+}
+.btn {
+  display: inline-block;
+  padding: 5px;
+  font-size: 16px;
+  margin-left: 10px;
+  text-align: center;
+  text-decoration: none;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  user-select: none;
+}
+.btn:focus {
+  outline: none;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+.btn.primary:active {
+  background-color: #003f7f; /* Even Darker Blue */
+}
+.btn.secondary:hover {
+  background-color: #5a6268; /* Darker Gray */
+}
+.add-button{
+    margin-left: 20px;
+}
+.price-button-group{
+    display: flex;
+    align-items: center;
+}
+.add-ons-field{
+    margin-bottom: 7px;
+}
 .name-field{
     flex: 1;
+}
+.tabs-card{
+    min-height: 250px;
+}
+.add-ons{
+    display: flex;
+    gap: 16px;
 }
 .description-field{
     flex: 2;
@@ -157,12 +255,15 @@ const tabs = ref(null);
 .window{
     display:block
 }
-.text-field
+.price-field{
+    margin-top: -50px;
+    margin-bottom: 5px;
+}
 #item-description{
     height: 80px;
 }
 #item-inputs{
-    border: 2px solid black;
+    border-bottom: 2px solid black;
     padding: 5px;
     margin: 0 auto;
 }
@@ -172,7 +273,11 @@ const tabs = ref(null);
     align-items: flex-start;
 }
 #add-ons{
-    border: 2px solid black;
     padding: 5px;
+}
+.v-tabs{
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 </style>
