@@ -5,8 +5,6 @@ const authStore = useAuthStore();
 const router = useRouter();
 const menuLinks = ref([
   { to: "/edit/menus", title: "Edit Menus" },
-  { to: "/edit/sections", title: "Edit Sections" },
-  { to: "/edit/items", title: "Edit Items" },
   { to: "/orders", title: "List Orders" }
 ]);
 

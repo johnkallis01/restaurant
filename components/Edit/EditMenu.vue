@@ -106,7 +106,7 @@ const addItem = (section) => {
                         <div class="section-title">
                             <span>{{ section.name }}</span>
                             <span class="btn-group">
-                                <button class="btn" @click="editSection">
+                                <button class="btn" @click="editSection(section)">
                                     <i class="mdi mdi-square-edit-outline"/>
                                     <span class="tooltip">edit</span>
                                 </button>
@@ -216,10 +216,7 @@ const addItem = (section) => {
     width: 90%;
     height: 90%;
 }
-.btn{
-    padding: 5px;
-    font-size: 15px;
-}
+
 .menu-title{
     display: flex;
     background-color: rgb(234, 228, 228);
