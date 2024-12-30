@@ -8,6 +8,7 @@ const props = defineProps({
 });
 const menuStore = useMenuStore();
 const passSection = ref();
+const passItem = ref();
 //dialog flags
 const newMenuDialog = ref(false);
 const newSectionDialog = ref(false);
@@ -22,28 +23,28 @@ const deleteItemDialog = ref(false);
 const recieveNewMenuDialog = (flag) => {   
     newMenuDialog.value=flag;
 };
-const recieveNewSectionDialog = (flag) => {   
+const recieveNewSectionDialog = (flag) => { 
     newSectionDialog.value=flag;
 };
-const recieveNewItemDialog = (flag) => {   
+const recieveNewItemDialog = (flag) => {  
     newItemDialog.value=flag;
 };
 const recieveEditMenuDialog = (flag) => {   
     editMenuDialog.value=flag;
 };
-const recieveEditSectionDialog = (flag) => {   
+const recieveEditSectionDialog = (flag) => { 
     editSectionDialog.value=flag;
 };
-const recieveEditItemDialog = (flag) => {   
+const recieveEditItemDialog = (flag) => {  
     editItemDialog.value=flag;
 };
 const recieveDeleteMenuDialog = (flag) => {   
     deleteMenuDialog.value=flag;
 };
-const recieveDeleteSectionDialog = (flag) => {   
+const recieveDeleteSectionDialog = (flag) => {  
     deleteSectionDialog.value=flag;
 };
-const recieveDeleteItemDialog = (flag) => {   
+const recieveDeleteItemDialog = (flag) => {; 
     deleteItemDialog.value=flag;
 };
 const deleteMenu = (menu) => {
@@ -54,9 +55,20 @@ const deleteSection = (section) => {
     passSection.value = section;
     deleteSectionDialog.value = true;
 }
-const deleteItem = (menu, section, item) =>{
-    let itemSection = menu.find((sec) => section._id === sec._id);
-    console.log('delete ',item)
+const deleteItem = (item, section) => {
+    passSection.value = section;
+    passItem.value = item;
+    deleteItemDialog.value = true;
+}
+const editSection = (section) => {
+    passSection.value=section;
+    editSectionDialog.value = true;
+}
+const editItem = (item, section) => {
+    console.log('edit item')
+    passItem.value = item;
+    passSection.value=section;
+    editItemDialog.value = true;
 }
 const addItem = (section) => {
     passSection.value = section;
@@ -110,7 +122,21 @@ const addItem = (section) => {
                         </div>
                         <div class="list-items">
                             <div v-for="(item, i) in section.items" :key="i">
-                                {{ item.name }}
+                                <span class="items-row">
+                                    <span class="item-name">
+                                        {{ item.name }}
+                                    </span>
+                                    <span class="btn-group-items">
+                                        <button class="btn" @click="editItem(item, section)">
+                                            <i class="mdi mdi-square-edit-outline"/>
+                                            <span class="tooltip">edit</span>
+                                        </button>
+                                        <button class="btn" @click="deleteItem(item, section)">
+                                            <i class="mdi mdi-close"/>
+                                            <span class="tooltip">delete</span>
+                                        </button>
+                                    </span>
+                                </span>
                             </div>
                         </div>                       
                     </v-card>
@@ -118,39 +144,75 @@ const addItem = (section) => {
             </v-row>
       
         <v-dialog v-model="newMenuDialog" persistent>
-            <newMenuDialog @getDialogFlag="recieveNewMenuDialog"/>
+            <NewMenuDialog @getDialogFlag="recieveNewMenuDialog"/>
         </v-dialog>
-        <v-dialog id="new-section-dialog" v-model="newSectionDialog" persistent>
+        <v-dialog class="new-section-dialog" v-model="newSectionDialog" persistent>
             <v-card>
                 <NewSectionDialog :menu="menu" @getDialogFlag="recieveNewSectionDialog"/>
             </v-card>
         </v-dialog>
-        <v-dialog id="new-item-dialog" v-model="newItemDialog" persistent>
+        <v-dialog class="new-item-dialog" v-model="newItemDialog" persistent>
             <v-card>
                 <NewItemDialog :menu="menu" :section="passSection" persistent @getDialogFlag="recieveNewItemDialog"/>
             </v-card>
         </v-dialog>
-        <v-dialog v-model="deleteSectionDialog" persistent class="dialog delete-section">
+        <v-dialog class="dialog delete-menu" v-model="deleteMenuDialog" persistent>
+            <v-card>
+                <DeleteMenuDialog :menu="menu" @getDialogFlag="recieveDeleteMenuDialog"/>
+            </v-card>
+        </v-dialog>
+        <v-dialog class="dialog delete-section" v-model="deleteSectionDialog" persistent>
             <v-card>
                 <DeleteSectionDialog :section="passSection" :menu="menu" @getDialogFlag="recieveDeleteSectionDialog"/>
+            </v-card>
+        </v-dialog>
+        <v-dialog class="dialog delete-item" v-model="deleteItemDialog" persistent>
+            <v-card>
+                <DeleteItemDialog :menu="menu" :section="passSection" :item="passItem" @getDialogFlag="recieveDeleteItemDialog"/>
+            </v-card>
+        </v-dialog>
+        <v-dialog class="dialog edit-menu" v-model="editMenuDialog" persistent>
+            <v-card>
+                <EditMenuDialog :menu="menu" @getDialogFlag="recieveEditMenuDialog"/>
+            </v-card>
+        </v-dialog>
+        <v-dialog class="dialog edit-section" v-model="editSectionDialog" persistent>
+            <v-card>
+                <EditSectionDialog :section="passSection" :menu="menu" @getDialogFlag="recieveEditSectionDialog"/>
+            </v-card>
+        </v-dialog>
+        <v-dialog class="dialog edit-item" v-model="editItemDialog" persistent>
+            <v-card>
+                <EditItemDialog :menu="menu" :section="passSection" :item="passItem" @getDialogFlag="recieveDeleteItemDialog"/>
             </v-card>
         </v-dialog>
     </v-card>
 </template>
 <style scoped>
 .list-items{
-    padding: 0px 10px;
+    padding: 5px;
     max-height: 170px;
     overflow-y: auto;
-    overflow-x: hidden
+    overflow-x: hidden;
+}
+.items-row{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.item-name{
+    flex: 1;
+}
+.btn-group-items{
+    display: flex;
 }
 .dialog{
     width: 80%;
 }
-#new-section-dialog{
+.new-section-dialog{
     width: 80vh;
 }
-#new-item-dialog{
+.new-item-dialog{
     width: 90%;
     height: 90%;
 }
@@ -158,7 +220,6 @@ const addItem = (section) => {
     padding: 5px;
     font-size: 15px;
 }
-
 .menu-title{
     display: flex;
     background-color: rgb(234, 228, 228);

@@ -36,9 +36,9 @@
     resize: none;
   }
 .text-field input:focus, .text-field textarea:focus{
-outline: none;
-border-color: #1976d2;
-box-shadow: rgba(25, 118, 210, 0.5);
+    outline: none;
+    border-color: #1976d2;
+    box-shadow: rgba(25, 118, 210, 0.5);
 }
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {
@@ -48,7 +48,7 @@ input[type="number"]::-webkit-outer-spin-button {
   /*end text input*/
 
   /* tooltip */
-  .tooltip {
+.tooltip {
     position: absolute;
     top: 100%;
     left: 50%;
@@ -63,9 +63,9 @@ input[type="number"]::-webkit-outer-spin-button {
     visibility: hidden;
     transition: opacity 0.2s;
     z-index: 10;
-  }
-  .btn:hover .tooltip{
-      opacity: 1;
-      visibility: visible;
-  }
+}
+.btn:hover .tooltip{
+    opacity: 1;
+    visibility: visible;
+}
   /* end tooltip */

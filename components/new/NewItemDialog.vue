@@ -42,7 +42,7 @@ const addItem = (item) => {
         updateSection.items.push(item);
         console.log(props.menu)
     };
-   // postItem(props.menu);
+    postItem(props.menu);
     closeDialog();
 };
 const closeDialog = () => {
