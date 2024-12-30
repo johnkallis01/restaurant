@@ -24,20 +24,13 @@ const isEnabled = computed(() => {
 const closeDialog = () => {
     emit('getDialogFlag', false);
 };
-const deleteItem = (item, section, menu) =>{
-    console.log('delete item ', item)
-    closeDialog();
+const deleteItem = (item, section, menu) =>{ 
     const removeItem = section.items.filter( (it) => it._id !== item._id); //remove item from section.items
-    console.log(removeItem) //items array
     section.items = removeItem; //replace section.items
-    console.log(section);
     const index = menu.sections.findIndex( (sec) => section._id === sec._id); //index of section to replace
-    if(index !== -1){
-        menu.sections[index]=section; //replace menu.section
-    }
-    console.log(menu.sections)
+    if(index !== -1){menu.sections[index]=section;} //replace
     postDelete(menu); //post changes
-    
+    closeDialog();
 }
 const postDelete = async (menu) => {
   try{
