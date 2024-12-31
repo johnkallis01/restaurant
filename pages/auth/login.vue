@@ -1,6 +1,5 @@
 <script setup>
 const authStore = useAuthStore();
-
 const email = ref('');
 const password = ref('');
 const showpassword = ref(false);
@@ -21,6 +20,13 @@ const login = async () => {
    console.error('login faield')
   }
 };
+
+const focusLoginButton = inject('focusLoginButton');
+onMounted(()=>{
+  if(focusLoginButton){
+    focusLoginButton();
+  }
+})
 </script>
 <template>
   <v-card  style="width: 400px">

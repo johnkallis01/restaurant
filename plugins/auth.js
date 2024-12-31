@@ -8,7 +8,7 @@ export default defineNuxtPlugin((nuxtApp)=>{
 
     router.beforeEach( (to, from, next ) => {
         if(!authStore.token && to.path !== '/auth/login'){
-            if(to.path === '/' || to.path === '/menu' || to.path === '/auth/register/'){
+            if(to.path === '/' || to.path === '/menus' || to.path === '/auth/register/'){
                 //do nothing
             }
             else{

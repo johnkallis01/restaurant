@@ -33,9 +33,8 @@ const editSection = (section, menu) => {
     postSection(props.menu);
     closeDialog();
 };
-const closeDialog = () => {
-    emit('getDialogFlag', false);
-};
+const closeDialog = () => emit('getDialogFlag', false);
+
 const postSection = async (menu) => {
   try{
     menuStore.updateMenu(menu);
@@ -45,11 +44,10 @@ const postSection = async (menu) => {
 };
 </script>
 <template>
-    <v-card id="dialog-container">
-        <v-card-title>
+    <div class="dialog-container">
+        <div class="title dialog">
             {{"Edit " + section.name + " Section"}}
-        </v-card-title>
-        <v-card-item>
+        </div>
             <div class="form-container">
                 <div class="text-field">
                     <label for="section-name">Section Name</label>
@@ -60,18 +58,28 @@ const postSection = async (menu) => {
                         v-model="newSection.name">
                 </div>
                 <div class="text-field">
-                    <label for="section-description" id="description-label">Section Description</label>
+                    <label for="section-description" class="description-label">Section Description</label>
                     <textarea
-                        id="section-description"
+                        class="section-description"
                         type="text"
                         placeholder="Enter Description"
                         v-model="newSection.description" ></textarea>
                 </div>
             </div>
-        </v-card-item>
-        <v-card-actions>   
-            <v-btn @click="editSection(newSection, menu)" text="add new section" :disabled="isEnabled"/>
-            <v-btn text="cancel" @click="closeDialog"/>        
-        </v-card-actions>
-    </v-card>
+        <div class="container-actions">   
+            <button class="btn" @click="editSection(newSection, menu)" :disabled="isEnabled">Add New Section</button>
+            <button class="btn" @click="closeDialog">Cancel</button>    
+        </div>
+    </div>
 </template>
+<style scoped>
+.dialog-container{
+    background-color: white;
+}
+.section-description{
+    height: 100px;
+}
+.title.dialog{
+    padding: 5px;
+}
+</style>

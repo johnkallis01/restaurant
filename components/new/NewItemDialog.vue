@@ -127,7 +127,7 @@ const tabs = ref(null);
                                     </div>
                                     <div class="price-button-group">
                                         <PriceInput title="Add-On Price :" :price="newAddOn.price" @update:price="getAddOnPrice"/>
-                                        <button class="btn" @click="pushAddOn(newAddOn)">Add</button>
+                                        <button class="btn add" @click="pushAddOn(newAddOn)">Add</button>
                                     </div>
                                 </div>
                                 <div class="list-container add-ons">
@@ -152,7 +152,7 @@ const tabs = ref(null);
                                             >
                                         </div>
                                         <div class="button-container">
-                                            <button class="btn" @click="pushRemove(newRemove)">Add</button>
+                                            <v-btn class="btn-add" @click="pushRemove(newRemove)">Add</v-btn>
                                         </div>
                                         
                                     </div>
@@ -225,7 +225,7 @@ const tabs = ref(null);
 .btn.primary:active {
   background-color: #003f7f; /* Even Darker Blue */
 }
-.btn.secondary:hover {
+.btn:hover {
   background-color: #5a6268; /* Darker Gray */
 }
 .price-button-group{

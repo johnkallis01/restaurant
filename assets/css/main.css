@@ -1,14 +1,58 @@
-.v-card-title{
+html, body {
+    overflow: hidden; /* Disable scrolling */
+    height: 100%; /* Ensure the body takes full viewport height */
+    scrollbar-width: none;
+}
+.btn-add{
+    margin-left: 10px;
+}
+.page-container{
+    height: 80vh;
+    width: 95vw;
+    background-color: white;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    top: 3vh;
+    left: 5vh;
+
+}
+.container-title{
+    border-radius: 5px 5px 0 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    padding: 10px;
+    font-size: 24px;
     background-color: green;
     color: white;
+    width: 100%;
+    top: 0;
+    height: 5vh;
+}
+.title{
+    display: flex;
+    background-color: rgb(234, 228, 228);
+    border-bottom: 2px solid black;
+    color: black;
+    justify-content: center;
+    align-items: center;
+    position: relative;
 }
 
-
 /* Input Formatting */
-.form-container {
+.form-container{
     display: flex;
     flex-direction: column; /* Align vertically */
     gap: 16px; /* Space between fields */
+    padding: 10px;
+}
+.container-actions{
+    padding: 0 10px;
+    gap: 10px;
 }
 .text-field{
     display: flex;
@@ -47,6 +91,26 @@ input[type="number"]::-webkit-outer-spin-button {
 }
   /*end text input*/
 
+.btn {
+    display: inline-block;
+    padding: 5px;
+    font-size: 16px;
+    margin-left: 10px;
+    text-align: center;
+    text-decoration: none;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    user-select: none;
+}
+.btn:focus {
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+.btn:hover {
+    background-color: #d3dce3; /* Darker Gray */
+}
   /* tooltip */
 .tooltip {
     position: absolute;
@@ -64,8 +128,25 @@ input[type="number"]::-webkit-outer-spin-button {
     transition: opacity 0.2s;
     z-index: 10;
 }
-.btn:hover .tooltip{
+.btn-icons:hover .tooltip{
     opacity: 1;
     visibility: visible;
 }
   /* end tooltip */
+
+  /* buttons */
+.btn-icons{
+    padding: 5px;
+    font-size: 15px;
+}
+.btn-icons-group{
+    position: absolute;
+    right: 0    
+}
+
+.list-items{
+    padding: 5px;
+    max-height: 170px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
