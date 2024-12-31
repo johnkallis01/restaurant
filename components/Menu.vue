@@ -3,7 +3,7 @@
         <v-card>
             <v-tabs v-model="tab">
               <v-tab
-                  v-for="menu in findDoubles(menus)"
+                  v-for="menu in menus"
                   :key=menu._id
               >
                   {{menu.name}}
@@ -11,7 +11,7 @@
           </v-tabs>
           <v-window v-model="tab">
               <v-window-item
-                  v-for="menu in findDoubles(menus)"
+                  v-for="menu in menus"
                   :key="menu._id"
               >
                   <Section
@@ -26,18 +26,12 @@
   <script>
    export default {
       props:{
-          items:{
-              type: Array,
-              required: true
-          },
+
           menus:{
               type: Array,
               required: true
           },
-          sections:{
-              type: Array,
-              required: true
-          }
+
       },
       data(){
           return {
