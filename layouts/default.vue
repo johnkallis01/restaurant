@@ -1,4 +1,7 @@
 <script setup>
+useHead({
+  title: "John's Restaurant"
+})
 const authStore = useAuthStore();
 
 // Initialize the router and links

@@ -1,6 +1,6 @@
-import vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
+import vuetify, { transformAssetUrls } from 'vite-plugin-vuetify';
 export default defineNuxtConfig({
-  //...
+  ssr: true,
   build: {
     transpile: ['vuetify'],
   },
@@ -10,8 +10,8 @@ export default defineNuxtConfig({
   ],
   components: {
     dirs: [
-      '~/components', // Main components folder
-      '~/components/new', // Include any subdirectories you want to auto-import from
+      '~/components',
+      '~/components/new',
       '~/components/new/day',
     ]
   },
@@ -19,7 +19,6 @@ export default defineNuxtConfig({
     '@pinia/nuxt',
     (_options, nuxt) => {
       nuxt.hooks.hook('vite:extendConfig', (config) => {
-        // @ts-expect-error
         config.plugins.push(vuetify({ autoImport: true }))
       })
     },
