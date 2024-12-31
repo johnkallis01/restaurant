@@ -3,7 +3,7 @@ const { data: orders } = await useFetch("/api/orders");
 </script>
 <template>
     <v-card>
-        <v-card
+ <!--       <v-card
             v-for="(order,i) in orders"
             :key="i"
             class="overflow-auto"
@@ -22,6 +22,6 @@ const { data: orders } = await useFetch("/api/orders");
            <v-card-title> {{ (j+1) + "). "}} {{ item.name }} -- ${{ item.price/100 }}</v-card-title>
         </v-card-item>
         <v-divider/>
-        </v-card>
+        </v-card> -->
     </v-card>
 </template>
