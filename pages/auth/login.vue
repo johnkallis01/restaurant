@@ -21,6 +21,12 @@ const login = async () => {
    console.error('login faield')
   }
 };
+const focusLoginButton = inject('focusLoginButton');
+onMounted(()=>{
+  if(focusLoginButton){
+    focusLoginButton();
+  }
+})
 </script>
 <template>
   <v-card  style="width: 400px">

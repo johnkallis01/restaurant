@@ -1,4 +1,6 @@
 <script setup>
+import { watchEffect } from 'vue';
+
 useHead({
   title: "John's Restaurant"
 })
@@ -6,6 +8,7 @@ const authStore = useAuthStore();
 
 // Initialize the router and links
 const router = useRouter();
+const route = useRoute();
 const menuLinks = ref([
   { to: "/edit/menus", title: "Edit Menus" },
   { to: "/orders", title: "List Orders" }
@@ -23,58 +26,63 @@ const logout = () => {
 const loggedIn = computed(() => {
   return !!authStore.getToken;
 })
-
-// State for menu visibility
-const menuVisible = ref(false);
+const loginButton = ref(null);
+const focusLoginButton = ()=>{
+  if(loginButton.value) {
+    loginButton.value.focus();
+  }
+}
+provide('focusLoginButton', focusLoginButton);
 </script>
 
 <template>
-  <v-app class="app">
+  <div class="app">
     <!-- App Bar with Navigation Buttons -->
-    <v-app-bar app class="app-bar">
-      <div class="header">
-        <v-btn to="/">Home</v-btn>
-        <v-btn to="/createOrder">Order</v-btn>
-        <v-btn to="/menu">Menu</v-btn>
-        <v-btn @click="navigate('/test')">test</v-btn>
+    <header class="header">
+      <div class="header-links">
+        <nuxt-link to="/">
+          <button class="btn-link">Home</button>
+        </nuxt-link>
+        <nuxt-link to="/menus">
+          <button class="btn-link">Menus</button>
+        </nuxt-link>
+        <nuxt-link to="/createOrder">
+          <button class="btn-link">Order</button>
+        </nuxt-link>
+        <nuxt-link to="/test">
+          <button class="btn-link">Test</button>
+        </nuxt-link>
       </div>
       
       <!-- Right-side Menu with Dropdown -->
       <span class="right-btns">
         <client-only>
-          
           <!-- Menu Button with Dropdown -->
-          <v-btn v-if="loggedIn">
-            edit menu
-            <v-menu activator="parent">
-              <!-- Dropdown List -->
-              <v-list>
-                <v-list-item 
-                  v-for="(link, i) in menuLinks"
-                  :key="i"
-                  @click="navigate(link.to)"
-                >
-                  <v-list-item-title>{{ link.title }}</v-list-item-title>
-                </v-list-item>
-              </v-list>
-            </v-menu>
-          </v-btn>
-          <v-btn text="login" flat to="/auth/login" v-if="!loggedIn"/>
-          <v-btn text="log out" v-else @click="logout"/>
+          <span v-if="loggedIn">
+            <button class="btn-link" @click="logout">Logout</button>
+            <nuxt-link to="/edit/menus">
+              <button class="btn-link">Edit Menu</button>
+            </nuxt-link>
+          </span>
+          <span v-else>
+            <nuxt-link to="/auth/login">
+              <button class="btn-link" ref="loginButton">Login</button>
+            </nuxt-link>
+          </span>
         </client-only>
       </span>
-    </v-app-bar>
+    </header>
 
     <!-- Main Content Area -->
-    <v-main app class="main">
+    <main class="main">
       <NuxtPage />
-    </v-main>
+    </main>
 
     <!-- Footer -->
-    <v-footer app class="footer">
+    <footer class="footer">
       <span class="footer-text">John Kallis websites johnkallis01@gmail.com</span>
-    </v-footer>
-  </v-app>
+    </footer>
+  </div>
 </template>
 
 <style scoped>
@@ -84,7 +92,7 @@ const menuVisible = ref(false);
   height: 100vh;
 }
 .app-bar {
-  background-color: azure;
+  background-color: rgb(206, 240, 240);
 }
 .header {
   display: flex;
@@ -116,14 +124,50 @@ const menuVisible = ref(false);
   background-color: red;
   padding-right: 5px;
 }
+.app {
+  height: 100vh;
+}
+.btn-link{
+  color: black;
+  padding: 10px;
+  margin: 10px;
+  width: 8vw;
+}
+.btn-link:focus {
+    border-bottom: 2px solid #166bad;
+}
+.btn-link:hover {
+   box-shadow: 0 0 5px rgba(214, 227, 240, 0.5);
+}
+.right-btns{
+  position: absolute;
+  right: 0;
+}
+.header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 10vh;
+  background-color: rgb(208, 236, 243);
+}
+.main {
+  background-image: url("https://t3.ftcdn.net/jpg/01/18/17/52/360_F_118175297_GZcJbKj0f4Jemq8EDIXIYbUFuTpoMwLT.jpg");
+  background-size: cover;
+  background-position: top left;
+  background-repeat: repeat;
+  height: 88vh;
+}
+.name-label{
+  background-color: red;
+  padding-right: 5px;
+}
 .footer {
-  max-height: 1%;
+  height: 2vh;
   display: flex;
   justify-content: center;
   align-items: center;
   background-color: lightgray;
 }
-
 .footer-text {
   font-size: 12px;
 }
