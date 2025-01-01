@@ -3,21 +3,17 @@ html, body {
     height: 100%; /* Ensure the body takes full viewport height */
     scrollbar-width: none;
 }
-.btn-add{
-    margin-left: 10px;
-}
 .page-container{
-    height: 80vh;
+    height: 90vh;
     width: 95vw;
-    background-color: white;
+    background-color: lightcoral;
     border-radius: 5px;
     display: flex;
     justify-content: center;
     align-items: center;
-    position: relative;
-    top: 3vh;
-    left: 5vh;
-
+    position: absolute;
+    top: 0;
+    right: 5vh;
 }
 .container-title{
     border-radius: 5px 5px 0 0;
@@ -31,7 +27,7 @@ html, body {
     color: white;
     width: 100%;
     top: 0;
-    height: 5vh;
+    height: 10vh;
 }
 .title{
     display: flex;
@@ -142,11 +138,4 @@ input[type="number"]::-webkit-outer-spin-button {
 .btn-icons-group{
     position: absolute;
     right: 0    
-}
-
-.list-items{
-    padding: 5px;
-    max-height: 170px;
-    overflow-y: auto;
-    overflow-x: hidden;
 }
