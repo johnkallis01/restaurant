@@ -3,11 +3,11 @@ html, body {
     height: 100%; /* Ensure the body takes full viewport height */
     scrollbar-width: none;
 }
+/* containers */
 .page-container{
     height: 90vh;
     width: 95vw;
-    background-color: lightcoral;
-    border-radius: 5px;
+    background-color: azure;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -15,9 +15,19 @@ html, body {
     top: 0;
     left: 5vh;
     right: 5vh; 
+    overflow-y: scroll;
+}
+.container-body{
+    background-color: azure;
+    height: 100%;
+    width: 100%;
+    border-radius: 10px 10px 0 0;
+    position: relative;
+    margin: 10px 10px;
+    top: 12vh;
+    left: 0;
 }
 .container-title{
-    border-radius: 5px 5px 0 0;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -30,16 +40,17 @@ html, body {
     top: 0;
     height: 10vh;
 }
-.title{
+.menu-container{
     display: flex;
-    background-color: rgb(234, 228, 228);
-    border-bottom: 2px solid black;
-    color: black;
     justify-content: center;
     align-items: center;
     position: relative;
+    top: 0;
+    width: 100%;
+    height: 100vh;
+    border-radius: 10px 10px 0 0;
+    background-color: azure;
 }
-
 /* Input Formatting */
 .form-container{
     display: flex;
@@ -125,7 +136,11 @@ input[type="number"]::-webkit-outer-spin-button {
     transition: opacity 0.2s;
     z-index: 10;
 }
-.btn-icons:hover .tooltip{
+.btn-text:hover .tooltip{
+    opacity: 1;
+    visibility: visible;
+}
+.btn:hover .tooltip{
     opacity: 1;
     visibility: visible;
 }

@@ -1,12 +1,5 @@
 <script setup>
-const props = defineProps({
-    menu:{
-        type: Object,
-        required: true
-    }
-});
-
-const menuStore = useMenuStore();
+const props = defineProps({ menu:{ type: Object, required: true }});
 
 const passSection = ref();
 const passItem = ref();
@@ -24,15 +17,15 @@ const deleteItemDialog = ref(false);
 const deleteSection = (section) => { passSection.value = section; deleteSectionDialog.value = true; }
 const deleteItem = (item, section) => { passSection.value = section; passItem.value = item; deleteItemDialog.value = true; }
 
-const editMenu = () => editMenuDialog = true;
+const editMenu = () => editMenuDialog.value = true;
 const editSection = (section) => { passSection.value=section; editSectionDialog.value = true; }
 const editItem = (item, section) => { passItem.value = item; passSection.value=section; editItemDialog.value = true; }
 
 const addItem = (section) => { passSection.value = section; newItemDialog.value=true; }
 </script>
 <template>
-    <v-card flat>
-        <div class="menu-title">
+    <div class="menu-container">
+        <div class="container-title menu">
             <span class="title-text">{{ menu.name }}</span>
             <span class="btn-group">
                 <button class="btn" @click="deleteMenu(menu)">
@@ -49,7 +42,6 @@ const addItem = (section) => { passSection.value = section; newItemDialog.value=
                 </button> 
             </span>
         </div>
-    
         <v-row dense>
             <v-col
                 v-for="(section, i) in menu.sections"
@@ -138,9 +130,16 @@ const addItem = (section) => { passSection.value = section; newItemDialog.value=
                 </v-card>
             </v-dialog>
         </div>
-    </v-card>
+    </div>
 </template>
 <style scoped>
+.container-title.menu{
+    height: 8vh;
+    background-color: rgb(234, 228, 228);
+    color: black;
+    border-radius: 10px 10px 0 0;
+    border-bottom: 2px solid #333;
+}
 .list-items{
     padding: 5px;
     max-height: 170px;
@@ -169,16 +168,7 @@ const addItem = (section) => { passSection.value = section; newItemDialog.value=
     height: 90%;
 }
 
-.menu-title{
-    display: flex;
-    background-color: rgb(234, 228, 228);
-    border-bottom: 2px solid black;
-    color: black;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-    position: relative;
-}
+
 
 .fixed-card{
     max-width: 300px;

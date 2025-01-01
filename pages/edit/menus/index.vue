@@ -7,10 +7,15 @@ const newMenuDialog = ref(false);
   <div class="page-container">
     <div class="container-title">
       <span class="title-text">Edit Menus</span>
-      <button class="btn new" @click="newMenuDialog = true">New +</button>
+      <button class="btn new" @click="newMenuDialog = true">
+        <span class="btn-text">New +</span>
+        <span class="tooltip">new menu</span>
+      </button>
     </div>
-    <div class="container-body" v-for="( menu, i) in menus" :key="i">
-     <EditMenu :menu="menu"/>
+    <div class="container-body">
+      <div v-for="( menu, i) in menus" :key="i">
+        <EditMenu :menu="menu"/>
+      </div>
     </div>
     <v-dialog class="dialog" v-model="newMenuDialog">
       <NewMenuDialog @getDialogFlag="recieveNewMenuDialog"/>
