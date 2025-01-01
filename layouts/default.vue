@@ -72,6 +72,9 @@ provide('focusLoginButton', focusLoginButton);
   height: 100vh;
   background-color: red;
 }
+.header-links{
+  position: relative;
+}
 .header {
   display: flex;
   justify-content: center;
@@ -104,6 +107,7 @@ provide('focusLoginButton', focusLoginButton);
   height: 90vh;
   position: absolute;
   top: 10vh;
+  left: 0;
   background-size: cover;
   background-position: top left;
   background-repeat: no-repeat;

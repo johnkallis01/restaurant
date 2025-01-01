@@ -1,16 +1,17 @@
 <script setup>
-const router = useRouter();
 const props = defineProps({
     menu:{
         type: Object,
         required: true
     }
 });
+
 const menuStore = useMenuStore();
+
 const passSection = ref();
 const passItem = ref();
+
 //dialog flags
-const newMenuDialog = ref(false);
 const newSectionDialog = ref(false);
 const newItemDialog = ref(false);
 const editMenuDialog = ref(false);
@@ -19,61 +20,15 @@ const editItemDialog = ref(false);
 const deleteMenuDialog = ref(false);
 const deleteSectionDialog = ref(false);
 const deleteItemDialog = ref(false);
-//receieve flags from emits
-const recieveNewMenuDialog = (flag) => {   
-    newMenuDialog.value=flag;
-};
-const recieveNewSectionDialog = (flag) => { 
-    newSectionDialog.value=flag;
-};
-const recieveNewItemDialog = (flag) => {  
-    newItemDialog.value=flag;
-};
-const recieveEditMenuDialog = (flag) => {   
-    editMenuDialog.value=flag;
-};
-const recieveEditSectionDialog = (flag) => { 
-    editSectionDialog.value=flag;
-};
-const recieveEditItemDialog = (flag) => {  
-    editItemDialog.value=flag;
-};
-const recieveDeleteMenuDialog = (flag) => {   
-    deleteMenuDialog.value=flag;
-};
-const recieveDeleteSectionDialog = (flag) => {  
-    deleteSectionDialog.value=flag;
-};
-const recieveDeleteItemDialog = (flag) => {; 
-    deleteItemDialog.value=flag;
-};
-const deleteMenu = (menu) => {
-    console.log('delete ', menu)
-    menuStore.deleteMenu(menu._id);
-}
-const deleteSection = (section) => {
-    passSection.value = section;
-    deleteSectionDialog.value = true;
-}
-const deleteItem = (item, section) => {
-    passSection.value = section;
-    passItem.value = item;
-    deleteItemDialog.value = true;
-}
-const editSection = (section) => {
-    passSection.value=section;
-    editSectionDialog.value = true;
-}
-const editItem = (item, section) => {
-    console.log('edit item')
-    passItem.value = item;
-    passSection.value=section;
-    editItemDialog.value = true;
-}
-const addItem = (section) => {
-    passSection.value = section;
-    newItemDialog.value=true;
-}
+
+const deleteSection = (section) => { passSection.value = section; deleteSectionDialog.value = true; }
+const deleteItem = (item, section) => { passSection.value = section; passItem.value = item; deleteItemDialog.value = true; }
+
+const editMenu = () => editMenuDialog = true;
+const editSection = (section) => { passSection.value=section; editSectionDialog.value = true; }
+const editItem = (item, section) => { passItem.value = item; passSection.value=section; editItemDialog.value = true; }
+
+const addItem = (section) => { passSection.value = section; newItemDialog.value=true; }
 </script>
 <template>
     <v-card flat>
@@ -94,98 +49,95 @@ const addItem = (section) => {
                 </button> 
             </span>
         </div>
-     
-            <v-row dense>
-                <v-col
-                    v-for="(section, i) in menu.sections"
-                    :key="i"
-                    cols="12"
-                    md="4"
-                >
-                    <v-card class="fixed-card">
-                        <div class="section-title">
-                            <span>{{ section.name }}</span>
-                            <span class="btn-group">
-                                <button class="btn" @click="editSection(section)">
-                                    <i class="mdi mdi-square-edit-outline"/>
-                                    <span class="tooltip">edit</span>
-                                </button>
-                                <button class="btn" @click="deleteSection(section)">
-                                    <i class="mdi mdi-close"/>
-                                    <span class="tooltip">delete</span>
-                                </button>
-                                <button class="btn" @click="addItem(section)">
-                                    <i class="mdi mdi-plus"/>
-                                    <span class="tooltip">add item</span>
-                                </button> 
+    
+        <v-row dense>
+            <v-col
+                v-for="(section, i) in menu.sections"
+                :key="i"
+                cols="12"
+                md="4"
+            >
+                <v-card class="fixed-card">
+                    <div class="section-title">
+                        <span>{{ section.name }}</span>
+                        <span class="btn-group">
+                            <button class="btn" @click="editSection(section)">
+                                <i class="mdi mdi-square-edit-outline"/>
+                                <span class="tooltip">edit</span>
+                            </button>
+                            <button class="btn" @click="deleteSection(section)">
+                                <i class="mdi mdi-close"/>
+                                <span class="tooltip">delete</span>
+                            </button>
+                            <button class="btn" @click="addItem(section)">
+                                <i class="mdi mdi-plus"/>
+                                <span class="tooltip">add item</span>
+                            </button> 
+                        </span>
+                    </div>
+                    <div class="list-items">
+                        <div v-for="(item, i) in section.items" :key="i">
+                            <span class="items-row">
+                                <span class="item-name">
+                                    {{ item.name }}
+                                </span>
+                                <span class="btn-group-items">
+                                    <button class="btn" @click="editItem(item, section)">
+                                        <i class="mdi mdi-square-edit-outline"/>
+                                        <span class="tooltip">edit</span>
+                                    </button>
+                                    <button class="btn" @click="deleteItem(item, section)">
+                                        <i class="mdi mdi-close"/>
+                                        <span class="tooltip">delete</span>
+                                    </button>
+                                </span>
                             </span>
                         </div>
-                        <div class="list-items">
-                            <div v-for="(item, i) in section.items" :key="i">
-                                <span class="items-row">
-                                    <span class="item-name">
-                                        {{ item.name }}
-                                    </span>
-                                    <span class="btn-group-items">
-                                        <button class="btn" @click="editItem(item, section)">
-                                            <i class="mdi mdi-square-edit-outline"/>
-                                            <span class="tooltip">edit</span>
-                                        </button>
-                                        <button class="btn" @click="deleteItem(item, section)">
-                                            <i class="mdi mdi-close"/>
-                                            <span class="tooltip">delete</span>
-                                        </button>
-                                    </span>
-                                </span>
-                            </div>
-                        </div>                       
-                    </v-card>
-                </v-col>
-            </v-row>
-      
-        <v-dialog v-model="newMenuDialog" persistent>
-            <NewMenuDialog @getDialogFlag="recieveNewMenuDialog"/>
-        </v-dialog>
-        <v-dialog class="new-section-dialog" v-model="newSectionDialog" persistent>
-            <v-card>
-                <NewSectionDialog :menu="menu" @getDialogFlag="recieveNewSectionDialog"/>
-            </v-card>
-        </v-dialog>
-        <v-dialog class="new-item-dialog" v-model="newItemDialog" persistent>
-            <v-card>
-                <NewItemDialog :menu="menu" :section="passSection" persistent @getDialogFlag="recieveNewItemDialog"/>
-            </v-card>
-        </v-dialog>
-        <v-dialog class="dialog delete-menu" v-model="deleteMenuDialog" persistent>
-            <v-card>
-                <DeleteMenuDialog :menu="menu" @getDialogFlag="recieveDeleteMenuDialog"/>
-            </v-card>
-        </v-dialog>
-        <v-dialog class="dialog delete-section" v-model="deleteSectionDialog" persistent>
-            <v-card>
-                <DeleteSectionDialog :section="passSection" :menu="menu" @getDialogFlag="recieveDeleteSectionDialog"/>
-            </v-card>
-        </v-dialog>
-        <v-dialog class="dialog delete-item" v-model="deleteItemDialog" persistent>
-            <v-card>
-                <DeleteItemDialog :menu="menu" :section="passSection" :item="passItem" @getDialogFlag="recieveDeleteItemDialog"/>
-            </v-card>
-        </v-dialog>
-        <v-dialog class="dialog edit-menu" v-model="editMenuDialog" persistent>
-            <v-card>
-                <EditMenuDialog :menu="menu" @getDialogFlag="recieveEditMenuDialog"/>
-            </v-card>
-        </v-dialog>
-        <v-dialog class="dialog edit-section" v-model="editSectionDialog" persistent>
-            <v-card>
-                <EditSectionDialog :section="passSection" :menu="menu" @getDialogFlag="recieveEditSectionDialog"/>
-            </v-card>
-        </v-dialog>
-        <v-dialog class="dialog edit-item" v-model="editItemDialog" persistent>
-            <v-card>
-                <EditItemDialog :menu="menu" :section="passSection" :item="passItem" @getDialogFlag="recieveDeleteItemDialog"/>
-            </v-card>
-        </v-dialog>
+                    </div>                       
+                </v-card>
+            </v-col>
+        </v-row>
+
+        <div id="dialogs">
+            <v-dialog class="dialog new-section" v-model="newSectionDialog" persistent fullscreen>
+                <v-card>
+                    <NewSectionDialog :menu="menu" @getDialogFlag="newSectionDialog=flag"/>
+                </v-card>
+            </v-dialog>
+            <v-dialog class="dialog new-item" v-model="newItemDialog" persistent fullscreen>
+                <v-card>
+                    <NewItemDialog :section="passSection" :menu="menu" persistent @getDialogFlag="newItemDialog=flag"/>
+                </v-card>
+            </v-dialog>
+            <v-dialog class="dialog delete-menu" v-model="deleteMenuDialog" persistent fullscreen>
+                <v-card>
+                    <DeleteMenuDialog :menu="menu" @getDialogFlag="deleteMenuDialog=flag"/>
+                </v-card>
+            </v-dialog>
+            <v-dialog class="dialog delete-section" v-model="deleteSectionDialog" persistent fullscreen>
+                <v-card>
+                    <DeleteSectionDialog :section="passSection" :menu="menu" @getDialogFlag="deleteSectionDialog=flag"/>
+                </v-card>
+            </v-dialog>
+            <v-dialog class="dialog delete-item" v-model="deleteItemDialog" persistent fullscreen>
+                <v-card>
+                    <DeleteItemDialog :item="passItem"  :section="passSection" :menu="menu" @getDialogFlag="deleteItemDialog=flag"/>
+                </v-card>
+            </v-dialog>
+            <v-dialog class="dialog edit-menu" v-model="editMenuDialog" persistent fullscreen>
+                <v-card>
+                    <EditMenuDialog :menu="menu" @getDialogFlag="editMenuDialog=flag"/>
+                </v-card>
+            </v-dialog>
+            <v-dialog class="dialog edit-section" v-model="editSectionDialog" persistent fullscreen>
+                <EditSectionDialog class="component edit-section-dialog" :section="passSection" :menu="menu" @getDialogFlag="editSectionDialog=flag"/>
+            </v-dialog>
+            <v-dialog class="dialog edit-item" v-model="editItemDialog" persistent fullscreen>
+                <v-card>
+                    <EditItemDialog :item="passItem" :section="passSection" :menu="menu" @getDialogFlag="editItemDialog=flag"/>
+                </v-card>
+            </v-dialog>
+        </div>
     </v-card>
 </template>
 <style scoped>

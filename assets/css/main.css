@@ -13,7 +13,8 @@ html, body {
     align-items: center;
     position: absolute;
     top: 0;
-    right: 5vh;
+    left: 5vh;
+    right: 5vh; 
 }
 .container-title{
     border-radius: 5px 5px 0 0;
