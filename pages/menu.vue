@@ -1,6 +1,6 @@
 <template>
   <v-card>
-   menu
+   <div v-for="(menu, i) in menus" :key="i">{{ menu }}</div>
   </v-card>
 </template>
 
