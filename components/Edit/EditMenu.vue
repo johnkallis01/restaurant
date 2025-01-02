@@ -1,5 +1,6 @@
 <script setup>
 const props = defineProps({ menu:{ type: Object, required: true }});
+const menuStore = useMenuStore();
 
 const passSection = ref();
 const passItem = ref();
@@ -18,16 +19,73 @@ const deleteSection = (section) => { passSection.value = section; deleteSectionD
 const deleteItem = (item, section) => { passSection.value = section; passItem.value = item; deleteItemDialog.value = true; }
 
 const editMenu = () => editMenuDialog.value = true;
-const editSection = (section) => { passSection.value=section; editSectionDialog.value = true; }
+//const editSection = (section) => {  passSection.value=section; editSectionDialog.value = true;}
 const editItem = (item, section) => { passItem.value = item; passSection.value=section; editItemDialog.value = true; }
 
 const addItem = (section) => { passSection.value = section; newItemDialog.value=true; }
+
+/************************
+**edit section name logic
+*************************/
+const sectionNameRefs = ref([]);
+const editSectionName = (section, index) => {
+  section.editName = true;
+  nextTick(() => { if(sectionNameRefs.value[index]) { sectionNameRefs.value[index].focus();}});
+};
+const setSectionNameRef = (el, index) => { if (el) sectionNameRefs.value[index] = el;};
+const submitEditSectionName = (section, index) => {
+  section.editName = false;
+  let newSection = { //remove flags
+    name: section.name,
+    description: section.description,
+    items: section.items,
+    _id: section._id
+  }
+  props.menu.sections[index] = newSection;
+  menuStore.updateMenu(props.menu);
+};
+/**********************
+**edit section description logic
+**********************/
+const sectionDescriptionRefs = ref([]);
+const editSectionDescription = (section, index) => {
+    section.editDescription = true;
+    nextTick(() => { if(sectionDescriptionRefs.value[index]) sectionDescriptionRefs.value[index].focus();})
+};
+const setSectionDescriptionRef = (el, index) => { if (el) sectionDescriptionRefs.value[index] = el;};
+const submitEditSectionDescription = (section, index) => {
+  section.editDescription= false;
+  let newSection = { //remove flags
+    name: section.name,
+    description: section.description,
+    items: section.items,
+    _id: section._id
+  }
+  props.menu.sections[index] = newSection;
+  menuStore.updateMenu(props.menu);
+};
+
+/** 
+ * add flags to new menu object
+ **/
+ const thisMenu = ref(props.menu);
+ const addSectionFlags = () => {
+    thisMenu.value.sections = thisMenu.value.sections.map( section =>({
+        ...section,
+        editName: false,
+        editDescription: false,
+    }))
+};
+const addItemFlags = () => {
+
+}
+onMounted(() => {addSectionFlags();});
 </script>
 <template>
     <div class="menu-container">
         <div class="container-title menu">
             <span class="title-text">{{ menu.name }}</span>
-            <span class="btn-group">
+            <span class="btn-icons-group">
                 <button class="btn" @click="deleteMenu(menu)">
                     <i class="mdi mdi-close"/>
                     <span class="tooltip">delete</span>
@@ -42,38 +100,72 @@ const addItem = (section) => { passSection.value = section; newItemDialog.value=
                 </button> 
             </span>
         </div>
-        <v-row dense>
-            <v-col
-                v-for="(section, i) in menu.sections"
+        <div class="sections">
+            <div 
+                class="section-container"
+                v-for="(section, i) in thisMenu.sections"
                 :key="i"
-                cols="12"
-                md="4"
             >
-                <v-card class="fixed-card">
-                    <div class="section-title">
+                <div class="section-name">
+                    <template v-if="section.editName">
+                        <div class="text-field name">
+                            <input
+                                type="text"
+                                :ref="el => setSectionNameRef(el, i)" 
+                                v-model="section.name"
+                                @blur="submitEditSectionName(section, i)"
+                            />
+                        </div>
+                    </template>
+                    <template v-else>
                         <span>{{ section.name }}</span>
-                        <span class="btn-group">
-                            <button class="btn" @click="editSection(section)">
-                                <i class="mdi mdi-square-edit-outline"/>
-                                <span class="tooltip">edit</span>
-                            </button>
-                            <button class="btn" @click="deleteSection(section)">
-                                <i class="mdi mdi-close"/>
-                                <span class="tooltip">delete</span>
-                            </button>
-                            <button class="btn" @click="addItem(section)">
-                                <i class="mdi mdi-plus"/>
-                                <span class="tooltip">add item</span>
-                            </button> 
-                        </span>
-                    </div>
-                    <div class="list-items">
-                        <div v-for="(item, i) in section.items" :key="i">
-                            <span class="items-row">
-                                <span class="item-name">
+                    </template>
+                    <span class="btn-icons-group">
+                        <button class="btn" @click="editSectionName(section, i)">
+                            <i class="mdi mdi-square-edit-outline"/>
+                            <span class="tooltip">edit name</span>
+                        </button>
+                        <button class="btn" @click="deleteSection(section)">
+                            <i class="mdi mdi-close"/>
+                            <span class="tooltip">delete</span>
+                        </button>
+                        <button class="btn" @click="addItem(section)">
+                            <span class="btn-text">item</span>
+                            <i class="mdi mdi-plus"/>
+                            <span class="tooltip">add item</span>
+                        </button> 
+                    </span>
+                </div>
+                <div class="section-description">
+                    <template v-if="section.editDescription">
+                        <div class="text-field description">
+                            <input
+                            type="text"
+                            :ref="el => setSectionDescriptionRef(el, i)" 
+                            v-model="section.description"
+                            @blur="submitEditSectionDescription(section, i)"
+                        />
+                        </div>
+                    </template>
+                    <template v-else>
+                        <span>{{ section.description }}</span>
+                    </template>
+                    <span class="btn-icons-group">
+                        <button class="btn" @click="editSectionDescription(section, i)">
+                            <i class="mdi mdi-square-edit-outline"/>
+                            <span class="tooltip">edit description</span>
+                        </button> 
+                    </span>
+                </div>
+                <div class="section-items">
+                    <div v-for="(item, i) in section.items" :key="i">
+                        <div class="section-items">
+                            <div class="item-name">
+                                <span>
                                     {{ item.name }}
                                 </span>
-                                <span class="btn-group-items">
+                                
+                                <span class="btn-icons-group items">
                                     <button class="btn" @click="editItem(item, section)">
                                         <i class="mdi mdi-square-edit-outline"/>
                                         <span class="tooltip">edit</span>
@@ -83,13 +175,25 @@ const addItem = (section) => { passSection.value = section; newItemDialog.value=
                                         <span class="tooltip">delete</span>
                                     </button>
                                 </span>
-                            </span>
+                            </div>
+                            <div class="item-description">
+                                <span>
+                                    {{ item.description }}
+                                </span>
+                                
+                                <span class="btn-icons-group items">
+                                    <button class="btn" @click="editItem(item, section)">
+                                        <i class="mdi mdi-square-edit-outline"/>
+                                        <span class="tooltip">edit</span>
+                                    </button>
+                                </span>
+                            </div>
                         </div>
-                    </div>                       
-                </v-card>
-            </v-col>
-        </v-row>
-
+                    </div>
+                </div>                       
+         
+            </div>
+        </div>
         <div id="dialogs">
             <v-dialog class="dialog new-section" v-model="newSectionDialog" persistent fullscreen>
                 <v-card>
@@ -133,30 +237,7 @@ const addItem = (section) => { passSection.value = section; newItemDialog.value=
     </div>
 </template>
 <style scoped>
-.container-title.menu{
-    height: 8vh;
-    background-color: rgb(234, 228, 228);
-    color: black;
-    border-radius: 10px 10px 0 0;
-    border-bottom: 2px solid #333;
-}
-.list-items{
-    padding: 5px;
-    max-height: 170px;
-    overflow-y: auto;
-    overflow-x: hidden;
-}
-.items-row{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-.item-name{
-    flex: 1;
-}
-.btn-group-items{
-    display: flex;
-}
+
 .dialog{
     width: 80%;
 }
@@ -168,25 +249,6 @@ const addItem = (section) => { passSection.value = section; newItemDialog.value=
     height: 90%;
 }
 
-
-
-.fixed-card{
-    max-width: 300px;
-    min-width: 250px;
-    height: 212px;
-    margin: 10px;
-}
-.section-title{
-    background-color: rgb(234, 228, 228);
-    color: black;
-    padding: 8px;
-    border-bottom: 2px solid #333;
-}
-
-.btn-group{
-    position: absolute;
-    right: 0
-}
 .title-text{
     position: absolute;
     left: 50%;

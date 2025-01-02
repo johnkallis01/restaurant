@@ -1,31 +1,33 @@
 html, body {
-    overflow: hidden; /* Disable scrolling */
-    height: 100%; /* Ensure the body takes full viewport height */
+    overflow: hidden;
+    height: 100%;
     scrollbar-width: none;
 }
-/* containers */
-.page-container{
-    height: 90vh;
-    width: 95vw;
-    background-color: azure;
+/**************
+containers 
+***************/
+.page-container{    
     display: flex;
     justify-content: center;
     align-items: center;
     position: absolute;
+    height: 90vh;
+    width: 95vw;
     top: 0;
     left: 5vh;
     right: 5vh; 
     overflow-y: scroll;
+    background-color: azure;
 }
 .container-body{
-    background-color: azure;
+    position: relative;   
     height: 100%;
-    width: 100%;
-    border-radius: 10px 10px 0 0;
-    position: relative;
-    margin: 10px 10px;
+    width: 100%; 
     top: 12vh;
     left: 0;
+    margin: 10px 10px;
+    border-radius: 10px 10px 0 0;
+    background-color: azure;
 }
 .container-title{
     display: flex;
@@ -40,6 +42,7 @@ html, body {
     top: 0;
     height: 10vh;
 }
+
 .menu-container{
     display: flex;
     justify-content: center;
@@ -51,7 +54,69 @@ html, body {
     border-radius: 10px 10px 0 0;
     background-color: azure;
 }
-/* Input Formatting */
+.container-title.menu{
+    height: 8vh;
+    background-color: rgba(110, 111, 113, 0.5);
+    color: black;
+    border-radius: 10px 10px 0 0;
+    border-bottom: 2px solid #333;
+}
+.sections{
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 20px;
+    background-color: rgb(214, 209, 209);
+    width: 95%;
+    position: absolute;
+    top: 10vh;
+}
+.section-container{
+    background-color: rgb(214, 209, 209);
+    position: relative;
+    top: 0;
+    left: 0;
+   
+}
+.section-name{
+    display: flex;
+    align-items: center;
+    margin: 15px;
+    font-size: 25px;
+ 
+    height: 45px;
+}
+.section-description{
+    display: flex;
+    align-items: center;
+    margin: 15px;
+    height: 30px;
+    font-size: 15px;
+  
+}
+.section-items{
+    margin: 15px;
+    margin-left: 55px;
+}
+.section-item{  
+    height: 30px;
+    font-size: 15px;
+}
+.item-name{
+    display: flex;
+    align-items: center;
+  
+}
+.item-description{
+    display: flex;
+    align-items: center;
+    margin-left: 25px;
+
+}
+
+/***************
+    Input Formatting
+*****************/
 .form-container{
     display: flex;
     flex-direction: column; /* Align vertically */
@@ -74,13 +139,10 @@ html, body {
     align-self: start;
     margin-bottom: 8px;
 }
-.text-field input, .text-field textarea {
-    height: 30px;
-    width: 250px;
+.text-field input{
     padding: 4px 8px;
     border: 1px solid #ccc;
     border-radius: 4px;
-    font-size: 16px;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
@@ -97,13 +159,14 @@ input[type="number"]::-webkit-outer-spin-button {
     -webkit-appearance: none;
     margin: 0;
 }
-  /*end text input*/
+  /****************
+    Buttons
+  ****************/
 
 .btn {
     display: inline-block;
-    padding: 5px;
-    font-size: 16px;
-    margin-left: 10px;
+    padding: 0px;
+    margin: 0px 5px;
     text-align: center;
     text-decoration: none;
     border: none;
@@ -119,7 +182,28 @@ input[type="number"]::-webkit-outer-spin-button {
 .btn:hover {
     background-color: #d3dce3; /* Darker Gray */
 }
-  /* tooltip */
+.btn-text:hover .tooltip{
+    opacity: 1;
+    visibility: visible;
+}
+.btn:hover .tooltip{
+    opacity: 1;
+    visibility: visible;
+}
+.btn-icons-group{
+    position: absolute;
+    right: 0;
+    padding: 5px;
+    font-size: 25px;
+}
+.btn-icons-group.items{
+    position: absolute;
+    left: 0;
+    right: 55px;
+}
+/****************
+   tooltip 
+ ****************/
 .tooltip {
     position: absolute;
     top: 100%;
@@ -136,22 +220,9 @@ input[type="number"]::-webkit-outer-spin-button {
     transition: opacity 0.2s;
     z-index: 10;
 }
-.btn-text:hover .tooltip{
-    opacity: 1;
-    visibility: visible;
-}
-.btn:hover .tooltip{
-    opacity: 1;
-    visibility: visible;
-}
-  /* end tooltip */
-
-  /* buttons */
-.btn-icons{
-    padding: 5px;
-    font-size: 15px;
-}
-.btn-icons-group{
-    position: absolute;
-    right: 0    
+/***************
+    dialogs
+***************/
+.dialog{
+    width: 80%;
 }
