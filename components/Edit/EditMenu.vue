@@ -23,7 +23,13 @@ const editMenu = () => editMenuDialog.value = true;
 const editItem = (item, section) => { passItem.value = item; passSection.value=section; editItemDialog.value = true; }
 
 const addItem = (section) => { passSection.value = section; newItemDialog.value=true; }
-
+const formatPrice = (priceString) => {
+  const number = parseFloat(priceString);
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+  }).format(number);
+};
 /************************
 **edit section name logic
 *************************/
@@ -161,10 +167,6 @@ onMounted(() => {addSectionFlags();});
                     <div v-for="(item, i) in section.items" :key="i">
                         <div class="section-items">
                             <div class="item-name">
-                                <span>
-                                    {{ item.name }}
-                                </span>
-                                
                                 <span class="btn-icons-group items">
                                     <button class="btn" @click="editItem(item, section)">
                                         <i class="mdi mdi-square-edit-outline"/>
@@ -175,18 +177,13 @@ onMounted(() => {addSectionFlags();});
                                         <span class="tooltip">delete</span>
                                     </button>
                                 </span>
-                            </div>
-                            <div class="item-description">
                                 <span>
-                                    {{ item.description }}
+                                    {{ item.name }}
+                                </span>
+                                <span class="item-price">
+                                    {{ formatPrice(item.price)}}
                                 </span>
                                 
-                                <span class="btn-icons-group items">
-                                    <button class="btn" @click="editItem(item, section)">
-                                        <i class="mdi mdi-square-edit-outline"/>
-                                        <span class="tooltip">edit</span>
-                                    </button>
-                                </span>
                             </div>
                         </div>
                     </div>
@@ -254,5 +251,7 @@ onMounted(() => {addSectionFlags();});
     left: 50%;
     font-size: 23px;
 }
-
+.item-price{
+    margin-left: 20px;
+}
 </style>
