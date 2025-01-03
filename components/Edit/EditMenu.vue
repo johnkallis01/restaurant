@@ -113,6 +113,10 @@ onMounted(() => {addSectionFlags();});
                 :key="i"
             >
                 <div class="section-name">
+                    <button class="btn delete" @click="deleteSection(section)">
+                        <i class="mdi mdi-close"/>
+                        <span class="tooltip">delete section</span>
+                    </button>
                     <template v-if="section.editName">
                         <div class="text-field name">
                             <input
@@ -124,67 +128,34 @@ onMounted(() => {addSectionFlags();});
                         </div>
                     </template>
                     <template v-else>
-                        <span>{{ section.name }}</span>
+                        <span @click="editSectionName(section, i)">{{ section.name }}</span>
                     </template>
-                    <span class="btn-icons-group">
-                        <button class="btn" @click="editSectionName(section, i)">
-                            <i class="mdi mdi-square-edit-outline"/>
-                            <span class="tooltip">edit name</span>
-                        </button>
-                        <button class="btn" @click="deleteSection(section)">
-                            <i class="mdi mdi-close"/>
-                            <span class="tooltip">delete</span>
-                        </button>
-                        <button class="btn" @click="addItem(section)">
-                            <span class="btn-text">item</span>
-                            <i class="mdi mdi-plus"/>
-                            <span class="tooltip">add item</span>
-                        </button> 
-                    </span>
+                    <button class="btn add-item" @click="addItem(section)">
+                        <span class="btn-text">item</span>
+                        <i class="mdi mdi-plus"/>
+                        <span class="tooltip">add item</span>
+                    </button> 
                 </div>
                 <div class="section-description">
                     <template v-if="section.editDescription">
                         <div class="text-field description">
                             <input
-                            type="text"
-                            :ref="el => setSectionDescriptionRef(el, i)" 
-                            v-model="section.description"
-                            @blur="submitEditSectionDescription(section, i)"
-                        />
+                                type="text"
+                                class="input-description"
+                                :ref="el => setSectionDescriptionRef(el, i)" 
+                                v-model="section.description"
+                                @blur="submitEditSectionDescription(section, i)"
+                            />
                         </div>
                     </template>
                     <template v-else>
-                        <span>{{ section.description }}</span>
+                        <span @click="editSectionDescription(section, i)">{{ section.description }}</span>
                     </template>
-                    <span class="btn-icons-group">
-                        <button class="btn" @click="editSectionDescription(section, i)">
-                            <i class="mdi mdi-square-edit-outline"/>
-                            <span class="tooltip">edit description</span>
-                        </button> 
-                    </span>
                 </div>
                 <div class="section-items">
                     <div v-for="(item, i) in section.items" :key="i">
                         <div class="section-items">
-                            <div class="item-name">
-                                <span class="btn-icons-group items">
-                                    <button class="btn" @click="editItem(item, section)">
-                                        <i class="mdi mdi-square-edit-outline"/>
-                                        <span class="tooltip">edit</span>
-                                    </button>
-                                    <button class="btn" @click="deleteItem(item, section)">
-                                        <i class="mdi mdi-close"/>
-                                        <span class="tooltip">delete</span>
-                                    </button>
-                                </span>
-                                <span>
-                                    {{ item.name }}
-                                </span>
-                                <span class="item-price">
-                                    {{ formatPrice(item.price)}}
-                                </span>
-                                
-                            </div>
+                            <EditItem :item="item" :section="section" :menu="menu" />
                         </div>
                     </div>
                 </div>                       
@@ -245,13 +216,36 @@ onMounted(() => {addSectionFlags();});
     width: 90%;
     height: 90%;
 }
-
+.text-field.description{
+    width: 100%;
+}
+.input-description{
+    width: 100%;
+}
 .title-text{
     position: absolute;
     left: 50%;
     font-size: 23px;
 }
+.btn.add-item{
+    position: absolute;
+    right: 0;
+}
+.btn.delete{
+    margin-right: 20px;
+}
+.name-price{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 50vh;
+}
+.item-name{
+    flex: 1;
+    text-align: left;
+}
 .item-price{
-    margin-left: 20px;
+    flex: 0 0 100px;
+    text-align: right;
 }
 </style>

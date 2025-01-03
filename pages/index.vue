@@ -1,10 +1,10 @@
 <template>
-        <v-card id="restaurant-container">
-            <div id="rest-info">
-                <v-card-title>John's Restaurant</v-card-title>
-                <v-card-subtitle>Phone: 667-940-8868 </v-card-subtitle>  
-            </div>
-        </v-card>
+  <div class="restaurant-container">
+      <v-card class="rest-info">
+          <v-card-title>John's Restaurant</v-card-title>
+          <v-card-subtitle>Phone: 667-940-8868 </v-card-subtitle>  
+      </v-card>
+    </div>
 </template>
 <script>
 export default {
@@ -14,39 +14,24 @@ data(){
 }
 </script>
 <style>
-#restaurant-container {
+.restaurant-container {
   background-image: url("https://dynamic-media-cdn.tripadvisor.com/media/photo-o/14/8b/88/31/fiddlers-green-restaurant.jpg?w=900&h=500&s=1");
   background-size: cover;
-  background-position: center center;
-  background-repeat: no-repeat;
-  display: flex; /* Enable flexbox */
-  justify-content: center; /* Center content horizontally */
-  align-items: center; /* Center content vertically */
-  box-sizing: border-box;
+  background-position: center;
+  display: flex; 
+  justify-content: center; 
+  align-items: center; 
   width: 100%;
   height: 100%;
-  position: relative; /* Required for absolute positioning inside */
 }
-
-#rest-info {
+.rest-info {
   color: white;
-  background-color: green; /* Solid green background */
-  padding: 20px; /* Adds space around the text */
-  position: absolute; /* Position relative to the parent container */
-  top: 20%; /* Center vertically */
-  left: 50%; /* Center horizontally */
-  transform: translate(-50%, -50%); /* Adjust for exact centering */
-  z-index: 10; /* Ensure it's above the image */
-  text-align: center; /* Center text inside the box */
-  border-radius: 8px; /* Optional: Adds rounded corners */
-}
-
-#rest-info .v-card-title {
-  font-size: 36px; /* Make title larger */
-  margin-bottom: 10px; /* Space between title and subtitle */
-}
-
-.v-card__image {
-  object-fit: cover; /* Ensures the image fills the card area */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: green; 
+  padding: 100px;
+  text-align: center;
+  border-radius: 8px; 
 }
 </style>

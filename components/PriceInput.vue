@@ -1,9 +1,5 @@
 <script setup>
 const props = defineProps({
-    title:{
-        type: String,
-        required: true
-    },
     price:{
         type: String,
         required: true,
@@ -26,8 +22,10 @@ const formattedPrice = computed(()=>{
 });
 const formatPriceInput = (event) => {
     const inputChar = event.data;
+    console.log(inputChar); //new char
+    console.log(event.target.value); //previous value
     if(!/^\d$/.test(inputChar)){ //if not a number
-        event.target.value=formattedPrice.value; //update the input with previous value in format 000.00
+        event.target.value=formattedPrice.value;
         return; //end function call999
     }
     rawPrice.value = (rawPrice.value + inputChar).slice(-5); //add the new input the end of the string and remove left most value
@@ -37,11 +35,9 @@ const formatPriceInput = (event) => {
 </script>
 <template>
     <div class="text-field">
-        <label for="price-input" id="item-price-label">{{ title }}</label>
         <div class="price-input">
             <span class="prefix">$</span>
             <input
-                id="item-price"
                 type="text"
                 placeholder="000.00"
                 :value="formattedPrice"

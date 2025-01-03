@@ -17,7 +17,7 @@ containers
     left: 5vh;
     right: 5vh; 
     overflow-y: scroll;
-    background-color: rgb(182, 188, 201);
+    background-color: rgb(233, 235, 238);
 }
 .container-body{
     position: relative;   
@@ -94,10 +94,11 @@ containers
     height: 30px;
     font-size: 15px;
 }
-.item-name{
+.item{
     display: flex;
     align-items: center;
 }
+
 
 
 /***************
