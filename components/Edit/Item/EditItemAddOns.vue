@@ -14,7 +14,6 @@ const getItemPrice = (newPrice) => {
 const priceInputRef = ref(null);
 const swapFlag = ()=>{
     flag.value=true;
-    console.log(flag.value)
     requestAnimationFrame(()=>{
         priceInputRef.value?.focusInput();
     })
