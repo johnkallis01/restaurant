@@ -1,10 +1,13 @@
 <script setup>
 import { watch } from 'vue';
 const menuStore = useMenuStore();
+const menuStore = useMenuStore();
 const props = defineProps({
     menu: { type:Object, required: true},
     section: { type:Object, required: true},
     item: { type:Object, required: true},
+});
+
 });
 
 const sectionIndex = props.menu.sections.findIndex(sec => sec._id === props.section._id);
@@ -49,7 +52,12 @@ const submitEditItemDescription = (item) => {
  *************/
 const itemPriceRef = ref(null);
 const rawPrice = ref(props.item.price.replace('.', ''));
+const rawPrice = ref(props.item.price.replace('.', ''));
 watch(
+  () => props.item.price,
+  (newPrice) => {
+    rawPrice.value = newPrice.replace('.', '');
+  }
   () => props.item.price,
   (newPrice) => {
     rawPrice.value = newPrice.replace('.', '');
@@ -73,16 +81,25 @@ const formatPriceInput = (event) => {
     }
     if(!/^\d$/.test(inputChar)){
         event.target.value=formattedPrice.value;
+    if(!/^\d$/.test(inputChar)){
+        event.target.value=formattedPrice.value;
         return;
+    }    
     }    
      rawPrice.value = (rawPrice.value + inputChar).slice(-5);
      event.target.value = formattedPrice.value;
 }
 const submitPriceChange = (event)=>{
+const submitPriceChange = (event)=>{
     props.item.editPrice = false;
     console.log('SUB RP',rawPrice.value)
     console.log('event.target.value', event.target.value)
+    console.log('SUB RP',rawPrice.value)
+    console.log('event.target.value', event.target.value)
     props.item.price = rawPrice.value;
+    console.log('props.price', props.item.price)
+    props.item.price = formattedPrice.value;
+    console.log('formattedprice', props.item.price)
     console.log('props.price', props.item.price)
     props.item.price = formattedPrice.value;
     console.log('formattedprice', props.item.price)
@@ -94,6 +111,7 @@ const formatPriceDisplay = (price) => {
         if(price[0] === "0") price = price.replace(0,"");
     }
     return "$" + price;
+    return "$" + price;
 }
 /***Add Flags for Edits*****/
 const addItemFlags = (item) => {
@@ -104,6 +122,7 @@ const addItemFlags = (item) => {
         editPrice: false,
     }
 }
+onMounted(()=>{addItemFlags();})
 onMounted(()=>{addItemFlags();})
 </script>
 <template>
