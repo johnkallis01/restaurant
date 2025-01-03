@@ -19,7 +19,7 @@ export default defineNuxtConfig({
     '@pinia/nuxt',
     (_options, nuxt) => {
       nuxt.hooks.hook('vite:extendConfig', (config) => {
-        console.log('conf ',config)
+        //console.log('conf ',config)
         config.plugins.push(vuetify({ autoImport: true }))
       })
     },

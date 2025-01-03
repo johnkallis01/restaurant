@@ -1,12 +1,12 @@
 <script setup>
 import { watch } from 'vue';
-
+const menuStore = useMenuStore();
 const props = defineProps({
     menu: { type:Object, required: true},
     section: { type:Object, required: true},
     item: { type:Object, required: true},
-})
-const menuStore = useMenuStore();
+});
+
 const sectionIndex = props.menu.sections.findIndex(sec => sec._id === props.section._id);
 const itemIndex = props.section.items.findIndex(it => it._id === props.item._id);
 
@@ -28,20 +28,18 @@ const submitEditItemName = (item) => {
     delete newItem.editDescription;
     delete newItem.editPrice;
     props.menu.sections[sectionIndex].items[itemIndex] = newItem;
-    console.log(props.menu.sections[sectionIndex])
-    console.log(item.price)
    // menuStore.updateMenu(props.menu);
 };
 /***********
  * Edit Item Price
  *************/
 const itemPriceRef = ref(null);
-const rawPrice = ref(props.item.price);
+const rawPrice = ref(props.item.price.replace('.', ''));
 watch(
-    () => props.item.price,
-    (newPrice) => {
-        rawPrice.value = newPrice.replace('.', ''); //removes the decimal
-    }
+  () => props.item.price,
+  (newPrice) => {
+    rawPrice.value = newPrice.replace('.', '');
+  }
 );
 const editItemPrice = (item) => {
   item.editPrice = true;
@@ -54,41 +52,33 @@ const formattedPrice = computed(()=>{
 });
 const formatPriceInput = (event) => {
     const inputChar = event.data;
-    console.log(event)
     if(event.inputType === "deleteContentBackward"){
         rawPrice.value = "0"+rawPrice.value.slice(0,-1);
         event.target.value = formattedPrice.value;
         return;
     }
-    else if(event.inputType === "deleteContentFormward"){
-        event.preventDefault();
+    if(!/^\d$/.test(inputChar)){
+        event.target.value=formattedPrice.value;
         return;
-    }
-    else if(!/^\d$/.test(inputChar)){
-        rawPrice.value=formattedPrice.value; //update the input with previous value in format 000.00
-        return;
-     }
+    }    
      rawPrice.value = (rawPrice.value + inputChar).slice(-5);
      event.target.value = formattedPrice.value;
 }
-const submitPriceChange = ()=>{
-    console.log('submit')
+const submitPriceChange = (event)=>{
     props.item.editPrice = false;
+    console.log('SUB RP',rawPrice.value)
+    console.log('event.target.value', event.target.value)
     props.item.price = rawPrice.value;
-    console.log(props.item.price)
+    console.log('props.price', props.item.price)
+    props.item.price = formattedPrice.value;
+    console.log('formattedprice', props.item.price)
 }
-const disableDelete=(event)=>{
-    console.log(event.key)
-    if(event.key==="Delete") event.preventDefault();
-    
-}
-const formatPrice = (price) => {
-    let priceString =  price.slice(0,3) + "." + price.slice(3,5);
-    if(priceString[0] === "0") {
-        priceString = priceString.replace(0,"");
-        if(priceString[0] === "0") priceString = priceString.replace(0,"");
+const formatPriceDisplay = (price) => {
+    if(price[0] === "0") {
+        price = price.replace(0,"");
+        if(price[0] === "0") price = price.replace(0,"");
     }
-    return "$" + priceString;
+    return "$" + price;
 }
 /***Add Flags for Edits*****/
 const addItemFlags = (item) => {
@@ -99,9 +89,7 @@ const addItemFlags = (item) => {
         editPrice: false,
     }
 }
-onMounted(()=>{
-    addItemFlags();
-})
+onMounted(()=>{addItemFlags();})
 </script>
 <template>
     <p class="item">
@@ -132,14 +120,13 @@ onMounted(()=>{
                         type="text"
                         ref="itemPriceRef"
                         :value="formattedPrice"
-                        @input="formatPriceInput"
-                        @keydown="disableDelete"
+                        @input="formatPriceInput"                
                         @blur="submitPriceChange"
                     >
                 </div>
             </template>
             <template v-else>
-                <span class="item-price" @click="editItemPrice(item)">{{ formatPrice(item.price)}}</span>
+                <span class="item-price" @click="editItemPrice(item)">{{ formatPriceDisplay(item.price)}}</span>
             </template>
         </span>
     </p>
