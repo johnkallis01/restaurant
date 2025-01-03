@@ -160,6 +160,16 @@ onMounted(()=>{addItemFlags();})
                 <span class="item-description-text" @click="editItemDescription(item)">{{ item.description }}</span>
             </template>
         </p>
+        <div class="item-addons-removes-options">
+            <div class="item-addons" v-for="(addOn, i) in item.addOns" :key="i">
+                <EditItemAddOns class="edit-item-addOns" 
+                    :addOn="addOn" :item="item" :section="section" :menu="menu"/>
+            </div>
+            <div class="item-removes" v-for="(remove, i) in item.removes" :key="i">
+                <EditItemRemoves class="edit-item-removes" 
+                    :remove="remove" :item="item" :section="section" :menu="menu"/>
+            </div>
+        </div>
     </div>
 </template>
 <style scoped>
@@ -208,7 +218,11 @@ onMounted(()=>{addItemFlags();})
     padding: 0 2px;
     min-width: 100%;
 }
-.item-description-text{
-    
+.item-addons-removes-options{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin-top: 20px;
+    width: 100%;
 }
 </style>
