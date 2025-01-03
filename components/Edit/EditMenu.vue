@@ -85,7 +85,7 @@ const submitEditSectionDescription = (section, index) => {
 const addItemFlags = () => {
 
 }
-onMounted(() => {addSectionFlags();});
+onMounted(() => {addSectionFlags();console.log(props.menu.sections)});
 </script>
 <template>
     <div class="menu-container">

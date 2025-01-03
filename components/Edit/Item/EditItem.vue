@@ -12,13 +12,6 @@ const itemIndex = props.section.items.findIndex(it => it._id === props.item._id)
 
 const itemDescriptionRef = ref(null);
 
-const formatPrice = (priceString) => {
-  const number = parseFloat(priceString);
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-  }).format(number);
-};
 
 /************************
 **edit item name logic
@@ -36,13 +29,14 @@ const submitEditItemName = (item) => {
     delete newItem.editPrice;
     props.menu.sections[sectionIndex].items[itemIndex] = newItem;
     console.log(props.menu.sections[sectionIndex])
+    console.log(item.price)
    // menuStore.updateMenu(props.menu);
 };
 /***********
  * Edit Item Price
  *************/
 const itemPriceRef = ref(null);
-const rawPrice = ref(props.item.price.replace('.', ''));
+const rawPrice = ref(props.item.price);
 watch(
     () => props.item.price,
     (newPrice) => {
@@ -79,6 +73,7 @@ const formatPriceInput = (event) => {
 }
 const submitPriceChange = ()=>{
     console.log('submit')
+    props.item.editPrice = false;
     props.item.price = rawPrice.value;
     console.log(props.item.price)
 }
@@ -87,6 +82,15 @@ const disableDelete=(event)=>{
     if(event.key==="Delete") event.preventDefault();
     
 }
+const formatPrice = (price) => {
+    let priceString =  price.slice(0,3) + "." + price.slice(3,5);
+    if(priceString[0] === "0") {
+        priceString = priceString.replace(0,"");
+        if(priceString[0] === "0") priceString = priceString.replace(0,"");
+    }
+    return "$" + priceString;
+}
+/***Add Flags for Edits*****/
 const addItemFlags = (item) => {
     item = {
         ...item,
@@ -108,39 +112,35 @@ onMounted(()=>{
             </button>
         </span>
         <span class="name-price">
-           
-                <template v-if="item.editName">
+            <template v-if="item.editName">
+                <input
+                    type="text"
+                    class="name-input"
+                    ref="itemNameRef"
+                    v-model="item.name"
+                    @blur="submitEditItemName(item)"
+                />
+            </template>
+            <template v-else>
+                <span class="item-name" @click="editItemName(item)">{{ item.name }}</span>
+            </template>
+            <template v-if="item.editPrice">
+                <div class="item-price-input">
+                    <span class="prefix">$</span>
                     <input
+                        class="item-price-input-field"
                         type="text"
-                        class="name-input"
-                        ref="itemNameRef"
-                        v-model="item.name"
-                        @blur="submitEditItemName(item)"
-                    />
-                </template>
-                <template v-else>
-                    <span class="item-name" @click="editItemName(item)">{{ item.name }}</span>
-                </template>
-       
-                <template v-if="item.editPrice">
-                    <div class="item-price-input">
-                        <span class="prefix">$</span>
-                        <input
-                            class="item-price-input-field"
-                            type="text"
-                            ref="itemPriceRef"
-                            :value="formattedPrice"
-                            @input="formatPriceInput"
-                            @keydown="disableDelete"
-                            @blur="submitPriceChange"
-
-                        >
-                    </div>
-                </template>
-                <template v-else>
-                    <span class="item-price" @click="editItemPrice(item)">{{ formatPrice(item.price)}}</span>
-                </template>
-      
+                        ref="itemPriceRef"
+                        :value="formattedPrice"
+                        @input="formatPriceInput"
+                        @keydown="disableDelete"
+                        @blur="submitPriceChange"
+                    >
+                </div>
+            </template>
+            <template v-else>
+                <span class="item-price" @click="editItemPrice(item)">{{ formatPrice(item.price)}}</span>
+            </template>
         </span>
     </p>
 </template>
