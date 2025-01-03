@@ -1,9 +1,12 @@
 <script setup>
+import { onMounted } from 'vue';
+
 useHead({
   title: "John's Restaurant"
 })
 const authStore = useAuthStore();
 const router = useRouter();
+const route = useRoute();
 
 const logout = () => {
   authStore.logout();
@@ -19,6 +22,14 @@ const focusLoginButton = ()=>{
   }
 }
 provide('focusLoginButton', focusLoginButton);
+
+const focusLogin = () =>{
+  console.log('fL', loggedIn.value)
+  if(!loggedIn.value) {
+    console.log('not loggedIN')
+    loginButton.value.focus();
+  }
+}
 </script>
 <template>
   <div class="app">
@@ -32,10 +43,10 @@ provide('focusLoginButton', focusLoginButton);
           <button class="btn-link">Menus</button>
         </nuxt-link>
         <nuxt-link to="/createOrder">
-          <button class="btn-link">Order</button>
+          <button class="btn-link" @click="focusLogin">Order</button>
         </nuxt-link>
         <nuxt-link to="/test">
-          <button class="btn-link">Test</button>
+          <button class="btn-link" @click="focusLogin">Test</button>
         </nuxt-link>
       </div>
       
