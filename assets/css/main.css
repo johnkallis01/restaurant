@@ -82,13 +82,13 @@ containers
 .section-description{
     display: flex;
     align-items: center;
-    margin: 15px;
     height: 30px;
-    font-size: 15px;
+    font-size: 12px;
+    margin-left: 60px;
 }
 .section-items{
     margin: 15px;
-    margin-left: 55px;
+    margin-left: 35px;
 }
 .section-item{  
     height: 30px;

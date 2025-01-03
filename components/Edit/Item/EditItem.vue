@@ -10,9 +10,6 @@ const props = defineProps({
 const sectionIndex = props.menu.sections.findIndex(sec => sec._id === props.section._id);
 const itemIndex = props.section.items.findIndex(it => it._id === props.item._id);
 
-const itemDescriptionRef = ref(null);
-
-
 /************************
 **edit item name logic
 *************************/
@@ -23,6 +20,23 @@ const editItemName = (item) => {
 }
 const submitEditItemName = (item) => {
     item.editName = false;
+    let newItem = item;
+    delete newItem.editName;
+    delete newItem.editDescription;
+    delete newItem.editPrice;
+    props.menu.sections[sectionIndex].items[itemIndex] = newItem;
+   // menuStore.updateMenu(props.menu);
+};
+/************************
+**edit item description logic
+*************************/
+const itemDescriptionRef = ref(null);
+const editItemDescription = (item) => {
+  item.editDescription = true;
+  nextTick(()=> itemDescriptionRef.value.focus())
+}
+const submitEditItemDescription = (item) => {
+    item.editDescription = false;
     let newItem = item;
     delete newItem.editName;
     delete newItem.editDescription;
@@ -74,6 +88,7 @@ const submitPriceChange = (event)=>{
     console.log('formattedprice', props.item.price)
 }
 const formatPriceDisplay = (price) => {
+    //remove leading zeros
     if(price[0] === "0") {
         price = price.replace(0,"");
         if(price[0] === "0") price = price.replace(0,"");
@@ -92,44 +107,60 @@ const addItemFlags = (item) => {
 onMounted(()=>{addItemFlags();})
 </script>
 <template>
-    <p class="item">
-        <span class="btn-icons-group items">
-            <button class="btn" @click="deleteItem(item)">
-                <i class="mdi mdi-close"/>
-                <span class="tooltip">delete</span>
-            </button>
-        </span>
-        <span class="name-price">
-            <template v-if="item.editName">
+    <div>
+        <p class="item">
+            <span class="btn-icons-group items">
+                <button class="btn" @click="deleteItem(item)">
+                    <i class="mdi mdi-close"/>
+                    <span class="tooltip">delete</span>
+                </button>
+            </span>
+            <span class="name-price">
+                <template v-if="item.editName">
+                    <input
+                        type="text"
+                        class="name-input"
+                        ref="itemNameRef"
+                        v-model="item.name"
+                        @blur="submitEditItemName(item)"
+                    />
+                </template>
+                <template v-else>
+                    <span class="item-name" @click="editItemName(item)">{{ item.name }}</span>
+                </template>
+                <template v-if="item.editPrice">
+                    <div class="item-price-input">
+                        <span class="prefix">$</span>
+                        <input
+                            class="item-price-input-field"
+                            type="text"
+                            ref="itemPriceRef"
+                            :value="formattedPrice"
+                            @input="formatPriceInput"                
+                            @blur="submitPriceChange"
+                        >
+                    </div>
+                </template>
+                <template v-else>
+                    <span class="item-price" @click="editItemPrice(item)">{{ formatPriceDisplay(item.price)}}</span>
+                </template>
+            </span>
+        </p>
+        <p class="item-description">
+            <template v-if="item.editDescription">
                 <input
                     type="text"
-                    class="name-input"
-                    ref="itemNameRef"
-                    v-model="item.name"
-                    @blur="submitEditItemName(item)"
+                    class="item-description-input"
+                    ref="itemDescriptionRef"
+                    v-model="item.description"
+                    @blur="submitEditItemDescription(item)"
                 />
             </template>
             <template v-else>
-                <span class="item-name" @click="editItemName(item)">{{ item.name }}</span>
+                <span class="item-description-text" @click="editItemDescription(item)">{{ item.description }}</span>
             </template>
-            <template v-if="item.editPrice">
-                <div class="item-price-input">
-                    <span class="prefix">$</span>
-                    <input
-                        class="item-price-input-field"
-                        type="text"
-                        ref="itemPriceRef"
-                        :value="formattedPrice"
-                        @input="formatPriceInput"                
-                        @blur="submitPriceChange"
-                    >
-                </div>
-            </template>
-            <template v-else>
-                <span class="item-price" @click="editItemPrice(item)">{{ formatPriceDisplay(item.price)}}</span>
-            </template>
-        </span>
-    </p>
+        </p>
+    </div>
 </template>
 <style scoped>
 .btn.add-item{
@@ -167,5 +198,17 @@ onMounted(()=>{addItemFlags();})
 }
 .prefix{
     margin-right: 4px;
+}
+.item-description{
+    font-size: 12px;
+    margin-left: 45px;
+}
+.item-description-input{
+    width: auto;
+    padding: 0 2px;
+    min-width: 100%;
+}
+.item-description-text{
+    
 }
 </style>
