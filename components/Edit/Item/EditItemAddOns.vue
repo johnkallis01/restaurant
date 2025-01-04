@@ -6,6 +6,14 @@ const props = defineProps({
     menu: { type:Object, required: true},
     
 });
+const formatPriceDisplay = (price) => {
+    //remove leading zeros
+    if(price[0] === "0") {
+        price = price.replace(0,"");
+        if(price[0] === "0") price = price.replace(0,"");
+    }
+    return "$" + price;
+}
 const getItemPrice = (newPrice) => {
     console.log(newPrice)
     props.addOn.price = newPrice;

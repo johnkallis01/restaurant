@@ -1,89 +1,59 @@
 <script setup>
 import { watch } from 'vue';
-const menuStore = useMenuStore();
 const props = defineProps({
     menu: { type:Object, required: true},
     section: { type:Object, required: true},
     item: { type:Object, required: true},
 });
-const sectionIndex = props.menu.sections.findIndex(sec => sec._id === props.section._id);
-const itemIndex = props.section.items.findIndex(it => it._id === props.item._id);
+const menuStore = useMenuStore();
 
+const postItemEdit = (item) => {
+    const sectionIndex = props.menu.sections.findIndex(sec => sec._id === props.section._id);
+    const itemIndex = props.section.items.findIndex(it => it._id === item._id);
+    props.menu.sections[sectionIndex].items[itemIndex]=item;
+    menuStore.updateMenu(props.menu);
+}
 /************************
 **edit item name logic
 *************************/
 const itemNameRef = ref(null);
-const editItemName = (item) => {
-  item.editName = true;
+const editName = ref(false);
+const editItemName = () => {
+  editName.value = true;
   nextTick(()=> itemNameRef.value.focus())
 }
 const submitEditItemName = (item) => {
-    item.editName = false;
-    let newItem = item;
-    delete newItem.editName;
-    delete newItem.editDescription;
-    delete newItem.editPrice;
-    props.menu.sections[sectionIndex].items[itemIndex] = newItem;
-   // menuStore.updateMenu(props.menu);
+    editName.value = false;
+    postItemEdit(item);
 };
 /************************
 **edit item description logic
 *************************/
 const itemDescriptionRef = ref(null);
-const editItemDescription = (item) => {
-  item.editDescription = true;
+const editDescription = ref(false);
+const editItemDescription = () => {
+  editDescription.value = true;
   nextTick(()=> itemDescriptionRef.value.focus())
 }
 const submitEditItemDescription = (item) => {
-    item.editDescription = false;
-    let newItem = item;
-    delete newItem.editName;
-    delete newItem.editDescription;
-    delete newItem.editPrice;
-    props.menu.sections[sectionIndex].items[itemIndex] = newItem;
-   // menuStore.updateMenu(props.menu);
+    editDescription.value = false;
+    postItemEdit(item);
 };
 /***********
  * Edit Item Price
  *************/
-const itemPriceRef = ref(null);
-const rawPrice = ref(props.item.price.replace('.', ''));
-watch(
-  () => props.item.price,
-  (newPrice) => {
-    rawPrice.value = newPrice.replace('.', '');
-  }
-);
-const editItemPrice = (item) => {
-  item.editPrice = true;
-  nextTick(() => itemPriceRef.value.focus())
-};
-const formattedPrice = computed(()=>{
-    const leftHandSide = rawPrice.value.slice(0,3); // left 3 values
-    const rightHandSide = rawPrice.value.slice(-2); // right 2 values
-    return leftHandSide + "." + rightHandSide; //add the decimal back in
-});
-const formatPriceInput = (event) => {
-    const inputChar = event.data;
-    if(event.inputType === "deleteContentBackward"){
-        rawPrice.value = "0"+rawPrice.value.slice(0,-1);
-        event.target.value = formattedPrice.value;
-        return;
-    }
-    if(!/^\d$/.test(inputChar)){
-        event.target.value=formattedPrice.value;
-    if(!/^\d$/.test(inputChar)){
-        event.target.value=formattedPrice.value;
-        return;
-    }    
-    }    
-     rawPrice.value = (rawPrice.value + inputChar).slice(-5);
-     event.target.value = formattedPrice.value;
+const priceInputRef = ref(null);
+const editPrice = ref(false);
+const editItemPrice = () =>{
+    editPrice.value = true;
+    requestAnimationFrame(()=>{
+        priceInputRef.value?.focusInput();
+    })
 }
-const submitPriceChange = (event)=>{
-    props.item.editPrice = false;
-    props.item.price = rawPrice.value;
-    props.item.price = formattedPrice.value;
+const getItemPrice = (newPrice) => {
+    editPrice.value = false;
+    props.item.price = newPrice;
+    postItemEdit(props.item);
 }
 const formatPriceDisplay = (price) => {
     //remove leading zeros
@@ -93,16 +63,13 @@ const formatPriceDisplay = (price) => {
     }
     return "$" + price;
 }
-/***Add Flags for Edits*****/
-const addItemFlags = (item) => {
-    item = {
-        ...item,
-        editName: false,
-        editDescription: false,
-        editPrice: false,
-    }
+//delete item
+const deleteItem = (item)=>{
+    const sectionIndex = props.menu.sections.findIndex(sec => sec._id === props.section._id);
+    const itemIndex = props.section.items.findIndex(it => it._id === item._id);
+    props.menu.sections[sectionIndex].items.splice(itemIndex, 1);
+    menuStore.updateMenu(props.menu);
 }
-onMounted(()=>{addItemFlags();})
 </script>
 <template>
     <div>
@@ -114,7 +81,7 @@ onMounted(()=>{addItemFlags();})
                 </button>
             </span>
             <span class="name-price">
-                <template v-if="item.editName">
+                <template v-if="editName">
                     <input
                         type="text"
                         class="name-input"
@@ -124,28 +91,18 @@ onMounted(()=>{addItemFlags();})
                     />
                 </template>
                 <template v-else>
-                    <span class="item-name" @click="editItemName(item)">{{ item.name }}</span>
+                    <span class="item-name" @click="editItemName">{{ item.name }}</span>
                 </template>
-                <template v-if="item.editPrice">
-                    <div class="item-price-input">
-                        <span class="prefix">$</span>
-                        <input
-                            class="item-price-input-field"
-                            type="text"
-                            ref="itemPriceRef"
-                            :value="formattedPrice"
-                            @input="formatPriceInput"                
-                            @blur="submitPriceChange"
-                        >
-                    </div>
+                <template v-if="editPrice">
+                    <PriceInput class="item-price-input" ref="priceInputRef" :price="item.price" @update:price="getItemPrice"/>
                 </template>
                 <template v-else>
-                    <span class="item-price" @click="editItemPrice(item)">{{ formatPriceDisplay(item.price)}}</span>
+                    <span class="item-price" @click="editItemPrice">{{ formatPriceDisplay(item.price)}}</span>
                 </template>
             </span>
         </p>
         <p class="item-description">
-            <template v-if="item.editDescription">
+            <template v-if="editDescription">
                 <input
                     type="text"
                     class="item-description-input"
@@ -155,7 +112,7 @@ onMounted(()=>{addItemFlags();})
                 />
             </template>
             <template v-else>
-                <span class="item-description-text" @click="editItemDescription(item)">{{ item.description }}</span>
+                <span class="item-description-text" @click="editItemDescription">{{ item.description }}</span>
             </template>
         </p>
         <div class="item-addons-removes-options">
@@ -197,12 +154,6 @@ onMounted(()=>{addItemFlags();})
 .item-price-input{
     display: inline-flex;
     align-items: center;
-}
-.item-price-input-field{
-    width: auto;
-    padding: 0 2px;
-    text-align: right;
-    max-width: 80px;
 }
 .prefix{
     margin-right: 4px;

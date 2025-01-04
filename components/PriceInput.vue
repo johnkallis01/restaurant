@@ -1,6 +1,4 @@
 <script setup>
-import { onMounted } from 'vue';
-
 const props = defineProps({
     price:{
         type: String,
@@ -9,12 +7,10 @@ const props = defineProps({
     }
 });
 const emit = defineEmits(['update:price']);
-const focusPriceRef = ()=>{
-  if(priceRef.value) {
-    priceRef.value.focus();
-  }
+//emit to parent component
+const submitPrice = () =>{
+    emit('update:price', formattedPrice.value)
 }
-provide('focusPriceRef', focusPriceRef);
 const rawPrice = ref(props.price.replace('.', ''));
 watch(
   () => props.price,
@@ -42,6 +38,7 @@ const formatPriceInput = (event) => {
     rawPrice.value = (rawPrice.value + inputChar).slice(-5);  
     event.target.value = formattedPrice.value;
 };
+
 /**************
  * focus ref logic
  **************/
@@ -49,20 +46,19 @@ const priceRef= ref(null);
 const focusInput = () => {
     priceRef.value?.focus();
 }
+//expose focus to parent
 defineExpose({ focusInput });
 onMounted(()=>{
     focusInput();
 })
-const submitPrice = () =>{
-    emit('update:price', formattedPrice.value)
-    console.log('on blur')
-}
+
 </script>
 <template>
     <div class="price-input">
         <span class="prefix">$</span>
         <input
             type="text"
+            class="price-input-field"
             ref="priceRef"
             placeholder="000.00"
             :value="formattedPrice"
@@ -72,25 +68,11 @@ const submitPrice = () =>{
     </div>
 </template>
 <style scoped>
-.price-input{
-    display: flex;
-    align-items: center;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    padding: 0 8px;
+.price-input-field{
+    width: auto;
     background-color: white;
+    padding: 0 2px;
+    text-align: right;
+    max-width: 60px;
 }
-.price-input .prefix{
-    font-size: 14px;
-    color: #666;
-    margin-right: 8px;
-}
-.price-input input{
-    border: none;
-}
-.price-input:focus-within {
-  border-color: #007bff; /* Highlight border */
-  box-shadow: 0 0 3px rgba(0, 123, 255, 0.5); /* Optional shadow effect */
-}
-
 </style>
