@@ -42,9 +42,7 @@ const deleteSection = (section)=>{
     menuStore.updateMenu(props.menu);
 }
 //add item
-const addItem = (section)=>{
-    console.log('add item')
-}
+const addItem = ref(false);
 </script>
 <template>
     <div>
@@ -66,7 +64,7 @@ const addItem = (section)=>{
             <template v-else>
                 <span @click="editSectionName(section)">{{ section.name }}</span>
             </template>
-            <button class="btn add-item" @click="addItem(section)">
+            <button class="btn add-item" @click="addItem=!addItem">
                 <span class="btn-text">item</span>
                 <i class="mdi mdi-plus"/>
                 <span class="tooltip">add item</span>
@@ -88,10 +86,13 @@ const addItem = (section)=>{
                 <span @click="editSectionDescription(section)">{{ section.description }}</span>
             </template>
         </div>
+        <div class="section-add-item" v-if="addItem">
+            <AddItem :section_id="section._id" :menu="menu"/>
+        </div>
         <div class="section-items">
             <div v-for="(item, i) in section.items" :key="i">
                 <div class="section-items">
-                    <EditItem :item="item" :section="section" :menu="menu" />
+                    <EditItem :item="item" :section_id="section._id" :menu="menu" />
                 </div>
             </div>
         </div>
@@ -101,5 +102,8 @@ const addItem = (section)=>{
 .btn.add-item{
     position: absolute;
     right: 0;
+    font-size:20px;
+    margin-right: 15px;
+    padding: 5px;
 }
 </style>

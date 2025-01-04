@@ -61,8 +61,7 @@ containers
 .sections{
     display: flex;
     flex-direction: column;
-    gap: 16px;
-    padding: 20px;
+    padding: 10px;
     width: 95%;
     position: absolute;
     top: 10vh;
@@ -75,20 +74,20 @@ containers
 .section-name{
     display: flex;
     align-items: center;
-    margin: 15px;
+    margin: 15px 5px 5px 5px;
     font-size: 25px;
     height: 45px;
+    border-bottom: 2px solid black;
 }
 .section-description{
     display: flex;
     align-items: center;
     height: 30px;
     font-size: 12px;
-    margin-left: 60px;
+    margin-left: 40px;
 }
 .section-items{
-    margin: 15px;
-    margin-left: 35px;
+    margin: 10px 5px 5px 45px;
 }
 .section-item{  
     height: 30px;

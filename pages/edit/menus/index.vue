@@ -1,13 +1,15 @@
 <script setup>
 //menus/index.vue
 const { data: menus } = await useFetch("/api/menus");
-const newMenuDialog = ref(false);
+const newMenu=()=>{
+  console.log('new menu logic')
+}
 </script>
 <template>
   <div class="page-container">
     <div class="container-title">
       <span class="title-text">Edit Menus</span>
-      <button class="btn new" @click="newMenuDialog = true">
+      <button class="btn new" @click="newMenu">
         <span class="btn-text">New +</span>
         <span class="tooltip">new menu</span>
       </button>
@@ -17,9 +19,6 @@ const newMenuDialog = ref(false);
         <EditMenu :menu="menu"/>
       </div>
     </div>
-    <v-dialog class="dialog" v-model="newMenuDialog">
-      <NewMenuDialog @getDialogFlag="recieveNewMenuDialog"/>
-    </v-dialog>
   </div>
 </template>
 <style scoped>

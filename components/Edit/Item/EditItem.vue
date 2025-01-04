@@ -1,15 +1,14 @@
 <script setup>
-import { watch } from 'vue';
 const props = defineProps({
     menu: { type:Object, required: true},
-    section: { type:Object, required: true},
+    section_id: { type:String, required: true},
     item: { type:Object, required: true},
 });
 const menuStore = useMenuStore();
 
 const postItemEdit = (item) => {
-    const sectionIndex = props.menu.sections.findIndex(sec => sec._id === props.section._id);
-    const itemIndex = props.section.items.findIndex(it => it._id === item._id);
+    const sectionIndex = props.menu.sections.findIndex(sec => sec._id === props.section_id);
+    const itemIndex = props.menu.sections[sectionIndex].items.findIndex(it => it._id === item._id);
     props.menu.sections[sectionIndex].items[itemIndex]=item;
     menuStore.updateMenu(props.menu);
 }
@@ -65,8 +64,8 @@ const formatPriceDisplay = (price) => {
 }
 //delete item
 const deleteItem = (item)=>{
-    const sectionIndex = props.menu.sections.findIndex(sec => sec._id === props.section._id);
-    const itemIndex = props.section.items.findIndex(it => it._id === item._id);
+    const sectionIndex = props.menu.sections.findIndex(sec => sec._id === props.section_id);
+    const itemIndex = props.menu.sections[sectionIndex].items.findIndex(it => it._id === item._id);
     props.menu.sections[sectionIndex].items.splice(itemIndex, 1);
     menuStore.updateMenu(props.menu);
 }
@@ -116,13 +115,17 @@ const deleteItem = (item)=>{
             </template>
         </p>
         <div class="item-addons-removes-options">
-            <div class="item-addons" v-for="(addOn, i) in item.addOns" :key="i">
+            <div class="item-addons">
                 <EditItemAddOns class="edit-item-addOns" 
-                    :addOn="addOn" :item="item" :section="section" :menu="menu"/>
+                    :addOns="item.addOns" :item_id="item._id" :section_id="section_id" :menu="menu"/>
             </div>
-            <div class="item-removes" v-for="(remove, i) in item.removes" :key="i">
+            <div class="item-removes">
                 <EditItemRemoves class="edit-item-removes" 
-                    :remove="remove" :item="item" :section="section" :menu="menu"/>
+                    :removes="item.removes" :item_id="item._id" :section_id="section_id" :menu="menu"/>
+            </div>
+            <div class="item-options">
+                <EditItemOptions class="edit-item-options" 
+                    :options="item.options" :item_id="item._id" :section_id="section_id" :menu="menu"/>
             </div>
         </div>
     </div>
@@ -169,7 +172,7 @@ const deleteItem = (item)=>{
 }
 .item-addons-removes-options{
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 16px;
     margin-top: 20px;
     width: 100%;

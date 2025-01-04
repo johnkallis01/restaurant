@@ -23,23 +23,12 @@ const deleteMenu = (menu) =>{
         </div>
         <div class="sections">
             <div class="section-container" v-for="(section, i) in menu.sections" :key="i">
-                <EditSection :section="section" :menu="menu" />                 
+                <EditSection :section="section" :menu="menu" />               
             </div>
         </div>
     </div>
 </template>
 <style scoped>
-
-.dialog{
-    width: 80%;
-}
-.new-section-dialog{
-    width: 80vh;
-}
-.new-item-dialog{
-    width: 90%;
-    height: 90%;
-}
 .text-field.description{
     width: 100%;
 }
@@ -50,10 +39,6 @@ const deleteMenu = (menu) =>{
     position: absolute;
     left: 50%;
     font-size: 23px;
-}
-.btn.add-item{
-    position: absolute;
-    right: 0;
 }
 .btn.delete{
     margin-right: 20px;

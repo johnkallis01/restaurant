@@ -1,11 +1,13 @@
 <script setup>
 const props = defineProps({
-    addOn: { type: Object, required: false },
-    item: { type: Object, required: true },
-    section: { type:Object, required: true},
+    addOns: { type: Array, required: false },
+    item_id: { type: String, required: true },
+    section_id: { type:String, required: true},
     menu: { type:Object, required: true},
     
 });
+const menuStore = useMenuStore();
+const viewAddOns = ref(false);
 const formatPriceDisplay = (price) => {
     //remove leading zeros
     if(price[0] === "0") {
@@ -14,44 +16,50 @@ const formatPriceDisplay = (price) => {
     }
     return "$" + price;
 }
-const getItemPrice = (newPrice) => {
-    console.log(newPrice)
-    props.addOn.price = newPrice;
-    flag.value = false;
-}
-const priceInputRef = ref(null);
-const swapFlag = ()=>{
-    flag.value=true;
-    requestAnimationFrame(()=>{
-        priceInputRef.value?.focusInput();
-    })
-}
 
-const flag=ref(false);
+/***********
+ * Edit Add-on Price
+ *************/
+const editPrice = ref(false);
+const priceInputRef = ref(null);
+const editAddOnPrice = ()=>{
+    editPrice.value=true;
+    requestAnimationFrame(()=>{priceInputRef.value?.focusInput();})
+}
+const getItemPrice = (newPrice) => {
+    props.addOn.price = newPrice;
+    editPrice.value = false;
+}
 </script>
 <template>
     <div class="addOn-container">
-        <p class="addOn-title-bar">
-            <span class="title-text">Add-Ons:</span>
-            <span class="new-addOn-input name">
-                <input class="new-addOn-input-field name" type="text">
-            </span>
-            <span class="new-addOn-input price">
-                <span class="prefix">$</span>
-                <input class="new-addOn-input-field price" type="text" placeholder="000.00">
-            </span>
-        </p>
-        <div class="addOn">
-            <p class="addOn-name">{{ addOn.name }}</p>
-            <template v-if="flag">
-                <PriceInput ref="priceInputRef" :price="addOn.price" @update:price="getItemPrice"/>
-            </template>
-            <template v-else>
-                <div @click="swapFlag" class="bg-blue">{{ addOn.price }}</div>
-            </template>
-            
+        <span class="title-text" @click="viewAddOns=!viewAddOns">Add-Ons:</span>
+        <div v-if="viewAddOns">
+            <p class="addOn-title-bar">
+                <span class="new-addOn-input name">
+                    <input class="new-addOn-input-field name" type="text">
+                </span>
+                <span class="new-addOn-input price">
+                    <span class="prefix">$</span>
+                    <input class="new-addOn-input-field price" type="text" placeholder="000.00">
+                </span>
+                <button class="btn">
+                    <span>Submit</span>
+                </button>
+            </p>
+            <div class="addOn" v-for="(addOn, i) in addOns" :key="i">
+                <p class="addOn-name">
+                    {{ addOn.name }}
+                </p>
+                <template v-if="editPrice">
+                    <PriceInput ref="priceInputRef" :price="addOn.price" @update:price="getItemPrice"/>
+                </template>
+                <template v-else>
+                    <div @click="editAddOnPrice">{{ addOn.price }}</div>
+                </template>
+                
+            </div>
         </div>
-        
     </div>
 </template>
 <style scoped>
