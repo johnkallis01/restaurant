@@ -11,8 +11,8 @@ const menuStore = useMenuStore();
 //checks if item is new
 onMounted(()=>{
     if(props.item?.new){ 
-        isNew.value=true; editName.value=true; editDescription.value=true;
-        delete props.item.new;  
+        isNew.value = true; editName.value=true; editDescription.value=true;
+        delete props.item.new;
     }
 });
 //reusable put menu change
@@ -25,9 +25,12 @@ const postItemEdit = (item) => {
 *************************/
 const itemNameRef = ref(null); const editName = ref(false);
 const editItemName = () => { editName.value = true; nextTick(()=> itemNameRef.value.focus()); }
-const submitEditItemName = (item) => {
-    editName.value = false;
-    if(!isNew.value) postItemEdit(item);
+const submitEditItemName = (item) => { 
+    if(!!item.name){
+        editName.value=false;
+    }
+    else if(!isNew.value) postItemEdit(item);
+    
 }
 /************************
 **edit item description logic
@@ -38,8 +41,11 @@ const editItemDescription = () => {
   nextTick(()=> itemDescriptionRef.value.focus())
 }
 const submitEditItemDescription = (item) => { 
-    editDescription.value = false;
-    if(!isNew.value) postItemEdit(item);
+    if(!!item.description){
+        editDescription.value=false;
+    }
+    else if(!isNew.value) postItemEdit(item);
+    
 }
 /***********
  * Edit Item Price
@@ -69,7 +75,8 @@ const formatPriceDisplay = (price) => {
  * Add-ons Removes Options
  ************/
  const addOnsFlag = ref(false); const removesFlag = ref(false); const optionsFlag = ref(false);
- const addOnTabRef = ref(null);  const removeTabRef = ref(null);  const optionTabRef = ref(null);
+ const addOnNameFlag = ref(false); const addOnPriceFlag = ref(false); const removeNameFlag = ref(false);
+ const optionsNameFlag = ref(false); const optionsValueFlag = ref(false);
  const addOnPriceInputRef = ref(null);
  const viewAddOns = ()=>{ removesFlag.value=optionsFlag.value=false; addOnsFlag.value=!addOnsFlag.value;}
  const viewRemoves = ()=>{ optionsFlag.value=addOnsFlag.value=false; removesFlag.value=!removesFlag.value;}
@@ -90,6 +97,16 @@ const pushAddOn = () => {
     }
     menuStore.updateMenu(props.menu);
 }
+const newAddOnFlag = ref(false);
+const getAddOnFlag = (flag) => {
+    newAddOn = {
+        new: true,
+        name: "",
+        price: "000.00",
+        _id: uuidv4(), 
+    }
+    newAddOnFlag.value = flag;
+}
 /*********
  * delete item logic
  ************/
@@ -101,13 +118,14 @@ const deleteItem = (item)=>{
  * new item logic
  ************/
 const isNew = ref(false);
-const emit = defineEmits(['sendNewItemFlag']);
+const emit = defineEmits(['send-new-item-flag']);
 const postNewItem = (item) => {
-    isNew.value=false;
-    const sectionIndex = props.menu.sections.findIndex(sec => sec._id === props.section_id);
-    props.menu.sections[sectionIndex].items.push(item);
-    menuStore.updateMenu(props.menu);
-    emit('sendNewItemFlag', false);
+    if(item.name){
+        const sectionIndex = props.menu.sections.findIndex(sec => sec._id === props.section_id);
+        props.menu.sections[sectionIndex].items.push(item);
+        menuStore.updateMenu(props.menu);
+        emit('send-new-item-flag', false);
+    }
 }
 </script>
 <template>
@@ -128,8 +146,9 @@ const postNewItem = (item) => {
                 </template>
             </span>
             <span class="name-price">
-                <template v-if="editName">
+                <client-only>
                     <input
+                        v-show="editName"
                         type="text"
                         class="name-input"
                         placeholder="name"
@@ -137,12 +156,12 @@ const postNewItem = (item) => {
                         v-model="item.name"
                         @blur="submitEditItemName(item)"
                     />
-                </template>
-                <template v-else>
+                </client-only>
+                <template v-if="!editName">
                     <span class="item-name" @click="editItemName">{{ item.name }}</span>
                 </template>
                 <template v-if="editPrice">
-                    <PriceInput class="item-price-input" ref="priceInputRef" :price="item.price" @update:price="getItemPrice"/>
+                    <PriceInput class="item-price-input" ref="priceInputRef" :price="item.price" @update-price="getItemPrice"/>
                 </template>
                 <template v-else>
                     <span class="item-price" @click="editItemPrice">{{ formatPriceDisplay(item.price)}}</span>
@@ -160,7 +179,7 @@ const postNewItem = (item) => {
                     @blur="submitEditItemDescription(item)"
                 />
             </template>
-            <template v-else>
+            <template v-if="!editDescription">
                 <span class="item-description-text" @click="editItemDescription">{{ item.description }}</span>
             </template>
         </p>
@@ -172,16 +191,12 @@ const postNewItem = (item) => {
             </div>
             <div class="item-a-r-o-components">
                 <div v-if="addOnsFlag">
-                    <div class="new-addOn">
-                        <span class="new-addOn-input name">
-                            <input class="new-addOn-input-field" type="text" v-model="newAddOn.name" placeholder="name">
-                        </span>
-                        <span class="new-addOn-input price">
-                            <PriceInput :price="newAddOn.price" @update:price="getAddOnPrice"/>
-                        </span>
-                        <span class="new-addOn-input btn">
-                            <button class="btn" @click="pushAddOn">Add</button>
-                        </span>
+                    <div class="new-addOn" v-if="newAddOnFlag">
+                        <EditItemAddOn 
+                            :addOn="newAddOn"
+                            :item_id="item._id"
+                            :section_id="section_id"
+                            :menu="menu"/> 
                     </div>
                     <div v-for="(addOn, i) in item.addOns" :key="i">
                         <EditItemAddOn class="edit-item-addOns" 
@@ -190,9 +205,7 @@ const postNewItem = (item) => {
                             :section_id="section_id"
                             :menu="menu"/> 
                     </div>
-                   
                 </div>
-                
                 <div>
                     <EditItemRemove class="edit-item-removes" 
                         :removes="item.removes" :item_id="item._id" :section_id="section_id" :menu="menu" v-if="removesFlag"/>

@@ -6,10 +6,10 @@ const props = defineProps({
         default: '000.00'
     }
 });
-const emit = defineEmits(['update:price']);
+const emit = defineEmits(['update-price']);
 //emit to parent component
 const submitPrice = () =>{
-    emit('update:price', formattedPrice.value)
+    emit('update-price', formattedPrice.value)
 }
 const rawPrice = ref(props.price.replace('.', ''));
 watch(

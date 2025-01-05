@@ -40,7 +40,16 @@ const deleteSection = (section)=>{
 //add item
 const addItem = ref(false);
 const getNewItemFlag = (flag) => { 
-    console.log(flag, 'recieved');
+    newItem.value={
+        new: true,
+        name: "",
+        description: "",
+        price: "000.00",
+        addOns: [],
+        removes: [],
+        options: [],
+        _id: uuidv4(),
+    }
     addItem.value=flag;
 }
 const newItem = ref({
@@ -99,7 +108,7 @@ const newItem = ref({
         </div>
         <div class="section-items">
             <div class="section-add-item" v-if="addItem">
-                <EditItem :item="newItem" :section_id="section._id" :menu="menu" @sendNewItemFlag="getNewItemFlag"/>
+                <EditItem :item="newItem" :section_id="section._id" :menu="menu" @send-new-item-flag="getNewItemFlag"/>
             </div>
             <div v-for="(item, i) in section.items" :key="i" class="items-loop">
                 <div class="section-item">

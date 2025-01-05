@@ -50,9 +50,43 @@ const getNewAddOnPrice = (newPrice) => {
     editPrice.value = false;
     props.addOn.price = newPrice;
 }
+/****************
+ * new add on logic
+ ********************/
+const isNew = ref(false);
+onMounted(()=>{
+    if(props.addOn?.new){ 
+        isNew.value = true; editName.value=true;
+        delete props.addOn.new;
+    }
+});
+const emit = defineEmits(['send-new-addon-flag']);
+const postNewItem = (addOn) => {
+    if(addOn.name){
+        const sectionIndex = props.menu.sections.findIndex(sec => sec._id === props.section_id);
+        const itemIndex = props.menu.sections[sectionIndex].items.findIndex(it => it._id === props.item_id);
+        props.menu.sections[sectionIndex].items[itemIndex].addOns.push(addOn);
+        menuStore.updateMenu(props.menu);
+        emit('send-new-addon-flag', false);
+    }
+}
 </script>
 <template>
     <div class="addOn-container">
+        <span class="btn-icons-group items">
+            <template v-if="!isNew">
+                <button class="btn" @click="deleteAddOn(addOn)">
+                    <i class="mdi mdi-close"/>
+                    <span class="tooltip">delete</span>
+                </button>
+            </template>
+            <template v-else>
+                <button class="btn" @click="postNewAddOn(addOn)">
+                    <i class="mdi mdi-plus"/>
+                    <span class="tooltip">add new addOn</span>
+                </button>
+            </template>
+        </span>
         <template v-if="editName">
             <input
                 type="text"
@@ -67,7 +101,7 @@ const getNewAddOnPrice = (newPrice) => {
             <span @click="editAddOnName(addOn)">{{ addOn.name }}</span>
         </template>
         <template v-if="editPrice">
-            <PriceInput ref="priceInputRef" :price="addOn.price" @update:price="getAddOnPrice"/>
+            <PriceInput ref="priceInputRef" :price="addOn.price" @update-price="getAddOnPrice"/>
         </template>
         <template v-else>
             <div @click="editAddOnPrice">{{ formatPriceDisplay(addOn.price) }}</div>
