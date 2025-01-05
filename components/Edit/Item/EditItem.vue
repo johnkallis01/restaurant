@@ -1,89 +1,138 @@
 <script setup>
+import { v4 as uuidv4 } from 'uuid';
 const props = defineProps({
     menu: { type:Object, required: true},
     section_id: { type:String, required: true},
     item: { type:Object, required: true},
 });
+const sectionIndex = props.menu.sections.findIndex(sec => sec._id === props.section_id);
+const itemIndex = props.menu.sections[sectionIndex].items.findIndex(it => it._id === props.item._id);
 const menuStore = useMenuStore();
-
+//checks if item is new
+onMounted(()=>{
+    if(props.item?.new){ 
+        isNew.value=true; editName.value=true; editDescription.value=true;
+        delete props.item.new;  
+    }
+});
+//reusable put menu change
 const postItemEdit = (item) => {
-    const sectionIndex = props.menu.sections.findIndex(sec => sec._id === props.section_id);
-    const itemIndex = props.menu.sections[sectionIndex].items.findIndex(it => it._id === item._id);
     props.menu.sections[sectionIndex].items[itemIndex]=item;
     menuStore.updateMenu(props.menu);
 }
 /************************
 **edit item name logic
 *************************/
-const itemNameRef = ref(null);
-const editName = ref(false);
-const editItemName = () => {
-  editName.value = true;
-  nextTick(()=> itemNameRef.value.focus())
-}
+const itemNameRef = ref(null); const editName = ref(false);
+const editItemName = () => { editName.value = true; nextTick(()=> itemNameRef.value.focus()); }
 const submitEditItemName = (item) => {
     editName.value = false;
-    postItemEdit(item);
-};
+    if(!isNew.value) postItemEdit(item);
+}
 /************************
 **edit item description logic
 *************************/
-const itemDescriptionRef = ref(null);
-const editDescription = ref(false);
+const itemDescriptionRef = ref(null); const editDescription = ref(false);
 const editItemDescription = () => {
   editDescription.value = true;
   nextTick(()=> itemDescriptionRef.value.focus())
 }
-const submitEditItemDescription = (item) => {
+const submitEditItemDescription = (item) => { 
     editDescription.value = false;
-    postItemEdit(item);
-};
+    if(!isNew.value) postItemEdit(item);
+}
 /***********
  * Edit Item Price
  *************/
-const priceInputRef = ref(null);
-const editPrice = ref(false);
+const priceInputRef = ref(null); const editPrice = ref(false);
 const editItemPrice = () =>{
     editPrice.value = true;
     requestAnimationFrame(()=>{
         priceInputRef.value?.focusInput();
     })
 }
+//from <PriceInput/> emit
 const getItemPrice = (newPrice) => {
     editPrice.value = false;
     props.item.price = newPrice;
-    postItemEdit(props.item);
+    if(!isNew.value) postItemEdit(props.item);
 }
+//remove leading zeros + $
 const formatPriceDisplay = (price) => {
-    //remove leading zeros
     if(price[0] === "0") {
         price = price.replace(0,"");
         if(price[0] === "0") price = price.replace(0,"");
     }
     return "$" + price;
 }
-//delete item
+/************
+ * Add-ons Removes Options
+ ************/
+ const addOnsFlag = ref(false); const removesFlag = ref(false); const optionsFlag = ref(false);
+ const addOnTabRef = ref(null);  const removeTabRef = ref(null);  const optionTabRef = ref(null);
+ const addOnPriceInputRef = ref(null);
+ const viewAddOns = ()=>{ removesFlag.value=optionsFlag.value=false; addOnsFlag.value=!addOnsFlag.value;}
+ const viewRemoves = ()=>{ optionsFlag.value=addOnsFlag.value=false; removesFlag.value=!removesFlag.value;}
+ const viewOptions = ()=>{ addOnsFlag.value=removesFlag.value=false; optionsFlag.value=!optionsFlag.value;}
+ // new add-ons
+ const newAddOn = ref({
+    name: "",
+    price: "000.00",
+    _id: uuidv4(), 
+});
+const getAddOnPrice = (price) => {newAddOn.value.price = price;}
+const pushAddOn = () => {
+    props.menu.sections[sectionIndex].items[itemIndex].addOns.push(newAddOn.value);
+    newAddOn.value = {
+        name: "",
+        price: "000.00",
+        _id: uuidv4(), 
+    }
+    menuStore.updateMenu(props.menu);
+}
+/*********
+ * delete item logic
+ ************/
 const deleteItem = (item)=>{
-    const sectionIndex = props.menu.sections.findIndex(sec => sec._id === props.section_id);
-    const itemIndex = props.menu.sections[sectionIndex].items.findIndex(it => it._id === item._id);
     props.menu.sections[sectionIndex].items.splice(itemIndex, 1);
     menuStore.updateMenu(props.menu);
+}
+/*********
+ * new item logic
+ ************/
+const isNew = ref(false);
+const emit = defineEmits(['sendNewItemFlag']);
+const postNewItem = (item) => {
+    isNew.value=false;
+    const sectionIndex = props.menu.sections.findIndex(sec => sec._id === props.section_id);
+    props.menu.sections[sectionIndex].items.push(item);
+    menuStore.updateMenu(props.menu);
+    emit('sendNewItemFlag', false);
 }
 </script>
 <template>
     <div>
         <p class="item">
             <span class="btn-icons-group items">
-                <button class="btn" @click="deleteItem(item)">
-                    <i class="mdi mdi-close"/>
-                    <span class="tooltip">delete</span>
-                </button>
+                <template v-if="!isNew">
+                    <button class="btn" @click="deleteItem(item)">
+                        <i class="mdi mdi-close"/>
+                        <span class="tooltip">delete</span>
+                    </button>
+                </template>
+                <template v-else>
+                    <button class="btn" @click="postNewItem(item)">
+                        <i class="mdi mdi-plus"/>
+                        <span class="tooltip">add new item</span>
+                    </button>
+                </template>
             </span>
             <span class="name-price">
                 <template v-if="editName">
                     <input
                         type="text"
                         class="name-input"
+                        placeholder="name"
                         ref="itemNameRef"
                         v-model="item.name"
                         @blur="submitEditItemName(item)"
@@ -105,6 +154,7 @@ const deleteItem = (item)=>{
                 <input
                     type="text"
                     class="item-description-input"
+                    placeholder="description"
                     ref="itemDescriptionRef"
                     v-model="item.description"
                     @blur="submitEditItemDescription(item)"
@@ -115,22 +165,48 @@ const deleteItem = (item)=>{
             </template>
         </p>
         <div class="item-addons-removes-options">
-            <div class="item-addons">
-                <EditItemAddOns class="edit-item-addOns" 
-                    :addOns="item.addOns" :item_id="item._id" :section_id="section_id" :menu="menu"/>
+            <div class="item-a-r-o-titles">
+                <span :class="{'underline': addOnsFlag}" @click="viewAddOns">Add-Ons</span>
+                <span :class="{'underline': removesFlag}" @click="viewRemoves">Removes</span>
+                <span :class="{'underline': optionsFlag}" @click="viewOptions">Options</span>
             </div>
-            <div class="item-removes">
-                <EditItemRemoves class="edit-item-removes" 
-                    :removes="item.removes" :item_id="item._id" :section_id="section_id" :menu="menu"/>
-            </div>
-            <div class="item-options">
-                <EditItemOptions class="edit-item-options" 
-                    :options="item.options" :item_id="item._id" :section_id="section_id" :menu="menu"/>
+            <div class="item-a-r-o-components">
+                <div v-if="addOnsFlag">
+                    <div class="new-addOn">
+                        <span class="new-addOn-input name">
+                            <input class="new-addOn-input-field" type="text" v-model="newAddOn.name" placeholder="name">
+                        </span>
+                        <span class="new-addOn-input price">
+                            <PriceInput :price="newAddOn.price" @update:price="getAddOnPrice"/>
+                        </span>
+                        <span class="new-addOn-input btn">
+                            <button class="btn" @click="pushAddOn">Add</button>
+                        </span>
+                    </div>
+                    <div v-for="(addOn, i) in item.addOns" :key="i">
+                        <EditItemAddOn class="edit-item-addOns" 
+                            :addOn="addOn"
+                            :item_id="item._id"
+                            :section_id="section_id"
+                            :menu="menu"/> 
+                    </div>
+                   
+                </div>
+                
+                <div>
+                    <EditItemRemove class="edit-item-removes" 
+                        :removes="item.removes" :item_id="item._id" :section_id="section_id" :menu="menu" v-if="removesFlag"/>
+                </div>
+                <div>
+                    <EditItemOption class="edit-item-options" 
+                        :options="item.options" :item_id="item._id" :section_id="section_id" :menu="menu" v-if="optionsFlag"/>
+                </div>
             </div>
         </div>
     </div>
 </template>
 <style scoped>
+
 .btn.add-item{
     position: absolute;
     right: 0;
@@ -168,13 +244,44 @@ const deleteItem = (item)=>{
 .item-description-input{
     width: auto;
     padding: 0 2px;
-    min-width: 100%;
+    min-width: 90%;
 }
 .item-addons-removes-options{
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
-    margin-top: 20px;
+    padding: 10px;
     width: 100%;
+}
+.edit-item-addOns{
+    height: 100%;
+}
+.edit-item-removes{
+    height: 100%;
+}
+.edit-item-options{
+    height: 100%;
+}
+.item-a-r-o-titles{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 5px 20px 20px 20px
+}
+.underline{
+    border-bottom: 2px solid black;
+}
+.new-addOn{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid black;
+}
+.new-addOn-input-field{
+    padding-left: 5px;
+    width: 200px;
+}
+.new-addOn-input.name{
+    width: 200px;
+}
+.new-addOn-input.price{
+    width: 180px;
 }
 </style>

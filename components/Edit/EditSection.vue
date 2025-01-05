@@ -1,9 +1,11 @@
 <script setup>
+import { v4 as uuidv4 } from 'uuid';
 const props = defineProps({
     section: { type:Object, required: true},
     menu: { type:Object, required: true},
 });
 const menuStore = useMenuStore();
+// reusable post edits to db logic
 const postSectionEdit = (section) => {
     const sectionIndex = props.menu.sections.findIndex(sec => sec._id === section._id);
     props.menu.sections[sectionIndex]=section;
@@ -18,10 +20,7 @@ const editSectionName = (section) => {
     editName.value = true;
     nextTick(()=> sectionNameRef.value.focus())
 }
-const submitEditSectionName = (section) => {
-    editName.value = false;
-    postSectionEdit(section);
-};
+const submitEditSectionName = (section) => { editName.value = false; postSectionEdit(section);};
 /************************
 **edit section description logic
 *************************/
@@ -31,10 +30,7 @@ const editSectionDescription = (section) => {
     editDescription.value = true;
     nextTick(()=> sectionDescriptionRef.value.focus())
 }
-const submitEditSectionDescription = (section) => {
-    editDescription.value = false;
-    postSectionEdit(section);
-};
+const submitEditSectionDescription = (section) => { editDescription.value = false; postSectionEdit(section);};
 //delete section
 const deleteSection = (section)=>{
     const sectionIndex = props.menu.sections.findIndex(sec => sec._id === section._id);
@@ -43,10 +39,25 @@ const deleteSection = (section)=>{
 }
 //add item
 const addItem = ref(false);
+const getNewItemFlag = (flag) => { 
+    console.log(flag, 'recieved');
+    addItem.value=flag;
+}
+const newItem = ref({
+    new: true,
+    name: "",
+    description: "",
+    price: "000.00",
+    addOns: [],
+    removes: [],
+    options: [],
+    _id: uuidv4(),
+})
+
 </script>
 <template>
     <div>
-       <div class="section-name">
+        <div class="section-name">
             <button class="btn delete" @click="deleteSection(section)">
                 <i class="mdi mdi-close"/>
                 <span class="tooltip">delete section</span>
@@ -55,7 +66,7 @@ const addItem = ref(false);
                 <div class="text-field name">
                     <input
                         type="text"
-                        ref="sectionNameRef" 
+                        ref="sectionNameRef"
                         v-model="section.name"
                         @blur="submitEditSectionName(section)"
                     />
@@ -86,12 +97,12 @@ const addItem = ref(false);
                 <span @click="editSectionDescription(section)">{{ section.description }}</span>
             </template>
         </div>
-        <div class="section-add-item" v-if="addItem">
-            <AddItem :section_id="section._id" :menu="menu"/>
-        </div>
         <div class="section-items">
-            <div v-for="(item, i) in section.items" :key="i">
-                <div class="section-items">
+            <div class="section-add-item" v-if="addItem">
+                <EditItem :item="newItem" :section_id="section._id" :menu="menu" @sendNewItemFlag="getNewItemFlag"/>
+            </div>
+            <div v-for="(item, i) in section.items" :key="i" class="items-loop">
+                <div class="section-item">
                     <EditItem :item="item" :section_id="section._id" :menu="menu" />
                 </div>
             </div>
@@ -105,5 +116,8 @@ const addItem = ref(false);
     font-size:20px;
     margin-right: 15px;
     padding: 5px;
+}
+.input-description{
+    width: 40vw;
 }
 </style>

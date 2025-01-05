@@ -86,12 +86,15 @@ containers
     font-size: 12px;
     margin-left: 40px;
 }
-.section-items{
-    margin: 10px 5px 5px 45px;
+.section-items{   
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    width: 80vw;
+    margin: 5px 5px 5px 45px;
+    gap: 10px;
 }
-.section-item{  
-    height: 30px;
-    font-size: 15px;
+.section-item{
+    border: 2px solid black;
 }
 .item{
     display: flex;
@@ -138,7 +141,7 @@ containers
     gap: 12px;
     resize: none;
   }
-.text-field input:focus, .text-field textarea:focus{
+.text-field input:focus{
     outline: none;
     border-color: #1976d2;
     box-shadow: rgba(25, 118, 210, 0.5);

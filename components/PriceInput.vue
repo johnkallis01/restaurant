@@ -1,9 +1,5 @@
 <script setup>
 const props = defineProps({
-    title:{
-        type: String,
-        required: true
-    },
     price:{
         type: String,
         required: true,
@@ -11,6 +7,10 @@ const props = defineProps({
     }
 });
 const emit = defineEmits(['update:price']);
+//emit to parent component
+const submitPrice = () =>{
+    emit('update:price', formattedPrice.value)
+}
 const rawPrice = ref(props.price.replace('.', ''));
 watch(
   () => props.price,
@@ -26,56 +26,53 @@ const formattedPrice = computed(()=>{
 });
 const formatPriceInput = (event) => {
     const inputChar = event.data;
-    if(!/^\d$/.test(inputChar)){ //if not a number
-        event.target.value=formattedPrice.value; //update the input with previous value in format 000.00
-        return; //end function call999
+    if(event.inputType === "deleteContentBackward"){
+        rawPrice.value = "0"+rawPrice.value.slice(0,-1);
+        event.target.value = formattedPrice.value;
+        return;
     }
-    rawPrice.value = (rawPrice.value + inputChar).slice(-5); //add the new input the end of the string and remove left most value
-    emit('update:price', formattedPrice.value)
+    if(!/^\d$/.test(inputChar)){
+        event.target.value=formattedPrice.value;
+        return;
+    }
+    rawPrice.value = (rawPrice.value + inputChar).slice(-5);  
     event.target.value = formattedPrice.value;
 };
+
+/**************
+ * focus ref logic
+ **************/
+const priceRef= ref(null);
+const focusInput = () => {
+    priceRef.value?.focus();
+}
+//expose focus to parent
+defineExpose({ focusInput });
+onMounted(()=>{
+    focusInput();
+})
+
 </script>
 <template>
-    <div class="text-field">
-        <label for="price-input" id="item-price-label">{{ title }}</label>
-        <div class="price-input">
-            <span class="prefix">$</span>
-            <input
-                id="item-price"
-                type="text"
-                placeholder="000.00"
-                :value="formattedPrice"
-                @input="formatPriceInput"
-            >
-        </div>
+    <div class="price-input">
+        <span class="prefix">$</span>
+        <input
+            type="text"
+            class="price-input-field"
+            ref="priceRef"
+            placeholder="000.00"
+            :value="formattedPrice"
+            @input="formatPriceInput"
+            @blur="submitPrice"
+        >
     </div>
 </template>
 <style scoped>
-#item-price{
-    width: 70px;
+.price-input-field{
+    width: auto;
+    background-color: white;
+    padding: 0 2px;
+    text-align: right;
+    max-width: 60px;
 }
-.price-field{
-    
-}
-.price-input{
-    display: flex;
-    align-items: center;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    padding: 0 8px;
-    background-color: #fff;
-}
-.price-input .prefix{
-    font-size: 14px;
-    color: #666;
-    margin-right: 8px;
-}
-.price-input input{
-    border: none;
-}
-.price-input:focus-within {
-  border-color: #007bff; /* Highlight border */
-  box-shadow: 0 0 3px rgba(0, 123, 255, 0.5); /* Optional shadow effect */
-}
-
 </style>
