@@ -1,6 +1,5 @@
 <script setup>
 const authStore = useAuthStore();
-
 const email = ref('');
 const password = ref('');
 const showpassword = ref(false);

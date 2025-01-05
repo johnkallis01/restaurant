@@ -146,17 +146,15 @@ const postNewItem = (item) => {
                 </template>
             </span>
             <span class="name-price">
-                <client-only>
-                    <input
-                        v-show="editName"
-                        type="text"
-                        class="name-input"
-                        placeholder="name"
-                        ref="itemNameRef"
-                        v-model="item.name"
-                        @blur="submitEditItemName(item)"
-                    />
-                </client-only>
+                <input
+                    v-if="editName"
+                    type="text"
+                    class="name-input"
+                    placeholder="name"
+                    ref="itemNameRef"
+                    v-model="item.name"
+                    @blur="submitEditItemName(item)"
+                />
                 <template v-if="!editName">
                     <span class="item-name" @click="editItemName">{{ item.name }}</span>
                 </template>
