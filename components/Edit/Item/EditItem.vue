@@ -1,23 +1,26 @@
 <script setup>
 import { v4 as uuidv4 } from 'uuid';
 const props = defineProps({
-    menu: { type:Object, required: true},
-    section_id: { type:String, required: true},
-    item: { type:Object, required: true},
+    menu: { type: Object, required: true},
+    section_id: { type: String, required: true},
+    item: { type: Object, required: true},
 });
 const menuStore = useMenuStore();
 //checks if item is new
+const isNew = ref(false);
 onMounted(()=>{
     if(props.item?.new){
         isNew.value = true; editName.value=true; editDescription.value=true;
         delete props.item.new;
     }
 });
-const sectionIndex = props.menu.sections.findIndex(sec => sec._id === props.section_id);
-const itemIndex = props.menu.sections[sectionIndex].items.findIndex(it => it._id === props.item._id);
+
 //reusable put menu change
 const postItemEdit = (item) => {
+    const sectionIndex = props.menu.sections.findIndex(sec => sec._id === props.section_id);
+    const itemIndex = props.menu.sections[sectionIndex].items.findIndex(it => it._id === props.item._id);
     props.menu.sections[sectionIndex].items[itemIndex]=item;
+    console.log("post",props.menu.sections[sectionIndex].items[itemIndex])
     menuStore.updateMenu(props.menu);
 }
 /************************
@@ -26,8 +29,9 @@ const postItemEdit = (item) => {
 const itemNameRef = ref(null); const editName = ref(false);
 const editItemName = () => { editName.value = true; nextTick(()=> itemNameRef.value.focus()); }
 const submitEditItemName = (item) => { 
-    if(!!item.name) editName.value=false;
-    else if(!isNew.value) postItemEdit(item);   
+    console.log('submit name', item)
+    if(!!item.name) {editName.value=false;}
+    if(!isNew.value) {postItemEdit(item);   }
 }
 /************************
 **edit item description logic
@@ -38,9 +42,9 @@ const editItemDescription = () => {
   nextTick(()=> itemDescriptionRef.value.focus())
 }
 const submitEditItemDescription = (item) => { 
-    if(!!item.description) editDescription.value=false;
-    else if(!isNew.value) postItemEdit(item);
-}
+    if(!!item.description) {editDescription.value=false;}
+    if(!isNew.value) {postItemEdit(item);
+}}
 /***********
  * Edit Item Price
  *************/
@@ -55,7 +59,7 @@ const editItemPrice = () =>{
 const getItemPrice = (newPrice) => {
     editPrice.value = false;
     props.item.price = newPrice;
-    if(!isNew.value) postItemEdit(props.item);
+    if(!isNew.value) {postItemEdit(props.item);}
 }
 //remove leading zeros + $
 const formatPriceDisplay = (price) => {
@@ -73,31 +77,9 @@ const formatPriceDisplay = (price) => {
  const viewRemoves = ()=>{ optionsFlag.value=addOnsFlag.value=false; removesFlag.value=!removesFlag.value;}
  const viewOptions = ()=>{ addOnsFlag.value=removesFlag.value=false; optionsFlag.value=!optionsFlag.value;}
  // new add-ons
- const newAddOn = ref({
-    name: "",
-    price: "000.00",
-    _id: uuidv4(), 
-});
-const getAddOnPrice = (price) => {newAddOn.value.price = price;}
-const pushAddOn = () => {
-    props.menu.sections[sectionIndex].items[itemIndex].addOns.push(newAddOn.value);
-    newAddOn.value = {
-        name: "",
-        price: "000.00",
-        _id: uuidv4(), 
-    }
-    menuStore.updateMenu(props.menu);
-}
-const newAddOnFlag = ref(false);
-const getAddOnFlag = (flag) => {
-    newAddOn = {
-        new: true,
-        name: "",
-        price: "000.00",
-        _id: uuidv4(), 
-    }
-    newAddOnFlag.value = flag;
-}
+ const newAddOn = ref({ new: true, name: "", price: "000.00", _id: uuidv4(), });
+ const newRemove = ref({ new: true, name: "", _id: uuidv4(), });
+ const newOption = ref({ new: true, name: "", values: [], _id: uuidv4(), });
 /*********
  * delete item logic
  ************/
@@ -108,7 +90,6 @@ const deleteItem = ()=>{
 /*********
  * new item logic
  ************/
-const isNew = ref(false);
 const emit = defineEmits(['send-new-item-flag']);
 const postNewItem = (item) => {
     if(item.name){
@@ -116,6 +97,7 @@ const postNewItem = (item) => {
         props.menu.sections[sectionIndex].items.push(item);
         menuStore.updateMenu(props.menu);
         emit('send-new-item-flag', false);
+        isNew.value=false;
     }
 }
 </script>
@@ -137,17 +119,18 @@ const postNewItem = (item) => {
                 </template>
             </span>
             <span class="name-price">
-                <div class="text-field">
-                    <input
-                        v-if="editName"
-                        type="text"
-                        class="name-input"
-                        placeholder="name"
-                        ref="itemNameRef"
-                        v-model="item.name"
-                        @blur="submitEditItemName(item)"
-                    />
-                </div>
+                <template v-if="editName">
+                    <div class="text-field">
+                        <input
+                            type="text"
+                            class="name-input"
+                            placeholder="name"
+                            ref="itemNameRef"
+                            v-model="item.name"
+                            @blur="submitEditItemName(item)"
+                        />
+                    </div>
+                </template>
                 <template v-if="!editName">
                     <span class="item-name" @click="editItemName">{{ item.name }}</span>
                 </template>
@@ -184,35 +167,47 @@ const postNewItem = (item) => {
             </div>
             <div class="item-a-r-o-components">
                 <div v-if="addOnsFlag">
-                    <div class="new-addOn" v-if="newAddOnFlag">
-                        <EditItemAddOn 
-                            :addOn="newAddOn"
-                            :item_id="item._id"
-                            :section_id="section_id"
-                            :menu="menu"/> 
-                    </div>
+                    <EditItemAddOn 
+                        :addOn="newAddOn"
+                        :item_id="item._id"
+                        :section_id="section_id"
+                        :menu="menu"
+                        @send-reset="getReset"
+                    /> 
                     <div v-for="(addOn, i) in item.addOns" :key="i">
-                        <EditItemAddOn class="edit-item-addOns" 
+                        <EditItemAddOn class="edit-item addOns" 
                             :addOn="addOn"
                             :item_id="item._id"
                             :section_id="section_id"
-                            :menu="menu"/> 
+                            :menu="menu"
+                        /> 
                     </div>
                 </div>
                 <div>
-                    <EditItemRemove class="edit-item-removes" 
-                        :removes="item.removes" :item_id="item._id" :section_id="section_id" :menu="menu" v-if="removesFlag"/>
+                    <EditItemRemove 
+                        v-if="removesFlag"
+                        class="edit-item removes" 
+                        :removes="item.removes"
+                        :item_id="item._id"
+                        :section_id="section_id"
+                        :menu="menu"     
+                    />
                 </div>
                 <div>
-                    <EditItemOption class="edit-item-options" 
-                        :options="item.options" :item_id="item._id" :section_id="section_id" :menu="menu" v-if="optionsFlag"/>
+                    <EditItemOption 
+                        v-if="optionsFlag"
+                        class="edit-item options" 
+                        :options="item.options"
+                        :item_id="item._id"
+                        :section_id="section_id"
+                        :menu="menu"
+                    />
                 </div>
             </div>
         </div>  
     </div>
 </template>
 <style scoped>
-
 .btn.add-item{
     position: absolute;
     right: 0;
@@ -270,6 +265,9 @@ const postNewItem = (item) => {
     align-items: center;
     margin: 5px 20px 20px 20px
 }
+.item-a-r-o-components{
+    background-color: grey;
+}
 .underline{
     border-bottom: 2px solid black;
 }
@@ -277,7 +275,6 @@ const postNewItem = (item) => {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 2px solid black;
 }
 .new-addOn-input-field{
     padding-left: 5px;

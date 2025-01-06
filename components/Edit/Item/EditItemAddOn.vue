@@ -26,9 +26,9 @@ const formatPriceDisplay = (price) => {
  * Edit Add-on Name
  *************/
 const editName=ref(false); const nameInputRef=ref(null);
-const editAddOnName = (name)=>{
+const editAddOnName = ()=>{
     editName.value=true;
-    nextTick(()=> nameInputRef.value.focus())
+    nextTick(()=> nameInputRef.value.focus());
 }
 const submitEditAddOnName = (addOn) => {
     editName.value=false;
@@ -42,34 +42,54 @@ const editAddOnPrice = ()=>{
     editPrice.value=true;
     requestAnimationFrame(()=>{priceInputRef.value?.focusInput();})
 }
-const getAddOnPrice = (newPrice, addOn) => {
-    editPrice.value = false;
-    postEditAddOn(addOn);
-}
-const getNewAddOnPrice = (newPrice) => {
+const getAddOnPrice = (newPrice) => {
     editPrice.value = false;
     props.addOn.price = newPrice;
+    postEditAddOn(addOn);
 }
 /****************
  * new add on logic
  ********************/
+const isNew = ref(false);
+onMounted(()=>{
+    if(props.addOn?.new){
+        isNew.value = true; editName.value=true; editDescription.value=true;
+        delete props.addOn.new;
+    }
+});
+const emit = defineEmits(['send-new-item-flag']);
+const postNewItem = (item) => {
+    if(item.name){
+        const sectionIndex = props.menu.sections.findIndex(sec => sec._id === props.section_id);
+        props.menu.sections[sectionIndex].items.push(item);
+        menuStore.updateMenu(props.menu);
+        emit('send-new-item-flag', false);
+    }
+}
 const postNewAddOn = (addOn) => {
     if(addOn.name){
         const sectionIndex = props.menu.sections.findIndex(sec => sec._id === props.section_id);
         const itemIndex = props.menu.sections[sectionIndex].items.findIndex(it => it._id === props.item_id);
         props.menu.sections[sectionIndex].items[itemIndex].addOns.push(addOn);
         menuStore.updateMenu(props.menu);
-        emit('send-new-addon-flag', false);
     }
 }
 </script>
 <template>
     <div class="addOn-container">
         <span class="btn-icons-group items">
-            <button class="btn" @click="postNewAddOn(addOn)">
-                <i class="mdi mdi-plus"/>
-                <span class="tooltip">add new addOn</span>
-            </button>
+            <template v-if="!isNew">
+                <button class="btn" @click="deleteAddOn">
+                    <i class="mdi mdi-close"/>
+                    <span class="tooltip">delete</span>
+                </button>
+            </template>
+            <template v-else>
+                <button class="btn" @click="postNewAddOn(addOn)">
+                    <i class="mdi mdi-plus"/>
+                    <span class="tooltip">add new add-on</span>
+                </button>
+            </template>
         </span>
         <template v-if="editName">
             <input

@@ -113,7 +113,7 @@ const getNewItemFlag = () => {
             <div class="section-add-item" v-if="addItem">
                 <EditItem :item="newItem" :section_id="section._id" :menu="menu" @send-new-item-flag="getNewItemFlag"/>
             </div>
-            <div v-for="(item, i) in section.items" :key="item._id" class="items-loop">
+            <div class="items-loop" v-for="(item, i) in section.items" :key="i">
                 <div class="section-item">
                     <EditItem :item="item" :section_id="section._id" :menu="menu" />
                 </div>
