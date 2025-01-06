@@ -5,16 +5,16 @@ const props = defineProps({
     section_id: { type:String, required: true},
     item: { type:Object, required: true},
 });
-const sectionIndex = props.menu.sections.findIndex(sec => sec._id === props.section_id);
-const itemIndex = props.menu.sections[sectionIndex].items.findIndex(it => it._id === props.item._id);
 const menuStore = useMenuStore();
 //checks if item is new
 onMounted(()=>{
-    if(props.item?.new){ 
+    if(props.item?.new){
         isNew.value = true; editName.value=true; editDescription.value=true;
         delete props.item.new;
     }
 });
+const sectionIndex = props.menu.sections.findIndex(sec => sec._id === props.section_id);
+const itemIndex = props.menu.sections[sectionIndex].items.findIndex(it => it._id === props.item._id);
 //reusable put menu change
 const postItemEdit = (item) => {
     props.menu.sections[sectionIndex].items[itemIndex]=item;
@@ -26,11 +26,8 @@ const postItemEdit = (item) => {
 const itemNameRef = ref(null); const editName = ref(false);
 const editItemName = () => { editName.value = true; nextTick(()=> itemNameRef.value.focus()); }
 const submitEditItemName = (item) => { 
-    if(!!item.name){
-        editName.value=false;
-    }
-    else if(!isNew.value) postItemEdit(item);
-    
+    if(!!item.name) editName.value=false;
+    else if(!isNew.value) postItemEdit(item);   
 }
 /************************
 **edit item description logic
@@ -41,11 +38,8 @@ const editItemDescription = () => {
   nextTick(()=> itemDescriptionRef.value.focus())
 }
 const submitEditItemDescription = (item) => { 
-    if(!!item.description){
-        editDescription.value=false;
-    }
+    if(!!item.description) editDescription.value=false;
     else if(!isNew.value) postItemEdit(item);
-    
 }
 /***********
  * Edit Item Price
@@ -75,9 +69,6 @@ const formatPriceDisplay = (price) => {
  * Add-ons Removes Options
  ************/
  const addOnsFlag = ref(false); const removesFlag = ref(false); const optionsFlag = ref(false);
- const addOnNameFlag = ref(false); const addOnPriceFlag = ref(false); const removeNameFlag = ref(false);
- const optionsNameFlag = ref(false); const optionsValueFlag = ref(false);
- const addOnPriceInputRef = ref(null);
  const viewAddOns = ()=>{ removesFlag.value=optionsFlag.value=false; addOnsFlag.value=!addOnsFlag.value;}
  const viewRemoves = ()=>{ optionsFlag.value=addOnsFlag.value=false; removesFlag.value=!removesFlag.value;}
  const viewOptions = ()=>{ addOnsFlag.value=removesFlag.value=false; optionsFlag.value=!optionsFlag.value;}
@@ -110,7 +101,7 @@ const getAddOnFlag = (flag) => {
 /*********
  * delete item logic
  ************/
-const deleteItem = (item)=>{
+const deleteItem = ()=>{
     props.menu.sections[sectionIndex].items.splice(itemIndex, 1);
     menuStore.updateMenu(props.menu);
 }
@@ -133,7 +124,7 @@ const postNewItem = (item) => {
         <p class="item">
             <span class="btn-icons-group items">
                 <template v-if="!isNew">
-                    <button class="btn" @click="deleteItem(item)">
+                    <button class="btn" @click="deleteItem">
                         <i class="mdi mdi-close"/>
                         <span class="tooltip">delete</span>
                     </button>
@@ -146,15 +137,17 @@ const postNewItem = (item) => {
                 </template>
             </span>
             <span class="name-price">
-                <input
-                    v-if="editName"
-                    type="text"
-                    class="name-input"
-                    placeholder="name"
-                    ref="itemNameRef"
-                    v-model="item.name"
-                    @blur="submitEditItemName(item)"
-                />
+                <div class="text-field">
+                    <input
+                        v-if="editName"
+                        type="text"
+                        class="name-input"
+                        placeholder="name"
+                        ref="itemNameRef"
+                        v-model="item.name"
+                        @blur="submitEditItemName(item)"
+                    />
+                </div>
                 <template v-if="!editName">
                     <span class="item-name" @click="editItemName">{{ item.name }}</span>
                 </template>
@@ -168,17 +161,19 @@ const postNewItem = (item) => {
         </p>
         <p class="item-description">
             <template v-if="editDescription">
-                <input
-                    type="text"
-                    class="item-description-input"
-                    placeholder="description"
-                    ref="itemDescriptionRef"
-                    v-model="item.description"
-                    @blur="submitEditItemDescription(item)"
-                />
+                <div class="text-field description">
+                    <input
+                        type="text"
+                        placeholder="description"
+                        ref="itemDescriptionRef"
+                        v-model="item.description"
+                        @blur="submitEditItemDescription(item)"
+                    />
+                </div>
             </template>
             <template v-if="!editDescription">
-                <span class="item-description-text" @click="editItemDescription">{{ item.description }}</span>
+                <span class="item-description-text" @click="editItemDescription" v-if="item.description">{{ item.description }}</span>
+                <span class="placeholder-color" @click="editItemDescription" v-else>description</span>
             </template>
         </p>
         <div class="item-addons-removes-options">
@@ -213,7 +208,7 @@ const postNewItem = (item) => {
                         :options="item.options" :item_id="item._id" :section_id="section_id" :menu="menu" v-if="optionsFlag"/>
                 </div>
             </div>
-        </div>
+        </div>  
     </div>
 </template>
 <style scoped>
@@ -252,9 +247,8 @@ const postNewItem = (item) => {
     font-size: 12px;
     margin-left: 45px;
 }
-.item-description-input{
+.text-field.description input{
     width: auto;
-    padding: 0 2px;
     min-width: 90%;
 }
 .item-addons-removes-options{

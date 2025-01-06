@@ -28,7 +28,7 @@ const newMenu=()=>{
   position: absolute;
   right: 0;
   margin: 10px;
-  padding: 5px 10px;
+  padding: 0px 10px;
 }
 .btn.new:hover{
   background-color: darkgreen;

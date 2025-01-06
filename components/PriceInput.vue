@@ -55,24 +55,29 @@ onMounted(()=>{
 </script>
 <template>
     <div class="price-input">
-        <span class="prefix">$</span>
-        <input
-            type="text"
-            class="price-input-field"
-            ref="priceRef"
-            placeholder="000.00"
-            :value="formattedPrice"
-            @input="formatPriceInput"
-            @blur="submitPrice"
-        >
+        <div class="text-field price">
+            <span class="prefix">$</span>
+            <input
+                type="text"
+                ref="priceRef"
+                placeholder="000.00"
+                :value="formattedPrice"
+                @input="formatPriceInput"
+                @blur="submitPrice"
+            >
+        </div>
     </div>
 </template>
 <style scoped>
-.price-input-field{
+.text-field.price input{
     width: auto;
     background-color: white;
     padding: 0 2px;
     text-align: right;
-    max-width: 60px;
+    max-width: 65px;
+}
+.text-field.price .prefix{
+    position: relative;
+    left: 24px;
 }
 </style>

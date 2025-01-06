@@ -37,32 +37,35 @@ const deleteSection = (section)=>{
     props.menu.sections.splice(sectionIndex, 1);
     menuStore.updateMenu(props.menu);
 }
-//add item
 const addItem = ref(false);
-const getNewItemFlag = (flag) => { 
-    newItem.value={
+const newItem = ref({
         new: true,
         name: "",
-        description: "",
         price: "000.00",
+        description: "",
+        addOns: [],
+        removes: [],
+        options: [],
+        _id: uuidv4(),
+    })
+//add item
+const addNewItem = () => {
+    addItem.value=!addItem.value;
+    newItem.value = {
+        new: true,
+        name: "",
+        price: "000.00",
+        description: "",
         addOns: [],
         removes: [],
         options: [],
         _id: uuidv4(),
     }
-    addItem.value=flag;
 }
-const newItem = ref({
-    new: true,
-    name: "",
-    description: "",
-    price: "000.00",
-    addOns: [],
-    removes: [],
-    options: [],
-    _id: uuidv4(),
-})
-
+const getNewItemFlag = () => {
+    console.log('flag in section')
+    addItem.value=false;
+}
 </script>
 <template>
     <div>
@@ -84,7 +87,7 @@ const newItem = ref({
             <template v-else>
                 <span @click="editSectionName(section)">{{ section.name }}</span>
             </template>
-            <button class="btn add-item" @click="addItem=!addItem">
+            <button class="btn add-item" @click="addNewItem">
                 <span class="btn-text">item</span>
                 <i class="mdi mdi-plus"/>
                 <span class="tooltip">add item</span>
@@ -110,7 +113,7 @@ const newItem = ref({
             <div class="section-add-item" v-if="addItem">
                 <EditItem :item="newItem" :section_id="section._id" :menu="menu" @send-new-item-flag="getNewItemFlag"/>
             </div>
-            <div v-for="(item, i) in section.items" :key="i" class="items-loop">
+            <div v-for="(item, i) in section.items" :key="item._id" class="items-loop">
                 <div class="section-item">
                     <EditItem :item="item" :section_id="section._id" :menu="menu" />
                 </div>

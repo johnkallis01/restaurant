@@ -52,12 +52,6 @@ containers
     height: 100vh;
     border-radius: 10px 10px 0 0;
 }
-.container-title.menu{
-    height: 8vh; 
-    color: black;
-    border-radius: 10px 10px 0 0;
-    border-bottom: 2px solid #333;
-}
 .sections{
     display: flex;
     flex-direction: column;
@@ -96,6 +90,7 @@ containers
 }
 .section-item{
     border: 2px solid black;
+    border-radius: 15px;
 }
 .item{
     display: flex;
@@ -129,11 +124,8 @@ containers
     align-self: start;
     margin-bottom: 8px;
 }
-.prefix{
-    margin-right: 4px;
-}
 .text-field input{
-    padding: 4px 8px;
+    padding: 0px 7px;
     border: 1px solid #ccc;
     border-radius: 4px;
     box-sizing: border-box;
@@ -152,13 +144,16 @@ input[type="number"]::-webkit-outer-spin-button {
     -webkit-appearance: none;
     margin: 0;
 }
+.placeholder-color{
+    color: #999;
+}
   /****************
     Buttons
   ****************/
 
 .btn {
     display: inline-block;
-    padding: 0px;
+    padding: 0px 5px;
     margin: 0px 5px;
     text-align: center;
     text-decoration: none;
@@ -187,7 +182,7 @@ input[type="number"]::-webkit-outer-spin-button {
     position: absolute;
     right: 0;
     padding: 5px;
-    font-size: 25px;
+    font-size: 18px;
 }
 .btn-icons-group.items{
     position: relative;

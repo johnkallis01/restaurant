@@ -9,7 +9,7 @@ const deleteMenu = (menu) =>{
 <template>
     <div class="menu-container">
         <div class="container-title menu">
-            <span class="title-text">{{ menu.name }}</span>
+            <span class="title-text menu">{{ menu.name }}</span>
             <span class="btn-icons-group">
                 <button class="btn" @click="deleteMenu(menu)">
                     <i class="mdi mdi-close"/>
@@ -29,8 +29,15 @@ const deleteMenu = (menu) =>{
     </div>
 </template>
 <style scoped>
+.container-title.menu{
+    height: 8vh;
+    color: black;
+    border-bottom: 2px solid #333;
+    background-color: rgb(184, 175, 175);
+}
 .text-field.description{
     width: 100%;
+
 }
 .input-description{
     width: 100%;

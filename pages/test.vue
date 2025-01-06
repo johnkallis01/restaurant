@@ -1,10 +1,12 @@
 <script setup>
+import { v4 as uuidv4 } from 'uuid';
 const { data: menus } = await useFetch("/api/menus");
 const menuStore = useMenuStore();
 const section = ref({
         name: "",
         description: "",
         items: [],
+        _id: uuidv4(),
       });
   
 const submitForm = () => {
