@@ -30,8 +30,8 @@ const itemNameRef = ref(null); const editName = ref(false);
 const editItemName = () => { editName.value = true; nextTick(()=> itemNameRef.value.focus()); }
 const submitEditItemName = (item) => { 
     console.log('submit name', item)
-    if(!!item.name) {editName.value=false;}
-    if(!isNew.value) {postItemEdit(item);   }
+    if(!!item.name) editName.value=false;
+    if(!isNew.value) postItemEdit(item);
 }
 /************************
 **edit item description logic
@@ -72,14 +72,23 @@ const formatPriceDisplay = (price) => {
 /************
  * Add-ons Removes Options
  ************/
- const addOnsFlag = ref(false); const removesFlag = ref(false); const optionsFlag = ref(false);
- const viewAddOns = ()=>{ removesFlag.value=optionsFlag.value=false; addOnsFlag.value=!addOnsFlag.value;}
- const viewRemoves = ()=>{ optionsFlag.value=addOnsFlag.value=false; removesFlag.value=!removesFlag.value;}
- const viewOptions = ()=>{ addOnsFlag.value=removesFlag.value=false; optionsFlag.value=!optionsFlag.value;}
+const addOnsFlag = ref(false); const removesFlag = ref(false); const optionsFlag = ref(false);
+const viewAddOns = ()=>{ removesFlag.value=false;optionsFlag.value=false; addOnsFlag.value=!addOnsFlag.value;}
+const viewRemoves = ()=>{ optionsFlag.value=false;addOnsFlag.value=false; removesFlag.value=!removesFlag.value;}
+const viewOptions = ()=>{ addOnsFlag.value=false;removesFlag.value=false; optionsFlag.value=!optionsFlag.value;}
  // new add-ons
- const newAddOn = ref({ new: true, name: "", price: "000.00", _id: uuidv4(), });
- const newRemove = ref({ new: true, name: "", _id: uuidv4(), });
- const newOption = ref({ new: true, name: "", values: [], _id: uuidv4(), });
+const newAddOn = ref({ name: "", price: "000.00", _id: uuidv4(), });
+const newRemove = ref({ name: "", _id: uuidv4(), });
+const newOption = ref({ name: "", values: [], _id: uuidv4(), });
+const getResetAddOn = () =>{
+    newAddOn.value = { name: "", price: "000.00", _id: uuidv4(), }
+}
+const getResetRemove = () =>{
+    newRemove.value = { name: "", _id: uuidv4(), }
+}
+const getResetOption = () =>{
+    newOption.value = { name: "", values: [], _id: uuidv4(), }
+}
 /*********
  * delete item logic
  ************/
@@ -97,7 +106,6 @@ const postNewItem = (item) => {
         props.menu.sections[sectionIndex].items.push(item);
         menuStore.updateMenu(props.menu);
         emit('send-new-item-flag', false);
-        isNew.value=false;
     }
 }
 </script>
@@ -167,41 +175,67 @@ const postNewItem = (item) => {
             </div>
             <div class="item-a-r-o-components">
                 <div v-if="addOnsFlag">
-                    <EditItemAddOn 
-                        :addOn="newAddOn"
-                        :item_id="item._id"
-                        :section_id="section_id"
-                        :menu="menu"
-                        @send-reset="getReset"
-                    /> 
+                    <template v-if="addOnsFlag">
+                        <EditItemAddOn 
+                            :addOn="newAddOn"
+                            :item_id="item._id"
+                            :section_id="section_id"
+                            :menu="menu"
+                            @send-reset-addon="getResetAddOn"
+                        />
+                    </template>
+                    
                     <div v-for="(addOn, i) in item.addOns" :key="i">
-                        <EditItemAddOn class="edit-item addOns" 
+                        <EditItemAddOn 
                             :addOn="addOn"
                             :item_id="item._id"
                             :section_id="section_id"
                             :menu="menu"
+                            @send-reset-remove="getResetRemove"
                         /> 
                     </div>
                 </div>
-                <div>
-                    <EditItemRemove 
-                        v-if="removesFlag"
-                        class="edit-item removes" 
-                        :removes="item.removes"
-                        :item_id="item._id"
-                        :section_id="section_id"
-                        :menu="menu"     
-                    />
+                <div v-if="removesFlag">
+                    <template v-if="removesFlag">
+                        <EditItemRemove 
+                            :remove="newRemove"
+                            :item_id="item._id"
+                            :section_id="section_id"
+                            :menu="menu"
+                            @send-reset-remove="getResetRemove"
+                        />
+                    </template>
+                    
+                    <div v-for="(remove, i) in item.removes" :key="i">
+                        <EditItemRemove
+                            :remove="remove"
+                            :item_id="item._id"
+                            :section_id="section_id"
+                            :menu="menu"
+                            @send-reset-remove="getResetRemove"
+                        /> 
+                    </div>
                 </div>
-                <div>
-                    <EditItemOption 
-                        v-if="optionsFlag"
-                        class="edit-item options" 
-                        :options="item.options"
-                        :item_id="item._id"
-                        :section_id="section_id"
-                        :menu="menu"
-                    />
+                <div v-if="optionsFlag">
+                    <template v-if="optionsFlag">
+                        <EditItemOption
+                            :option="newOption"
+                            :item_id="item._id"
+                            :section_id="section_id"
+                            :menu="menu"
+                            @send-reset-option="getResetOption"
+                        />
+                    </template>
+                    
+                    <div v-for="(option, i) in item.options" :key="i">
+                        <EditItemOption
+                            :option="option"
+                            :item_id="item._id"
+                            :section_id="section_id"
+                            :menu="menu"
+                            @send-reset-option="getResetOption"
+                        /> 
+                    </div>
                 </div>
             </div>
         </div>  
@@ -214,9 +248,6 @@ const postNewItem = (item) => {
 }
 .btn.delete{
     margin-right: 20px;
-}
-.name-input{
-    width: 100%;
 }
 .name-price{
     display: flex;
@@ -262,11 +293,12 @@ const postNewItem = (item) => {
 .item-a-r-o-titles{
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: center;    
     margin: 5px 20px 20px 20px
 }
 .item-a-r-o-components{
-    background-color: grey;
+    display: flex;
+    align-items: center;
 }
 .underline{
     border-bottom: 2px solid black;

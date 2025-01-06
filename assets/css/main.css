@@ -60,6 +60,9 @@ containers
     position: absolute;
     top: 10vh;
 }
+.name-input{
+    width: 100%;
+}
 .section-container{
     position: relative;
     top: 0;
@@ -117,13 +120,6 @@ containers
     align-items: center;
     gap: 12px;
 }
-.text-field label{
-    text-align: left;
-    min-width: 150px;
-    display: block;
-    align-self: start;
-    margin-bottom: 8px;
-}
 .text-field input{
     padding: 0px 7px;
     border: 1px solid #ccc;
@@ -131,18 +127,12 @@ containers
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    gap: 12px;
     resize: none;
   }
 .text-field input:focus{
     outline: none;
     border-color: #1976d2;
     box-shadow: rgba(25, 118, 210, 0.5);
-}
-input[type="number"]::-webkit-inner-spin-button,
-input[type="number"]::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
 }
 .placeholder-color{
     color: #999;
@@ -207,8 +197,26 @@ input[type="number"]::-webkit-outer-spin-button {
     z-index: 10;
 }
 /***************
-    dialogs
+    addon/remove/options
 ***************/
-.dialog{
-    width: 80%;
+.tab-container{
+    display: flex;
+    align-items: center;
+}
+.tab-row{
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    width: 100%;
+}
+.tab-name{
+    width: 100%;
+    min-width: 350px;
+}
+.tab-name input{
+    width: 100%;
+}
+.tab-price{
+    text-align: right;
+    width: 75px;
 }
