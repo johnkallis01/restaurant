@@ -119,7 +119,7 @@ const postNewItem = (item) => {
 </script>
 <template>
     <div class="item-container">
-        <p class="item">
+        <p class="item-title">
             <span class="btn-icons-group items">
                 <template v-if="!isNew">
                     <button class="btn" @click="deleteItem" @keydown="tabToName" ref="buttonRef">
@@ -149,7 +149,7 @@ const postNewItem = (item) => {
                     <span class="item-name" @click="focusNameInput">{{ item.name }}</span>
                 </template>
                 <template v-if="editPrice">
-                    <PriceInput class="item-price-input" ref="priceInputRef"
+                    <PriceInput class="item-price input" ref="priceInputRef"
                         :price="item.price"
                         @keydown="tabToDescription"
                         @keydown.enter="postItemEdit(item)"

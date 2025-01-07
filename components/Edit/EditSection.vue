@@ -68,7 +68,7 @@ const getNewItemFlag = () => {
 }
 </script>
 <template>
-    <div>
+    <div class="section-container">
         <div class="section-name">
             <button class="btn delete" @click="deleteSection(section)">
                 <i class="mdi mdi-close"/>
@@ -110,14 +110,13 @@ const getNewItemFlag = () => {
             </template>
         </div>
         <div class="section-items">
-            <div class="section-add-item" v-if="addItem">
+            <div class="section-item" v-if="addItem">
                 <EditItem :item="newItem" :section_id="section._id" :menu="menu" @send-new-item-flag="getNewItemFlag"/>
             </div>
-            <div class="items-loop" v-for="(item, i) in section.items" :key="i">
-                <div class="section-item">
-                    <EditItem :item="item" :section_id="section._id" :menu="menu"/>
-                </div>
+            <div class="section-item" v-for="(item, i) in section.items" :key="i">
+                <EditItem :item="item" :section_id="section._id" :menu="menu"/>
             </div>
+           
         </div>
     </div>
 </template>

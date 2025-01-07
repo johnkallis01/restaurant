@@ -12,11 +12,10 @@ containers
     align-items: center;
     position: absolute;
     height: 90vh;
-    width: 95vw;
     top: 0;
     left: 5vh;
     right: 5vh; 
-    overflow-y: scroll;
+    overflow: scroll;
     background-color: rgb(233, 235, 238);
 }
 .container-body{
@@ -48,7 +47,6 @@ containers
     align-items: center;
     position: relative;
     top: 0;
-    width: 100%;
     height: 100vh;
     border-radius: 10px 10px 0 0;
 }
@@ -56,7 +54,6 @@ containers
     display: flex;
     flex-direction: column;
     padding: 10px;
-    width: 95%;
     position: absolute;
     top: 10vh;
 }
@@ -64,9 +61,7 @@ containers
     width: 100%;
 }
 .section-container{
-    position: relative;
-    top: 0;
-    left: 0;
+    width: 100%;
 }
 .section-name{
     display: flex;
@@ -87,21 +82,38 @@ containers
 .section-items{   
     display: grid;
     grid-template-columns: repeat(2, 1fr);
+    justify-items: center;
     width: 80vw;
     margin: 5px 5px 5px 5px;
-    gap: 10px;
+    gap: 2px;
+    box-sizing: border-box;
+    border: 2px solid green;
 }
 .section-item{
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    box-sizing: border-box;
     border: 2px solid black;
     border-radius: 15px;
-    max-width: 70vw;
+    width: 39vw;
 }
-.item{
+.item-container{
+    width: 100%;
+    
+}
+.item-title{
     display: flex;
     align-items: center;
 }
-
-
+.item-description{
+    
+}
+.item-addons-removes-options{
+    width: 100%;
+    box-sizing: border-box;
+    border: 2px solid red;
+}
 
 /***************
     Input Formatting
@@ -201,14 +213,12 @@ containers
 /***************
     addon/remove/options
 ***************/
-.item-addons-removes-options{
-    width: 100%;
-}
+
+
 .tab-container{
     display: flex;
     justify-content: flex-start;
     align-items: flex-start;
-    max-width: 500px;
     width: 100%;
 }
 .tab-row{
@@ -217,10 +227,9 @@ containers
 }
 .tab-name{
     flex: 1;
-    width: 250px;
+    width: 20vw;
 }
 .tab-name input{
-    width: 80%;
 }
 .tab-price{
     text-align: right;
