@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 const props = defineProps({
     menu: { type: Object, required: true},
     section_id: { type: String, required: true},
-    item: { type: Object, required: true}, index: {type: Number, required: true}
+    item: { type: Object, required: true},
 });
 const menuStore = useMenuStore();
 const sectionIndex = props.menu.sections.findIndex(sec => sec._id === props.section_id);
@@ -41,8 +41,11 @@ const tabToName = (event)=>{
 }
 //reusable put menu change
 const postItemEdit = (item) => {
-    props.menu.sections[sectionIndex].items[itemIndex]=item;
-    menuStore.updateMenu(props.menu);
+    if(!isNew.value){
+        props.menu.sections[sectionIndex].items[itemIndex]=item;
+        menuStore.updateMenu(props.menu);
+    }else{ postNewItem(item);}
+    
 }
 /************************
 **edit item name logic
@@ -106,7 +109,7 @@ const deleteItem = ()=>{
  ************/
 const emit = defineEmits(['send-new-item-flag']);
 const postNewItem = (item) => {
-    if(item.name){
+    if(item?.name){
         const sectionIndex = props.menu.sections.findIndex(sec => sec._id === props.section_id);
         props.menu.sections[sectionIndex].items.push(item);
         menuStore.updateMenu(props.menu);
@@ -115,7 +118,7 @@ const postNewItem = (item) => {
 }
 </script>
 <template>
-    <div class="item-container" :id="`item-${index}`">
+    <div class="item-container">
         <p class="item">
             <span class="btn-icons-group items">
                 <template v-if="!isNew">
@@ -139,14 +142,18 @@ const postNewItem = (item) => {
                             v-model="item.name"
                             @blur="submitEditItemName(item)"
                             @keydown="tabToPrice"
-                        />
+                            @keydown.enter="postItemEdit(item)"/>
                     </div>
                 </template>
                 <template v-if="!editName">
                     <span class="item-name" @click="focusNameInput">{{ item.name }}</span>
                 </template>
                 <template v-if="editPrice">
-                    <PriceInput class="item-price-input" ref="priceInputRef" :price="item.price" @keydown="tabToDescription" @update-price="getItemPrice"/>
+                    <PriceInput class="item-price-input" ref="priceInputRef"
+                        :price="item.price"
+                        @keydown="tabToDescription"
+                        @keydown.enter="postItemEdit(item)"
+                        @update-price="getItemPrice"/>
                 </template>
                 <template v-else>
                     <span class="item-price" @click="focusPriceInput">{{ formatPriceDisplay(item.price)}}</span>
@@ -158,7 +165,8 @@ const postNewItem = (item) => {
                 <div class="text-field description">
                     <input type="text" placeholder="description" ref="descriptionInputRef"
                         v-model="item.description"
-                        @blur="submitEditItemDescription(item)" />
+                        @blur="submitEditItemDescription(item)" 
+                        @keydown.enter="postItemEdit(item)"/>
                 </div>
             </template>
             <template v-if="!editDescription">
@@ -167,7 +175,7 @@ const postNewItem = (item) => {
             </template>
         </p>
         <div class="item-addons-removes-options" ref="clickInsideOK" @click.stop>
-            <span class="item-a-r-o-titles">
+            <span class="item-a-r-o-titles" v-if="!isNew">
                 <button class="btn" @click="viewAddOns" @keydown.enter="viewAddOns">
                     <span :class="{'underline': addOnsFlag}">Add-Ons</span>
                 </button>
