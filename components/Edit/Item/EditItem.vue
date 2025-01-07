@@ -52,8 +52,7 @@ const postItemEdit = (item) => {
 /************************
 **edit item name logic
 *************************/
-const nameInputRef = ref(null); const editName = ref(false);
-const focusNameInput = () => { editName.value = true; nextTick(()=> nameInputRef.value.focus()); }
+const { nameInputRef, editName, focusNameInput } = useNameInput();
 const submitEditItemName = (item) => { 
     if(!!item.name) editName.value=false;
     if(!isNew.value) postItemEdit(item);
@@ -73,11 +72,7 @@ const submitEditItemDescription = (item) => {
 /***********
  * Edit Item Price
  *************/
-const priceInputRef = ref(null); const editPrice = ref(false);
-const focusPriceInput = () =>{
-    editPrice.value = true;
-    requestAnimationFrame(()=> priceInputRef.value?.focusInput())
-}
+ const { priceInputRef, editPrice, focusPriceInput } = usePriceInput();
 //from <PriceInput/> emit
 const getItemPrice = (newPrice) => {
     editPrice.value = false;
@@ -182,7 +177,7 @@ const postNewItem = (item) => {
                         ref="itemDescriptionRef"
                         v-model="item.description"
                         @blur="submitEditItemDescription(item)"
-                        @keydown="tabToAddOns"
+                        
                     />
                 </div>
             </template>
@@ -192,20 +187,23 @@ const postNewItem = (item) => {
             </template>
         </p>
         <div class="item-addons-removes-options" ref="itemAROsRef">
-            <div class="item-a-r-o-titles">
-                <span :class="{'underline': addOnsFlag}"
-                    @click="viewAddOns" ref="addOnsRef" tabindex="0"
-                    @keydown.enter="viewAddOns" @keydown="tabToRemoves">Add-Ons
-                </span>
-                <span :class="{'underline': removesFlag}"
-                    @click="viewRemoves" ref="removesRef" tabindex="1"
-                    @keydown.enter="viewRemoves" @keydown="tabToOptions">Removes
-                </span>
-                <span :class="{'underline': optionsFlag}"
-                    @click="viewOptions" ref="optionsRef" tabindex="2" 
-                    @keydown.enter="viewOptions" @keydown="tabToButton">Options
-                </span>
-            </div>
+            <span class="item-a-r-o-titles">
+                <button class="btn"
+                    @click="viewAddOns" ref="addOnsRef"
+                    @keydown.enter="viewAddOns">
+                    <span :class="{'underline': addOnsFlag}">Add-Ons</span>
+                </button>
+                <button class="btn"
+                    @click="viewRemoves" ref="removesRef"
+                    @keydown.enter="viewRemoves">
+                    <span :class="{'underline': removesFlag}">Removes</span>
+                </button>
+                <button class="btn"
+                    @click="viewOptions" ref="optionsRef"    
+                    @keydown.enter="viewOptions">
+                    <span :class="{'underline': optionsFlag}">Options</span>
+                </button>
+            </span>
             <div class="item-a-r-o-components">
                 <div v-if="addOnsFlag">
                     <EditItemAddOn 
@@ -323,8 +321,13 @@ const postNewItem = (item) => {
 .item-a-r-o-titles{
     display: flex;
     justify-content: space-between;
-    align-items: center;    
+    align-items: center;       
     margin: 5px 20px 20px 20px
+}
+.item-a-r-o-titles:focus{
+    outline: none;
+    background-color: red;
+    box-shadow: 5px 0 5px rgba(0, 123, 255, 0.5); 
 }
 .item-a-r-o-components{
     display: flex;

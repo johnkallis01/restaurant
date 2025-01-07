@@ -1,5 +1,4 @@
 <script setup>
-import { v4 as uuidv4 } from 'uuid';
 const props = defineProps({
     remove: { type: Object, required: false },
     item_id: { type: String, required: true },
@@ -11,14 +10,10 @@ const menuStore = useMenuStore();
 const sectionIndex = props.menu.sections.findIndex(sec => sec._id === props.section_id);
 const itemIndex = props.menu.sections[sectionIndex].items.findIndex(it => it._id === props.item_id);
 const removeIndex = props.menu.sections[sectionIndex].items[itemIndex].removes.findIndex((remove)=> remove._id === props.remove._id);
+const { nameInputRef, editName, focusNameInput } = useNameInput();
 /***********
  * Edit Add-on Name
  *************/
-const editName=ref(false); const nameInputRef=ref(null);
-const editRemoveName = ()=>{
-    editName.value=true;
-    nextTick(()=> nameInputRef.value.focus());
-}
 const submitEditRemoveName = (remove) => {
     if(!!remove.name) editName.value=false;
     if(!isNew.value) postEditRemove(remove);
@@ -36,6 +31,7 @@ const isNew = ref(false);
 onMounted(()=>{
     if(!props.remove?.name){
         isNew.value = true; editName.value=true;
+        focusNameInput();
     }  
 });
 const emit = defineEmits(['send-reset-remove']);
@@ -84,7 +80,7 @@ const deleteRemove = () => {
                     </div>
                 </template>
                 <template v-else>
-                    <span @click="editRemoveName(remove)" v-if="remove.name">{{ remove.name }}</span>
+                    <span @click="focusNameInput" v-if="remove.name">{{ remove.name }}</span>
                     <span class="placeholder-color" @click="editRemoveName(remove)" v-else>name</span>
                 </template>
             </span>

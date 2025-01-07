@@ -1,5 +1,4 @@
 <script setup>
-import { v4 as uuidv4 } from 'uuid';
 const props = defineProps({
     addOn: { type: Object, required: false },
     item_id: { type: String, required: true },
@@ -8,6 +7,7 @@ const props = defineProps({
     
 });
 const menuStore = useMenuStore();
+
 const sectionIndex = props.menu.sections.findIndex(sec => sec._id === props.section_id);
 const itemIndex = props.menu.sections[sectionIndex].items.findIndex(it => it._id === props.item_id);
 const addOnIndex = props.menu.sections[sectionIndex].items[itemIndex].addOns.findIndex((addOn)=> addOn._id === props.addOn._id);
@@ -19,24 +19,12 @@ const formatPriceDisplay = (price) => {
     }
     return "$" + price;
 }
-const tabToPrice = (event)=>{
-    if(event.key==="Tab"){
-        event.preventDefault();
-        editPrice.value=true;
-        requestAnimationFrame(()=>{priceInputRef.value?.focusInput();})
-    }
-}
-const tabToName = (event) => {
-    if(event.key==="Tab"){}
-}
+const tabToName = (event)=>{ if(event.key==="Tab"){ event.preventDefault(); focusNameInput();}}
+const tabToPrice = (event)=>{ if(event.key==="Tab"){ event.preventDefault(); focusPriceInput();}}
 /***********
  * Edit Add-on Name
  *************/
-const editName=ref(false); const nameInputRef=ref(null);
-const focusNameInput = ()=>{
-    editName.value=true;
-    nextTick(()=> nameInputRef.value.focus());
-}
+const { nameInputRef, editName, focusNameInput } = useNameInput();
 const submitEditAddOnName = (addOn) => {
     if(!!addOn.name) editName.value=false;
     if(!isNew.value) postEditAddOn(addOn);
@@ -45,12 +33,7 @@ const submitEditAddOnName = (addOn) => {
 /***********
  * Edit Add-on Price
  *************/
-const editPrice = ref(false); const priceInputRef = ref(null);
-const editAddOnPrice = ()=>{
-    editPrice.value=true;
-    requestAnimationFrame(()=>{priceInputRef.value?.focusInput();})
-}
-const priceDisplayRef = ref(null);
+const { priceInputRef, editPrice, focusPriceInput } = usePriceInput();
 const getAddOnPrice = (newPrice) => {
     editPrice.value = false;
     if(!isNew.value) postEditAddOn(props.addOn);
@@ -61,11 +44,7 @@ const getAddOnPrice = (newPrice) => {
     });
 
 }
-//post changes
-const postEditAddOn = (addOn) => {
-    props.menu.sections[sectionIndex].items[itemIndex].addOns[addOnIndex] = addOn;  
-    menuStore.updateMenu(props.menu);
-}
+
 /****************
  * new add on logic
  ********************/
@@ -77,7 +56,6 @@ onMounted(()=>{
     }
 });
 const emit = defineEmits(['send-reset-addon']);
-
 const postNewAddOn = (addOn) => {
     if(addOn.name){    
         props.menu.sections[sectionIndex].items[itemIndex].addOns.push(addOn);
@@ -85,6 +63,11 @@ const postNewAddOn = (addOn) => {
         emit('send-reset-addon');
     }
 }
+//post changes
+const postEditAddOn = (addOn) => {
+    props.menu.sections[sectionIndex].items[itemIndex].addOns[addOnIndex] = addOn;  
+    menuStore.updateMenu(props.menu);
+}   
 const deleteAddOn = () => {
     props.menu.sections[sectionIndex].items[itemIndex].addOns.splice(addOnIndex, 1);
     menuStore.updateMenu(props.menu)
@@ -94,13 +77,13 @@ const deleteAddOn = () => {
     <div class="tab-container">
         <span class="btn-icons-group items">
             <template v-if="!isNew">
-                <button class="btn" @click="deleteAddOn">
+                <button class="btn" @click="deleteAddOn" @keydown="tabToName">
                     <i class="mdi mdi-close"/>
                     <span class="tooltip">delete</span>
                 </button>
             </template>
             <template v-else>
-                <button class="btn" @click="postNewAddOn(addOn)">
+                <button class="btn" @click="postNewAddOn(addOn)" @keydown="tabToName">
                     <i class="mdi mdi-plus"/>
                     <span class="tooltip">add new add-on</span>
                 </button>
@@ -110,10 +93,7 @@ const deleteAddOn = () => {
             <span class="tab-name">
                 <template v-if="editName">
                         <div class="text-field">
-                            <input
-                                type="text"
-                                placeholder="name"
-                                ref="nameInputRef"
+                            <input type="text" placeholder="name" ref="nameInputRef"
                                 v-model="addOn.name"
                                 @blur="submitEditAddOnName(addOn)"
                                 @keydown="tabToPrice"
@@ -130,9 +110,7 @@ const deleteAddOn = () => {
                     <PriceInput ref="priceInputRef" :price="addOn.price" @update-price="getAddOnPrice"/>
                 </template>
                 <template v-else>
-                    <span @click="editAddOnPrice" ref="priceDisplayRef">{{ formatPriceDisplay(addOn.price) }}</span>
-      <!--              <span @click="editAddOnPrice" v-if="addOn.price !=='000.00'">{{ formatPriceDisplay(addOn.price) }}</span>
-                    <span @click="editAddOnPrice" class="placeholder-color" v-else>000.00</span> -->
+                    <span @click="focusPriceInput">{{ formatPriceDisplay(addOn.price) }}</span>
                 </template>
             </span>
         </div>

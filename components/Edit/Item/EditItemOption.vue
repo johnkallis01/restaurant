@@ -1,5 +1,4 @@
 <script setup>
-import { v4 as uuidv4 } from 'uuid';
 const props = defineProps({
     option: { type: Object, required: false },
     item_id: { type: String, required: true },
@@ -10,23 +9,23 @@ const props = defineProps({
 const menuStore = useMenuStore();
 const sectionIndex = props.menu.sections.findIndex(sec => sec._id === props.section_id);
 const itemIndex = props.menu.sections[sectionIndex].items.findIndex(it => it._id === props.item_id);
-const optionIndex = props.menu.sections[sectionIndex].items[itemIndex].options.findIndex((option)=> option._id === props.option._id);
+const optionIndex = props.menu.sections[sectionIndex].items[itemIndex].options.findIndex((remove)=> remove._id === props.remove._id);
 /***********
  * Edit Add-on Name
  *************/
 const editName=ref(false); const nameInputRef=ref(null);
-const editOptionName = ()=>{
+const focusNameInput = ()=>{
     editName.value=true;
     nextTick(()=> nameInputRef.value.focus());
 }
-const submitEditOptionName = (option) => {
-    if(!!option.name) editName.value=false;
-    if(!isNew.value) postEditOption(option);
+const submitEditRemoveName = (remove) => {
+    if(!!remove.name) editName.value=false;
+    if(!isNew.value) postEditRemove(remove);
     
 }
 //post changes
-const postEditOption = (option) => {
-    props.menu.sections[sectionIndex].items[itemIndex].options[optionIndex] = option;   
+const postEditRemove = (remove) => {
+    props.menu.sections[sectionIndex].items[itemIndex].removes[removeIndex] = remove;   
     menuStore.updateMenu(props.menu);
 }
 /****************
@@ -34,69 +33,73 @@ const postEditOption = (option) => {
  ********************/
 const isNew = ref(false);
 onMounted(()=>{
-    if(!props.option?.name){
+    if(!props.remove?.name){
         isNew.value = true; editName.value=true;
     }  
 });
-const emit = defineEmits(['send-reset-option']);
+const emit = defineEmits(['send-reset-remove']);
 
-const postNewOption = (option) => {
-    if(option.name){    
-        props.menu.sections[sectionIndex].items[itemIndex].options.push(option);
+const postNewRemove = (remove) => {
+    if(remove.name){    
+        props.menu.sections[sectionIndex].items[itemIndex].removes.push(remove);
         menuStore.updateMenu(props.menu);
-        emit('send-reset-option');
+        emit('send-reset-remove');
     }
 }
-const deleteOption = () => {
+const deleteRemove = () => {
     console.log('del')
-    props.menu.sections[sectionIndex].items[itemIndex].options.splice(optionIndex, 1);
+    props.menu.sections[sectionIndex].items[itemIndex].removes.splice(removeIndex, 1);
     menuStore.updateMenu(props.menu)
 }
 </script>
 <template>
-    <div class="option-container">
+    <div class="tab-container">
         <span class="btn-icons-group items">
             <template v-if="!isNew">
-                <button class="btn" @click="deleteOption">
+                <button class="btn" @click="deleteRemove">
                     <i class="mdi mdi-close"/>
                     <span class="tooltip">delete</span>
                 </button>
             </template>
             <template v-else>
-                <button class="btn" @click="postNewOption(option)">
+                <button class="btn" @click="postNewRemove(remove)">
                     <i class="mdi mdi-plus"/>
                     <span class="tooltip">add new add-on</span>
                 </button>
             </template>
         </span>
-        <template v-if="editName">
-            <div class="text-field">
-                <input
-                    type="text"
-                    class="name-input"
-                    placeholder="name"
-                    ref="nameInputRef"
-                    v-model="option.name"
-                    @blur="submitEditOptionName(option)"
-                />
-            </div>
-        </template>
-        <template v-else>
-            <span @click="editOptionName(option)" v-if="option.name">{{ option.name }}</span>
-            <span class="placeholder-color" @click="editOptionName(option)" v-else>name</span>
-        </template>
+        <span class="tab-row">
+            <span class="tab-name">
+                <template v-if="editName">
+                    <div class="text-field">
+                        <input
+                            type="text"
+                            class="name-input"
+                            placeholder="name"
+                            ref="nameInputRef"
+                            v-model="remove.name"
+                            @blur="submitEditRemoveName(remove)"
+                        />
+                    </div>
+                </template>
+                <template v-else>
+                    <span @click="editRemoveName(remove)" v-if="remove.name">{{ remove.name }}</span>
+                    <span class="placeholder-color" @click="editRemoveName(remove)" v-else>name</span>
+                </template>
+            </span>
+        </span>
     </div>
 </template>
 <style scoped>
-.option-name{
+.remove-name{
     row-gap: 100px;
     margin-left: 30px;
 }
-.new-option{
+.new-remove{
     display: grid;
     grid-template-columns: repeat(2, 1fr);
 }
-.option-container{
+.remove-container{
     display: flex;
     justify-content: space-between;
     align-items: center;
