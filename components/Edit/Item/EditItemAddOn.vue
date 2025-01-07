@@ -19,11 +19,21 @@ const formatPriceDisplay = (price) => {
     }
     return "$" + price;
 }
+const tabToPrice = (event)=>{
+    if(event.key==="Tab"){
+        event.preventDefault();
+        editPrice.value=true;
+        requestAnimationFrame(()=>{priceInputRef.value?.focusInput();})
+    }
+}
+const tabToName = (event) => {
+    if(event.key==="Tab"){}
+}
 /***********
  * Edit Add-on Name
  *************/
 const editName=ref(false); const nameInputRef=ref(null);
-const editAddOnName = ()=>{
+const focusNameInput = ()=>{
     editName.value=true;
     nextTick(()=> nameInputRef.value.focus());
 }
@@ -40,14 +50,20 @@ const editAddOnPrice = ()=>{
     editPrice.value=true;
     requestAnimationFrame(()=>{priceInputRef.value?.focusInput();})
 }
+const priceDisplayRef = ref(null);
 const getAddOnPrice = (newPrice) => {
     editPrice.value = false;
-    props.addOn.price = newPrice;
-    postEditAddOn(props.addOn);
+    if(!isNew.value) postEditAddOn(props.addOn);
+    else if (props.addOn.name) postNewAddOn({
+        _id: props.addOn._id,
+        name: props.addOn.name,
+        price: newPrice
+    });
+
 }
 //post changes
 const postEditAddOn = (addOn) => {
-    props.menu.sections[sectionIndex].items[itemIndex].addOns[addOnIndex] = addOn;   
+    props.menu.sections[sectionIndex].items[itemIndex].addOns[addOnIndex] = addOn;  
     menuStore.updateMenu(props.menu);
 }
 /****************
@@ -56,7 +72,8 @@ const postEditAddOn = (addOn) => {
 const isNew = ref(false);
 onMounted(()=>{
     if(!props.addOn?.name){
-        isNew.value = true; editName.value=true;
+        isNew.value = true;
+        focusNameInput();
     }
 });
 const emit = defineEmits(['send-reset-addon']);
@@ -69,7 +86,6 @@ const postNewAddOn = (addOn) => {
     }
 }
 const deleteAddOn = () => {
-    console.log('del')
     props.menu.sections[sectionIndex].items[itemIndex].addOns.splice(addOnIndex, 1);
     menuStore.updateMenu(props.menu)
 }
@@ -93,19 +109,20 @@ const deleteAddOn = () => {
         <div class="tab-row">
             <span class="tab-name">
                 <template v-if="editName">
-                    <div class="text-field">
-                        <input
-                            type="text"
-                            placeholder="name"
-                            ref="nameInputRef"
-                            v-model="addOn.name"
-                            @blur="submitEditAddOnName(addOn)"
-                        />
-                    </div>
+                        <div class="text-field">
+                            <input
+                                type="text"
+                                placeholder="name"
+                                ref="nameInputRef"
+                                v-model="addOn.name"
+                                @blur="submitEditAddOnName(addOn)"
+                                @keydown="tabToPrice"
+                            />
+                        </div>
                 </template>
                 <template v-else>
-                    <span @click="editAddOnName(addOn)" v-if="addOn.name">{{ addOn.name }}</span>
-                    <span class="placeholder-color" @click="editAddOnName(addOn)" v-else>name</span>
+                    <span @click="focusNameInput" v-if="addOn.name">{{ addOn.name }}</span>
+                    <span class="placeholder-color" @click="focusNameInput" v-else>name</span>
                 </template>
             </span>
             <span class="tab-price">
@@ -113,7 +130,9 @@ const deleteAddOn = () => {
                     <PriceInput ref="priceInputRef" :price="addOn.price" @update-price="getAddOnPrice"/>
                 </template>
                 <template v-else>
-                    <div @click="editAddOnPrice">{{ formatPriceDisplay(addOn.price) }}</div>
+                    <span @click="editAddOnPrice" ref="priceDisplayRef">{{ formatPriceDisplay(addOn.price) }}</span>
+      <!--              <span @click="editAddOnPrice" v-if="addOn.price !=='000.00'">{{ formatPriceDisplay(addOn.price) }}</span>
+                    <span @click="editAddOnPrice" class="placeholder-color" v-else>000.00</span> -->
                 </template>
             </span>
         </div>

@@ -6,30 +6,55 @@ const props = defineProps({
     item: { type: Object, required: true},
 });
 const menuStore = useMenuStore();
+const sectionIndex = props.menu.sections.findIndex(sec => sec._id === props.section_id);
+const itemIndex = props.menu.sections[sectionIndex].items.findIndex(it => it._id === props.item._id);
 //checks if item is new
 const isNew = ref(false);
 onMounted(()=>{
-    if(props.item?.new){
-        isNew.value = true; editName.value=true; editDescription.value=true;
-        delete props.item.new;
+    document.addEventListener('click', handleClickOutside);
+    if(!props.item?.name){
+        isNew.value = true; 
+        focusNameInput();
     }
 });
-
+onBeforeUnmount(() => {
+  document.removeEventListener('click', handleClickOutside);
+});
+/****************
+ * Tab Controls
+ ****************/
+const tabToPrice = (event)=>{
+    if(event.key==="Tab"){event.preventDefault();focusPriceInput();}
+}
+const tabToDescription = (event)=>{
+    if(event.key==="Tab"){event.preventDefault();focusDescriptionInput();}
+}
+const tabToName = (event)=>{
+    if(event.key==="Tab"){event.preventDefault();focusNameInput();}
+}
+const addOnsRef = ref(null); const removesRef = ref(null); const optionsRef=ref(null); const buttonRef=ref(null);
+const tabToAddOns = (event) => {
+    if(event.key === "Tab"){ 
+        event.preventDefault(); 
+        addOnsRef.value.focus(); }
+}
+const tabToRemoves = (event) => {
+    if(event.key === "Tab"){ event.preventDefault(); removesRef.value.focus();}}
+const tabToOptions = (event) => {
+    if(event.key === "Tab"){ event.preventDefault(); optionsRef.value.focus();}}
+const tabToButton = (event) => {
+    if(event.key==="Tab"){ event.preventDefault(); buttonRef.value.focus();}}
 //reusable put menu change
 const postItemEdit = (item) => {
-    const sectionIndex = props.menu.sections.findIndex(sec => sec._id === props.section_id);
-    const itemIndex = props.menu.sections[sectionIndex].items.findIndex(it => it._id === props.item._id);
     props.menu.sections[sectionIndex].items[itemIndex]=item;
-    console.log("post",props.menu.sections[sectionIndex].items[itemIndex])
     menuStore.updateMenu(props.menu);
 }
 /************************
 **edit item name logic
 *************************/
-const itemNameRef = ref(null); const editName = ref(false);
-const editItemName = () => { editName.value = true; nextTick(()=> itemNameRef.value.focus()); }
+const nameInputRef = ref(null); const editName = ref(false);
+const focusNameInput = () => { editName.value = true; nextTick(()=> nameInputRef.value.focus()); }
 const submitEditItemName = (item) => { 
-    console.log('submit name', item)
     if(!!item.name) editName.value=false;
     if(!isNew.value) postItemEdit(item);
 }
@@ -37,7 +62,7 @@ const submitEditItemName = (item) => {
 **edit item description logic
 *************************/
 const itemDescriptionRef = ref(null); const editDescription = ref(false);
-const editItemDescription = () => {
+const focusDescriptionInput = () => {
   editDescription.value = true;
   nextTick(()=> itemDescriptionRef.value.focus())
 }
@@ -49,17 +74,15 @@ const submitEditItemDescription = (item) => {
  * Edit Item Price
  *************/
 const priceInputRef = ref(null); const editPrice = ref(false);
-const editItemPrice = () =>{
+const focusPriceInput = () =>{
     editPrice.value = true;
-    requestAnimationFrame(()=>{
-        priceInputRef.value?.focusInput();
-    })
+    requestAnimationFrame(()=> priceInputRef.value?.focusInput())
 }
 //from <PriceInput/> emit
 const getItemPrice = (newPrice) => {
     editPrice.value = false;
     props.item.price = newPrice;
-    if(!isNew.value) {postItemEdit(props.item);}
+    if(!isNew.value) postItemEdit(props.item);
 }
 //remove leading zeros + $
 const formatPriceDisplay = (price) => {
@@ -73,22 +96,21 @@ const formatPriceDisplay = (price) => {
  * Add-ons Removes Options
  ************/
 const addOnsFlag = ref(false); const removesFlag = ref(false); const optionsFlag = ref(false);
-const viewAddOns = ()=>{ removesFlag.value=false;optionsFlag.value=false; addOnsFlag.value=!addOnsFlag.value;}
-const viewRemoves = ()=>{ optionsFlag.value=false;addOnsFlag.value=false; removesFlag.value=!removesFlag.value;}
-const viewOptions = ()=>{ addOnsFlag.value=false;removesFlag.value=false; optionsFlag.value=!optionsFlag.value;}
- // new add-ons
+const resetFlags = () => { addOnsFlag.value=false;removesFlag.value=false;optionsFlag.value=false;}
+const viewAddOns = (event)=>{ resetFlags(); addOnsFlag.value=true; }
+const viewRemoves = ()=>{ resetFlags(); removesFlag.value=true;}
+const viewOptions = ()=>{ resetFlags(); optionsFlag.value=true;}
+const itemAROsRef=ref(null);
+const handleClickOutside = (event) => { if (itemAROsRef.value && !itemAROsRef.value.contains(event.target)) { resetFlags();}};
+// new add-ons/remove/options
 const newAddOn = ref({ name: "", price: "000.00", _id: uuidv4(), });
 const newRemove = ref({ name: "", _id: uuidv4(), });
 const newOption = ref({ name: "", values: [], _id: uuidv4(), });
-const getResetAddOn = () =>{
-    newAddOn.value = { name: "", price: "000.00", _id: uuidv4(), }
-}
-const getResetRemove = () =>{
-    newRemove.value = { name: "", _id: uuidv4(), }
-}
-const getResetOption = () =>{
-    newOption.value = { name: "", values: [], _id: uuidv4(), }
-}
+const getResetAddOn = () => newAddOn.value = { name: "", price: "000.00", _id: uuidv4(),}
+const getResetRemove = () =>{ newRemove.value = { name: "", _id: uuidv4(), }}
+const getResetOption = () =>{ newOption.value = { name: "", values: [], _id: uuidv4(), }}
+
+
 /*********
  * delete item logic
  ************/
@@ -110,17 +132,17 @@ const postNewItem = (item) => {
 }
 </script>
 <template>
-    <div>
+    <div class="item-container" ref="itemContainer">
         <p class="item">
             <span class="btn-icons-group items">
                 <template v-if="!isNew">
-                    <button class="btn" @click="deleteItem">
+                    <button class="btn" @click="deleteItem" @keydown="tabToName" ref="buttonRef">
                         <i class="mdi mdi-close"/>
                         <span class="tooltip">delete</span>
                     </button>
                 </template>
                 <template v-else>
-                    <button class="btn" @click="postNewItem(item)">
+                    <button class="btn" @click="postNewItem(item)" @keydown="tabToName" ref="buttonRef">
                         <i class="mdi mdi-plus"/>
                         <span class="tooltip">add new item</span>
                     </button>
@@ -133,20 +155,21 @@ const postNewItem = (item) => {
                             type="text"
                             class="name-input"
                             placeholder="name"
-                            ref="itemNameRef"
+                            ref="nameInputRef"
                             v-model="item.name"
                             @blur="submitEditItemName(item)"
+                            @keydown="tabToPrice"
                         />
                     </div>
                 </template>
                 <template v-if="!editName">
-                    <span class="item-name" @click="editItemName">{{ item.name }}</span>
+                    <span class="item-name" @click="focusNameInput">{{ item.name }}</span>
                 </template>
                 <template v-if="editPrice">
-                    <PriceInput class="item-price-input" ref="priceInputRef" :price="item.price" @update-price="getItemPrice"/>
+                    <PriceInput class="item-price-input" ref="priceInputRef" :price="item.price" @keydown="tabToDescription" @update-price="getItemPrice"/>
                 </template>
                 <template v-else>
-                    <span class="item-price" @click="editItemPrice">{{ formatPriceDisplay(item.price)}}</span>
+                    <span class="item-price" @click="focusPriceInput">{{ formatPriceDisplay(item.price)}}</span>
                 </template>
             </span>
         </p>
@@ -159,32 +182,39 @@ const postNewItem = (item) => {
                         ref="itemDescriptionRef"
                         v-model="item.description"
                         @blur="submitEditItemDescription(item)"
+                        @keydown="tabToAddOns"
                     />
                 </div>
             </template>
             <template v-if="!editDescription">
-                <span class="item-description-text" @click="editItemDescription" v-if="item.description">{{ item.description }}</span>
-                <span class="placeholder-color" @click="editItemDescription" v-else>description</span>
+                <span class="item-description-text" @click="focusDescriptionInput" v-if="item.description">{{ item.description }}</span>
+                <span class="placeholder-color" @click="focusDescriptionInput" v-else>description</span>
             </template>
         </p>
-        <div class="item-addons-removes-options">
+        <div class="item-addons-removes-options" ref="itemAROsRef">
             <div class="item-a-r-o-titles">
-                <span :class="{'underline': addOnsFlag}" @click="viewAddOns">Add-Ons</span>
-                <span :class="{'underline': removesFlag}" @click="viewRemoves">Removes</span>
-                <span :class="{'underline': optionsFlag}" @click="viewOptions">Options</span>
+                <span :class="{'underline': addOnsFlag}"
+                    @click="viewAddOns" ref="addOnsRef" tabindex="0"
+                    @keydown.enter="viewAddOns" @keydown="tabToRemoves">Add-Ons
+                </span>
+                <span :class="{'underline': removesFlag}"
+                    @click="viewRemoves" ref="removesRef" tabindex="1"
+                    @keydown.enter="viewRemoves" @keydown="tabToOptions">Removes
+                </span>
+                <span :class="{'underline': optionsFlag}"
+                    @click="viewOptions" ref="optionsRef" tabindex="2" 
+                    @keydown.enter="viewOptions" @keydown="tabToButton">Options
+                </span>
             </div>
             <div class="item-a-r-o-components">
                 <div v-if="addOnsFlag">
-                    <template v-if="addOnsFlag">
-                        <EditItemAddOn 
-                            :addOn="newAddOn"
-                            :item_id="item._id"
-                            :section_id="section_id"
-                            :menu="menu"
-                            @send-reset-addon="getResetAddOn"
-                        />
-                    </template>
-                    
+                    <EditItemAddOn 
+                        :addOn="newAddOn"
+                        :item_id="item._id"
+                        :section_id="section_id"
+                        :menu="menu"
+                        @send-reset-addon="getResetAddOn"
+                    />
                     <div v-for="(addOn, i) in item.addOns" :key="i">
                         <EditItemAddOn 
                             :addOn="addOn"
@@ -302,20 +332,5 @@ const postNewItem = (item) => {
 }
 .underline{
     border-bottom: 2px solid black;
-}
-.new-addOn{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-.new-addOn-input-field{
-    padding-left: 5px;
-    width: 200px;
-}
-.new-addOn-input.name{
-    width: 200px;
-}
-.new-addOn-input.price{
-    width: 180px;
 }
 </style>

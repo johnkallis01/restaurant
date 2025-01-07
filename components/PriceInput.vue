@@ -8,9 +8,7 @@ const props = defineProps({
 });
 const emit = defineEmits(['update-price']);
 //emit to parent component
-const submitPrice = () =>{
-    emit('update-price', formattedPrice.value)
-}
+const submitPrice = (event) => emit('update-price', formattedPrice.value);
 const rawPrice = ref(props.price.replace('.', ''));
 watch(
   () => props.price,
@@ -64,6 +62,7 @@ onMounted(()=>{
                 :value="formattedPrice"
                 @input="formatPriceInput"
                 @blur="submitPrice"
+                @keydown.enter="submitPrice"
             >
         </div>
     </div>

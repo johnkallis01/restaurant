@@ -17,9 +17,7 @@ const loggedIn = computed(() => {
 });
 const loginButton = ref(null);
 const focusLoginButton = ()=>{
-  if(loginButton.value) {
-    loginButton.value.focus();
-  }
+    loginButton?.value.focus();
 }
 provide('focusLoginButton', focusLoginButton);
 
