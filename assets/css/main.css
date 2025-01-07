@@ -40,7 +40,6 @@ containers
     top: 0;
     height: 10vh;
 }
-
 .menu-container{
     display: flex;
     justify-content: center;
@@ -60,6 +59,9 @@ containers
 .name-input{
     width: 100%;
 }
+/**************
+*** sections 
+****************/
 .section-container{
     width: 100%;
 }
@@ -86,33 +88,85 @@ containers
     width: 80vw;
     margin: 5px 5px 5px 5px;
     gap: 2px;
-    box-sizing: border-box;
-    border: 2px solid green;
 }
 .section-item{
     display: flex;
     justify-content: center;
     align-content: center;
-    box-sizing: border-box;
-    border: 2px solid black;
     border-radius: 15px;
     width: 39vw;
 }
+/**************
+*** items 
+****************/
 .item-container{
     width: 100%;
-    
+    box-sizing: border-box;
+    border: 2px solid black;
 }
+/* item title classes */
 .item-title{
+    position: relative;
     display: flex;
     align-items: center;
 }
-.item-description{
-    
+.btn-icons-group.items{
+    position: relative;
 }
-.item-addons-removes-options{
+.item-description{
+    font-size: 12px;
+    height: 10vh;
+    margin: 0 0 0 15px;
+    overflow: hidden;
+}
+.text-field.description textarea{
+    height: 10vh;
+    width: auto;
+    min-width: 90%;
+}
+.name-price{
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     width: 100%;
+}
+.item-name{
+    flex: 1;
+    text-align: left;
+}
+.text-field.item-name{}
+.item-price{
+    position: relative;
+    right: 0;
+    display: inline-block;
+    margin-right: 7px;
+}
+.item-price.input{
+    display: inline-flex;
+    align-items: center;
+}
+/********
+    item 
+        addon-removes-options classes 
+********/
+.item-addons-removes-options{
     box-sizing: border-box;
     border: 2px solid red;
+}
+.item-a-r-o-titles{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);  
+}
+.item-a-r-o-components{
+    display: flex;
+    align-items: center;
+    
+}
+.item-addon{
+    width: 100%;
+    box-sizing: border-box;
+    border: 2px solid black;
 }
 
 /***************
@@ -133,7 +187,7 @@ containers
     align-items: center;
     gap: 12px;
 }
-.text-field input{
+.text-field input, .text-field textarea{
     padding: 0px 7px;
     border: 1px solid #ccc;
     border-radius: 4px;
@@ -143,7 +197,7 @@ containers
     resize: none;
     background-color: white;
   }
-.text-field input:focus{
+.text-field input:focus, .text-field textarea:focus{
     outline: none;
     border-color: #1976d2;
     box-shadow: rgba(25, 118, 210, 0.5);
@@ -158,7 +212,6 @@ containers
 .btn {
     display: inline-block;
     padding: 0px 5px;
-    margin: 0px 5px;
     text-align: center;
     text-decoration: none;
     border: none;
@@ -171,7 +224,7 @@ containers
     outline: none;
     box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
 }
-.btn:hover {
+.btn:hover {    
     background-color: #d3dce3; /* Darker Gray */
 }
 .btn-text:hover .tooltip{
@@ -187,9 +240,6 @@ containers
     right: 0;
     padding: 5px;
     font-size: 18px;
-}
-.btn-icons-group.items{
-    position: relative;
 }
 /****************
    tooltip 
@@ -229,8 +279,7 @@ containers
     flex: 1;
     width: 20vw;
 }
-.tab-name input{
-}
+.tab-name input{}
 .tab-price{
     text-align: right;
     width: 75px;
