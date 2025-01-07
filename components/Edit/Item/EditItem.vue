@@ -32,18 +32,6 @@ const tabToDescription = (event)=>{
 const tabToName = (event)=>{
     if(event.key==="Tab"){event.preventDefault();focusNameInput();}
 }
-const addOnsRef = ref(null); const removesRef = ref(null); const optionsRef=ref(null); const buttonRef=ref(null);
-const tabToAddOns = (event) => {
-    if(event.key === "Tab"){ 
-        event.preventDefault(); 
-        addOnsRef.value.focus(); }
-}
-const tabToRemoves = (event) => {
-    if(event.key === "Tab"){ event.preventDefault(); removesRef.value.focus();}}
-const tabToOptions = (event) => {
-    if(event.key === "Tab"){ event.preventDefault(); optionsRef.value.focus();}}
-const tabToButton = (event) => {
-    if(event.key==="Tab"){ event.preventDefault(); buttonRef.value.focus();}}
 //reusable put menu change
 const postItemEdit = (item) => {
     props.menu.sections[sectionIndex].items[itemIndex]=item;
@@ -60,11 +48,7 @@ const submitEditItemName = (item) => {
 /************************
 **edit item description logic
 *************************/
-const itemDescriptionRef = ref(null); const editDescription = ref(false);
-const focusDescriptionInput = () => {
-  editDescription.value = true;
-  nextTick(()=> itemDescriptionRef.value.focus())
-}
+const { descriptionInputRef, editDescription, focusDescriptionInput } = useDescriptionInput();
 const submitEditItemDescription = (item) => { 
     if(!!item.description) {editDescription.value=false;}
     if(!isNew.value) {postItemEdit(item);
@@ -174,7 +158,7 @@ const postNewItem = (item) => {
                     <input
                         type="text"
                         placeholder="description"
-                        ref="itemDescriptionRef"
+                        ref="descriptionInputRef"
                         v-model="item.description"
                         @blur="submitEditItemDescription(item)"
                         
@@ -188,19 +172,15 @@ const postNewItem = (item) => {
         </p>
         <div class="item-addons-removes-options" ref="itemAROsRef">
             <span class="item-a-r-o-titles">
-                <button class="btn"
-                    @click="viewAddOns" ref="addOnsRef"
-                    @keydown.enter="viewAddOns">
+                <button class="btn" @click="viewAddOns" @keydown.enter="viewAddOns">
                     <span :class="{'underline': addOnsFlag}">Add-Ons</span>
                 </button>
                 <button class="btn"
-                    @click="viewRemoves" ref="removesRef"
+                    @click="viewRemoves"
                     @keydown.enter="viewRemoves">
                     <span :class="{'underline': removesFlag}">Removes</span>
                 </button>
-                <button class="btn"
-                    @click="viewOptions" ref="optionsRef"    
-                    @keydown.enter="viewOptions">
+                <button class="btn" @click="viewOptions" @keydown.enter="viewOptions">
                     <span :class="{'underline': optionsFlag}">Options</span>
                 </button>
             </span>
