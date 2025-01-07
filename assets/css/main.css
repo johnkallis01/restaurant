@@ -296,4 +296,12 @@ containers
         left: 0;
         right:0;
     }
+    .section-items{   
+        display: grid;
+        grid-template-columns: repeat(1, 1fr);
+        justify-items: center;
+        width: 80vw;
+        margin: 5px;
+        gap: 2px;
+    }
 }
