@@ -69,11 +69,11 @@ onMounted(()=>{
 </template>
 <style scoped>
 .text-field.price input{
-    width: auto;
     background-color: white;
     padding: 0 2px;
     text-align: right;
-    max-width: 65px;
+    width: 65px;
+    box-sizing: border-box;
 }
 .text-field.price .prefix{
     position: relative;

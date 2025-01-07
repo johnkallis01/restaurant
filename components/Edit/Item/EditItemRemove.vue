@@ -87,18 +87,3 @@ const deleteRemove = () => {
         </span>
     </div>
 </template>
-<style scoped>
-.remove-name{
-    row-gap: 100px;
-    margin-left: 30px;
-}
-.new-remove{
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-}
-.remove-container{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-</style>

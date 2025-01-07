@@ -7,7 +7,6 @@ const props = defineProps({
     
 });
 const menuStore = useMenuStore();
-
 const sectionIndex = props.menu.sections.findIndex(sec => sec._id === props.section_id);
 const itemIndex = props.menu.sections[sectionIndex].items.findIndex(it => it._id === props.item_id);
 const addOnIndex = props.menu.sections[sectionIndex].items[itemIndex].addOns.findIndex((addOn)=> addOn._id === props.addOn._id);
@@ -35,7 +34,11 @@ const submitEditAddOnName = (addOn) => {
 const { priceInputRef, editPrice, focusPriceInput } = usePriceInput();
 const getAddOnPrice = (newPrice) => {
     editPrice.value = false;
-    if(!isNew.value) postEditAddOn(props.addOn);
+    console.log('edit price')
+    if(!isNew.value) {
+        props.addOn.price = newPrice;
+        postEditAddOn(props.addOn);
+    }
     else if (props.addOn.name) postNewAddOn({
         _id: props.addOn._id,
         name: props.addOn.name,
@@ -89,13 +92,13 @@ const deleteAddOn = () => {
         <div class="tab-row">
             <span class="tab-name">
                 <template v-if="editName">
-                        <div class="text-field">
-                            <input type="text" placeholder="name" ref="nameInputRef"
-                                v-model="addOn.name"
-                                @blur="submitEditAddOnName(addOn)"
-                                @keydown="tabToPrice"
-                            />
-                        </div>
+                    <div class="text-field">
+                        <input type="text" placeholder="name" ref="nameInputRef"
+                            v-model="addOn.name"
+                            @blur="submitEditAddOnName(addOn)"
+                            @keydown="tabToPrice"
+                        />
+                    </div>
                 </template>
                 <template v-else>
                     <span @click="focusNameInput" v-if="addOn.name">{{ addOn.name }}</span>

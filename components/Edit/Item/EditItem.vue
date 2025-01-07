@@ -181,7 +181,7 @@ const postNewItem = (item) => {
                 </button>
             </span>
             <div class="item-a-r-o-components">
-                <div v-if="addOnsFlag">
+                <div v-if="addOnsFlag" class="item-addon">
                     <EditItemAddOn 
                         :addOn="newAddOn"
                         :item_id="item._id"

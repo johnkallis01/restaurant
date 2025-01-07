@@ -71,7 +71,7 @@ containers
 .section-name{
     display: flex;
     align-items: center;
-    margin: 15px 5px 5px 5px;
+    margin: 5px;
     font-size: 25px;
     height: 45px;
     color:black;
@@ -88,12 +88,13 @@ containers
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     width: 80vw;
-    margin: 5px 5px 5px 45px;
+    margin: 5px 5px 5px 5px;
     gap: 10px;
 }
 .section-item{
     border: 2px solid black;
     border-radius: 15px;
+    max-width: 70vw;
 }
 .item{
     display: flex;
@@ -200,25 +201,28 @@ containers
 /***************
     addon/remove/options
 ***************/
+.item-addons-removes-options{
+    width: 100%;
+}
 .tab-container{
     display: flex;
-    align-items: center;
+    justify-content: flex-start;
+    align-items: flex-start;
+    max-width: 500px;
+    width: 100%;
 }
 .tab-row{
     display: flex;
     align-items: center;
-    gap: 10px;
-    width: 100%;
 }
 .tab-name{
-    width: 100%;
-    min-width: 250px;
+    flex: 1;
+    width: 250px;
 }
 .tab-name input{
-    width: 100%;
+    width: 80%;
 }
 .tab-price{
     text-align: right;
-    margin: 10px;
     width: 75px;
 }

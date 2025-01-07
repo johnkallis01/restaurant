@@ -9,23 +9,19 @@ const props = defineProps({
 const menuStore = useMenuStore();
 const sectionIndex = props.menu.sections.findIndex(sec => sec._id === props.section_id);
 const itemIndex = props.menu.sections[sectionIndex].items.findIndex(it => it._id === props.item_id);
-const optionIndex = props.menu.sections[sectionIndex].items[itemIndex].options.findIndex((remove)=> remove._id === props.remove._id);
+const optionIndex = props.menu.sections[sectionIndex].items[itemIndex].options.findIndex((option)=> option._id === props.option._id);
 /***********
  * Edit Add-on Name
  *************/
-const editName=ref(false); const nameInputRef=ref(null);
-const focusNameInput = ()=>{
-    editName.value=true;
-    nextTick(()=> nameInputRef.value.focus());
-}
-const submitEditRemoveName = (remove) => {
-    if(!!remove.name) editName.value=false;
-    if(!isNew.value) postEditRemove(remove);
+ const { nameInputRef, editName, focusNameInput } = useNameInput();
+const submitEditOptionName = (option) => {
+    if(!!option.name) editName.value=false;
+    if(!isNew.value) postEditOption(option);
     
 }
 //post changes
-const postEditRemove = (remove) => {
-    props.menu.sections[sectionIndex].items[itemIndex].removes[removeIndex] = remove;   
+const postEditOption = (option) => {
+    props.menu.sections[sectionIndex].items[itemIndex].options[optionIndex] = option;   
     menuStore.updateMenu(props.menu);
 }
 /****************
@@ -33,22 +29,23 @@ const postEditRemove = (remove) => {
  ********************/
 const isNew = ref(false);
 onMounted(()=>{
-    if(!props.remove?.name){
+    if(!props.option?.name){
         isNew.value = true; editName.value=true;
+        focusNameInput();
     }  
 });
-const emit = defineEmits(['send-reset-remove']);
+const emit = defineEmits(['send-reset-option']);
 
-const postNewRemove = (remove) => {
-    if(remove.name){    
-        props.menu.sections[sectionIndex].items[itemIndex].removes.push(remove);
+const postNewOption = (option) => {
+    if(option.name){    
+        props.menu.sections[sectionIndex].items[itemIndex].options.push(option);
         menuStore.updateMenu(props.menu);
-        emit('send-reset-remove');
+        emit('send-reset-option');
     }
 }
-const deleteRemove = () => {
+const deleteOption = () => {
     console.log('del')
-    props.menu.sections[sectionIndex].items[itemIndex].removes.splice(removeIndex, 1);
+    props.menu.sections[sectionIndex].items[itemIndex].options.splice(optionIndex, 1);
     menuStore.updateMenu(props.menu)
 }
 </script>
@@ -62,7 +59,7 @@ const deleteRemove = () => {
                 </button>
             </template>
             <template v-else>
-                <button class="btn" @click="postNewRemove(remove)">
+                <button class="btn" @click="postNewRemove(option)">
                     <i class="mdi mdi-plus"/>
                     <span class="tooltip">add new add-on</span>
                 </button>
@@ -77,31 +74,18 @@ const deleteRemove = () => {
                             class="name-input"
                             placeholder="name"
                             ref="nameInputRef"
-                            v-model="remove.name"
-                            @blur="submitEditRemoveName(remove)"
+                            v-model="option.name"
+                            @blur="submitEditOptionName(option)"
                         />
                     </div>
                 </template>
                 <template v-else>
-                    <span @click="editRemoveName(remove)" v-if="remove.name">{{ remove.name }}</span>
-                    <span class="placeholder-color" @click="editRemoveName(remove)" v-else>name</span>
+                    <span @click="editOptionName(option)" v-if="option.name">{{ option.name }}</span>
+                    <span class="placeholder-color" @click="editOptionName(option)" v-else>name</span>
                 </template>
             </span>
         </span>
     </div>
 </template>
 <style scoped>
-.remove-name{
-    row-gap: 100px;
-    margin-left: 30px;
-}
-.new-remove{
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-}
-.remove-container{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
 </style>
