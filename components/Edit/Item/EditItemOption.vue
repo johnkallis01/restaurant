@@ -50,39 +50,48 @@ const deleteOption = () => {
 }
 </script>
 <template>
-    <div class="tab-container">
-        <span class="btn-icons-group items">
-            <template v-if="!isNew">
-                <button class="btn" @click="deleteRemove">
-                    <i class="mdi mdi-close"/>
-                    <span class="tooltip">delete</span>
-                </button>
-            </template>
-            <template v-else>
-                <button class="btn" @click="postNewRemove(option)">
-                    <i class="mdi mdi-plus"/>
-                    <span class="tooltip">add new add-on</span>
-                </button>
-            </template>
+    <div>
+        <span  class="tab-container">
+            <span class="tab-row">
+                <span class="btn-icons-group items">
+                    <template v-if="!isNew">
+                        <button class="btn" @click="deleteOption">
+                            <i class="mdi mdi-close"/>
+                            <span class="tooltip">delete</span>
+                        </button>
+                    </template>
+                    <template v-else>
+                        <button class="btn" @click="postNewOption(option)">
+                            <i class="mdi mdi-plus"/>
+                            <span class="tooltip">add new add-on</span>
+                        </button>
+                    </template>
+                </span>
+                <span class="tab-name">
+                    <template v-if="editName">
+                        <div class="text-field">
+                            <input
+                                type="text"
+                                class="name-input"
+                                placeholder="name"
+                                ref="nameInputRef"
+                                v-model="option.name"
+                                @blur="submitEditOptionName(option)"
+                            />
+                        </div>
+                    </template>
+                    <template v-else>
+                        <span @click="focusNameInput" v-if="option.name">{{ option.name }}</span>
+                        <span class="placeholder-color" @click="focusNameInput" v-else>name</span>
+                    </template>
+                </span>
+            </span>
         </span>
-        <span class="tab-row">
-            <span class="tab-name">
-                <template v-if="editName">
-                    <div class="text-field">
-                        <input
-                            type="text"
-                            class="name-input"
-                            placeholder="name"
-                            ref="nameInputRef"
-                            v-model="option.name"
-                            @blur="submitEditOptionName(option)"
-                        />
-                    </div>
-                </template>
-                <template v-else>
-                    <span @click="editOptionName(option)" v-if="option.name">{{ option.name }}</span>
-                    <span class="placeholder-color" @click="editOptionName(option)" v-else>name</span>
-                </template>
+        <span class="tab-container">
+            <span class="tab-row">
+                <span v-for="(val, i) in option.values">
+                    values
+                </span>
             </span>
         </span>
     </div>
