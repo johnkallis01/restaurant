@@ -3,13 +3,14 @@ import { v4 as uuidv4 } from 'uuid';
 const props = defineProps({
     menu: { type: Object, required: true},
     section_id: { type: String, required: true},
-    item: { type: Object, required: true},
+    item: { type: Object, required: true}, index: {type: Number, required: true}
 });
 const menuStore = useMenuStore();
 const sectionIndex = props.menu.sections.findIndex(sec => sec._id === props.section_id);
 const itemIndex = props.menu.sections[sectionIndex].items.findIndex(it => it._id === props.item._id);
 //checks if item is new
 const isNew = ref(false);
+const refsObject = ref({});
 onMounted(()=>{
     if(!props.item?.name){
         isNew.value = true; 
@@ -19,16 +20,13 @@ onMounted(()=>{
 });
 
 onBeforeUnmount(() => {
-  document.removeEventListener('click', handleClickOutside);
+    document.removeEventListener('click', handleClickOutside);
 });
-const itemContainer = ref(null);
 const clickInsideOK = ref(null);
 const handleClickOutside = (event) => {
-  if (clickInsideOK.value && !clickInsideOK.value.contains(event.target)) {
-    console.log('close')
-    resetFlags();
-  }else{console.log('click ok')}
-};
+  // Check if the clicked element is outside the itemElement
+  if (clickInsideOK.value && !clickInsideOK.value.contains(event.target)) resetFlags();
+}
 /****************
  * Tab Controls
  ****************/
@@ -117,7 +115,7 @@ const postNewItem = (item) => {
 }
 </script>
 <template>
-    <div class="item-container" ref="itemContainer">
+    <div class="item-container" :id="`item-${index}`">
         <p class="item">
             <span class="btn-icons-group items">
                 <template v-if="!isNew">
