@@ -28,11 +28,10 @@ const { nameInputRef, editName, focusNameInput } = useNameInput();
 const submitEditAddOnName = (addOn) => {
     if(!!addOn.name) editName.value=false;
     if(!isNew.value) postEditAddOn(addOn);
-    
 }
-/***********
+/******************
  * Edit Add-on Price
- *************/
+ ******************/
 const { priceInputRef, editPrice, focusPriceInput } = usePriceInput();
 const getAddOnPrice = (newPrice) => {
     editPrice.value = false;
@@ -42,9 +41,7 @@ const getAddOnPrice = (newPrice) => {
         name: props.addOn.name,
         price: newPrice
     });
-
 }
-
 /****************
  * new add on logic
  ********************/

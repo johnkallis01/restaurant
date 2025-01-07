@@ -11,15 +11,24 @@ const itemIndex = props.menu.sections[sectionIndex].items.findIndex(it => it._id
 //checks if item is new
 const isNew = ref(false);
 onMounted(()=>{
-    document.addEventListener('click', handleClickOutside);
     if(!props.item?.name){
         isNew.value = true; 
         focusNameInput();
     }
+    document.addEventListener('click', handleClickOutside);
 });
+
 onBeforeUnmount(() => {
   document.removeEventListener('click', handleClickOutside);
 });
+const itemContainer = ref(null);
+const clickInsideOK = ref(null);
+const handleClickOutside = (event) => {
+  if (clickInsideOK.value && !clickInsideOK.value.contains(event.target)) {
+    console.log('close')
+    resetFlags();
+  }else{console.log('click ok')}
+};
 /****************
  * Tab Controls
  ****************/
@@ -76,11 +85,10 @@ const formatPriceDisplay = (price) => {
  ************/
 const addOnsFlag = ref(false); const removesFlag = ref(false); const optionsFlag = ref(false);
 const resetFlags = () => { addOnsFlag.value=false;removesFlag.value=false;optionsFlag.value=false;}
-const viewAddOns = (event)=>{ resetFlags(); addOnsFlag.value=true; }
+const viewAddOns = ()=>{ resetFlags(); addOnsFlag.value=true;}
 const viewRemoves = ()=>{ resetFlags(); removesFlag.value=true;}
 const viewOptions = ()=>{ resetFlags(); optionsFlag.value=true;}
-const itemAROsRef=ref(null);
-const handleClickOutside = (event) => { if (itemAROsRef.value && !itemAROsRef.value.contains(event.target)) { resetFlags();}};
+
 // new add-ons/remove/options
 const newAddOn = ref({ name: "", price: "000.00", _id: uuidv4(), });
 const newRemove = ref({ name: "", _id: uuidv4(), });
@@ -88,8 +96,6 @@ const newOption = ref({ name: "", values: [], _id: uuidv4(), });
 const getResetAddOn = () => newAddOn.value = { name: "", price: "000.00", _id: uuidv4(),}
 const getResetRemove = () =>{ newRemove.value = { name: "", _id: uuidv4(), }}
 const getResetOption = () =>{ newOption.value = { name: "", values: [], _id: uuidv4(), }}
-
-
 /*********
  * delete item logic
  ************/
@@ -130,10 +136,7 @@ const postNewItem = (item) => {
             <span class="name-price">
                 <template v-if="editName">
                     <div class="text-field">
-                        <input
-                            type="text"
-                            class="name-input"
-                            placeholder="name"
+                        <input type="text" class="name-input" placeholder="name"
                             ref="nameInputRef"
                             v-model="item.name"
                             @blur="submitEditItemName(item)"
@@ -155,14 +158,9 @@ const postNewItem = (item) => {
         <p class="item-description">
             <template v-if="editDescription">
                 <div class="text-field description">
-                    <input
-                        type="text"
-                        placeholder="description"
-                        ref="descriptionInputRef"
+                    <input type="text" placeholder="description" ref="descriptionInputRef"
                         v-model="item.description"
-                        @blur="submitEditItemDescription(item)"
-                        
-                    />
+                        @blur="submitEditItemDescription(item)" />
                 </div>
             </template>
             <template v-if="!editDescription">
@@ -170,14 +168,12 @@ const postNewItem = (item) => {
                 <span class="placeholder-color" @click="focusDescriptionInput" v-else>description</span>
             </template>
         </p>
-        <div class="item-addons-removes-options" ref="itemAROsRef">
+        <div class="item-addons-removes-options" ref="clickInsideOK" @click.stop>
             <span class="item-a-r-o-titles">
                 <button class="btn" @click="viewAddOns" @keydown.enter="viewAddOns">
                     <span :class="{'underline': addOnsFlag}">Add-Ons</span>
                 </button>
-                <button class="btn"
-                    @click="viewRemoves"
-                    @keydown.enter="viewRemoves">
+                <button class="btn" @click="viewRemoves" @keydown.enter="viewRemoves">
                     <span :class="{'underline': removesFlag}">Removes</span>
                 </button>
                 <button class="btn" @click="viewOptions" @keydown.enter="viewOptions">
