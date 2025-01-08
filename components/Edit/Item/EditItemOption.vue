@@ -51,9 +51,9 @@ const deleteOption = () => {
 </script>
 <template>
     <div>
-        <span  class="tab-container">
-            <span class="tab-row">
-                <span class="btn-icons-group items">
+        <div  class="tab-container">
+            <div class="tab-row">
+                <div class="btn-icons-group items">
                     <template v-if="!isNew">
                         <button class="btn" @click="deleteOption">
                             <i class="mdi mdi-close"/>
@@ -66,8 +66,8 @@ const deleteOption = () => {
                             <span class="tooltip">add new add-on</span>
                         </button>
                     </template>
-                </span>
-                <span class="tab-name">
+                </div>
+                <div class="tab-name">
                     <template v-if="editName">
                         <div class="text-field">
                             <input
@@ -84,16 +84,16 @@ const deleteOption = () => {
                         <span @click="focusNameInput" v-if="option.name">{{ option.name }}</span>
                         <span class="placeholder-color" @click="focusNameInput" v-else>name</span>
                     </template>
-                </span>
-            </span>
-        </span>
-        <span class="tab-container">
-            <span class="tab-row">
-                <span v-for="(val, i) in option.values">
+                </div>
+            </div>
+        </div>
+        <div class="tab-container">
+            <div class="tab-row">
+                <div v-for="(val, i) in option.values">
                     values
-                </span>
-            </span>
-        </span>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 <style scoped>

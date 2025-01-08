@@ -74,8 +74,8 @@ const deleteAddOn = () => {
 }
 </script>
 <template>
-    <div class="tab-container">
-        <span class="btn-icons-group items">
+    <div class="item-title addon">
+        <div class="btn-icons-group items">
             <template v-if="!isNew">
                 <button class="btn" @click="deleteAddOn" @keydown="tabToName">
                     <i class="mdi mdi-close"/>
@@ -88,9 +88,9 @@ const deleteAddOn = () => {
                     <span class="tooltip">add new add-on</span>
                 </button>
             </template>
-        </span>
-        <div class="tab-row">
-            <span class="tab-name">
+        </div>
+        <div class="name-price addon">
+            <div class="item-name">
                 <template v-if="editName">
                     <div class="text-field">
                         <input type="text" placeholder="name" ref="nameInputRef"
@@ -101,18 +101,18 @@ const deleteAddOn = () => {
                     </div>
                 </template>
                 <template v-else>
-                    <span @click="focusNameInput" v-if="addOn.name">{{ addOn.name }}</span>
-                    <span class="placeholder-color" @click="focusNameInput" v-else>name</span>
+                    <div @click="focusNameInput" v-if="addOn.name">{{ addOn.name }}</div>
+                    <div class="placeholder-color" @click="focusNameInput" v-else>name</div>
                 </template>
-            </span>
-            <span class="tab-price">
+            </div>
+            <div class="item-price addon">
                 <template v-if="editPrice">
                     <PriceInput ref="priceInputRef" :price="addOn.price" @update-price="getAddOnPrice"/>
                 </template>
                 <template v-else>
                     <span @click="focusPriceInput">{{ formatPriceDisplay(addOn.price) }}</span>
                 </template>
-            </span>
+            </div>
         </div>
     </div>
 </template>
