@@ -11,7 +11,7 @@ const sectionIndex = props.menu.sections.findIndex(sec => sec._id === props.sect
 const itemIndex = props.menu.sections[sectionIndex].items.findIndex(it => it._id === props.item_id);
 const optionIndex = props.menu.sections[sectionIndex].items[itemIndex].options.findIndex((option)=> option._id === props.option._id);
 /***********
- * Edit Add-on Name
+ * Edit Option Name
  *************/
  const { nameInputRef, editName, focusNameInput } = useNameInput();
 const submitEditOptionName = (option) => {
@@ -25,7 +25,7 @@ const postEditOption = (option) => {
     menuStore.updateMenu(props.menu);
 }
 /****************
- * new add on logic
+ * new option logic
  ********************/
 const isNew = ref(false);
 onMounted(()=>{
@@ -50,8 +50,7 @@ const deleteOption = () => {
 }
 </script>
 <template>
-    <div>
-        <div  class="tab-container">
+        <div class="tab-container">
             <div class="tab-row">
                 <div class="btn-icons-group items">
                     <template v-if="!isNew">
@@ -63,7 +62,7 @@ const deleteOption = () => {
                     <template v-else>
                         <button class="btn" @click="postNewOption(option)">
                             <i class="mdi mdi-plus"/>
-                            <span class="tooltip">add new add-on</span>
+                            <span class="tooltip">add new option</span>
                         </button>
                     </template>
                 </div>
@@ -73,7 +72,7 @@ const deleteOption = () => {
                             <input
                                 type="text"
                                 class="name-input"
-                                placeholder="name"
+                                placeholder="option title"
                                 ref="nameInputRef"
                                 v-model="option.name"
                                 @blur="submitEditOptionName(option)"
@@ -81,7 +80,10 @@ const deleteOption = () => {
                         </div>
                     </template>
                     <template v-else>
-                        <span @click="focusNameInput" v-if="option.name">{{ option.name }}</span>
+                        <span v-if="option.name">
+                            <span @click="focusNameInput">{{ option.name }}</span> 
+                            <button class="btn" @click=""> add value </button>
+                        </span>
                         <span class="placeholder-color" @click="focusNameInput" v-else>name</span>
                     </template>
                 </div>
@@ -94,7 +96,6 @@ const deleteOption = () => {
                 </div>
             </div>
         </div>
-    </div>
 </template>
 <style scoped>
 </style>

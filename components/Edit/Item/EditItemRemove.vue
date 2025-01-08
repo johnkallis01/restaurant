@@ -12,7 +12,7 @@ const itemIndex = props.menu.sections[sectionIndex].items.findIndex(it => it._id
 const removeIndex = props.menu.sections[sectionIndex].items[itemIndex].removes.findIndex((remove)=> remove._id === props.remove._id);
 const { nameInputRef, editName, focusNameInput } = useNameInput();
 /***********
- * Edit Add-on Name
+ * Edit Remove Name
  *************/
 const submitEditRemoveName = (remove) => {
     if(!!remove.name) editName.value=false;
@@ -25,7 +25,7 @@ const postEditRemove = (remove) => {
     menuStore.updateMenu(props.menu);
 }
 /****************
- * new add on logic
+ * new  remove logic
  ********************/
 const isNew = ref(false);
 onMounted(()=>{
@@ -61,7 +61,7 @@ const deleteRemove = () => {
             <template v-else>
                 <button class="btn" @click="postNewRemove(remove)">
                     <i class="mdi mdi-plus"/>
-                    <span class="tooltip">add new add-on</span>
+                    <span class="tooltip">add new remove</span>
                 </button>
             </template>
         </span>

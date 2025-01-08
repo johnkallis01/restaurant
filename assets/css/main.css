@@ -95,14 +95,15 @@ containers
     align-content: center;
     border-radius: 15px;
     width: 39vw;
+    box-sizing: border-box;
+    border: 2px solid black;
 }
 /**************
 *** items 
 ****************/
 .item-container{
     width: 100%;
-    box-sizing: border-box;
-    border: 2px solid black;
+    
 }
 /* item title classes */
 .item-title{
@@ -129,9 +130,12 @@ containers
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 20px;
     width: 100%;
 }
-.text-field.item-name{}
+.item-title .addon{
+    border: 2px;
+}
 .item-price{
     position: relative;
     right: 0;
@@ -154,7 +158,7 @@ containers
 .item-a-r-o-components{
     display: flex;
     align-items: center;
-    
+    width: 39vw;
 }
 
 /***************
@@ -254,25 +258,17 @@ containers
 
 
 .tab-container{
-    position: relative;
-    display: flex;
-    align-items: center;
-    width: 100%;
+    width: 38vw;
 }
 .tab-row{
     position: relative;
     display: flex;
     align-items: center;
+    width: 100%;
 }
 .tab-name{
     display: flex;
     align-items: center;
-    box-sizing: border-box;
-     border: 1px solid green;
-}
-.tab-name input{
-    box-sizing: border-box;
-     border: 1px solid blue;
 }
 .tab-price{
     position: relative;
@@ -280,8 +276,6 @@ containers
     margin-right: 10px;
     text-align: right;
     width: 75px;
-    box-sizing: border-box;
-    border: 1px solid purple;
 }
 .option-value{
     display: flex;

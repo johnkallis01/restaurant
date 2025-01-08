@@ -124,64 +124,62 @@ const postNewItem = (item) => {
 </script>
 <template>
     <div class="item-container">
-        <div>
-            <p class="item-title">
-                <span class="btn-icons-group items">
-                    <template v-if="!isNew">
-                        <button class="btn" @click="deleteItem" @keydown="tabToName" ref="buttonRef">
-                            <i class="mdi mdi-close"/>
-                            <span class="tooltip">delete</span>
-                        </button>
-                    </template>
-                    <template v-else>
-                        <button class="btn" @click="postNewItem(item)" @keydown="tabToName" ref="buttonRef">
-                            <i class="mdi mdi-plus"/>
-                            <span class="tooltip">add new item</span>
-                        </button>
-                    </template>
-                </span>
-                <span class="name-price">
-                    <template v-if="editName">
-                        <div class="text-field item-name">
-                            <input type="text" class="name-input" placeholder="name"
-                                ref="nameInputRef"
-                                v-model="item.name"
-                                @blur="submitEditItemName(item)"
-                                @keydown="tabToPrice"
-                                />
-                        </div>
-                    </template>
-                    <template v-if="!editName">
-                        <span class="item-name" @click="focusNameInput">{{ item.name }}</span>
-                    </template>
-                    <template v-if="editPrice">
-                        <PriceInput class="item-price input" ref="priceInputRef"
-                            :price="item.price"
-                            @keydown="tabToDescription"
-                            @update-price="getItemPrice"/>
-                    </template>
-                    <template v-else>
-                        <span class="item-price" @click="focusPriceInput">{{ formatPriceDisplay(item.price)}}</span>
-                    </template>
-                </span>
-            </p>
-            <p class="item-description">
-                <template v-if="editDescription">
-                    <div class="text-field description">
-                        <textarea type="text" placeholder="description" ref="descriptionInputRef"
-                            v-model="item.description"
-                            @blur="submitEditItemDescription(item)"/>
+        <p class="item-title">
+            <span class="btn-icons-group items">
+                <template v-if="!isNew">
+                    <button class="btn" @click="deleteItem" @keydown="tabToName" ref="buttonRef">
+                        <i class="mdi mdi-close"/>
+                        <span class="tooltip">delete</span>
+                    </button>
+                </template>
+                <template v-else>
+                    <button class="btn" @click="postNewItem(item)" @keydown="tabToName" ref="buttonRef">
+                        <i class="mdi mdi-plus"/>
+                        <span class="tooltip">add new item</span>
+                    </button>
+                </template>
+            </span>
+            <span class="name-price">
+                <template v-if="editName">
+                    <div class="text-field item-name">
+                        <input type="text" placeholder="name"
+                            ref="nameInputRef"
+                            v-model="item.name"
+                            @blur="submitEditItemName(item)"
+                            @keydown="tabToPrice"
+                            />
                     </div>
                 </template>
-                <template v-if="!editDescription">
-                    <span class="item-description-text" 
-                        @click="focusDescriptionInput"
-                        v-if="item.description">{{ item.description }}
-                    </span>
-                    <span class="placeholder-color" @click="focusDescriptionInput" v-else>description</span>
+                <template v-if="!editName">
+                    <span class="item-name" @click="focusNameInput">{{ item.name }}</span>
                 </template>
-            </p>
-        </div>
+                <template v-if="editPrice">
+                    <PriceInput class="item-price" ref="priceInputRef"
+                        :price="item.price"
+                        @keydown="tabToDescription"
+                        @update-price="getItemPrice"/>
+                </template>
+                <template v-else>
+                    <span class="item-price" @click="focusPriceInput">{{ formatPriceDisplay(item.price)}}</span>
+                </template>
+            </span>
+        </p>
+        <p class="item-description">
+            <template v-if="editDescription">
+                <div class="text-field description">
+                    <textarea type="text" placeholder="description" ref="descriptionInputRef"
+                        v-model="item.description"
+                        @blur="submitEditItemDescription(item)"/>
+                </div>
+            </template>
+            <template v-if="!editDescription">
+                <span class="item-description-text" 
+                    @click="focusDescriptionInput"
+                    v-if="item.description">{{ item.description }}
+                </span>
+                <span class="placeholder-color" @click="focusDescriptionInput" v-else>description</span>
+            </template>
+        </p>
         <div class="item-addons-removes-options" ref="clickInsideOK" @click.stop>
             <span class="item-a-r-o-titles" v-if="!isNew">
                 <button class="btn" @click="viewAddOns" @keydown.enter="viewAddOns">
@@ -195,7 +193,7 @@ const postNewItem = (item) => {
                 </button>
             </span>
             <div class="item-a-r-o-components">
-                <div v-if="addOnsFlag" class="item-addon">
+                <span v-if="addOnsFlag" class="item-addon">
                     <EditItemAddOn 
                         :addOn="newAddOn"
                         :item_id="item._id"
@@ -212,7 +210,7 @@ const postNewItem = (item) => {
                         @send-reset-remove="getResetRemove"
                     /> 
                     
-                </div>
+                </span>
                 <div v-if="removesFlag">
                     <template v-if="removesFlag">
                         <EditItemRemove 

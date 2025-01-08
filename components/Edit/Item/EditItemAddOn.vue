@@ -74,25 +74,25 @@ const deleteAddOn = () => {
 }
 </script>
 <template>
-    <div class="item-title addon">
-        <div class="btn-icons-group items">
-            <template v-if="!isNew">
-                <button class="btn" @click="deleteAddOn" @keydown="tabToName">
-                    <i class="mdi mdi-close"/>
-                    <span class="tooltip">delete</span>
-                </button>
-            </template>
-            <template v-else>
-                <button class="btn" @click="postNewAddOn(addOn)" @keydown="tabToName">
-                    <i class="mdi mdi-plus"/>
-                    <span class="tooltip">add new add-on</span>
-                </button>
-            </template>
-        </div>
-        <div class="name-price addon">
-            <div class="item-name">
+    <div class="tab-container">
+        <p class="tab-row">
+            <span class="btn-icons-group items">
+                <template v-if="!isNew">
+                    <button class="btn" @click="deleteAddOn" @keydown="tabToName">
+                        <i class="mdi mdi-close"/>
+                        <span class="tooltip">delete</span>
+                    </button>
+                </template>
+                <template v-else>
+                    <button class="btn" @click="postNewAddOn(addOn)" @keydown="tabToName">
+                        <i class="mdi mdi-plus"/>
+                        <span class="tooltip">add new add-on</span>
+                    </button>
+                </template>
+            </span>
+            <span class="name-price">
                 <template v-if="editName">
-                    <div class="text-field">
+                    <div class="text-field item-name">
                         <input type="text" placeholder="name" ref="nameInputRef"
                             v-model="addOn.name"
                             @blur="submitEditAddOnName(addOn)"
@@ -104,15 +104,13 @@ const deleteAddOn = () => {
                     <div @click="focusNameInput" v-if="addOn.name">{{ addOn.name }}</div>
                     <div class="placeholder-color" @click="focusNameInput" v-else>name</div>
                 </template>
-            </div>
-            <div class="item-price addon">
                 <template v-if="editPrice">
-                    <PriceInput ref="priceInputRef" :price="addOn.price" @update-price="getAddOnPrice"/>
+                    <PriceInput class="item-price" ref="priceInputRef" :price="addOn.price" @update-price="getAddOnPrice"/>
                 </template>
                 <template v-else>
-                    <span @click="focusPriceInput">{{ formatPriceDisplay(addOn.price) }}</span>
+                    <div class="item-price" @click="focusPriceInput">{{ formatPriceDisplay(addOn.price) }}</div>
                 </template>
-            </div>
-        </div>
+            </span>
+        </p>
     </div>
 </template>
