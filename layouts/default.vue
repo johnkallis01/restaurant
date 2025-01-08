@@ -102,8 +102,6 @@ const focusLogin = () =>{
 }
 .btn-link{
   color: black;
-  border: 2px solid black;
-  box-sizing: border-box;
   padding: 10px;
   margin: 10px;
   width: 10vw;
