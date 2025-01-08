@@ -1,6 +1,4 @@
 <script setup>
-import { onMounted } from 'vue';
-
 useHead({
   title: "John's Restaurant"
 })
@@ -49,22 +47,22 @@ const focusLogin = () =>{
       </div>
       
       <!-- Right-side Menu with Dropdown -->
-      <span class="right-btns">
+      <div class="right-btns">
         <client-only>
           <!-- Menu Button with Dropdown -->
-          <span v-if="loggedIn">
+          <div v-if="loggedIn">
             <button class="btn-link" @click="logout">Logout</button>
             <nuxt-link to="/edit/menus">
               <button class="btn-link">Edit Menu</button>
             </nuxt-link>
-          </span>
-          <span v-else>
+          </div>
+          <div v-else>
             <nuxt-link to="/auth/login">
               <button class="btn-link" ref="loginButton">Login</button>
             </nuxt-link>
-          </span>
+          </div>
         </client-only>
-      </span>
+      </div>
     </header>
 
     <!-- Main Content Area -->
@@ -82,25 +80,36 @@ const focusLogin = () =>{
   background-color: red;
 }
 .header-links{
-  position: relative;
+  display: flex;  /* Make sure the links are laid out in a row */
+  justify-content: flex-start;  /* Align to the left */
+  gap: 20px;
 }
 .header {
-  display: flex;
-  justify-content: center;
-  align-items: center;
   position: relative;
+  display: flex;
+  justify-content: space-between;  /* Ensure the links are spaced evenly */
+  align-items: center;  /* Vertically center the content */
   height: 10vh;
   background-color: rgb(208, 236, 243);
+  padding: 0 20px;  /* Add some padding for the header */
+  box-sizing: border-box;;
+  overflow-x: visible;
 }
 .right-btns{
-  position: absolute;
-  right: 0;
+  display: flex;
+  justify-content: flex-end;  /* Align the buttons to the right */
+  gap: 10px;
 }
 .btn-link{
   color: black;
+  border: 2px solid black;
+  box-sizing: border-box;
   padding: 10px;
   margin: 10px;
   width: 10vw;
+  height: 3vw;
+  text-overflow: hidden;
+  white-space: nowrap;
 }
 .btn-link:focus {
     border-bottom: 2px solid #166bad;
@@ -121,5 +130,14 @@ const focusLogin = () =>{
   background-position: top left;
   background-repeat: no-repeat;
   background-image: url("https://i.pinimg.com/736x/e6/7d/af/e67daf68a6e8f6d4a9283cb7d64b098c.jpg");
+}
+@media (max-width: 740px) {
+  .btn-link{
+  color: black;
+  width: 8vw;
+  height: 3vw;
+  text-overflow: hidden;
+  white-space: nowrap;
+}
 }
 </style>

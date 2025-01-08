@@ -131,10 +131,6 @@ containers
     align-items: center;
     width: 100%;
 }
-.item-name{
-    flex: 1;
-    text-align: left;
-}
 .text-field.item-name{}
 .item-price{
     position: relative;
@@ -150,10 +146,7 @@ containers
     item 
         addon-removes-options classes 
 ********/
-.item-addons-removes-options{
-    box-sizing: border-box;
-    border: 2px solid red;
-}
+.item-addons-removes-options{}
 .item-a-r-o-titles{
     display: grid;
     grid-template-columns: repeat(3, 1fr);  
@@ -162,11 +155,6 @@ containers
     display: flex;
     align-items: center;
     
-}
-.item-addon{
-    width: 100%;
-    box-sizing: border-box;
-    border: 2px solid black;
 }
 
 /***************
@@ -270,8 +258,6 @@ containers
     display: flex;
     align-items: center;
     width: 100%;
-    box-sizing: border-box;
-    border: 2px solid black;
 }
 .tab-row{
     position: relative;
@@ -302,7 +288,7 @@ containers
     justify-content: center;
     align-items: center;
 }
-@media (max-width: 600px) {
+@media (max-width: 740px) {
     .page-container {
         left: 0;
         right:0;
