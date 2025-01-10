@@ -32,9 +32,10 @@ const handleClickOutside = (event) => {
 const tabToPrice = (event)=>{
     if(event.key==="Tab"){event.preventDefault();focusPriceInput();}
 }
-const tabToDescription = (event)=>{
+
+/*const tabToDescription = (event)=>{
     if(event.key==="Tab"){event.preventDefault();focusDescriptionInput();}
-}
+}*/
 const tabToName = (event)=>{
     if(event.key==="Tab"){event.preventDefault();focusNameInput();}
 }
@@ -57,9 +58,9 @@ const submitEditItemName = (item) => {
 /************************
 **edit item description logic
 *************************/
-const { descriptionInputRef, editDescription, focusDescriptionInput } = useDescriptionInput();
+const { tabToDescription, descriptionInputRef,
+    editDescription, focusDescriptionInput} = useTabToDescription();
 const submitEditItemDescription = (item) => { 
-    console.log('@blur', !!item.description)
     editDescription.value=false;
     if(!isNew.value) {postItemEdit(item);}
     else postNewItem(item)
@@ -70,7 +71,6 @@ const submitEditItemDescription = (item) => {
  const { priceInputRef, editPrice, focusPriceInput } = usePriceInput();
 //from <PriceInput/> emit
 const getItemPrice = (newPrice) => {
-    console.log('getitemprice')
     editPrice.value = false;
     props.item.price = newPrice;
     if(!isNew.value) postItemEdit(props.item);
@@ -107,7 +107,8 @@ const getResetOption = () =>{ newOption.value = { name: "", values: [], _id: uui
  ************/
 const deleteItem = ()=>{
     props.menu.sections[sectionIndex].items.splice(itemIndex, 1);
-    menuStore.updateMenu(props.menu);
+    //menuStore.updateMenu(props.menu);
+    console.log('delete item disabled')
 }
 /*********
  * new item logic
@@ -124,22 +125,22 @@ const postNewItem = (item) => {
 </script>
 <template>
     <div class="item-container">
-        <p class="item-title">
-            <span class="btn-icons-group items">
-                <template v-if="!isNew">
-                    <button class="btn" @click="deleteItem" @keydown="tabToName" ref="buttonRef">
-                        <i class="mdi mdi-close"/>
-                        <span class="tooltip">delete</span>
-                    </button>
-                </template>
-                <template v-else>
-                    <button class="btn" @click="postNewItem(item)" @keydown="tabToName" ref="buttonRef">
-                        <i class="mdi mdi-plus"/>
-                        <span class="tooltip">add new item</span>
-                    </button>
-                </template>
-            </span>
-            <span class="name-price">
+        <div class="item-title">
+            <div class="button-name">
+                <span class="btn-icons-group items">
+                    <template v-if="!isNew">
+                        <button class="btn" @click="deleteItem" @keydown="tabToName" ref="buttonRef">
+                            <i class="mdi mdi-close"/>
+                            <span class="tooltip">delete</span>
+                        </button>
+                    </template>
+                    <template v-else>
+                        <button class="btn" @click="postNewItem(item)" @keydown="tabToName" ref="buttonRef">
+                            <i class="mdi mdi-plus"/>
+                            <span class="tooltip">add new item</span>
+                        </button>
+                    </template>
+                </span>
                 <template v-if="editName">
                     <div class="text-field item-name">
                         <input type="text" placeholder="name"
@@ -151,19 +152,27 @@ const postNewItem = (item) => {
                     </div>
                 </template>
                 <template v-if="!editName">
-                    <span class="item-name" @click="focusNameInput">{{ item.name }}</span>
+                    <span class="item-name"
+                        v-if="item.name"
+                        @click="focusNameInput"
+                        >{{ item.name }}</span>
+                        <span class="placeholder-color"
+                            @click="focusNameInput"
+                            v-else
+                        >name</span>
                 </template>
-                <template v-if="editPrice">
-                    <PriceInput class="item-price" ref="priceInputRef"
-                        :price="item.price"
-                        @keydown="tabToDescription"
-                        @update-price="getItemPrice"/>
-                </template>
-                <template v-else>
-                    <span class="item-price" @click="focusPriceInput">{{ formatPriceDisplay(item.price)}}</span>
-                </template>
-            </span>
-        </p>
+            </div>
+            <template v-if="editPrice">
+                <PriceInput class="item-price" ref="priceInputRef"
+                    :price="item.price"
+                    @keydown="tabToDescription"
+                    @update-price="getItemPrice"/>
+            </template>
+            <template v-else>
+                <span class="item-price" @click="focusPriceInput">{{ formatPriceDisplay(item.price)}}</span>
+            </template>
+         
+        </div>
         <p class="item-description">
             <template v-if="editDescription">
                 <div class="text-field description">
@@ -192,8 +201,8 @@ const postNewItem = (item) => {
                     <span :class="{'underline': optionsFlag}">Options</span>
                 </button>
             </span>
-            <div class="item-a-r-o-components">
-                <span v-if="addOnsFlag" class="item-addon">
+            <span class="item-a-r-o-components">
+                <div v-if="addOnsFlag">
                     <EditItemAddOn 
                         :addOn="newAddOn"
                         :item_id="item._id"
@@ -208,52 +217,43 @@ const postNewItem = (item) => {
                         :menu="menu"
                         v-for="(addOn, i) in item.addOns" :key="i"
                         @send-reset-remove="getResetRemove"
+                    />   
+                </div>
+                <span v-if="removesFlag">
+                    <EditItemRemove 
+                        :remove="newRemove"
+                        :item_id="item._id"
+                        :section_id="section_id"
+                        :menu="menu"
+                        @send-reset-remove="getResetRemove"
+                    />
+                    <EditItemRemove
+                        :remove="remove"
+                        :item_id="item._id"
+                        :section_id="section_id"
+                        :menu="menu"
+                        v-for="(remove, i) in item.removes" :key="i"
+                        @send-reset-remove="getResetRemove"
                     /> 
-                    
                 </span>
-                <div v-if="removesFlag">
-                    <template v-if="removesFlag">
-                        <EditItemRemove 
-                            :remove="newRemove"
-                            :item_id="item._id"
-                            :section_id="section_id"
-                            :menu="menu"
-                            @send-reset-remove="getResetRemove"
-                        />
-                    </template>
-                    
-                    <div v-for="(remove, i) in item.removes" :key="i">
-                        <EditItemRemove
-                            :remove="remove"
-                            :item_id="item._id"
-                            :section_id="section_id"
-                            :menu="menu"
-                            @send-reset-remove="getResetRemove"
-                        /> 
-                    </div>
-                </div>
-                <div v-if="optionsFlag">
-                    <template v-if="optionsFlag">
-                        <EditItemOption
-                            :option="newOption"
-                            :item_id="item._id"
-                            :section_id="section_id"
-                            :menu="menu"
-                            @send-reset-option="getResetOption"
-                        />
-                    </template>
-                    
-                    <div v-for="(option, i) in item.options" :key="i">
-                        <EditItemOption
-                            :option="option"
-                            :item_id="item._id"
-                            :section_id="section_id"
-                            :menu="menu"
-                            @send-reset-option="getResetOption"
-                        /> 
-                    </div>
-                </div>
-            </div>
+                <span v-if="optionsFlag">
+                    <EditItemOption
+                        :option="newOption"
+                        :item_id="item._id"
+                        :section_id="section_id"
+                        :menu="menu"
+                        @send-reset-option="getResetOption"
+                    />
+                    <EditItemOption
+                        :option="option"
+                        :item_id="item._id"
+                        :section_id="section_id"
+                        :menu="menu"
+                        v-for="(option, i) in item.options" :key="i"
+                        @send-reset-option="getResetOption"
+                    />                
+                </span>
+            </span>
         </div>  
     </div>
 </template>

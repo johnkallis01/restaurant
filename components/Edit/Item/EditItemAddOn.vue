@@ -49,6 +49,7 @@ const getAddOnPrice = (newPrice) => {
  * new add on logic
  ********************/
 const isNew = ref(false);
+const inputFlag = ref(false);
 onMounted(()=>{
     if(!props.addOn?.name){
         isNew.value = true;
@@ -75,42 +76,52 @@ const deleteAddOn = () => {
 </script>
 <template>
     <div class="tab-container">
-        <p class="tab-row">
-            <span class="btn-icons-group items">
-                <template v-if="!isNew">
-                    <button class="btn" @click="deleteAddOn" @keydown="tabToName">
-                        <i class="mdi mdi-close"/>
-                        <span class="tooltip">delete</span>
-                    </button>
-                </template>
-                <template v-else>
-                    <button class="btn" @click="postNewAddOn(addOn)" @keydown="tabToName">
-                        <i class="mdi mdi-plus"/>
-                        <span class="tooltip">add new add-on</span>
-                    </button>
-                </template>
-            </span>
-            <span class="name-price">
+        <div class="item-title">
+            <div class="button-name">
+                <span class="btn-icons-group items">
+                    <template v-if="!isNew">
+                        <button class="btn" @click="deleteAddOn" @keydown="tabToName">
+                            <i class="mdi mdi-close"/>
+                            <span class="tooltip">delete</span>
+                        </button>
+                    </template>
+                    <template v-else>
+                        <button class="btn" @click="postNewAddOn(addOn)" @keydown="tabToName">
+                            <i class="mdi mdi-plus"/>
+                            <span class="tooltip">add new add-on</span>
+                        </button>
+                    </template>
+                </span>
                 <template v-if="editName">
                     <div class="text-field item-name">
-                        <input type="text" placeholder="name" ref="nameInputRef"
+                        <input 
+                            type="text" placeholder="name" ref="nameInputRef"
                             v-model="addOn.name"
                             @blur="submitEditAddOnName(addOn)"
                             @keydown="tabToPrice"
                         />
                     </div>
                 </template>
-                <template v-else>
-                    <div @click="focusNameInput" v-if="addOn.name">{{ addOn.name }}</div>
-                    <div class="placeholder-color" @click="focusNameInput" v-else>name</div>
+                <template v-if="!editName">
+                    <span  class="item-name"
+                        @click="focusNameInput"
+                        v-if="addOn.name"
+                        >{{ addOn.name }}</span>
+                    <span class="placeholder-color"
+                        @click="focusNameInput"
+                        v-else>name</span>
                 </template>
-                <template v-if="editPrice">
-                    <PriceInput class="item-price" ref="priceInputRef" :price="addOn.price" @update-price="getAddOnPrice"/>
-                </template>
-                <template v-else>
-                    <div class="item-price" @click="focusPriceInput">{{ formatPriceDisplay(addOn.price) }}</div>
-                </template>
-            </span>
-        </p>
+            </div>
+            <template v-if="editPrice">
+                <PriceInput class="item-price" ref="priceInputRef" 
+                    :price="addOn.price"
+                    @update-price="getAddOnPrice"
+                    />
+            </template>
+            <template v-else>
+                <span class="item-price" @click="focusPriceInput">{{ formatPriceDisplay(addOn.price) }}</span>
+            </template>
+           
+        </div>
     </div>
 </template>

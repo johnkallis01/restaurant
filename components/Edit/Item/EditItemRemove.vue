@@ -51,39 +51,37 @@ const deleteRemove = () => {
 </script>
 <template>
     <div class="tab-container">
-        <span class="btn-icons-group items">
-            <template v-if="!isNew">
-                <button class="btn" @click="deleteRemove">
-                    <i class="mdi mdi-close"/>
-                    <span class="tooltip">delete</span>
-                </button>
-            </template>
-            <template v-else>
-                <button class="btn" @click="postNewRemove(remove)">
-                    <i class="mdi mdi-plus"/>
-                    <span class="tooltip">add new remove</span>
-                </button>
-            </template>
-        </span>
-        <span class="tab-row">
-            <span class="tab-name">
-                <template v-if="editName">
-                    <div class="text-field">
-                        <input
-                            type="text"
-                            class="name-input"
-                            placeholder="name"
-                            ref="nameInputRef"
-                            v-model="remove.name"
-                            @blur="submitEditRemoveName(remove)"
-                        />
-                    </div>
+        <div class="button-name">
+            <span class="btn-icons-group items">
+                <template v-if="!isNew">
+                    <button class="btn" @click="deleteRemove">
+                        <i class="mdi mdi-close"/>
+                        <span class="tooltip">delete</span>
+                    </button>
                 </template>
                 <template v-else>
-                    <span @click="focusNameInput" v-if="remove.name">{{ remove.name }}</span>
-                    <span class="placeholder-color" @click="editRemoveName(remove)" v-else>name</span>
+                    <button class="btn" @click="postNewRemove(remove)">
+                        <i class="mdi mdi-plus"/>
+                        <span class="tooltip">add new remove</span>
+                    </button>
                 </template>
             </span>
-        </span>
+            <template v-if="editName">
+                <div class="text-field">
+                    <input
+                        type="text"
+                        class="name-input"
+                        placeholder="name"
+                        ref="nameInputRef"
+                        v-model="remove.name"
+                        @blur="submitEditRemoveName(remove)"
+                    />
+                </div>
+            </template>
+            <template v-else>
+                <span @click="focusNameInput" v-if="remove.name">{{ remove.name }}</span>
+                <span class="placeholder-color" @click="editRemoveName(remove)" v-else>name</span>
+            </template>
+        </div>  
     </div>
 </template>

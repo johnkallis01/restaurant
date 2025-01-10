@@ -1,15 +1,13 @@
 export function useDescriptionInput() {
-    const descriptionInputRef = ref(null); // Ref for the input element
-    const editDescription = ref(false); // Tracks if the input is in edit mode
-  
+    const descriptionInputRef = ref(null);
+    const editDescription = ref(false); 
     const focusDescriptionInput = () => {
-      editDescription.value = true; // Set edit mode to true
+      editDescription.value = true;
       nextTick(() => {
         if (descriptionInputRef.value) {
-            descriptionInputRef.value.focus(); // Safely focus the input
+            descriptionInputRef.value.focus();
         }
       });
     };
-  
     return { descriptionInputRef, editDescription, focusDescriptionInput };
   }

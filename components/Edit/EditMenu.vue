@@ -1,27 +1,44 @@
 <script setup>
+import { v4 as uuidv4 } from 'uuid';
 const props = defineProps({ menu:{ type: Object, required: true }});
-const menuStore = useMenuStore();
-
 const deleteMenu = (menu) =>{
     console.log('delete menu')
 }
+const addSection = ref(false);
+const addNewSection = () =>{
+    addSection.value=!addSection.value;
+}
+const getNewSectionFlag = () => {
+    console.log('flag in section')
+    addSection.value=!addSection.value;
+}
+const newSection = ref({
+    name: "",
+    description: "",
+    _id: uuidv4(),
+});
 </script>
 <template>
     <div class="menu-container">
         <div class="container-title menu">
+            <button class="btn menu" @click="deleteMenu(menu)">
+                <i class="mdi mdi-close"/>
+                <span class="tooltip">delete</span>
+            </button>
             <span class="title-text menu">{{ menu.name }}</span>
             <span class="btn-icons-group">
-                <button class="btn" @click="deleteMenu(menu)">
-                    <i class="mdi mdi-close"/>
-                    <span class="tooltip">delete</span>
-                </button>
-                <button class="btn" @click="editMenu">
-                    <i class="mdi mdi-square-edit-outline"/>
-                    <span class="tooltip">edit</span>
+                
+                <button class="btn" @click="addNewSection">
+                    <span>section</span>
+                    <i class="mdi mdi-plus"/>
+                    <span class="tooltip">add section</span>
                 </button> 
             </span>
         </div>
         <div class="sections">
+            <div class="section-container" v-if="addSection">
+                <EditSection :section="newSection" :menu="menu" @send-new-section-flag="getNewSectionFlag"/>
+            </div>
             <div class="section-container" v-for="(section, i) in menu.sections" :key="i">
                 <EditSection :section="section" :menu="menu" />               
             </div>
@@ -63,5 +80,9 @@ const deleteMenu = (menu) =>{
 .item-price{
     flex: 0 0 100px;
     text-align: right;
+}
+.btn.menu{
+    position: absolute;
+    left: 0;
 }
 </style>

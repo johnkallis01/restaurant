@@ -3,6 +3,72 @@ html, body {
     height: 100%;
     scrollbar-width: none;
 }
+/** default layout **/
+.app {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background-color: red;
+  }
+  .header-links{
+    display: flex;  
+    justify-content: flex-start; 
+    gap: 20px;
+  }
+  .header {
+    position: relative;
+    display: flex;
+    justify-content: space-between;  
+    align-items: center;  
+    height: 10vh;
+    background-color: rgb(208, 236, 243);
+    padding: 0 20px;
+    box-sizing: border-box;;
+    overflow-x: visible;
+  }
+  .right-btns{
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+  .btn-link{
+    color: black;
+    padding: 10px;
+    margin: 10px;
+    width: 10vw;
+    height: 3vw;
+    text-overflow: hidden;
+    white-space: nowrap;
+  }
+  .btn-link:focus {
+      border-bottom: 2px solid #166bad;
+  }
+  .btn-link:hover {
+     box-shadow: 0 0 5px rgba(214, 227, 240, 0.5);
+  }
+  .main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 90vh;
+    position: absolute;
+    top: 10vh;
+    left: 0;
+    background-size: cover;
+    background-position: top left;
+    background-repeat: no-repeat;
+    background-image: url("https://i.pinimg.com/736x/e6/7d/af/e67daf68a6e8f6d4a9283cb7d64b098c.jpg");
+  }
+  @media (max-width: 740px) {
+      .btn-link{
+      color: black;
+      width: 8vw;
+      height: 3vw;
+      text-overflow: hidden;
+      white-space: nowrap;
+    }
+  }
 /**************
 containers 
 ***************/
@@ -56,9 +122,6 @@ containers
     position: absolute;
     top: 10vh;
 }
-.name-input{
-    width: 100%;
-}
 /**************
 *** sections 
 ****************/
@@ -102,15 +165,10 @@ containers
 *** items 
 ****************/
 .item-container{
-    width: 100%;
-    
+    width: 39vw;
 }
 /* item title classes */
-.item-title{
-    position: relative;
-    display: flex;
-    align-items: center;
-}
+
 .btn-icons-group.items{
     position: relative;
 }
@@ -125,40 +183,48 @@ containers
     width: auto;
     min-width: 90%;
 }
-.name-price{
-    position: relative;
+.item-title{
     display: flex;
+    align-items: flex-start;
     justify-content: space-between;
-    align-items: center;
-    gap: 20px;
+    margin: 6px;
+
+}
+.button-name{
+    display: flex;
+    flex-direction: row;
+}
+.item-price{
+    align-self: flex-start;
+    margin-left: auto;
+    margin-right: 7px;
+}
+.text-field.item-name input{
     width: 100%;
+}
+.item-name{
+    width: 100%;
+}
+.item-price{
+    display: inline-flex;
+    align-items: center;
 }
 .item-title .addon{
     border: 2px;
-}
-.item-price{
-    position: relative;
-    right: 0;
-    display: inline-block;
-    margin-right: 7px;
-}
-.item-price.input{
-    display: inline-flex;
-    align-items: center;
 }
 /********
     item 
         addon-removes-options classes 
 ********/
-.item-addons-removes-options{}
+.item-addons-removes-options{
+}
 .item-a-r-o-titles{
     display: grid;
     grid-template-columns: repeat(3, 1fr);  
 }
 .item-a-r-o-components{
     display: flex;
-    align-items: center;
-    width: 39vw;
+    align-items: center;  
 }
 
 /***************
@@ -230,7 +296,6 @@ containers
 .btn-icons-group{
     position: absolute;
     right: 0;
-    padding: 5px;
     font-size: 18px;
 }
 /****************
@@ -255,9 +320,8 @@ containers
 /***************
     addon/remove/options
 ***************/
-
-
 .tab-container{
+    position: relative;
     width: 38vw;
 }
 .tab-row{
@@ -282,6 +346,7 @@ containers
     justify-content: center;
     align-items: center;
 }
+
 @media (max-width: 740px) {
     .page-container {
         left: 0;
@@ -298,4 +363,10 @@ containers
     .section-item{
         width: 80vw;
     }
-}
+    .item-container{
+        width: 100%;
+    }
+    .item-title{
+        width: 75vw;
+    }
+} 
