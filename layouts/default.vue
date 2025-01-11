@@ -30,7 +30,7 @@ const focusLogin = () =>{
 <template>
   <div class="app">
     <header class="header">
-      <div class="header-links">
+      <div class="left-btns">
         <nuxt-link to="/">
           <button class="btn-link">Home</button>
         </nuxt-link>
@@ -46,17 +46,17 @@ const focusLogin = () =>{
       </div>
       <div class="right-btns">
         <ClientOnly>
-          <div v-if="loggedIn">
-            <button class="btn-link" @click="logout">Logout</button>
+          <template v-if="loggedIn">
+            <nuxt-link>
+              <button class="btn-link" @click="logout">Logout</button>
+            </nuxt-link>
             <nuxt-link to="/edit/menus">
               <button class="btn-link">Edit Menu</button>
             </nuxt-link>
-          </div>
-          <div v-else>
-            <nuxt-link to="/auth/login">
+          </template>
+            <nuxt-link to="/auth/login" v-else>
               <button class="btn-link" ref="loginButton">Login</button>
             </nuxt-link>
-          </div>
         </ClientOnly>
       </div>
     </header>
@@ -65,3 +65,6 @@ const focusLogin = () =>{
     </main>
   </div>
 </template>
+<style scoped>
+a { text-decoration: none; }
+</style>

@@ -10,7 +10,7 @@ const newMenu=()=>{
   <div class="page-container">
     <div class="container-title">
       <span class="title-text">Edit Menus</span>
-      <nuxt-link to="/edit/menu/new">
+      <nuxt-link to="/edit/menus/new">
       <button class="btn new">
         <span class="btn-text">New +</span>
         <span class="tooltip">new menu</span>
