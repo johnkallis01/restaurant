@@ -3,6 +3,7 @@ html, body {
     height: 100%;
     scrollbar-width: none;
 }
+a { text-decoration: none; color: black; }
 /** default layout **/
 .app {
     display: flex;

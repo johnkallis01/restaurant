@@ -1,7 +1,7 @@
 <template>
-  <v-card>
+  <div>
     menu
-  </v-card>
+  </div>
 </template>
 
 

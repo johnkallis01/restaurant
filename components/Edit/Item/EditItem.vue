@@ -23,7 +23,6 @@ onBeforeUnmount(() => {
 });
 const clickInsideOK = ref(null);
 const handleClickOutside = (event) => {
-  // Check if the clicked element is outside the itemElement
   if (clickInsideOK.value && !clickInsideOK.value.contains(event.target)) resetFlags();
 }
 /****************
