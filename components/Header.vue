@@ -4,14 +4,13 @@ const router = useRouter();
 
 const dropdownRef=ref(null);
 onMounted(()=>{
-    document.addEventListener('click', handleClickOutside);
+    document.addEventListener('click', closeDropdown);
 });
-
 onBeforeUnmount(() => {
-    document.removeEventListener('click', handleClickOutside);
+    document.removeEventListener('click', closeDropdown);
 });
-const handleClickOutside = (event) => {
-  if (dropdownRef.value && !dropdownRef.value.$el?.contains(event.target)) toggleDropdown();
+const closeDropdown = (event) => {
+  if (dropdownRef.value && !dropdownRef.value.$el?.contains(event.target)) dropdown.value=false;
 }
 
 const logout = () => {

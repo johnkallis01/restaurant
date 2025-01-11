@@ -43,7 +43,7 @@ const submitName =() => {
 }
 </script>
 <template>
-    <v-card>
+    <div class="new-menu">
       <v-card-title>Create Menu</v-card-title>
         <v-card-item class="menu-name">
             <v-text-field
@@ -71,7 +71,7 @@ const submitName =() => {
             </v-card-actions>
           </v-card>
         </v-dialog>
-    </v-card>
+      </div>
 </template>
 <style scoped>
 .menu-name {

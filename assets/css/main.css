@@ -68,15 +68,6 @@ a { text-decoration: none; color: black; }
     background-repeat: no-repeat;
     background-image: url("https://i.pinimg.com/736x/e6/7d/af/e67daf68a6e8f6d4a9283cb7d64b098c.jpg");
   }
-  @media (max-width: 740px) {
-      .btn-link{
-      color: black;
-      width: 8vw;
-      height: 3vw;
-      text-overflow: hidden;
-      white-space: nowrap;
-    }
-  }
 /**************
 containers 
 ***************/
@@ -190,6 +181,52 @@ containers
     margin: 0 10px 0 15px;
     overflow: hidden;
 }
+/***
+    floating text field
+***/
+.floating-text-field{
+    position: relative;
+    margin-bottom: 20px
+}
+.floating-text-field label{ /*no focus */
+    position: absolute;
+    transition: 0.2s ease all;
+    pointer-events: none; 
+}
+.floating-text-field input{
+    font-size: 16px;
+    padding: 10px 10px 10px 15px;
+    display: block;
+    width: 100%;
+    height: 40px;
+    font-size: 16px;
+    background-color: white;
+    border: 2px solid rgb(96, 97, 97);
+    border-radius: 5px;
+}
+.floating-text-field input:placeholder-shown + label{
+    position: absolute;
+    top: 7px;
+    left: 10px;
+    font-size: 18px;
+    color: #aaaa;
+    padding: 2px;
+    transition: 0.2s ease all;
+    background-color: white;
+}
+.floating-text-field input:hover + label{
+    cursor: text;
+}
+.floating-text-field input:focus + label,
+.floating-text-field input:not(:placeholder-shown) + label {
+    top: -10px;
+    left: 10px;
+    font-size: 12px;
+    color: #5264ae; 
+    background-color: white; 
+}
+/*** end floating input
+
 .text-field.description textarea{
     height: 10vh;
     width: auto;
@@ -254,8 +291,8 @@ containers
 *****************/
 .form-container{
     display: flex;
-    flex-direction: column; /* Align vertically */
-    gap: 16px; /* Space between fields */
+    flex-direction: column;
+    gap: 16px;
     padding: 10px;
 }
 .container-actions{
@@ -305,7 +342,7 @@ containers
     box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
 }
 .btn:hover {    
-    background-color: #d3dce3; /* Darker Gray */
+    background-color: #d3dce3;
 }
 .btn-text:hover .tooltip{
     opacity: 1;
@@ -365,7 +402,7 @@ containers
     justify-content: center;
     align-items: center;
 }
-@media (max-width: 750px) {
+@media (max-width: 740px) {
     .page-container {
         left: 0;
         right:0;
