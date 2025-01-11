@@ -26,7 +26,8 @@ html, body {
     position: relative;
     display: flex;
     justify-content: space-between;  
-    align-items: center;  
+    align-items: center;
+    align-content: center;  
     flex-direction: row;
     height: 10vh;
     background-color: rgb(208, 236, 243);
@@ -158,27 +159,21 @@ containers
     margin-left: 40px;
 }
 .section-items{   
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    justify-items: center;
-    width: 80vw;
-    margin: 5px;
-    gap: 2px;
-}
-.section-item{
     display: flex;
-    justify-content: center;
+    flex-wrap: wrap;
     align-content: center;
-    
-    width: 39vw;
-    
+    align-items: center;
+    justify-items: center;
+    width: 82vw;
+    margin: 5px;
+    gap: 15px;
 }
 
 /**************
 *** items 
 ****************/
 .item-container{
-    width: 39vw;
+    width: 40vw;
     border-radius: 15px;
     box-sizing: border-box;
     border: 2px solid black;
@@ -199,20 +194,30 @@ containers
     width: auto;
     min-width: 90%;
 }
+.tab-container{
+    display: flex;
+    justify-content: space-between;
+    align-content: center;
+    width: 40vw;
+}
 .item-title{
     display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    margin: 6px;
-
+    justify-content: space-between;  
+    align-items: center;
+    align-content: center;  
+    flex-direction: row;
+    margin: 6px 0;
+    width: 100%;
 }
 .button-name{
-    display: flex;
-    flex-direction: row;
+    display: flex;  
+    justify-content: flex-start; 
+    align-items: center;
 }
 .item-price{
-    align-self: flex-start;
-    margin-left: auto;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
     margin-right: 7px;
 }
 .text-field.item-name input{
@@ -232,11 +237,11 @@ containers
     item 
         addon-removes-options classes 
 ********/
-.item-addons-removes-options{
-}
 .item-a-r-o-titles{
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);  
+    display: flex;
+    justify-content: space-between;
+    align-content: center;
+    margin: 0px 15px; 
 }
 .item-a-r-o-components{
     display: flex;
@@ -336,12 +341,8 @@ containers
 /***************
     addon/remove/options
 ***************/
-.tab-container{
-    position: relative;
-    width: 38vw;
-}
+
 .tab-row{
-    position: relative;
     display: flex;
     align-items: center;
     width: 100%;
@@ -349,9 +350,10 @@ containers
 .tab-name{
     display: flex;
     align-items: center;
+    width: 100%;
 }
 .tab-price{
-    position: relative;
+    flex: 1;
     margin-left: auto;
     margin-right: 10px;
     text-align: right;
@@ -362,27 +364,24 @@ containers
     justify-content: center;
     align-items: center;
 }
-
-@media (max-width: 740px) {
+@media (max-width: 750px) {
     .page-container {
         left: 0;
         right:0;
     }
     .section-items{   
-        display: grid;
-        grid-template-columns: repeat(1, 1fr);
-        justify-items: center;
         width: 100vw;
         margin: 5px;
         gap: 2px;
-    }
-    .section-item{
-        width: 80vw;
+        display: flex;
+        align-content: center;
+        align-items: center;
+        justify-content: center;
     }
     .item-container{
-        width: 100%;
+        width: 60vw;
     }
-    .item-title{
-        width: 75vw;
+    .tab-container{
+        width: 59vw;
     }
 } 
