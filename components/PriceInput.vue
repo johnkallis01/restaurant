@@ -8,9 +8,7 @@ const props = defineProps({
 });
 const emit = defineEmits(['update-price']);
 //emit to parent component
-const submitPrice = () =>{
-    emit('update-price', formattedPrice.value)
-}
+const submitPrice = (event) => emit('update-price', formattedPrice.value);
 const rawPrice = ref(props.price.replace('.', ''));
 watch(
   () => props.price,
@@ -54,25 +52,31 @@ onMounted(()=>{
 
 </script>
 <template>
-    <div class="price-input">
+    <span class="text-field price">
         <span class="prefix">$</span>
         <input
             type="text"
-            class="price-input-field"
             ref="priceRef"
             placeholder="000.00"
             :value="formattedPrice"
             @input="formatPriceInput"
             @blur="submitPrice"
+            @keydown.enter="submitPrice"
         >
-    </div>
+    </span>
+
 </template>
 <style scoped>
-.price-input-field{
-    width: auto;
+.text-field.price input{
+    position: inherit;
     background-color: white;
     padding: 0 2px;
     text-align: right;
-    max-width: 60px;
+    width: 65px;
+    box-sizing: border-box;
+}
+.text-field.price .prefix{
+    position: relative;
+    left: 24px;
 }
 </style>

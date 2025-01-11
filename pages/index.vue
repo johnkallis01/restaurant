@@ -1,9 +1,10 @@
 <template>
   <div class="restaurant-container">
-      <v-card class="rest-info">
-          <v-card-title>John's Restaurant</v-card-title>
-          <v-card-subtitle>Phone: 667-940-8868 </v-card-subtitle>  
-      </v-card>
+      <div class="rest-info">
+          <h1>John's Restaurant</h1><br/>
+          <p>Phone: 667-940-8868 </p>
+          <p>johnkallis01@gmail.com</p>
+      </div>
     </div>
 </template>
 <script>
@@ -26,11 +27,8 @@ data(){
 }
 .rest-info {
   color: white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   background-color: green; 
-  padding: 100px;
+  padding: 50px;
   text-align: center;
   border-radius: 8px; 
 }

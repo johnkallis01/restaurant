@@ -3,6 +3,80 @@ html, body {
     height: 100%;
     scrollbar-width: none;
 }
+a { text-decoration: none; color: black; }
+/** default layout **/
+.app {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background-color: red;
+  }
+  .left-btns{
+    display: flex;  
+    justify-content: flex-start; 
+    align-items: center;
+    gap: 20px;
+  }
+  .right-btns{
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 20px;
+  }
+  .header {
+    position: relative;
+    display: flex;
+    justify-content: space-between;  
+    align-items: center;
+    align-content: center;  
+    flex-direction: row;
+    height: 10vh;
+    background-color: rgb(208, 236, 243);
+    padding: 0 20px;
+    overflow-x: visible;
+  }
+
+  .btn-link{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: black;
+    padding: 10px;
+    margin: 10px;
+    width: 10vw;
+    border: none;
+    text-overflow: hidden;
+    white-space: nowrap;
+  }
+  .btn-link:focus {
+      border-bottom: 2px solid #166bad;
+  }
+  .btn-link:hover {
+     box-shadow: 0 0 5px rgba(214, 227, 240, 0.5);
+  }
+  .main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 90vh;
+    position: absolute;
+    top: 10vh;
+    left: 0;
+    background-size: cover;
+    background-position: top left;
+    background-repeat: no-repeat;
+    background-image: url("https://i.pinimg.com/736x/e6/7d/af/e67daf68a6e8f6d4a9283cb7d64b098c.jpg");
+  }
+  @media (max-width: 740px) {
+      .btn-link{
+      color: black;
+      width: 8vw;
+      height: 3vw;
+      text-overflow: hidden;
+      white-space: nowrap;
+    }
+  }
 /**************
 containers 
 ***************/
@@ -12,11 +86,10 @@ containers
     align-items: center;
     position: absolute;
     height: 90vh;
-    width: 95vw;
     top: 0;
     left: 5vh;
     right: 5vh; 
-    overflow-y: scroll;
+    overflow: scroll;
     background-color: rgb(233, 235, 238);
 }
 .container-body{
@@ -30,7 +103,7 @@ containers
 }
 .container-title{
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     position: absolute;
     padding: 10px;
@@ -41,42 +114,42 @@ containers
     top: 0;
     height: 10vh;
 }
-
+.title-text{
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
 .menu-container{
     display: flex;
     justify-content: center;
     align-items: center;
     position: relative;
     top: 0;
-    width: 100%;
     height: 100vh;
     border-radius: 10px 10px 0 0;
-}
-.container-title.menu{
-    height: 8vh; 
-    color: black;
-    border-radius: 10px 10px 0 0;
-    border-bottom: 2px solid #333;
 }
 .sections{
     display: flex;
     flex-direction: column;
     padding: 10px;
-    width: 95%;
     position: absolute;
     top: 10vh;
 }
+/**************
+*** sections 
+****************/
 .section-container{
-    position: relative;
-    top: 0;
-    left: 0;
+    width: 100%;
 }
 .section-name{
     display: flex;
     align-items: center;
-    margin: 15px 5px 5px 5px;
+    margin: 5px;
     font-size: 25px;
     height: 45px;
+    color:black;
     border-bottom: 2px solid black;
 }
 .section-description{
@@ -87,21 +160,94 @@ containers
     margin-left: 40px;
 }
 .section-items{   
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    width: 80vw;
-    margin: 5px 5px 5px 45px;
-    gap: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: center;
+    align-items: center;
+    justify-items: center;
+    width: 82vw;
+    margin: 5px;
+    gap: 15px;
 }
-.section-item{
+
+/**************
+*** items 
+****************/
+.item-container{
+    width: 40vw;
+    border-radius: 15px;
+    box-sizing: border-box;
     border: 2px solid black;
 }
-.item{
+/* item title classes */
+
+.btn-icons-group.items{
+    position: relative;
+}
+.item-description{
+    font-size: 12px;
+    height: 10vh;
+    margin: 0 10px 0 15px;
+    overflow: hidden;
+}
+.text-field.description textarea{
+    height: 10vh;
+    width: auto;
+    min-width: 90%;
+}
+.tab-container{
     display: flex;
+    justify-content: space-between;
+    align-content: center;
+    width: 40vw;
+}
+.item-title{
+    display: flex;
+    justify-content: space-between;  
+    align-items: center;
+    align-content: center;  
+    flex-direction: row;
+    margin: 6px 0;
+    width: 100%;
+}
+.button-name{
+    display: flex;  
+    justify-content: flex-start; 
     align-items: center;
 }
-
-
+.item-price{
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-right: 7px;
+}
+.text-field.item-name input{
+    width: 100%;
+}
+.item-name{
+    width: 100%;
+}
+.item-price{
+    display: inline-flex;
+    align-items: center;
+}
+.item-title .addon{
+    border: 2px;
+}
+/********
+    item 
+        addon-removes-options classes 
+********/
+.item-a-r-o-titles{
+    display: flex;
+    justify-content: space-between;
+    align-content: center;
+    margin: 0px 15px; 
+}
+.item-a-r-o-components{
+    display: flex;
+    align-items: center;  
+}
 
 /***************
     Input Formatting
@@ -121,44 +267,31 @@ containers
     align-items: center;
     gap: 12px;
 }
-.text-field label{
-    text-align: left;
-    min-width: 150px;
-    display: block;
-    align-self: start;
-    margin-bottom: 8px;
-}
-.prefix{
-    margin-right: 4px;
-}
-.text-field input{
-    padding: 4px 8px;
+.text-field input, .text-field textarea{
+    padding: 0px 7px;
     border: 1px solid #ccc;
     border-radius: 4px;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    gap: 12px;
     resize: none;
+    background-color: white;
   }
-.text-field input:focus{
+.text-field input:focus, .text-field textarea:focus{
     outline: none;
     border-color: #1976d2;
     box-shadow: rgba(25, 118, 210, 0.5);
 }
-input[type="number"]::-webkit-inner-spin-button,
-input[type="number"]::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
+.placeholder-color{
+    color: #999;
 }
   /****************
     Buttons
   ****************/
-
+  
 .btn {
     display: inline-block;
-    padding: 0px;
-    margin: 0px 5px;
+    padding: 0px 5px;
     text-align: center;
     text-decoration: none;
     border: none;
@@ -171,7 +304,7 @@ input[type="number"]::-webkit-outer-spin-button {
     outline: none;
     box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
 }
-.btn:hover {
+.btn:hover {    
     background-color: #d3dce3; /* Darker Gray */
 }
 .btn-text:hover .tooltip{
@@ -185,11 +318,7 @@ input[type="number"]::-webkit-outer-spin-button {
 .btn-icons-group{
     position: absolute;
     right: 0;
-    padding: 5px;
-    font-size: 25px;
-}
-.btn-icons-group.items{
-    position: relative;
+    font-size: 18px;
 }
 /****************
    tooltip 
@@ -211,8 +340,49 @@ input[type="number"]::-webkit-outer-spin-button {
     z-index: 10;
 }
 /***************
-    dialogs
+    addon/remove/options
 ***************/
-.dialog{
-    width: 80%;
+
+.tab-row{
+    display: flex;
+    align-items: center;
+    width: 100%;
 }
+.tab-name{
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+.tab-price{
+    flex: 1;
+    margin-left: auto;
+    margin-right: 10px;
+    text-align: right;
+    width: 75px;
+}
+.option-value{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+@media (max-width: 750px) {
+    .page-container {
+        left: 0;
+        right:0;
+    }
+    .section-items{   
+        width: 100vw;
+        margin: 5px;
+        gap: 2px;
+        display: flex;
+        align-content: center;
+        align-items: center;
+        justify-content: center;
+    }
+    .item-container{
+        width: 60vw;
+    }
+    .tab-container{
+        width: 59vw;
+    }
+} 

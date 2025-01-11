@@ -32,12 +32,11 @@ export const useMenuStore = defineStore('menu', {
       console.log(response)
     },
     async updateMenu(menu){
-      console.log('edit menu')
       const response = await $fetch('/api/menus/'+menu._id,{
         method: 'PUT',
         body: menu
       })
-      console.log('res ',response)
+      //console.log('res ',response)
     },
     async deleteMenu(id){
       console.log('delete menu');

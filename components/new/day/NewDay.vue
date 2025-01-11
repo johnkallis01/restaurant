@@ -53,7 +53,6 @@ const submitSchedule = () => {
 <template>
   <div>
     <!-- Iterate through each day's schedule -->
-    <client-only>
       <div class="day-card" v-for="(day, i) in schedule" :key="i">
         <span class="day-name">{{ day.day }}</span>
 
@@ -84,7 +83,6 @@ const submitSchedule = () => {
           />
         </template>
       </div>
-    </client-only>
     <!-- Submit Button -->
     <v-btn
       text="Submit Schedule"

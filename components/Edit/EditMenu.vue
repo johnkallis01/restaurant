@@ -1,27 +1,55 @@
 <script setup>
-const props = defineProps({ menu:{ type: Object, required: true }});
+import { v4 as uuidv4 } from 'uuid';
+const { data: menus } = await useFetch("/api/menus");
+const props = defineProps({ menu: { type: Object, required: true }},);
 const menuStore = useMenuStore();
-
 const deleteMenu = (menu) =>{
-    console.log('delete menu')
+    const menuIndex = menus.findIndex(menu=> props.menu._id === menu._id);
+    props.menus.slice(menuIndex, 1);
+    console.log('delete menu', menu)
+    //menuStore.deleteMenu(props.menu._id);
 }
+const addSection = ref(false);
+const addNewSection = () =>{
+    addSection.value=!addSection.value;
+    newSection.value = {
+        name: "",
+        description: "",
+        _id: uuidv4(),
+        items: []
+    }
+}
+const getNewSectionFlag = () => {
+    console.log('flag in section')
+    addSection.value=false;
+}
+const newSection = ref({
+    name: "",
+    description: "",
+    _id: uuidv4(),
+});
 </script>
 <template>
     <div class="menu-container">
         <div class="container-title menu">
+            <button class="btn menu" @click="deleteMenu(menu)">
+                <i class="mdi mdi-close"/>
+                <span class="tooltip">delete</span>
+            </button>
             <span class="title-text">{{ menu.name }}</span>
             <span class="btn-icons-group">
-                <button class="btn" @click="deleteMenu(menu)">
-                    <i class="mdi mdi-close"/>
-                    <span class="tooltip">delete</span>
-                </button>
-                <button class="btn" @click="editMenu">
-                    <i class="mdi mdi-square-edit-outline"/>
-                    <span class="tooltip">edit</span>
+                
+                <button class="btn" @click="addNewSection">
+                    <span>section</span>
+                    <i class="mdi mdi-plus"/>
+                    <span class="tooltip">add section</span>
                 </button> 
             </span>
         </div>
         <div class="sections">
+            <div class="section-container" v-if="addSection">
+                <EditSection :section="newSection" :menu="menu" @send-new-section-flag="getNewSectionFlag"/>
+            </div>
             <div class="section-container" v-for="(section, i) in menu.sections" :key="i">
                 <EditSection :section="section" :menu="menu" />               
             </div>
@@ -29,32 +57,10 @@ const deleteMenu = (menu) =>{
     </div>
 </template>
 <style scoped>
-.text-field.description{
-    width: 100%;
-}
-.input-description{
-    width: 100%;
-}
-.title-text{
-    position: absolute;
-    left: 50%;
-    font-size: 23px;
-}
-.btn.delete{
-    margin-right: 20px;
-}
-.name-price{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 50vh;
-}
-.item-name{
-    flex: 1;
-    text-align: left;
-}
-.item-price{
-    flex: 0 0 100px;
-    text-align: right;
+.container-title.menu{
+    height: 8vh;
+    color: black;
+    border-bottom: 2px solid #333;
+    background-color: rgb(184, 175, 175);
 }
 </style>

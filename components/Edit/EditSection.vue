@@ -5,69 +5,100 @@ const props = defineProps({
     menu: { type:Object, required: true},
 });
 const menuStore = useMenuStore();
+//new section logic
+const isNew = ref(false);
+onMounted(()=>{
+    if(!props.section?.name){
+        isNew.value = true;
+        focusNameInput();
+    }
+})
 // reusable post edits to db logic
 const postSectionEdit = (section) => {
-    const sectionIndex = props.menu.sections.findIndex(sec => sec._id === section._id);
-    props.menu.sections[sectionIndex]=section;
-    menuStore.updateMenu(props.menu);
+    if(!isNew.value){
+        const sectionIndex = props.menu.sections.findIndex(sec => sec._id === section._id);
+        props.menu.sections[sectionIndex]=section;
+        menuStore.updateMenu(props.menu);
+    }else{
+        postNewSection(section);
+    }
+
+    
 }
 /************************
 **edit section name logic
 *************************/
-const sectionNameRef = ref(null);
-const editName = ref(false);
-const editSectionName = (section) => {
-    editName.value = true;
-    nextTick(()=> sectionNameRef.value.focus())
-}
-const submitEditSectionName = (section) => { editName.value = false; postSectionEdit(section);};
+const { nameInputRef, editName, focusNameInput } = useNameInput();
+const submitEditSectionName = (section) => {
+    editName.value = false;
+    if(!isNew.value) postSectionEdit(section);
+    
+    
+};
 /************************
 **edit section description logic
 *************************/
-const sectionDescriptionRef = ref(null);
-const editDescription = ref(false);
-const editSectionDescription = (section) => {
-    editDescription.value = true;
-    nextTick(()=> sectionDescriptionRef.value.focus())
+const { tabToDescription, descriptionInputRef,
+    editDescription, focusDescriptionInput} = useTabToDescription();
+const submitEditSectionDescription = (section) => { 
+    editDescription.value = false; 
+    if(!isNew.value) postSectionEdit(section);
 }
-const submitEditSectionDescription = (section) => { editDescription.value = false; postSectionEdit(section);};
+
 //delete section
-const deleteSection = (section)=>{
+const deleteSection = ( section )=>{
     const sectionIndex = props.menu.sections.findIndex(sec => sec._id === section._id);
     props.menu.sections.splice(sectionIndex, 1);
-    menuStore.updateMenu(props.menu);
+   // menuStore.updateMenu(props.menu);
+    console.log('delete section disabled')
 }
-//add item
+const postNewSection = (section) => {
+    console.log('postNewSection')
+    if(section?.name){
+     //   console.log('if section name')
+        props.menu.sections.push(section);
+        menuStore.updateMenu(props.menu);
+        emit('send-new-section-flag');  
+    }
+}
 const addItem = ref(false);
-const getNewItemFlag = (flag) => { 
-    newItem.value={
+const newItem = ref({
         new: true,
         name: "",
-        description: "",
         price: "000.00",
+        description: "",
+        addOns: [],
+        removes: [],
+        options: [],
+        _id: uuidv4(),
+    })
+//add item
+const addNewItem = () => {
+    addItem.value=!addItem.value;
+    newItem.value = {
+        name: "",
+        price: "000.00",
+        description: "",
         addOns: [],
         removes: [],
         options: [],
         _id: uuidv4(),
     }
-    addItem.value=flag;
 }
-const newItem = ref({
-    new: true,
-    name: "",
-    description: "",
-    price: "000.00",
-    addOns: [],
-    removes: [],
-    options: [],
-    _id: uuidv4(),
-})
-
+const emit = defineEmits(['send-new-section-flag']);
+const getNewItemFlag = () => {
+   // console.log('flag in section')
+    addItem.value=false;
+}
 </script>
 <template>
-    <div>
+    <div class="section-container">
         <div class="section-name">
-            <button class="btn delete" @click="deleteSection(section)">
+            <button class="btn delete" @click="postNewSection(section)" v-if="isNew">
+                <i class="mdi mdi-plus"/>
+                <span class="tooltip">add section</span>
+            </button>
+            <button class="btn delete" @click="deleteSection(section)" v-else>
                 <i class="mdi mdi-close"/>
                 <span class="tooltip">delete section</span>
             </button>
@@ -75,16 +106,19 @@ const newItem = ref({
                 <div class="text-field name">
                     <input
                         type="text"
-                        ref="sectionNameRef"
+                        ref="nameInputRef"
                         v-model="section.name"
                         @blur="submitEditSectionName(section)"
+                        @keydown.enter="postNewSection(section)"
+                        @keydown=tabToDescription
                     />
                 </div>
             </template>
             <template v-else>
-                <span @click="editSectionName(section)">{{ section.name }}</span>
+                <span @click="focusNameInput" v-if="section.name">{{ section.name }}</span>
+                <span class="placeholder-color" @click="focusNameInput" v-else>name</span>
             </template>
-            <button class="btn add-item" @click="addItem=!addItem">
+            <button class="btn add-item" @click="addNewItem" v-if="!isNew">
                 <span class="btn-text">item</span>
                 <i class="mdi mdi-plus"/>
                 <span class="tooltip">add item</span>
@@ -96,25 +130,32 @@ const newItem = ref({
                     <input
                         type="text"
                         class="input-description"
-                        ref="sectionDescriptionRef"
+                        ref="descriptionInputRef"
                         v-model="section.description"
+                        @keydown.enter="postNewSection(section)"
                         @blur="submitEditSectionDescription(section)"
                     />
                 </div>
             </template>
             <template v-else>
-                <span @click="editSectionDescription(section)">{{ section.description }}</span>
+                <span @click="focusDescriptionInput" v-if="section.description">{{ section.description }}</span>
+                <span class="placeholder-color" @click="focusDescriptionInput" v-else>description</span>
             </template>
         </div>
         <div class="section-items">
-            <div class="section-add-item" v-if="addItem">
-                <EditItem :item="newItem" :section_id="section._id" :menu="menu" @send-new-item-flag="getNewItemFlag"/>
-            </div>
-            <div v-for="(item, i) in section.items" :key="i" class="items-loop">
-                <div class="section-item">
-                    <EditItem :item="item" :section_id="section._id" :menu="menu" />
-                </div>
-            </div>
+            <EditItem
+                v-if="addItem"
+                :item="newItem"
+                :section_id="section._id"
+                :menu="menu"
+                @send-new-item-flag="getNewItemFlag"/>
+            <EditItem 
+                v-for="(item, i) in section.items"
+                :key="i"
+                ref="it"
+                :item="item"
+                :section_id="section._id"
+                :menu="menu"/>
         </div>
     </div>
 </template>
