@@ -32,10 +32,6 @@ const handleClickOutside = (event) => {
 const tabToPrice = (event)=>{
     if(event.key==="Tab"){event.preventDefault();focusPriceInput();}
 }
-
-/*const tabToDescription = (event)=>{
-    if(event.key==="Tab"){event.preventDefault();focusDescriptionInput();}
-}*/
 const tabToName = (event)=>{
     if(event.key==="Tab"){event.preventDefault();focusNameInput();}
 }
@@ -58,10 +54,13 @@ const submitEditItemName = (item) => {
 /************************
 **edit item description logic
 *************************/
+const addonsRef = ref(null)
 const { tabToDescription, descriptionInputRef,
     editDescription, focusDescriptionInput} = useTabToDescription();
-const submitEditItemDescription = (item) => { 
+const submitEditItemDescription = (item, event) => { 
     editDescription.value=false;
+    if(event?.key==="Enter"){
+    }
     if(!isNew.value) {postItemEdit(item);}
     else postNewItem(item)
 }
@@ -147,6 +146,7 @@ const postNewItem = (item) => {
                             ref="nameInputRef"
                             v-model="item.name"
                             @blur="submitEditItemName(item)"
+                            @keydown.enter="submitEditItemName(item)"
                             @keydown="tabToPrice"
                             />
                     </div>
@@ -173,31 +173,33 @@ const postNewItem = (item) => {
             </template>
          
         </div>
-        <p class="item-description">
+        <div class="item-description">
             <template v-if="editDescription">
                 <div class="text-field description">
                     <textarea type="text" placeholder="description" ref="descriptionInputRef"
                         v-model="item.description"
-                        @blur="submitEditItemDescription(item)"/>
+                        @blur="submitEditItemDescription(item)"
+                        @keydown.enter="submitEditItemDescription(item, $event)"
+                        />
                 </div>
             </template>
             <template v-if="!editDescription">
-                <span class="item-description-text" 
-                    @click="focusDescriptionInput"
-                    v-if="item.description">{{ item.description }}
+                <span class="item-description-text"
+                    v-if="item.description" 
+                    @click="focusDescriptionInput">{{ item.description }}
                 </span>
                 <span class="placeholder-color" @click="focusDescriptionInput" v-else>description</span>
             </template>
-        </p>
+        </div>
         <div class="item-addons-removes-options" ref="clickInsideOK" @click.stop>
             <span class="item-a-r-o-titles" v-if="!isNew">
-                <button class="btn" @click="viewAddOns" @keydown.enter="viewAddOns">
+                <button class="btn"  @click="viewAddOns" @keydown.enter="viewAddOns">
                     <span :class="{'underline': addOnsFlag}">Add-Ons</span>
                 </button>
-                <button class="btn" @click="viewRemoves" @keydown.enter="viewRemoves">
+                <button class="btn" id="removes-tab" @click="viewRemoves" @keydown.enter="viewRemoves">
                     <span :class="{'underline': removesFlag}">Removes</span>
                 </button>
-                <button class="btn" @click="viewOptions" @keydown.enter="viewOptions">
+                <button class="btn" id="options-tab" @click="viewOptions" @keydown.enter="viewOptions">
                     <span :class="{'underline': optionsFlag}">Options</span>
                 </button>
             </span>

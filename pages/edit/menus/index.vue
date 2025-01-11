@@ -2,21 +2,24 @@
 //menus/index.vue
 const { data: menus } = await useFetch("/api/menus");
 const newMenu=()=>{
-  console.log('new menu logic')
+  console.log('new menu logic');
+
 }
 </script>
 <template>
   <div class="page-container">
     <div class="container-title">
       <span class="title-text">Edit Menus</span>
-      <button class="btn new" @click="newMenu">
+      <nuxt-link to="/edit/menu/new">
+      <button class="btn new">
         <span class="btn-text">New +</span>
         <span class="tooltip">new menu</span>
       </button>
+      </nuxt-link>
     </div>
     <div class="container-body">
       <div v-for="( menu, i) in menus" :key="i">
-        <EditMenu :menu="menu"/>
+        <EditMenu :menu="menu" :menus="menus"/>
       </div>
     </div>
   </div>
@@ -25,10 +28,6 @@ const newMenu=()=>{
 .btn.new{
   background-color: green;
   color: white;
-  position: absolute;
-  right: 0;
-  margin: 10px;
-  padding: 0px 10px;
 }
 .btn.new:hover{
   background-color: darkgreen;

@@ -20,7 +20,7 @@ const getDaysTimes = (daysObj) => {
     newMenu.value.days = daysObj.schedule; //add days and times to newMenu
     menuStore.setMenu(newMenu.value);
     postMenu(newMenu.value); //post menu to db 
-    router.push({path:'/edit/menus/new/sections/'}); //redirect to add sections
+    router.push({path:'/edit/menus'}); //redirect to add sections
   }
   else if(daysObj.correctTimes && !newMenu.value.name.length){
     nameFlag.value=true;//trigger dialog box for name entry

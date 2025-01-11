@@ -1,16 +1,27 @@
 <script setup>
 import { v4 as uuidv4 } from 'uuid';
-const props = defineProps({ menu:{ type: Object, required: true }});
+const props = defineProps({ menu:{ type: Object, required: true },
+    menus: {type:Array, required: true},});
+const menuStore = useMenuStore();
 const deleteMenu = (menu) =>{
+    const menuIndex = props.menus.findIndex(menu=> props.menu._id === menu._id);
+    props.menus.slice(menuIndex, 1);
     console.log('delete menu')
+    menuStore.deleteMenu(props.menu._id);
 }
 const addSection = ref(false);
 const addNewSection = () =>{
     addSection.value=!addSection.value;
+    newSection.value = {
+        name: "",
+        description: "",
+        _id: uuidv4(),
+        items: []
+    }
 }
 const getNewSectionFlag = () => {
     console.log('flag in section')
-    addSection.value=!addSection.value;
+    addSection.value=false;
 }
 const newSection = ref({
     name: "",
@@ -25,7 +36,7 @@ const newSection = ref({
                 <i class="mdi mdi-close"/>
                 <span class="tooltip">delete</span>
             </button>
-            <span class="title-text menu">{{ menu.name }}</span>
+            <span class="title-text">{{ menu.name }}</span>
             <span class="btn-icons-group">
                 
                 <button class="btn" @click="addNewSection">
@@ -51,38 +62,5 @@ const newSection = ref({
     color: black;
     border-bottom: 2px solid #333;
     background-color: rgb(184, 175, 175);
-}
-.text-field.description{
-    width: 100%;
-
-}
-.input-description{
-    width: 100%;
-}
-.title-text{
-    position: absolute;
-    left: 50%;
-    font-size: 23px;
-}
-.btn.delete{
-    margin-right: 20px;
-}
-.name-price{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 50vh;
-}
-.item-name{
-    flex: 1;
-    text-align: left;
-}
-.item-price{
-    flex: 0 0 100px;
-    text-align: right;
-}
-.btn.menu{
-    position: absolute;
-    left: 0;
 }
 </style>

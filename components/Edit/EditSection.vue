@@ -15,27 +15,51 @@ onMounted(()=>{
 })
 // reusable post edits to db logic
 const postSectionEdit = (section) => {
-    const sectionIndex = props.menu.sections.findIndex(sec => sec._id === section._id);
-    props.menu.sections[sectionIndex]=section;
-    menuStore.updateMenu(props.menu);
+    if(!isNew.value){
+        const sectionIndex = props.menu.sections.findIndex(sec => sec._id === section._id);
+        props.menu.sections[sectionIndex]=section;
+        menuStore.updateMenu(props.menu);
+    }else{
+        postNewSection(section);
+    }
+
+    
 }
 /************************
 **edit section name logic
 *************************/
 const { nameInputRef, editName, focusNameInput } = useNameInput();
-const submitEditSectionName = (section) => { editName.value = false; postSectionEdit(section);};
+const submitEditSectionName = (section) => {
+    editName.value = false;
+    if(!isNew.value) postSectionEdit(section);
+    
+    
+};
 /************************
 **edit section description logic
 *************************/
 const { tabToDescription, descriptionInputRef,
     editDescription, focusDescriptionInput} = useTabToDescription();
-const submitEditSectionDescription = (section) => { editDescription.value = false; postSectionEdit(section);};
+const submitEditSectionDescription = (section) => { 
+    editDescription.value = false; 
+    if(!isNew.value) postSectionEdit(section);
+}
+
 //delete section
-const deleteSection = (section)=>{
+const deleteSection = ( section )=>{
     const sectionIndex = props.menu.sections.findIndex(sec => sec._id === section._id);
     props.menu.sections.splice(sectionIndex, 1);
-    //menuStore.updateMenu(props.menu);
+   // menuStore.updateMenu(props.menu);
     console.log('delete section disabled')
+}
+const postNewSection = (section) => {
+    console.log('postNewSection')
+    if(section?.name){
+     //   console.log('if section name')
+        props.menu.sections.push(section);
+        menuStore.updateMenu(props.menu);
+        emit('send-new-section-flag');  
+    }
 }
 const addItem = ref(false);
 const newItem = ref({
@@ -63,7 +87,7 @@ const addNewItem = () => {
 }
 const emit = defineEmits(['send-new-section-flag']);
 const getNewItemFlag = () => {
-    console.log('flag in section')
+   // console.log('flag in section')
     addItem.value=false;
 }
 </script>
@@ -85,6 +109,7 @@ const getNewItemFlag = () => {
                         ref="nameInputRef"
                         v-model="section.name"
                         @blur="submitEditSectionName(section)"
+                        @keydown.enter="postNewSection(section)"
                         @keydown=tabToDescription
                     />
                 </div>
@@ -107,6 +132,7 @@ const getNewItemFlag = () => {
                         class="input-description"
                         ref="descriptionInputRef"
                         v-model="section.description"
+                        @keydown.enter="postNewSection(section)"
                         @blur="submitEditSectionDescription(section)"
                     />
                 </div>
@@ -117,13 +143,19 @@ const getNewItemFlag = () => {
             </template>
         </div>
         <div class="section-items">
-            <div class="section-item" v-if="addItem">
-                <EditItem :item="newItem" :section_id="section._id" :menu="menu" @send-new-item-flag="getNewItemFlag"/>
-            </div>
-            <div class="section-item" v-for="(item, i) in section.items" :key="i">
-                <EditItem :item="item" :section_id="section._id" :menu="menu"/>
-            </div>
-           
+            <EditItem
+                v-if="addItem"
+                :item="newItem"
+                :section_id="section._id"
+                :menu="menu"
+                @send-new-item-flag="getNewItemFlag"/>
+            <EditItem 
+                v-for="(item, i) in section.items"
+                :key="i"
+                ref="it"
+                :item="item"
+                :section_id="section._id"
+                :menu="menu"/>
         </div>
     </div>
 </template>

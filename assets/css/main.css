@@ -95,7 +95,7 @@ containers
 }
 .container-title{
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     position: absolute;
     padding: 10px;
@@ -105,6 +105,13 @@ containers
     width: 100%;
     top: 0;
     height: 10vh;
+}
+.title-text{
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
 }
 .menu-container{
     display: flex;
@@ -156,16 +163,19 @@ containers
     display: flex;
     justify-content: center;
     align-content: center;
-    border-radius: 15px;
+    
     width: 39vw;
-    box-sizing: border-box;
-    border: 2px solid black;
+    
 }
+
 /**************
 *** items 
 ****************/
 .item-container{
     width: 39vw;
+    border-radius: 15px;
+    box-sizing: border-box;
+    border: 2px solid black;
 }
 /* item title classes */
 
