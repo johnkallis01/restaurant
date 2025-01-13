@@ -8,7 +8,7 @@ const props = defineProps({
 });
 const emit = defineEmits(['update-price']);
 //emit to parent component
-const submitPrice = (event) => emit('update-price', formattedPrice.value);
+const submitPrice = () => emit('update-price', formattedPrice.value);
 const rawPrice = ref(props.price.replace('.', ''));
 watch(
   () => props.price,

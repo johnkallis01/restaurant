@@ -35,7 +35,6 @@ a { text-decoration: none; color: black; }
     padding: 0 20px;
     overflow-x: visible;
   }
-
   .btn-link{
     display: flex;
     justify-content: center;
@@ -71,6 +70,18 @@ a { text-decoration: none; color: black; }
 /**************
 containers 
 ***************/
+.container{
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+    align-content: center;
+    background-color: azure;
+    border-radius: 10px 10px 10px 10px;
+    width: 40vw;
+    max-height: 90vh;
+    overflow: auto;
+    
+}
 .page-container{    
     display: flex;
     justify-content: center;
@@ -186,7 +197,6 @@ containers
 ***/
 .floating-text-field{
     position: relative;
-    margin-bottom: 20px
 }
 .floating-text-field label{ /*no focus */
     position: absolute;
@@ -195,11 +205,12 @@ containers
 }
 .floating-text-field input{
     font-size: 16px;
-    padding: 10px 10px 10px 15px;
+    padding: 20px 10px 10px 15px;
     display: block;
     width: 100%;
     height: 40px;
     font-size: 16px;
+    line-height: 20px;
     background-color: white;
     border: 2px solid rgb(96, 97, 97);
     border-radius: 5px;
@@ -210,9 +221,7 @@ containers
     left: 10px;
     font-size: 18px;
     color: #aaaa;
-    padding: 2px;
     transition: 0.2s ease all;
-    background-color: white;
 }
 .floating-text-field input:hover + label{
     cursor: text;
@@ -225,7 +234,7 @@ containers
     color: #5264ae; 
     background-color: white; 
 }
-/*** end floating input
+/*** end floating input **/
 
 .text-field.description textarea{
     height: 10vh;
@@ -271,6 +280,27 @@ containers
 .item-title .addon{
     border: 2px;
 }
+.form-container{
+    display: flex;
+    flex-direction: column;
+    margin: 5px;
+}
+.form-title{
+    padding: 10px;
+    height: 8vh;
+    font-size: large;
+    border-radius: 10px 10px 0px 0px;
+    border-bottom: 2px solid black;
+    background-color: rgb(180, 175, 175);
+}
+.form-field{
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+.form-actions{
+    margin: 10px 0 5px 20px;
+}
 /********
     item 
         addon-removes-options classes 
@@ -289,12 +319,7 @@ containers
 /***************
     Input Formatting
 *****************/
-.form-container{
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    padding: 10px;
-}
+
 .container-actions{
     padding: 0 10px;
     gap: 10px;
@@ -357,6 +382,14 @@ containers
     right: 0;
     font-size: 18px;
 }
+.btn.register{
+    margin: 0 10px;
+    border: 2px solid black;
+  }
+  .btn:disabled{
+    color: #aaaa;
+    border: 2px solid #aaaa;
+  }
 /****************
    tooltip 
  ****************/
