@@ -37,20 +37,10 @@ const postMenu = async (menu) => {
     <div class="new-menu-container">
       <div class="title"> Create Menu </div>
       <div class="menu-container-body"> 
-        <div class="floating-text-field new-menu">
-          <input
-            type="text"
-            name="name"
-            placeholder=" "
-            required
-            v-model="newMenu.name"/>
-          <label for="name">Menu Name</label>
-        </div>
+        <TextField  place-holder="menu name" :req="true"/>
+        <NewDay class="day-row"
+          :day="day" v-for="(day, i) in days" :key="i"/>
       </div>
-        <div v-for="(day, i) in days" :key="i">
-          <NewDay :day="day"/>
-        </div>
-          
       </div>
 </template>
 <style scoped>
@@ -61,7 +51,7 @@ const postMenu = async (menu) => {
   align-content: center;
   background-color: azure;
   border-radius: 10px;
-  width: 80vw;
+  width: 60vw;
   height: 100%;
   border: 2px solid green;
 }
@@ -74,13 +64,15 @@ const postMenu = async (menu) => {
   border-bottom: 2px solid black;
 }
 .menu-container-body{
+  border: 2px solid blue;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-between;
   align-content: center;
   margin: 15px;
-  width: 50%;
-
+}
+.day-row{
+  margin: 5px;
 }
 .floating-text-field.new-menu{
   display: flex;

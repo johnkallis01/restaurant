@@ -3,7 +3,7 @@ const props = defineProps({
     placeHolder: { type: String, required: true},
     req: {type: Boolean, required: true},
     password: {type: Boolean, required: false},
-    isValid: {type: Boolean, required: false}
+    isValid: {type: Boolean, required: false, default: true}
 });
 const emit = defineEmits(['send-input']);
 const value = ref("");

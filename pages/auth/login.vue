@@ -35,8 +35,8 @@ const getPassword = (string) =>{
     <div class="form-title">Login</div>
     <form class="form-container" @submit.prevent="login">
       <div class="form-field">
-        <TextField class="input-field email" placeHolder="email" :req="true" @send-input="getEmail"/>
-        <TextField class="input-field password" placeHolder="password" 
+        <TextField class="input-field email" place-holder="email" :req="true" @send-input="getEmail"/>
+        <TextField class="input-field password" place-holder="password" 
           :req="true" :password="true"
           @send-input="getPassword"
           />
