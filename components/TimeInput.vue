@@ -51,7 +51,7 @@ function toggleAMPM(pm) {
   font-size: 12px;
 }
 .toggle{
-  top: 2px;
+  
   width: 30px;
 }
 

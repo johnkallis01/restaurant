@@ -45,15 +45,7 @@ const postMenu = async (menu) => {
       </div>
 </template>
 <style scoped>
-.new-menu-container{
-  display: flex;
-  justify-content: flex-start;
-  flex-direction: column;
-  align-content: center;
-  background-color: azure;
-  border-radius: 10px;
-  width: 60vw;
-}
+
 .title{
   display: flex;
   justify-content: flex-start;
