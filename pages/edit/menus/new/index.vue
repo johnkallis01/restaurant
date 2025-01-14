@@ -3,7 +3,7 @@
 const menuStore = useMenuStore();
 const router = useRouter();
 
-const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+const days = [{"name":"Sunday","day":0},{"name":"Monday","day":1},{"name":"Tuesday","day":2},{"name":"Wednesday","day":3},{"name":"Thursday","day":4},{"name":"Friday","day":5},{"name":"Saturday","day":6}];
 const textFlag = ref(false);
 const nameFlag = ref(false);
 const newMenu = ref({
@@ -41,6 +41,7 @@ const postMenu = async (menu) => {
         <NewDay class="day-row"
           :day="day" v-for="(day, i) in days" :key="i"/>
       </div>
+      <button class="btn" @click="postMenu(newMenu)">submit</button>
       </div>
 </template>
 <style scoped>
@@ -52,8 +53,6 @@ const postMenu = async (menu) => {
   background-color: azure;
   border-radius: 10px;
   width: 60vw;
-  height: 100%;
-  border: 2px solid green;
 }
 .title{
   display: flex;
@@ -64,15 +63,15 @@ const postMenu = async (menu) => {
   border-bottom: 2px solid black;
 }
 .menu-container-body{
-  border: 2px solid blue;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-content: center;
-  margin: 15px;
+  padding: 5px;
+  border-bottom: 2px solid black;
 }
 .day-row{
-  margin: 5px;
+  margin: 2px;
 }
 .floating-text-field.new-menu{
   display: flex;

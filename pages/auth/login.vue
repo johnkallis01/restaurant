@@ -2,6 +2,7 @@
 const authStore = useAuthStore();
 const email = ref('');
 const password = ref('');
+const loginRef=ref(null);
 const showpassword = ref(false);
 const eye = ref(["mdi-eye-outline", "mdi-eye-off-outline"]);
 const rules = {required: (v) => !!v || 'Required'};
@@ -29,6 +30,16 @@ const getPassword = (string) =>{
   password.value=string;
 
 }
+const tabToLogin = (event) =>{
+  event.preventDefault();
+  nextTick(() => {
+        if (loginRef.value) {
+            loginRef.value.focus();
+            loginRef.value.click();
+        }
+
+      });
+}
 </script>
 <template>
   <div class="container">
@@ -39,11 +50,13 @@ const getPassword = (string) =>{
         <TextField class="input-field password" place-holder="password" 
           :req="true" :password="true"
           @send-input="getPassword"
+          @keydown.enter="tabToLogin"
           />
       </div>
+      
     </form>
     <div class="form-actions">
-      <button class="btn login" type="submit" @click="login">Login</button>
+      <button class="btn login" ref="loginRef" @click="login">Login</button>
       <nuxt-link to="/auth/register/" >
         <button class="btn register" style="margin-right: 10px;">Register</button>
       </nuxt-link>
