@@ -71,6 +71,15 @@ a { text-decoration: none; color: black; }
 /**************
 containers 
 ***************/
+.new-menu-container{
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: column;
+  align-content: center;
+  background-color: azure;
+  border-radius: 10px;
+  width: 60vw;
+}
 .container{
     display: flex;
     justify-content: flex-start;
@@ -529,10 +538,10 @@ containers
         right:0;
     }
     .left-btns{
-        gap:0;
+        gap: 0px;
     }
     .new-menu-container{
-        width: 100%;
+        width: 100vw;
     }
     .section-items{   
         width: 100vw;
