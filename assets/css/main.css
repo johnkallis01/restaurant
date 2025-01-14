@@ -17,6 +17,7 @@ a { text-decoration: none; color: black; }
     align-items: center;
     gap: 20px;
   }
+  
   .right-btns{
     display: flex;
     justify-content: flex-end;
@@ -526,6 +527,12 @@ containers
     .page-container {
         left: 0;
         right:0;
+    }
+    .left-btns{
+        gap:0;
+    }
+    .new-menu-container{
+        width: 100%;
     }
     .section-items{   
         width: 100vw;
