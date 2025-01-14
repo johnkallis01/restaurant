@@ -32,11 +32,11 @@ function toggleAMPM(pm) {
       <select>
         <option v-for="m in mins" :key="m" class="options">{{ m<15 ? m+'0':m }}</option>
       </select>
-      <div class="toggle pm" @click="time.pm=!time.pm">
-        <div class="toggle-text">
-          <span :class="{open: !time.pm }">AM</span>
-          <span :class="{open: time.pm }">PM</span>
-        </div>
+      <div class="toggle" @click="time.pm=!time.pm">
+        <Transition name="slide-fade">
+          <span v-if="time.pm">AM</span>
+          <span v-else>PM</span>
+        </Transition>
       </div>
     </div>
 </template>
@@ -50,13 +50,11 @@ function toggleAMPM(pm) {
 .options{
   font-size: 12px;
 }
-.toggle.pm{
+.toggle{
+  top: 2px;
   width: 30px;
 }
-.toggle:hover{
-  background-color: rgb(248, 238, 238);
-  border-radius: 7px;
-}
+
 select{
   padding: 5px;
 }

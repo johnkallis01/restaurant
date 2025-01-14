@@ -16,10 +16,10 @@ const schedule = ref({
     <div>{{ schedule.day.name + ":"}}</div>
     <div class="times">
       <div @click="schedule.open=!schedule.open" class="toggle">
-        <div class="toggle-text">
-          <span :class="{ open: schedule.open }">open</span>
-          <span :class="{ open: !schedule.open }">closed</span>
-        </div>
+        <Transition name="slide-fade">
+          <span v-if="schedule.open">open</span>
+          <span v-else>closed</span>
+        </Transition>
       </div>
       <TimeInput :time="schedule.start" :disabled="!schedule.open"/>
       -
