@@ -18,7 +18,7 @@ const newMenu=reactive({
   "sections":[]
 });
 const hasError = (menu) => {
-  menu['day'].forEach((day)=>{
+  menu['days'].forEach((day)=>{
     if(day['error']) return true;
   })
 }
