@@ -357,6 +357,9 @@ containers
 .placeholder-color{
     color: #999;
 }
+.error-text{
+  color: red;
+}
   /****************
     Buttons
   ****************/
@@ -473,7 +476,7 @@ containers
     display: block;
     width: 100%;
     line-height: 40px;
-    transition: transform 0.3s ease;
+    transition: transform 0.4s ease;
     position: absolute;
     top: -5px;
   }
@@ -487,7 +490,7 @@ containers
     animation: slide-in 0.5s;
   }
   .slide-fade-leave-active {
-    animation: slide-out 0.3s;
+    animation: slide-out 0.4s;
   }
   .slide-fade-enter-from{
     opacity: 1;
@@ -498,17 +501,14 @@ containers
     opacity: 1;
   }
   @keyframes slide-in {
-    0% {
-      transform: translateX(-100px);
-    }
     25%{
-      transform: translateX(-100px);
+      transform: translateX(-60px);
     }
     50%{
-      transform: translateX(-50px);
+      transform: translateX(-45px);
     }
     75% {
-      transform: translateX(-25px);
+      transform: translateX(-30px);
     }
     100% {
       transform: translateX(-15px);
@@ -516,19 +516,19 @@ containers
   }
     @keyframes slide-out {
     0% {
-      transform: translateX(10px);
+      transform: translateX(0px);
     }
     25%{
-      transform: translateX(20px);
+      transform: translateX(15px);
     }
     50% {
-      transform: translateX(25px);
+      transform: translateX(30px);
     }
     75%{
-      transform: translateX(35px);
+      transform: translateX(45px);
     }
     100% {
-      transform: translateX(50px);
+      transform: translateX(60px);
     }
   }
 
@@ -542,6 +542,8 @@ containers
     }
     .new-menu-container{
         width: 100vw;
+        height: 90vh;
+        border-radius: 0;
     }
     .section-items{   
         width: 100vw;

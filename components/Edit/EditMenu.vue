@@ -1,11 +1,11 @@
 <script setup>
 import { v4 as uuidv4 } from 'uuid';
 const { data: menus } = await useFetch("/api/menus");
-const props = defineProps({ menu: { type: Object, required: true }},);
+const {menu} = defineProps({ menu: { type: Object, required: true, default:{name:"",days:[],section:[]} }},);
 const menuStore = useMenuStore();
 const deleteMenu = (menu) =>{
-    const menuIndex = menus.findIndex(menu=> props.menu._id === menu._id);
-    props.menus.slice(menuIndex, 1);
+    const menuIndex = menus.findIndex(m => menu['_id'] === m['_id']);
+    menus.slice(menuIndex, 1);
     console.log('delete menu', menu)
     //menuStore.deleteMenu(props.menu._id);
 }
@@ -36,7 +36,7 @@ const newSection = ref({
                 <i class="mdi mdi-close"/>
                 <span class="tooltip">delete</span>
             </button>
-            <span class="title-text">{{ menu.name }}</span>
+            <span class="title-text">{{ menu['name'] }}</span>
             <span class="btn-icons-group">
                 
                 <button class="btn" @click="addNewSection">
@@ -50,8 +50,8 @@ const newSection = ref({
             <div class="section-container" v-if="addSection">
                 <EditSection :section="newSection" :menu="menu" @send-new-section-flag="getNewSectionFlag"/>
             </div>
-            <div class="section-container" v-for="(section, i) in menu.sections" :key="i">
-                <EditSection :section="section" :menu="menu" />               
+            <div class="section-container" v-for="(section, i) in menu['sections']" :key="i">
+                <EditSection :section="section" :menu="menu" />              
             </div>
         </div>
     </div>

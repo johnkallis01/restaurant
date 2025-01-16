@@ -1,28 +1,20 @@
 <script setup>
 const { data: menus } = await useFetch("/api/menus");
-
-const selectedMenu = ref('Select an option');
-function selectOption(menu) {
-  selectedMenu.value = menu
+const router = useRouter();
+function selectOption(id) {
+  console.log('select')
+  router.push("/edit/menus/"+id)
 }
 </script>
 <template>
     <ul class="dropdown-menu">
-        <li class="dropdown-item">
-            <nuxt-link to="/edit/menus/new">
-                <button>New Menu</button>
-            </nuxt-link>
-        </li>
+        <li class="dropdown-item" @click="selectOption('new')">New Menu</li>
         <li 
             v-for="(menu, index) in menus" 
             :key="index" 
-            @click="selectOption(menu)"
+            @click="selectOption(menu['_id'])"
             class="dropdown-item"
-        >
-        <nuxt-link :to="'/edit/menus/'+menu._id">
-           <button>{{ menu.name }}</button>
-        </nuxt-link>
-        </li>
+        >{{ menu.name }}</li>
     </ul>
 </template>  
 <style scoped>

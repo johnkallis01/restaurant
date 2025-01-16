@@ -1,5 +1,5 @@
 <script setup>
-const props = defineProps({
+const {price} = defineProps({
     price:{
         type: String,
         required: true,
@@ -9,9 +9,9 @@ const props = defineProps({
 const emit = defineEmits(['update-price']);
 //emit to parent component
 const submitPrice = () => emit('update-price', formattedPrice.value);
-const rawPrice = ref(props.price.replace('.', ''));
+const rawPrice = ref(price.replace('.', ''));
 watch(
-  () => props.price,
+  () => price,
   (newPrice) => {
     rawPrice.value = newPrice.replace('.', '');
   }

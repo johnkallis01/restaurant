@@ -1,29 +1,41 @@
 <script setup>
-const {day} = defineProps({
-    day: {type: Object, required: true}
-});
+const {day} = defineProps({day: {type: Object, required: true}});
 const emit = defineEmits(['send-day']);
-const schedule = ref({
-    day: day,
-    open: false,
-    start: { hour: 0, min: 0, pm: false },
-    end: { hour: 0, min: 0, pm: false },
-    error: false,
+const errorTime = computed(()=>{
+  if(day['start'].hour > day['end'].hour) {
+    day['error']=true;
+    return true;
+  }else {
+    day['error']=false;
+    return false;
+  }
 });
+const getStart = (d) =>{
+  day['start']=d;
+  emit('send-day',day);
+}
+const getEnd = (d)=>{
+  day['end']=d;
+  emit('send-day', day);
+}
+
 </script>
 <template>
   <div class="day-card">
-    <div>{{ schedule.day.name + ":"}}</div>
+    <div>{{ day['day'].name + ":"}}</div>
     <div class="times">
-      <div @click="schedule.open=!schedule.open" class="toggle">
+      <div @click="day['open']=!day['open']" class="toggle">
         <Transition name="slide-fade">
-          <span v-if="schedule.open">open</span>
+          <span v-if="day['open']">open</span>
           <span v-else>closed</span>
         </Transition>
       </div>
-      <TimeInput :time="schedule.start" :disabled="!schedule.open"/>
-      -
-      <TimeInput :time="schedule.end" :disabled="!schedule.open" />
+      <TimeInput :error="errorTime"
+          :time="day['start']" :disabled="!day['open']" 
+          @update:time="getStart"/>
+      <span :class="{'placeholder-color': !day['open'],'error-text': errorTime && day['open']}">-</span>
+      <TimeInput :error="errorTime"
+        :time="day['end']" :disabled="!day['open']" @update:time="getEnd"/>
     </div>
   </div>
 </template>
@@ -36,15 +48,15 @@ const schedule = ref({
   align-items: center;
 }
 .toggle{
-  margin-right: 20px;
+  margin-right: 40px;
 }
-@media (max-width: 740px){
+@media (max-width: 755px){
   .times{
-    margin: 0;
     gap:0;
   }
   .toggle{
-    margin: 0px;
+    margin: 0;
+
   }
 }
 .times{
@@ -52,6 +64,5 @@ const schedule = ref({
   justify-content: space-evenly;
   align-items: center;
   gap: 15px;
-  margin-right: 20px;
 }
 </style>

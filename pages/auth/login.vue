@@ -6,11 +6,6 @@ const loginRef=ref(null);
 const showpassword = ref(false);
 const eye = ref(["mdi-eye-outline", "mdi-eye-off-outline"]);
 const rules = {required: (v) => !!v || 'Required'};
-
-const togglepassword = () => {
-  showpassword.value = !showpassword.value;
-};
-
 const login = async () => {
   try {
     await authStore.login({
@@ -21,24 +16,15 @@ const login = async () => {
    console.error('login faield')
   }
 };
-const getEmail = (string) =>{
- // console.log('get email ' ,string)
-  email.value=string;
-}
-const getPassword = (string) =>{
- // console.log('get password ' ,string)
-  password.value=string;
-
-}
+const getEmail = (em) =>{ email.value=em;}
+const getPassword = (p) =>{password.value=p;}
 const tabToLogin = (event) =>{
   event.preventDefault();
   nextTick(() => {
         if (loginRef.value) {
             loginRef.value.focus();
             loginRef.value.click();
-        }
-
-      });
+        }});
 }
 </script>
 <template>

@@ -1,6 +1,6 @@
 <script setup>
 import { useRoute } from 'vue-router'
-const { data: menus } = await useFetch("/api/menus");
+const { data: menus, err } = await useFetch("/api/menus");
 const route = useRoute()
 const menu = computed(()=>{
   const id = route.params.id;
@@ -14,8 +14,10 @@ const menu = computed(()=>{
       <span class="title-text">Edit Menu</span>
     </div>
     <div class="container-body">
-        <EditMenu :menu="menu" />
+        <EditMenu :menu="menu"  v-if="menu"/>
+        <div v-else>error</div>
     </div>
+
   </div>
 </template>
 <style scoped>

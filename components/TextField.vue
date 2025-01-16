@@ -6,7 +6,7 @@ const props = defineProps({
     isValid: {type: Boolean, required: false, default: true}
 });
 const emit = defineEmits(['send-input']);
-const value = ref("");
+const str = ref("");
 
 const capitalizeFirstLetter = (word)=>{
     word.trim();
@@ -23,8 +23,8 @@ const updateText = (event) => {
     emit('send-input', event.target.value);
 }
 const onInput = (event) => {
-  value.value = event.target.value;
-  emit('send-input', value.value);
+    str.value = event.target.value;
+  emit('send-input', str.value);
 };
 </script>
 <template>
@@ -35,7 +35,7 @@ const onInput = (event) => {
             :class="{ invalid: isValid===false }"
             placeholder=" "
             :required="req"
-            v-model="value"
+            v-model="str"
             :aria-label="'Enter '+ placeHolder"
             @blur="onInput($event)"
             />

@@ -1,6 +1,6 @@
 <script setup>
 import { v4 as uuidv4 } from 'uuid';
-const props = defineProps({
+const {section, menu} = defineProps({
     section: { type:Object, required: true},
     menu: { type:Object, required: true},
 });
@@ -8,7 +8,7 @@ const menuStore = useMenuStore();
 //new section logic
 const isNew = ref(false);
 onMounted(()=>{
-    if(!props.section?.name){
+    if(!section['name']){
         isNew.value = true;
         focusNameInput();
     }
@@ -16,9 +16,9 @@ onMounted(()=>{
 // reusable post edits to db logic
 const postSectionEdit = (section) => {
     if(!isNew.value){
-        const sectionIndex = props.menu.sections.findIndex(sec => sec._id === section._id);
-        props.menu.sections[sectionIndex]=section;
-        menuStore.updateMenu(props.menu);
+        const sectionIndex = menu['sections'].findIndex(sec => sec['_id'] === section['_id']);
+        menu['sections'].sectionIndex=section;
+        menuStore.updateMenu(menu);
     }else{
         postNewSection(section);
     }
@@ -47,17 +47,17 @@ const submitEditSectionDescription = (section) => {
 
 //delete section
 const deleteSection = ( section )=>{
-    const sectionIndex = props.menu.sections.findIndex(sec => sec._id === section._id);
-    props.menu.sections.splice(sectionIndex, 1);
+    const sectionIndex = menu['sections'].findIndex(sec => sec['_id'] === section['_id']);
+    menu['sections'].splice(sectionIndex, 1);
    // menuStore.updateMenu(props.menu);
     console.log('delete section disabled')
 }
 const postNewSection = (section) => {
     console.log('postNewSection')
-    if(section?.name){
+    if(section['name']){
      //   console.log('if section name')
-        props.menu.sections.push(section);
-        menuStore.updateMenu(props.menu);
+        menu['sections'].push(section);
+        menuStore.updateMenu(menu);
         emit('send-new-section-flag');  
     }
 }
@@ -107,7 +107,7 @@ const getNewItemFlag = () => {
                     <input
                         type="text"
                         ref="nameInputRef"
-                        v-model="section.name"
+                        v-model="section['name']"
                         @blur="submitEditSectionName(section)"
                         @keydown.enter="postNewSection(section)"
                         @keydown=tabToDescription
@@ -115,7 +115,7 @@ const getNewItemFlag = () => {
                 </div>
             </template>
             <template v-else>
-                <span @click="focusNameInput" v-if="section.name">{{ section.name }}</span>
+                <span @click="focusNameInput" v-if="section['name']">{{ section['name'] }}</span>
                 <span class="placeholder-color" @click="focusNameInput" v-else>name</span>
             </template>
             <button class="btn add-item" @click="addNewItem" v-if="!isNew">
@@ -131,14 +131,14 @@ const getNewItemFlag = () => {
                         type="text"
                         class="input-description"
                         ref="descriptionInputRef"
-                        v-model="section.description"
+                        v-model="section['description']"
                         @keydown.enter="postNewSection(section)"
                         @blur="submitEditSectionDescription(section)"
                     />
                 </div>
             </template>
             <template v-else>
-                <span @click="focusDescriptionInput" v-if="section.description">{{ section.description }}</span>
+                <span @click="focusDescriptionInput" v-if="section['description']">{{ section['description'] }}</span>
                 <span class="placeholder-color" @click="focusDescriptionInput" v-else>description</span>
             </template>
         </div>
@@ -150,7 +150,7 @@ const getNewItemFlag = () => {
                 :menu="menu"
                 @send-new-item-flag="getNewItemFlag"/>
             <EditItem 
-                v-for="(item, i) in section.items"
+                v-for="(item, i) in section['items']"
                 :key="i"
                 ref="it"
                 :item="item"
