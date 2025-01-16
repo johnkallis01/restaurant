@@ -106,7 +106,7 @@ const getResetOption = () =>{ newOption.value = { name: "", values: [], _id: uui
 const deleteItem = ()=>{
     menu['sections'][sectionIndex].items.splice(itemIndex, 1);
     menuStore.updateMenu(menu);
-    console.log('delete item disabled')
+  //  console.log('delete item disabled')
 }
 /*********
  * new item logic

@@ -3,9 +3,7 @@
 const menuStore = useMenuStore();
 const router = useRouter();
 
-const textFlag = ref(false);
-const nameFlag = ref(false);
-const newMenu=reactive({
+const newMenu = reactive({
   "name":"",
   "days":[
     {"day":{"name":"Sunday","position":0},"open":false,"start":{"hour":0,"min":0,"pm":false},"end":{"hour":0,"min":0,"pm":false},"error":false},
@@ -17,27 +15,31 @@ const newMenu=reactive({
     {"day":{"name":"Saturday","position":6},"open":false,"start":{"hour":0,"min":0,"pm":false},"end":{"hour":0,"min":0,"pm":false},"error":false}],
   "sections":[]
 });
-const hasError = (menu) => {
-  menu['days'].forEach((day)=>{
-    if(day['error']) return true;
-  })
-}
-const disableSubmit=ref(false);
-const getName = (name) => {newMenu.value['name']=name;}
+
+const hasError = computed(() => {
+  let disableSubmit=false;
+  newMenu['days'].forEach((day)=>{if(day['error']) disableSubmit = true;})
+  return disableSubmit;
+});
+const isOpen = computed(()=>{
+  let flag=false;
+  newMenu['days'].forEach((day)=>{if(day['open']) flag=true;})
+  return flag;
+})
+
+const getName = (name) => { newMenu['name']=name;}
 //recieves schedule data from NewDay
-const getDay = (day) => {
-  console.log('day',day);
-}
-const postMenu = async (menu) => {
-  console.log(disableSubmit.value)
-  disableSubmit.value = newMenu.value['days'].forEach(day => {if(day['error']) return true;});
-  if(!disableSubmit.value && newMenu.value['name']){
+const getDay = (d) => {newMenu['days'].forEach(day=> {if(day.position === d.position) day = d;})}
+const postMenu = (menu) => {
+  if(newMenu['name']){
     try{
-      console.log('post ', menu)
-      menuStore.postMenu({menu})
+      menuStore.postMenu(menu);
+      router.push('/');
     }catch(error){console.log("menu didn't post")}
-  }else{ console.log('else');disableSubmit.value=false;}
-  
+  }
+  else{ 
+    console.log('no name');
+  }
 }
 </script>
 <template>
@@ -48,7 +50,7 @@ const postMenu = async (menu) => {
         <NewDay class="day-row"
           :day="day" v-for="(day, i) in newMenu['days']" :key="i" @send-day="getDay"/>
       </div>
-      <button class="btn" @click="postMenu(newMenu)" :disabled="hasError(newMenu)">submit</button>
+      <button class="btn" @click="postMenu(newMenu)" :disabled="hasError || !isOpen">submit</button>
       </div>
 </template>
 <style scoped>
