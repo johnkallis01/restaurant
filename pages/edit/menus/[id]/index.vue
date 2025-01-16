@@ -3,8 +3,8 @@ import { useRoute } from 'vue-router'
 const { data: menus, err } = await useFetch("/api/menus");
 const route = useRoute()
 const menu = computed(()=>{
-  const id = route.params.id;
-  return menus.value?.find((menu)=>menu._id === id) || null;
+  const id = route['params'].id;
+  return menus.value?.find((menu)=>menu['_id'] === id) || null;
 });
 
 </script>

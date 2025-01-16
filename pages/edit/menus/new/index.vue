@@ -17,6 +17,11 @@ const newMenu=reactive({
     {"day":{"name":"Saturday","position":6},"open":false,"start":{"hour":0,"min":0,"pm":false},"end":{"hour":0,"min":0,"pm":false},"error":false}],
   "sections":[]
 });
+const hasError = (menu) => {
+  menu['day'].forEach((day)=>{
+    if(day['error']) return true;
+  })
+}
 const disableSubmit=ref(false);
 const getName = (name) => {newMenu.value['name']=name;}
 //recieves schedule data from NewDay
@@ -29,7 +34,7 @@ const postMenu = async (menu) => {
   if(!disableSubmit.value && newMenu.value['name']){
     try{
       console.log('post ', menu)
-      // menuStore.postMenu({menu})
+      menuStore.postMenu({menu})
     }catch(error){console.log("menu didn't post")}
   }else{ console.log('else');disableSubmit.value=false;}
   
@@ -43,7 +48,7 @@ const postMenu = async (menu) => {
         <NewDay class="day-row"
           :day="day" v-for="(day, i) in newMenu['days']" :key="i" @send-day="getDay"/>
       </div>
-      <button class="btn" @click="postMenu(newMenu)">submit</button>
+      <button class="btn" @click="postMenu(newMenu)" :disabled="hasError(newMenu)">submit</button>
       </div>
 </template>
 <style scoped>

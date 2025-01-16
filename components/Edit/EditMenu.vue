@@ -7,7 +7,7 @@ const deleteMenu = (menu) =>{
     const menuIndex = menus.findIndex(m => menu['_id'] === m['_id']);
     menus.slice(menuIndex, 1);
     console.log('delete menu', menu)
-    //menuStore.deleteMenu(props.menu._id);
+    menuStore.deleteMenu(menu['_id']);
 }
 const addSection = ref(false);
 const addNewSection = () =>{

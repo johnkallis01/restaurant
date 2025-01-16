@@ -1,17 +1,17 @@
 <script setup>
 import { v4 as uuidv4 } from 'uuid';
-const props = defineProps({
+const {menu,section_id,item} = defineProps({
     menu: { type: Object, required: true},
     section_id: { type: String, required: true},
     item: { type: Object, required: true},
 });
 const menuStore = useMenuStore();
-const sectionIndex = props.menu.sections.findIndex(sec => sec._id === props.section_id);
-const itemIndex = props.menu.sections[sectionIndex].items.findIndex(it => it._id === props.item._id);
+const sectionIndex = menu['sections'].findIndex(sec => sec['_id'] === section_id);
+const itemIndex = menu['sections'][sectionIndex].items.findIndex(it => it['_id'] === item['_id']);
 //checks if item is new
 const isNew = ref(false);
 onMounted(()=>{
-    if(!props.item?.name){
+    if(!item['name']){
         isNew.value = true; 
         focusNameInput();
     }
@@ -37,8 +37,8 @@ const tabToName = (event)=>{
 //reusable put menu change
 const postItemEdit = (item) => {
     if(!isNew.value){
-        props.menu.sections[sectionIndex].items[itemIndex]=item;
-        menuStore.updateMenu(props.menu);
+        menu['sections'][sectionIndex].items[itemIndex]=item;
+        menuStore.updateMenu(menu);
     }
     
 }
@@ -47,7 +47,7 @@ const postItemEdit = (item) => {
 *************************/
 const { nameInputRef, editName, focusNameInput } = useNameInput();
 const submitEditItemName = (item) => { 
-    if(!!item.name) editName.value=false;
+    if(!!item['name']) editName.value=false;
     if(!isNew.value) postItemEdit(item);
 }
 /************************
@@ -70,8 +70,8 @@ const submitEditItemDescription = (item, event) => {
 //from <PriceInput/> emit
 const getItemPrice = (newPrice) => {
     editPrice.value = false;
-    props.item.price = newPrice;
-    if(!isNew.value) postItemEdit(props.item);
+    item['price'] = newPrice;
+    if(!isNew.value) postItemEdit(item);
 }
 const submitNewItem = (item) => {
     if(isNew.value) postItemEdit(item)
@@ -104,8 +104,8 @@ const getResetOption = () =>{ newOption.value = { name: "", values: [], _id: uui
  * delete item logic
  ************/
 const deleteItem = ()=>{
-    props.menu.sections[sectionIndex].items.splice(itemIndex, 1);
-    //menuStore.updateMenu(props.menu);
+    menu['sections'][sectionIndex].items.splice(itemIndex, 1);
+    menuStore.updateMenu(menu);
     console.log('delete item disabled')
 }
 /*********
@@ -113,10 +113,10 @@ const deleteItem = ()=>{
  ************/
 const emit = defineEmits(['send-new-item-flag']);
 const postNewItem = (item) => {
-    if(item?.name){
-        const sectionIndex = props.menu.sections.findIndex(sec => sec._id === props.section_id);
-        props.menu.sections[sectionIndex].items.push(item);
-        menuStore.updateMenu(props.menu);
+    if(item['name']){
+        const sectionIndex = menu['sections'].findIndex(sec => sec['_id'] === section_id);
+        menu['sections'][sectionIndex].items.push(item);
+        menuStore.updateMenu(menu);
         emit('send-new-item-flag', false);
     }
 }

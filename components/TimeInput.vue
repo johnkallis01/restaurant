@@ -42,9 +42,9 @@ const updateMinute = (min) => {emit('update:time', { ...time, min });}
           {{ m<15 ? m+'0':m }}
         </option>
       </select>
-      <button class="toggle" @click="time.pm=!time.pm; updatePM(time.pm)" :disabled="disabled" :class="{'error-text': error && !disabled}">
+      <button class="toggle" @click="time['pm']=!time['pm']; updatePM(time['pm'])" :disabled="disabled" :class="{'error-text': error && !disabled}">
         <Transition name="slide-fade">
-          <span v-if="time.pm" :class="{'placeholder-color': disabled}">PM</span>
+          <span v-if="time['pm']" :class="{'placeholder-color': disabled}">PM</span>
           <span v-else :class="{'placeholder-color': disabled}">AM</span>
         </Transition>
       </button>

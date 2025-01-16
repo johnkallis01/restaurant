@@ -1,5 +1,5 @@
 <script setup>
-const props = defineProps({
+const {addOn, item_id, section_id, menu} = defineProps({
     addOn: { type: Object, required: false },
     item_id: { type: String, required: true },
     section_id: { type:String, required: true},
@@ -7,9 +7,9 @@ const props = defineProps({
     
 });
 const menuStore = useMenuStore();
-const sectionIndex = props.menu.sections.findIndex(sec => sec._id === props.section_id);
-const itemIndex = props.menu.sections[sectionIndex].items.findIndex(it => it._id === props.item_id);
-const addOnIndex = props.menu.sections[sectionIndex].items[itemIndex].addOns.findIndex((addOn)=> addOn._id === props.addOn._id);
+const sectionIndex = menu['sections'].findIndex(sec => sec['_id'] === section_id);
+const itemIndex = menu['sections'][sectionIndex].items.findIndex(it => it['_id'] === item_id);
+const addOnIndex = menu['sections'][sectionIndex].items[itemIndex].addOns.findIndex((ao)=> ao['_id'] === addOn['_id']);
 const formatPriceDisplay = (price) => {
     //remove leading zeros
     if(price[0] === "0") {
@@ -24,9 +24,9 @@ const tabToPrice = (event)=>{ if(event.key==="Tab"){ event.preventDefault(); foc
  * Edit Add-on Name
  *************/
 const { nameInputRef, editName, focusNameInput } = useNameInput();
-const submitEditAddOnName = (addOn) => {
-    if(!!addOn.name) editName.value=false;
-    if(!isNew.value) postEditAddOn(addOn);
+const submitEditAddOnName = (ao) => {
+    if(!!ao['name']) editName.value=false;
+    if(!isNew.value) postEditAddOn(ao);
 }
 /******************
  * Edit Add-on Price
@@ -36,12 +36,12 @@ const getAddOnPrice = (newPrice) => {
     editPrice.value = false;
     console.log('edit price')
     if(!isNew.value) {
-        props.addOn.price = newPrice;
-        postEditAddOn(props.addOn);
+        addOn['price'] = newPrice;
+        postEditAddOn(addOn);
     }
-    else if (props.addOn.name) postNewAddOn({
-        _id: props.addOn._id,
-        name: props.addOn.name,
+    else if (addOn['name']) postNewAddOn({
+        _id: addOn['_id'],
+        name: addOn['name'],
         price: newPrice
     });
 }
@@ -51,27 +51,27 @@ const getAddOnPrice = (newPrice) => {
 const isNew = ref(false);
 const inputFlag = ref(false);
 onMounted(()=>{
-    if(!props.addOn?.name){
+    if(!addOn['name']){
         isNew.value = true;
         focusNameInput();
     }
 });
 const emit = defineEmits(['send-reset-addon']);
-const postNewAddOn = (addOn) => {
-    if(addOn.name){    
-        props.menu.sections[sectionIndex].items[itemIndex].addOns.push(addOn);
-        menuStore.updateMenu(props.menu);
+const postNewAddOn = (ao) => {
+    if(addOn['name']){    
+        menu['sections'][sectionIndex].items[itemIndex]['addOns'].push(ao);
+        menuStore.updateMenu(menu);
         emit('send-reset-addon');
     }
 }
 //post changes
-const postEditAddOn = (addOn) => {
-    props.menu.sections[sectionIndex].items[itemIndex].addOns[addOnIndex] = addOn;  
-    menuStore.updateMenu(props.menu);
+const postEditAddOn = (ao) => {
+    menu['sections'][sectionIndex].items[itemIndex]['addOns'][addOnIndex] = ao;  
+    menuStore.updateMenu(menu);
 }   
 const deleteAddOn = () => {
-    props.menu.sections[sectionIndex].items[itemIndex].addOns.splice(addOnIndex, 1);
-    menuStore.updateMenu(props.menu)
+    menu['sections'][sectionIndex].items[itemIndex]['addOns'].splice(addOnIndex, 1);
+    menuStore.updateMenu(menu)
 }
 </script>
 <template>
@@ -96,7 +96,7 @@ const deleteAddOn = () => {
                     <div class="text-field item-name">
                         <input 
                             type="text" placeholder="name" ref="nameInputRef"
-                            v-model="addOn.name"
+                            v-model="addOn['name']"
                             @blur="submitEditAddOnName(addOn)"
                             @keydown="tabToPrice"
                         />
@@ -105,8 +105,8 @@ const deleteAddOn = () => {
                 <template v-if="!editName">
                     <span  class="item-name"
                         @click="focusNameInput"
-                        v-if="addOn.name"
-                        >{{ addOn.name }}</span>
+                        v-if="addOn['name']"
+                        >{{ addOn['name'] }}</span>
                     <span class="placeholder-color"
                         @click="focusNameInput"
                         v-else>name</span>
@@ -114,12 +114,12 @@ const deleteAddOn = () => {
             </div>
             <template v-if="editPrice">
                 <PriceInput class="item-price" ref="priceInputRef" 
-                    :price="addOn.price"
+                    :price="addOn['price']"
                     @update-price="getAddOnPrice"
                     />
             </template>
             <template v-else>
-                <span class="item-price" @click="focusPriceInput">{{ formatPriceDisplay(addOn.price) }}</span>
+                <span class="item-price" @click="focusPriceInput">{{ formatPriceDisplay(addOn['price']) }}</span>
             </template>
            
         </div>

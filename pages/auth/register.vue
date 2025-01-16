@@ -39,9 +39,9 @@ const validateInput = (rule, value, inputVar) =>{
     if(validationStatus[inputVar]) user[inputVar] = value;
   }
   if(inputVar==='confirmPassword') {
-    validationStatus.confirmPassword = user.password === value;
-    validationStatus.password=validationStatus.confirmPassword;
-    if(!validationStatus.confirmPassword) validationStatus.password=false;
+    validationStatus['confirmPassword'] = user['password'] === value;
+    validationStatus['password']=validationStatus['confirmPassword'];
+    if(!validationStatus['confirmPassword']) validationStatus['password']=false;
   }
 }
 const fNameRef=ref(null);
@@ -51,14 +51,14 @@ const getConfirmPassword = (p) =>{confirmPassword.value = p;}
 const register = async () => {
     try {
       await authStore.register({
-        firstName: user.firstName,
-        lastName: user.lastName,
-        phone: user.phone,
-        email: user.email,
-        password: user.password,
+        firstName: user['firstName'],
+        lastName: user['lastName'],
+        phone: user['phone'],
+        email: user['email'],
+        password: user['password'],
       })
     } catch (error) {
-      console.log('errrror: ', error.statusCode)
+      console.log('errrror: ', error['statusCode'])
       if(error.response.status === 409){
         navigateTo('/auth/login')
       }

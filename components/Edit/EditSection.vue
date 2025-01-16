@@ -17,7 +17,7 @@ onMounted(()=>{
 const postSectionEdit = (section) => {
     if(!isNew.value){
         const sectionIndex = menu['sections'].findIndex(sec => sec['_id'] === section['_id']);
-        menu['sections'].sectionIndex=section;
+        menu['sections'][sectionIndex]=section;
         menuStore.updateMenu(menu);
     }else{
         postNewSection(section);
@@ -32,8 +32,6 @@ const { nameInputRef, editName, focusNameInput } = useNameInput();
 const submitEditSectionName = (section) => {
     editName.value = false;
     if(!isNew.value) postSectionEdit(section);
-    
-    
 };
 /************************
 **edit section description logic
@@ -44,7 +42,6 @@ const submitEditSectionDescription = (section) => {
     editDescription.value = false; 
     if(!isNew.value) postSectionEdit(section);
 }
-
 //delete section
 const deleteSection = ( section )=>{
     const sectionIndex = menu['sections'].findIndex(sec => sec['_id'] === section['_id']);
@@ -146,7 +143,7 @@ const getNewItemFlag = () => {
             <EditItem
                 v-if="addItem"
                 :item="newItem"
-                :section_id="section._id"
+                :section_id="section['_id']"
                 :menu="menu"
                 @send-new-item-flag="getNewItemFlag"/>
             <EditItem 
@@ -154,7 +151,7 @@ const getNewItemFlag = () => {
                 :key="i"
                 ref="it"
                 :item="item"
-                :section_id="section._id"
+                :section_id="section['_id']"
                 :menu="menu"/>
         </div>
     </div>

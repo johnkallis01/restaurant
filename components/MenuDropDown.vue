@@ -14,7 +14,7 @@ function selectOption(id) {
             :key="index" 
             @click="selectOption(menu['_id'])"
             class="dropdown-item"
-        >{{ menu.name }}</li>
+        >{{ menu['name'] }}</li>
     </ul>
 </template>  
 <style scoped>
