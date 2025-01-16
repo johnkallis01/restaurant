@@ -1,6 +1,4 @@
 <script setup>
-import { reactive } from 'vue';
-
 const menuStore = useMenuStore();
 onMounted(async () => {
   try {
@@ -9,7 +7,6 @@ onMounted(async () => {
     console.error("Failed to fetch menus:", error);
   }
 });
-const allMenus = computed(() => menuStore.menus);
 let now = new Date();
 const today = ref({
   day: now.getDay(),
@@ -17,7 +14,7 @@ const today = ref({
   mins: now.getMinutes(),
 });
 const todayMenus = computed(()=>{
-  return allMenus.value.filter((menu)=>{
+  return menuStore.menus.filter((menu)=>{
     return menu.days.some((day)=> day.day.position === today.value.day && day.open)
   });
 });
@@ -34,22 +31,27 @@ const nowMenus = computed(() => {
     })
   })
 });
-
+const btnList = computed(()=>{
+  console.log(nowMenus.length)
+})
+const index = ref(0);
+const visibleMenu = () => {
+  return nowMenus.value[index.value];
+}
 </script>
-
 <template>
   <div>
     <div class="page-container">
       <div class="container-title">
         <div
-          v-if="allMenus.length > 0"
           class="title-text"
           v-for="(menu, i) in nowMenus"
           :key="i"
         >
-          {{ menu.name }}
+          <button @click="index=i">{{ menu.name }}</button>
         </div>
       </div>
+      <DisplayMenu :menu="visibleMenu()"/>
     </div>
   </div>
 </template>

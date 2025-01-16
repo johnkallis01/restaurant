@@ -145,7 +145,6 @@ const postNewItem = (item) => {
                             ref="nameInputRef"
                             v-model="item.name"
                             @blur="submitEditItemName(item)"
-                            @keydown.enter="submitEditItemName(item)"
                             @keydown="tabToPrice"
                             />
                     </div>
