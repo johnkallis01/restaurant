@@ -1,10 +1,9 @@
 <script setup>
-import { useRoute } from 'vue-router'
-const { data: menus, err } = await useFetch("/api/menus");
+const { data: menus } = await useFetch("/api/menus");
 const route = useRoute()
 const menu = computed(()=>{
   const id = route['params'].id;
-  return menus.value?.find((menu)=>menu['_id'] === id) || null;
+  return menus.value?.find((menu)=>menu._id === id) || null;
 });
 
 </script>
@@ -14,7 +13,7 @@ const menu = computed(()=>{
       <span class="title-text">Edit Menu</span>
     </div>
     <div class="container-body">
-        <EditMenu :menu="menu"  v-if="menu"/>
+        <EditMenu :menu="menu" :menus="menus" v-if="menu"/>
         <div v-else>error</div>
     </div>
 

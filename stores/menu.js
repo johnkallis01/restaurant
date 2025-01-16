@@ -2,12 +2,18 @@ import { defineStore } from 'pinia';
 
 export const useMenuStore = defineStore('menu', {
   state: () => ({
+    menus: [],
     menu: { _id: '', name: '', days: [], sections: [] },
   }),
   getters:{
-    getMenu: (state) => state.menu
+    getMenu: (state) => state.menu,
   },
   actions: {
+    async fetchMenus(){
+    await fetch('/api/menus')
+      .then(response => response.json())
+      .then(data => this.menus = data);
+    },
     setMenu(menu) {
       this.menu = menu;
     },

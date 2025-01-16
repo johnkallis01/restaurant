@@ -1,13 +1,15 @@
 <script setup>
 import { v4 as uuidv4 } from 'uuid';
-const { data: menus } = await useFetch("/api/menus");
-const {menu} = defineProps({ menu: { type: Object, required: true, default:{name:"",days:[],section:[]} }},);
+const router=useRouter();
+const {menu, menus} = defineProps({ menu: { type: Object, required: true, },
+    menus: {type: Array, required: true}});
 const menuStore = useMenuStore();
 const deleteMenu = (menu) =>{
     const menuIndex = menus.findIndex(m => menu['_id'] === m['_id']);
     menus.slice(menuIndex, 1);
     console.log('delete menu', menu)
     menuStore.deleteMenu(menu['_id']);
+    router.push('/')
 }
 const addSection = ref(false);
 const addNewSection = () =>{

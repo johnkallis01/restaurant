@@ -34,7 +34,7 @@ const updateMinute = (min) => {emit('update:time', { ...time, min });}
 <template>
     <div class="time-group">
       <select :disabled="disabled" @change="updateHour(Number($event.target.value))" :class="{'error-text': error && !disabled}">
-        <option v-for="h in hours" :key="h" class="options">{{ displayHour(h) }}</option>
+        <option v-for="h in hours" :key="h" class="options" type="number">{{ displayHour(h) }}</option>
       </select>
       <span :class="{'placeholder-color': disabled,'error-text':error && !disabled}">:</span>
       <select :disabled="disabled" @change="updateMinute(Number($event.target.value))" :class="{'error-text': error && !disabled}">
