@@ -3,12 +3,36 @@ useHead({
   title: "John's Restaurant"
 });
 const cartStore = useCartStore();
+const cartRef=ref(null);
+const childRef=ref(null);
+
+const closeCart = (event) => {
+  console.log(cartStore.isCartOpen)
+  console.log(childRef.value?.cartButtonRef)
+  if(cartStore.isCartOpen){
+    const cartEl = cartRef.value?.$el;
+    const buttonEl = childRef.value?.cartButtonRef;
+
+    if ( cartEl && ! cartEl.contains(event.target) &&
+      buttonEl && !buttonEl.contains(event.target)
+    ) {
+        console.log('click detected')
+        cartStore.closeCart()
+      }
+  }
+}
+onMounted(()=>{
+    document.addEventListener('click', closeCart);
+});
+onBeforeUnmount(() => {
+    document.removeEventListener('click', closeCart);
+});
 </script>
 <template>
   <div class="app">
-    <Header/>
+    <Header ref="childRef"/>
     <main class="main">
-      <Cart v-if="cartStore.isCartOpen"/>
+      <Cart ref="cartRef" v-if="cartStore.isCartOpen" />
       <NuxtPage />
     </main>
   </div>

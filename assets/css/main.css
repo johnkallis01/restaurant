@@ -560,4 +560,10 @@ containers
     .tab-container{
         width: 59vw;
     }
+    .modal{
+      width: 80vw;
+    }
+    .cart{
+      width: 80vw;
+    }
 } 

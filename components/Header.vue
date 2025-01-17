@@ -3,6 +3,7 @@ const authStore = useAuthStore();
 const cartStore = useCartStore();
 const router = useRouter();
 
+const cartButtonRef=ref(null);
 const dropdownRef=ref(null);
 onMounted(()=>{
     document.addEventListener('click', closeDropdown);
@@ -13,7 +14,7 @@ onBeforeUnmount(() => {
 const closeDropdown = (event) => {
   if (dropdownRef.value && !dropdownRef.value.$el?.contains(event.target)) dropdown.value=false;
 }
-
+defineExpose({cartButtonRef})
 const logout = () => {
   authStore.logout();
   router.push('/auth/login');
@@ -28,10 +29,7 @@ const focusLoginButton = ()=>{
 }
 provide('focusLoginButton', focusLoginButton);
 
-const toggleCart = ()=>{
-  console.log('toggleCart')
-  cartStore.toggleCart();
-}
+const toggleCart = ()=>{cartStore.toggleCart();}
 
 const focusLogin = () =>{
   console.log('fL', loggedIn.value)
@@ -48,7 +46,7 @@ const toggleDropdown = () => {dropdown.value = !dropdown.value;}
       <div class="left-btns">
         <ClientOnly>
           <template v-if="loggedIn">
-            <button @click="toggleCart"><i class="mdi mdi-cart"/></button>
+            <button @click="toggleCart" ref="cartButtonRef"><i class="mdi mdi-cart"/></button>
           </template>
         </ClientOnly>
         <nuxt-link to="/">

@@ -1,7 +1,16 @@
 <script setup>
+const cartStore = useCartStore(); 
 const { item } = defineProps({item: {type: Object, required: true}})
-const emits = defineEmits(['send-item']);
+const emit = defineEmits(['close-modal']);
 const { formatPrice } = usePriceFormatter();
+const addItem = (item)=>{
+    console.log(item)
+    cartStore.addItemToCart(item);
+    emit('close-modal');
+}
+const closeModal = ()=>{
+    emit('close-modal');
+}
 </script>
 <template>
     <div class="container">
@@ -17,8 +26,8 @@ const { formatPrice } = usePriceFormatter();
 
         </div>
         <div class="form-actions">
-            <button class="btn">submit</button>
-            <button class="btn">cancel</button>
+            <button class="btn" @click="addItem(item)">submit</button>
+            <button class="btn" @click="closeModal">cancel</button>
         </div>
     </div>
 </template>

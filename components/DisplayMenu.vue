@@ -6,16 +6,15 @@ const modalFlag=ref(false);
 const modalItem = ref();
 
 const displayModal = (item)=>{
-    console.log(item)
-    modalFlag.value=!modalFlag.value;
+    modalFlag.value=true;
     modalItem.value=item;
 }
-const sendToModal = ()=>{
-    console.log(modalItem.value)
-    return modalItem.value;
-}
+const sendToModal = ()=>{return modalItem.value;}
 const getItem = (item)=>{
     console.log(item)
+}
+const closeModal = () =>{
+    modalFlag.value=false;
 }
 </script>
 <template>
@@ -40,7 +39,7 @@ const getItem = (item)=>{
             {{ "no menu available at this time" }}
         </div>
         <div class="modal" v-if="modalFlag">
-            <ModalItem :item="sendToModal()" @send-item="getItem"/> 
+            <ModalAddItem :item="sendToModal()" @close-modal="closeModal"/> 
         </div>
     </div>
 </template>
