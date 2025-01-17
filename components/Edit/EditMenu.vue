@@ -49,6 +49,15 @@ const newSection = ref({
             </span>
         </div>
         <div class="sections">
+            <span class="menu-schedule">
+               <span v-for="(day, i) in menu['days']" :key="i" >
+                    <span v-if="day.open">{{  day.day.name }}</span><br>
+                    <span v-if="day.open">{{ day.start.hour + ":" + day.start.min + (day.start.pm ? "PM" : "AM") }}</span><br>
+                    <span v-if="day.open">{{ day.end.hour + ":" + day.end.min + (day.end.pm ? "PM" : "AM") }}</span>
+                </span> 
+            </span>
+            
+
             <div class="section-container" v-if="addSection">
                 <EditSection :section="newSection" :menu="menu" @send-new-section-flag="getNewSectionFlag"/>
             </div>
@@ -59,6 +68,13 @@ const newSection = ref({
     </div>
 </template>
 <style scoped>
+.menu-schedule{
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    justify-content: center;
+    gap: 5px;
+}
 .container-title.menu{
     height: 8vh;
     color: black;

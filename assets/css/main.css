@@ -86,7 +86,7 @@ containers
     flex-direction: column;
     align-content: center;
     background-color: azure;
-    border-radius: 10px 10px 10px 10px;
+    border-radius: 10px;
     width: 40vw;
     max-height: 90vh;
     overflow: auto;

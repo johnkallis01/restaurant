@@ -77,13 +77,7 @@ const submitNewItem = (item) => {
     if(isNew.value) postItemEdit(item)
 }
 //remove leading zeros + $
-const formatPriceDisplay = (price) => {
-    if(price[0] === "0") {
-        price = price.replace(0,"");
-        if(price[0] === "0") price = price.replace(0,"");
-    }
-    return "$" + price;
-}
+const { formatPrice } = usePriceFormatter();
 /************
  * Add-ons Removes Options
  ************/
@@ -109,7 +103,7 @@ const deleteItem = ()=>{
   //  console.log('delete item disabled')
 }
 /*********
- * new item logic
+ * new item logicF
  ************/
 const emit = defineEmits(['send-new-item-flag']);
 const postNewItem = (item) => {
@@ -167,7 +161,7 @@ const postNewItem = (item) => {
                     @update-price="getItemPrice"/>
             </template>
             <template v-else>
-                <span class="item-price" @click="focusPriceInput">{{ formatPriceDisplay(item.price)}}</span>
+                <span class="item-price" @click="focusPriceInput">{{ formatPrice(item.price)}}</span>
             </template>
          
         </div>
@@ -177,7 +171,6 @@ const postNewItem = (item) => {
                     <textarea type="text" placeholder="description" ref="descriptionInputRef"
                         v-model="item.description"
                         @blur="submitEditItemDescription(item)"
-                        @keydown.enter="submitEditItemDescription(item, $event)"
                         />
                 </div>
             </template>

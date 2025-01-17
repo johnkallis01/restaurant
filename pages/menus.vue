@@ -19,25 +19,22 @@ const todayMenus = computed(()=>{
   });
 });
 const nowMenus = computed(() => {
-  return todayMenus.value.filter((menu)=>{
+  return todayMenus.value.filter((menu) => {
     return menu.days.some((day)=>{
       return (
-        (day.start.hour < today.value.hour ||
-        (day.start.hour === today.value.hour && day.start.mins <= today.value.mins))
+        (day.start.hour < today.value.hour || (day.start.hour === today.value.hour && day.start.mins <= today.value.mins))
             &&
-        (day.end.hour > today.value.hour ||
-        (day.end.hour === today.value.hour && day.end.mins > today.value.mins))
+        (day.end.hour > today.value.hour || (day.end.hour === today.value.hour && day.end.mins > today.value.mins))
       )
     })
   })
 });
-const btnList = computed(()=>{
-  console.log(nowMenus.length)
-})
 const index = ref(0);
 const visibleMenu = () => {
+  //return menuStore.menus[index.value];
   return nowMenus.value[index.value];
 }
+
 </script>
 <template>
   <div>
@@ -53,5 +50,9 @@ const visibleMenu = () => {
       </div>
       <DisplayMenu :menu="visibleMenu()"/>
     </div>
+    
   </div>
 </template>
+<style scoped>
+
+</style>
