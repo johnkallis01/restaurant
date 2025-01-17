@@ -1,5 +1,6 @@
 <script setup>
-const {menu} = defineProps({menu: {type: Object, required: false}});
+const {menu} = defineProps({menu: {type: Object, required: false},
+order: {type: Boolean, required: true}});
 const { formatPrice } = usePriceFormatter();
 
 const modalFlag=ref(false);
@@ -24,14 +25,15 @@ const closeModal = () =>{
                 <div class="section-name">{{ section.name }}</div>
                 <div class="section-description">{{ section?.description }}</div>
                 <div class="section-items">
-                    <div v-for="(item, j) in section['items']" class="item-container"
+                    <button class="item-container" :disabled="!order"
+                        v-for="(item, j) in section['items']"
                         @click="displayModal(item)">
                         <div class="item-title" >
                             <span class="item-name">{{ item.name }}</span>
                             <span class="item-price">{{ formatPrice(item.price) }}</span>
                         </div>
                         <div class="item-description">{{ item.description }}</div>
-                    </div>
+                    </button>
                 </div>
             </div>
         </div>
@@ -44,6 +46,10 @@ const closeModal = () =>{
     </div>
 </template>
 <style scoped>
+.item-container button{
+    display: flex;
+    justify-content: space-between;
+}
 .item-name{
     margin-left: 10px;
 }

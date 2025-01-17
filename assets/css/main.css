@@ -197,10 +197,11 @@ containers
     position: relative;
 }
 .item-description{
-    font-size: 12px;
-    height: 10vh;
-    margin: 0 10px 0 15px;
-    overflow: hidden;
+  display: flex;
+  font-size: 12px;
+  height: 10vh;
+  margin: 0 10px 0 15px;
+  overflow: hidden;
 }
 /***
     floating text field
@@ -281,6 +282,7 @@ containers
     width: 100%;
 }
 .item-name{
+  display: flex;
     width: 100%;
 }
 .item-price{
@@ -325,7 +327,9 @@ containers
     display: flex;
     align-items: center;  
 }
-
+.underline{
+  border-bottom: 2px solid black;
+}
 /***************
     Input Formatting
 *****************/

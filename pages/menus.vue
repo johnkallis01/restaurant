@@ -7,52 +7,28 @@ onMounted(async () => {
     console.error("Failed to fetch menus:", error);
   }
 });
-let now = new Date();
-const today = ref({
-  day: now.getDay(),
-  hour: now.getHours(),
-  mins: now.getMinutes(),
-});
-const todayMenus = computed(()=>{
-  return menuStore.menus.filter((menu)=>{
-    return menu.days.some((day)=> day.day.position === today.value.day && day.open)
-  });
-});
-const nowMenus = computed(() => {
-  return todayMenus.value.filter((menu) => {
-    return menu.days.some((day)=>{
-      return (
-        (day.start.hour < today.value.hour || (day.start.hour === today.value.hour && day.start.mins <= today.value.mins))
-            &&
-        (day.end.hour > today.value.hour || (day.end.hour === today.value.hour && day.end.mins > today.value.mins))
-      )
-    })
-  })
-});
 const index = ref(0);
 const visibleMenu = () => {
-  //return menuStore.menus[index.value];
-  return nowMenus.value[index.value];
+  return menuStore.menus[index.value];
+ // return nowMenus.value[index.value];
 }
-
 </script>
 <template>
-  <div>
     <div class="page-container">
       <div class="container-title">
         <div
           class="title-text"
-          v-for="(menu, i) in nowMenus"
+          v-for="(menu, i) in menuStore.menus"
           :key="i"
         >
           <button @click="index=i">{{ menu.name }}</button>
         </div>
       </div>
-      <DisplayMenu :menu="visibleMenu()"/>
+      <DisplayMenu  :menu="visibleMenu()" :order="false"/>
     </div>
-    
-  </div>
 </template>
 <style scoped>
-
+.title-text{
+  font-size: 16px;
+}
 </style>

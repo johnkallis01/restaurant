@@ -7,12 +7,9 @@ const cartRef=ref(null);
 const childRef=ref(null);
 
 const closeCart = (event) => {
-  console.log(cartStore.isCartOpen)
-  console.log(childRef.value?.cartButtonRef)
   if(cartStore.isCartOpen){
     const cartEl = cartRef.value?.$el;
     const buttonEl = childRef.value?.cartButtonRef;
-
     if ( cartEl && ! cartEl.contains(event.target) &&
       buttonEl && !buttonEl.contains(event.target)
     ) {

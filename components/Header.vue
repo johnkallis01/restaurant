@@ -55,7 +55,7 @@ const toggleDropdown = () => {dropdown.value = !dropdown.value;}
         <nuxt-link to="/menus">
           <button class="btn-link">Menus</button>
         </nuxt-link>
-        <nuxt-link to="/createOrder">
+        <nuxt-link to="/order">
           <button class="btn-link" @click="focusLogin">Order</button>
         </nuxt-link>
         <nuxt-link to="/test">

@@ -81,11 +81,8 @@ const { formatPrice } = usePriceFormatter();
 /************
  * Add-ons Removes Options
  ************/
-const addOnsFlag = ref(false); const removesFlag = ref(false); const optionsFlag = ref(false);
-const resetFlags = () => { addOnsFlag.value=false;removesFlag.value=false;optionsFlag.value=false;}
-const viewAddOns = ()=>{ resetFlags(); addOnsFlag.value=true;}
-const viewRemoves = ()=>{ resetFlags(); removesFlag.value=true;}
-const viewOptions = ()=>{ resetFlags(); optionsFlag.value=true;}
+ const {addOnsFlag, removesFlag, optionsFlag,
+    resetFlags, viewAddOns, viewRemoves, viewOptions } = useAROFlags();
 
 // new add-ons/remove/options
 const newAddOn = ref({ name: "", price: "000.00", _id: uuidv4(), });
@@ -182,7 +179,7 @@ const postNewItem = (item) => {
                 <span class="placeholder-color" @click="focusDescriptionInput" v-else>description</span>
             </template>
         </div>
-        <div class="item-addons-removes-options" ref="clickInsideOK" @click.stop>
+        <div class="item-addons-removes-options" ref="clickInsideOK">
             <span class="item-a-r-o-titles" v-if="!isNew">
                 <button class="btn"  @click="viewAddOns" @keydown.enter="viewAddOns">
                     <span :class="{'underline': addOnsFlag}">Add-Ons</span>
@@ -250,8 +247,3 @@ const postNewItem = (item) => {
         </div>  
     </div>
 </template>
-<style scoped>
-.underline{
-    border-bottom: 2px solid black;
-}
-</style>

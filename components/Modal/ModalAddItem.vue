@@ -11,6 +11,9 @@ const addItem = (item)=>{
 const closeModal = ()=>{
     emit('close-modal');
 }
+const {addOnsFlag, removesFlag, optionsFlag,
+    resetFlags, viewAddOns, viewRemoves, viewOptions } = useAROFlags();
+//optionsFlag.value=true;
 </script>
 <template>
     <div class="container">
@@ -23,16 +26,42 @@ const closeModal = ()=>{
             </div>  
         </div>
         <div class="form-body">
-
+            <div class="item-addons-removes-options">
+                <div class="item-a-r-o-titles">
+                    <button class="btn" id="options-tab" v-if="item['options'].length"
+                        @click="viewOptions" @keydown.enter="viewOptions">
+                        <span :class="{'underline': optionsFlag}">Options</span>
+                    </button>
+                    <button class="btn" v-if="item['addOns'].length"
+                        @click="viewAddOns" @keydown.enter="viewAddOns">
+                        <span :class="{'underline': addOnsFlag}">Add-Ons</span>
+                    </button>
+                    <button class="btn"  v-if="item['removes'].length"
+                        @click="viewRemoves" @keydown.enter="viewRemoves">
+                        <span :class="{'underline': removesFlag}">Removes</span>
+                    </button>    
+                </div>
+            <div class="item-a-r-o-components">
+                <div v-if="optionsFlag">
+                    options
+                </div>
+                <div v-if="addOnsFlag">
+                    addons
+                </div>
+                <div v-if="removesFlag">
+                    removes
+                </div>
+            </div>
+        </div> 
         </div>
         <div class="form-actions">
-            <button class="btn" @click="addItem(item)">submit</button>
-            <button class="btn" @click="closeModal">cancel</button>
+            <button class="btn close" @click="addItem(item)">submit</button>
+            <button class="btn close" @click="closeModal">cancel</button>
         </div>
     </div>
 </template>
 <style scoped>
-.btn{
+.btn.close{
     border: 1px solid black;
     box-sizing: border-box;
 }
