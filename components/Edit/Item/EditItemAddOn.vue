@@ -1,23 +1,15 @@
 <script setup>
-const {addOn, item_id, section_id, menu} = defineProps({
+const {addOn,item_id, section_id, menu} = defineProps(
+{
     addOn: { type: Object, required: false },
     item_id: { type: String, required: true },
     section_id: { type:String, required: true},
-    menu: { type:Object, required: true},
-    
-});
+    menu: { type:Object, required: true},});
 const menuStore = useMenuStore();
 const sectionIndex = menu['sections'].findIndex(sec => sec['_id'] === section_id);
 const itemIndex = menu['sections'][sectionIndex].items.findIndex(it => it['_id'] === item_id);
 const addOnIndex = menu['sections'][sectionIndex].items[itemIndex].addOns.findIndex((ao)=> ao['_id'] === addOn['_id']);
-const formatPriceDisplay = (price) => {
-    //remove leading zeros
-    if(price[0] === "0") {
-        price = price.replace(0,"");
-        if(price[0] === "0") price = price.replace(0,"");
-    }
-    return "$" + price;
-}
+const { formatPrice } = usePriceFormatter();
 const tabToName = (event)=>{ if(event.key==="Tab"){ event.preventDefault(); focusNameInput();}}
 const tabToPrice = (event)=>{ if(event.key==="Tab"){ event.preventDefault(); focusPriceInput();}}
 /***********
@@ -119,7 +111,7 @@ const deleteAddOn = () => {
                     />
             </template>
             <template v-else>
-                <span class="item-price" @click="focusPriceInput">{{ formatPriceDisplay(addOn['price']) }}</span>
+                <span class="item-price" @click="focusPriceInput">{{ formatPrice(addOn['price']) }}</span>
             </template>
            
         </div>

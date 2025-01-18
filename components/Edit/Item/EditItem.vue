@@ -88,9 +88,12 @@ const { formatPrice } = usePriceFormatter();
 const newAddOn = ref({ name: "", price: "000.00", _id: uuidv4(), });
 const newRemove = ref({ name: "", _id: uuidv4(), });
 const newOption = ref({ name: "", values: [], _id: uuidv4(), });
-const getResetAddOn = () => newAddOn.value = { name: "", price: "000.00", _id: uuidv4(),}
-const getResetRemove = () =>{ newRemove.value = { name: "", _id: uuidv4(), }}
-const getResetOption = () =>{ newOption.value = { name: "", values: [], _id: uuidv4(), }}
+const getResetAddOn = () => 
+{newAddOn.value = { name: "", price: "000.00", _id: uuidv4(),}}
+const getResetRemove = () =>{ 
+    newRemove.value = { name: "", _id: uuidv4(), }}
+const getResetOption = () =>{ 
+    newOption.value = { name: "", values: [], _id: uuidv4(), }}
 /*********
  * delete item logic
  ************/
@@ -179,7 +182,7 @@ const postNewItem = (item) => {
                 <span class="placeholder-color" @click="focusDescriptionInput" v-else>description</span>
             </template>
         </div>
-        <div class="item-addons-removes-options" ref="clickInsideOK">
+        <div class="item-addons-removes-options" ref="clickInsideOK" @click.stop>
             <span class="item-a-r-o-titles" v-if="!isNew">
                 <button class="btn"  @click="viewAddOns" @keydown.enter="viewAddOns">
                     <span :class="{'underline': addOnsFlag}">Add-Ons</span>
@@ -191,7 +194,7 @@ const postNewItem = (item) => {
                     <span :class="{'underline': optionsFlag}">Options</span>
                 </button>
             </span>
-            <span class="item-a-r-o-components">
+            <div class="item-a-r-o-components">
                 <div v-if="addOnsFlag">
                     <EditItemAddOn 
                         :addOn="newAddOn"
@@ -206,10 +209,9 @@ const postNewItem = (item) => {
                         :section_id="section_id"
                         :menu="menu"
                         v-for="(addOn, i) in item.addOns" :key="i"
-                        @send-reset-remove="getResetRemove"
                     />   
                 </div>
-                <span v-if="removesFlag">
+                <div v-if="removesFlag">
                     <EditItemRemove 
                         :remove="newRemove"
                         :item_id="item._id"
@@ -223,10 +225,9 @@ const postNewItem = (item) => {
                         :section_id="section_id"
                         :menu="menu"
                         v-for="(remove, i) in item.removes" :key="i"
-                        @send-reset-remove="getResetRemove"
                     /> 
-                </span>
-                <span v-if="optionsFlag">
+                </div>
+                <div v-if="optionsFlag">
                     <EditItemOption
                         :option="newOption"
                         :item_id="item._id"
@@ -240,10 +241,9 @@ const postNewItem = (item) => {
                         :section_id="section_id"
                         :menu="menu"
                         v-for="(option, i) in item.options" :key="i"
-                        @send-reset-option="getResetOption"
                     />                
-                </span>
-            </span>
+                </div>
+            </div>
         </div>  
     </div>
 </template>

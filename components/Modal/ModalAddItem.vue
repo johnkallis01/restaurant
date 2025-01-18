@@ -3,6 +3,15 @@ const cartStore = useCartStore();
 const { item } = defineProps({item: {type: Object, required: true}})
 const emit = defineEmits(['close-modal']);
 const { formatPrice } = usePriceFormatter();
+
+const selectedItem = {
+    name: item.name,
+    price: item.price,
+    addOns: [],
+    removes: [],
+    options:[],
+    comments: '',
+}
 const addItem = (item)=>{
     console.log(item)
     cartStore.addItemToCart(item);
@@ -11,9 +20,21 @@ const addItem = (item)=>{
 const closeModal = ()=>{
     emit('close-modal');
 }
-const {addOnsFlag, removesFlag, optionsFlag,
-    resetFlags, viewAddOns, viewRemoves, viewOptions } = useAROFlags();
-//optionsFlag.value=true;
+const {addOnsFlag, removesFlag, optionsFlag, commentsFlag,
+    resetFlags, viewAddOns, viewRemoves, viewOptions, viewComments } = useAROFlags();
+const OAR = ref([
+    {name:'options', flag: optionsFlag, callback: viewOptions},
+    {name:'addOns', flag: addOnsFlag, callback: viewAddOns},
+    {name:'removes', flag: removesFlag, callback: viewRemoves},
+    ]);
+const comments = ref({name:'comments', flag: commentsFlag, callback: viewComments});
+const openFirstOAR = computed(()=>{
+    const first = OAR.value.find((el)=>item[el.name].length);
+    if(first) first.flag=true;
+})
+onMounted(()=>{
+    openFirstOAR.value
+    })
 </script>
 <template>
     <div class="container">
@@ -28,28 +49,30 @@ const {addOnsFlag, removesFlag, optionsFlag,
         <div class="form-body">
             <div class="item-addons-removes-options">
                 <div class="item-a-r-o-titles">
-                    <button class="btn" id="options-tab" v-if="item['options'].length"
-                        @click="viewOptions" @keydown.enter="viewOptions">
-                        <span :class="{'underline': optionsFlag}">Options</span>
-                    </button>
-                    <button class="btn" v-if="item['addOns'].length"
-                        @click="viewAddOns" @keydown.enter="viewAddOns">
-                        <span :class="{'underline': addOnsFlag}">Add-Ons</span>
-                    </button>
-                    <button class="btn"  v-if="item['removes'].length"
-                        @click="viewRemoves" @keydown.enter="viewRemoves">
-                        <span :class="{'underline': removesFlag}">Removes</span>
-                    </button>    
+                    <template v-for="(el, i) in OAR" :key="i">
+                        <button class="btn"
+                            v-if="item[el.name].length"
+                            @click="el.callback" @keydown.enter="el.callback">
+                            <span :class="{'underline': el.flag}" >{{ el.name }}</span>
+                        </button>
+                    </template>
+                        <button class="btn"
+                            @click="comments.callback" @keydown.enter="comments.callback">
+                            <span :class="{'underline': comments.flag}">{{ comments.name }}</span>
+                        </button>
                 </div>
             <div class="item-a-r-o-components">
-                <div v-if="optionsFlag">
-                    options
-                </div>
-                <div v-if="addOnsFlag">
-                    addons
-                </div>
-                <div v-if="removesFlag">
-                    removes
+                <template v-for="(oar, i) in OAR" :key="i">
+                    <div v-if="oar.flag && item[oar.name].length" class="container aro">
+                        <div v-for="(el, j) in item[oar.name]" :key="j" class="item-title aro">
+                            <input type="checkbox" />
+                            <label class="item-name">{{ el.name }}</label>
+                            <label class="item-price" v-if="el.price">{{ formatPrice(el.price) }}</label>
+                        </div>
+                    </div>
+                </template>
+                <div v-if="comments.flag">
+                    <textarea class="text-field"></textarea>
                 </div>
             </div>
         </div> 
@@ -79,6 +102,9 @@ const {addOnsFlag, removesFlag, optionsFlag,
     padding: 5px;
     border-bottom: 2px solid black;
 }
+.item-title.aro{
+    border: none;
+}
 .form-actions{
     display: flex;
     justify-content: flex-end;
@@ -88,5 +114,10 @@ const {addOnsFlag, removesFlag, optionsFlag,
 .container{
     height: 100%;
     width: 100%;
+}
+.container.aro{
+    display: flex;
+    justify-content: center;
+    width: 80%;
 }
 </style>

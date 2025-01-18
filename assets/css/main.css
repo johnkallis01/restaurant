@@ -325,7 +325,8 @@ containers
 }
 .item-a-r-o-components{
     display: flex;
-    align-items: center;  
+    align-items: center;
+    justify-content: center;
 }
 .underline{
   border-bottom: 2px solid black;

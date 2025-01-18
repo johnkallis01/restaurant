@@ -6,14 +6,8 @@ const { formatPrice } = usePriceFormatter();
 const modalFlag=ref(false);
 const modalItem = ref();
 
-const displayModal = (item)=>{
-    modalFlag.value=true;
-    modalItem.value=item;
-}
+const displayModal = (item)=>{modalFlag.value=true;modalItem.value=item;}
 const sendToModal = ()=>{return modalItem.value;}
-const getItem = (item)=>{
-    console.log(item)
-}
 const closeModal = () =>{
     modalFlag.value=false;
 }
