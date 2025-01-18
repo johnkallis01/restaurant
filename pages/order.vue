@@ -11,7 +11,7 @@ let now = new Date();
 const today = ref({
   day: now.getDay(),
   hour: now.getHours(),
-  mins: now.getMinutes(),
+  min: now.getMinutes(),
 });
 const todayMenus = computed(()=>{
   return menuStore.menus.filter((menu)=>{
@@ -22,9 +22,9 @@ const nowMenus = computed(() => {
   return todayMenus.value.filter((menu) => {
     return menu.days.some((day)=>{
       return (
-        (day.start.hour < today.value.hour || (day.start.hour === today.value.hour && day.start.mins <= today.value.mins))
+        (day.start.hour < today.value.hour || (day.start.hour === today.value.hour && day.start.min <= today.value.min))
             &&
-        (day.end.hour > today.value.hour || (day.end.hour === today.value.hour && day.end.mins > today.value.mins)))})})});
+        (day.end.hour > today.value.hour || (day.end.hour === today.value.hour && day.end.min > today.value.min)))})})});
 const index = ref(0);
 const visibleMenu = () => {
   return nowMenus.value[index.value];

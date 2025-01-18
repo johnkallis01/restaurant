@@ -223,6 +223,7 @@ containers
     font-size: 16px;
     line-height: 20px;
     background-color: white;
+    box-sizing: border-box;
     border: 2px solid rgb(96, 97, 97);
     border-radius: 5px;
 }
@@ -279,15 +280,11 @@ containers
     margin-right: 7px;
 }
 .text-field.item-name input{
-    width: 100%;
+  width: 100%;
 }
 .item-name{
   display: flex;
-    width: 100%;
-}
-.item-price{
-    display: inline-flex;
-    align-items: center;
+  width: 100%;
 }
 .item-title .addon{
     border: 2px;
@@ -327,6 +324,7 @@ containers
     display: flex;
     align-items: center;
     justify-content: center;
+    margin-bottom: 4px;
 }
 .underline{
   border-bottom: 2px solid black;
@@ -438,6 +436,7 @@ containers
 }
 .tab-name{
     display: flex;
+    justify-content: space-between;
     align-items: center;
     width: 100%;
 }
@@ -453,6 +452,20 @@ containers
     justify-content: center;
     align-items: center;
 }
+/* Modal */
+.modal{
+  background-color: white;
+  z-index: 1000;
+  position: fixed;
+  top: 25vh;
+  left: 25vw;
+  width: 50vw;
+  height: 50vh;
+  border-radius: 15px;
+  border: 2px solid black;
+  box-sizing: border-box;
+}
+
 /*toggle button*/
 .toggle {
     display: flex;

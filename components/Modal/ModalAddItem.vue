@@ -31,10 +31,9 @@ const comments = ref({name:'comments', flag: commentsFlag, callback: viewComment
 const openFirstOAR = computed(()=>{
     const first = OAR.value.find((el)=>item[el.name].length);
     if(first) first.flag=true;
+    else commentsFlag.value=true;
 })
-onMounted(()=>{
-    openFirstOAR.value
-    })
+onMounted(()=>{openFirstOAR.value});
 </script>
 <template>
     <div class="container">

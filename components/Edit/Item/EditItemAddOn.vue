@@ -113,7 +113,6 @@ const deleteAddOn = () => {
             <template v-else>
                 <span class="item-price" @click="focusPriceInput">{{ formatPrice(addOn['price']) }}</span>
             </template>
-           
         </div>
     </div>
 </template>

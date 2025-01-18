@@ -24,7 +24,8 @@ function selectOption(id) {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     margin: 0;
     padding: 0;
-    top: 8vh;
+    top: 10vh;
+    right: 15vw;
     list-style-type: none;
     z-index: 10;
     border-radius: 4px;

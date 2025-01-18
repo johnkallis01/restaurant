@@ -46,7 +46,10 @@ const toggleDropdown = () => {dropdown.value = !dropdown.value;}
       <div class="left-btns">
         <ClientOnly>
           <template v-if="loggedIn">
-            <button @click="toggleCart" ref="cartButtonRef"><i class="mdi mdi-cart"/></button>
+            <button @click="toggleCart" ref="cartButtonRef" class="btn cart">
+              <i class="mdi mdi-cart"/>
+              <span class="tooltip" v-if="!cartStore.items.length">add to order to open cart</span>
+            </button>
           </template>
         </ClientOnly>
         <nuxt-link to="/">
@@ -69,7 +72,7 @@ const toggleDropdown = () => {dropdown.value = !dropdown.value;}
               <button class="btn-link" @click="toggleDropdown">Edit Menu</button>
             </nuxt-link>
             <template v-if="dropdown">
-              <MenuDropDown />
+              <MenuDropDown/>
             </template>
             <nuxt-link>
               <button class="btn-link" @click="logout">Logout</button>
@@ -82,3 +85,14 @@ const toggleDropdown = () => {dropdown.value = !dropdown.value;}
       </div>
     </header>
 </template>
+<style scoped>
+.cart{
+  padding: 2px 7px;
+  border-radius: 15px;
+}
+.tooltip{
+  position: absolute;
+  left: 100px;
+  top: 35px;
+}
+</style>

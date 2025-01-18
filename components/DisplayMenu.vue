@@ -5,7 +5,6 @@ const { formatPrice } = usePriceFormatter();
 
 const modalFlag=ref(false);
 const modalItem = ref();
-
 const displayModal = (item)=>{modalFlag.value=true;modalItem.value=item;}
 const sendToModal = ()=>{return modalItem.value;}
 const closeModal = () =>{
@@ -57,17 +56,5 @@ const closeModal = () =>{
 }
 .section-name{
     width: 80vw;
-}
-.modal{
-  background-color: white;
-  z-index: 1000;
-  position: fixed;
-  top: 25vh;
-  left: 25vw;
-  width: 50vw;
-  height: 50vh;
-  border-radius: 15px;
-  border: 2px solid black;
-  box-sizing: border-box;
 }
 </style>

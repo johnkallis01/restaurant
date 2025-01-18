@@ -8,7 +8,7 @@ export const useCartStore = defineStore('cart', {
     getters:{
         getItems: (state) => state.items,
         getTotal: (state) => 
-            state.items.reduce((sum, item)=> sum+Number(item.price),0).toFixed(2),
+            ((state.items.reduce((sum, item)=> sum+Number(item.price),0))*1.06).toFixed(2),
         isOpen: (state)=> state.isCartOpen,
     },
     actions: {
@@ -19,10 +19,10 @@ export const useCartStore = defineStore('cart', {
             this.items.splice(index, 1);
         },
         toggleCart(){
-            this.isCartOpen = !this.isCartOpen;
+            if(this.items.length) this.isCartOpen = !this.isCartOpen;  
         },
         openCart(){
-            this.isCartOpen=true;
+            if(this.items.length) this.isCartOpen=true;
         },
         closeCart(){
             this.isCartOpen=false;

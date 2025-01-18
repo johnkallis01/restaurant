@@ -83,7 +83,11 @@ const { formatPrice } = usePriceFormatter();
  ************/
  const {addOnsFlag, removesFlag, optionsFlag,
     resetFlags, viewAddOns, viewRemoves, viewOptions } = useAROFlags();
-
+const OAR = ref([
+    {name:'options', flag: optionsFlag, callback: ()=>modalFlag.value=true},
+    {name:'addOns', flag: addOnsFlag, callback: viewAddOns},
+    {name:'removes', flag: removesFlag, callback: viewRemoves},
+    ]);
 // new add-ons/remove/options
 const newAddOn = ref({ name: "", price: "000.00", _id: uuidv4(), });
 const newRemove = ref({ name: "", _id: uuidv4(), });
@@ -113,6 +117,10 @@ const postNewItem = (item) => {
         menuStore.updateMenu(menu);
         emit('send-new-item-flag', false);
     }
+}
+const modalFlag=ref(false);
+const closeModal = ()=>{
+    modalFlag.value=false;
 }
 </script>
 <template>
@@ -183,17 +191,14 @@ const postNewItem = (item) => {
             </template>
         </div>
         <div class="item-addons-removes-options" ref="clickInsideOK" @click.stop>
-            <span class="item-a-r-o-titles" v-if="!isNew">
-                <button class="btn"  @click="viewAddOns" @keydown.enter="viewAddOns">
-                    <span :class="{'underline': addOnsFlag}">Add-Ons</span>
-                </button>
-                <button class="btn" id="removes-tab" @click="viewRemoves" @keydown.enter="viewRemoves">
-                    <span :class="{'underline': removesFlag}">Removes</span>
-                </button>
-                <button class="btn" id="options-tab" @click="viewOptions" @keydown.enter="viewOptions">
-                    <span :class="{'underline': optionsFlag}">Options</span>
-                </button>
-            </span>
+            <div class="item-a-r-o-titles" >
+                <template v-for="(el, i) in OAR" :key="i">
+                    <button class="btn"
+                        @click="el.callback" @keydown.enter="el.callback">
+                        <span :class="{'underline': el.flag}" >{{ el.name }}</span>
+                    </button>
+                </template>
+            </div>
             <div class="item-a-r-o-components">
                 <div v-if="addOnsFlag">
                     <EditItemAddOn 
@@ -227,23 +232,12 @@ const postNewItem = (item) => {
                         v-for="(remove, i) in item.removes" :key="i"
                     /> 
                 </div>
-                <div v-if="optionsFlag">
-                    <EditItemOption
-                        :option="newOption"
-                        :item_id="item._id"
-                        :section_id="section_id"
-                        :menu="menu"
-                        @send-reset-option="getResetOption"
-                    />
-                    <EditItemOption
-                        :option="option"
-                        :item_id="item._id"
-                        :section_id="section_id"
-                        :menu="menu"
-                        v-for="(option, i) in item.options" :key="i"
-                    />                
-                </div>
+               
             </div>
-        </div>  
+        </div>
+        <div v-if="modalFlag" class="modal">
+            <ModalAddOptions :item="item" :section_id="section_id"
+                :menu="menu" @close-modal="closeModal"/>               
+        </div>
     </div>
 </template>
