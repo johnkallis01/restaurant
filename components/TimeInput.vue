@@ -1,51 +1,58 @@
 <script setup>
-const {time, disabled} = defineProps({
-    time: { 
-      type: Object,
-      required: true,
-      default: { hour: 0, min: 0, pm: false }
-    },
-    disabled: { type: Boolean, required: true, default: false},
-    error: { type: Boolean, required: false, default: false},
-    
-});
 const emit = defineEmits(['update:time']);
-
+const {time, disabled, error} = defineProps({
+    time: { type: Object,required: true},
+    disabled: { type: Boolean, required: true},
+    error: { type: Boolean, required: false, default: false},  
+});
 const hours=[0,1,2,3,4,5,6,7,8,9,10,11];
 const mins = [0,15,30,45];
-const displayHour= (hour)=>{
-  if (!hour) return 12;
-  else if(hour < 10) return '0'+ hour; 
-  else return hour;
-}
+const displayHour = (hour) => (hour === 0 ? 12 : hour);
 
 const updateHour = (hour) => {
-  if(time['pm']) hour+=12;
-  time['hour']=hour;
-  emit('update:time', time);
-}
+  emit('update:time', {...time, hour: time.pm & hour<12 ? hour + 12 : hour,});
+};
 const updatePM = (pm) => {
-  if (pm) time['hour']+=12;
-  else if(!pm) time['hour']-=12;
-  emit('update:time', time);
-}
-const updateMinute = (min) => {emit('update:time', { ...time, min });}
+  let newHour = time.hour;
+  if (pm && time.hour < 12) newHour += 12;
+  if (!pm && time.hour >= 12) newHour -= 12;
+  emit('update:time', { ...time, pm, hour: newHour });
+};
+const updateMinute = (min) => {
+  emit('update:time', { ...time, min });
+};
 </script>
 <template>
     <div class="time-group">
-      <select :disabled="disabled" @change="updateHour(Number($event.target.value))" :class="{'error-text': error && !disabled}">
-        <option v-for="h in hours" :key="h" class="options" type="number">{{ displayHour(h) }}</option>
+      <select :class="{'error-text': error && !disabled}"
+        @change="updateHour(Number($event.target.value))"
+        :value="(time.hour === 0 || time.hour % 12 ===0) ? 12 : time.hour % 12" 
+        :disabled="disabled">
+        <option class="options" type="number"
+          v-for="h in hours" :key="h">
+          {{ displayHour(h) }}
+        </option>
       </select>
-      <span :class="{'placeholder-color': disabled,'error-text':error && !disabled}">:</span>
-      <select :disabled="disabled" @change="updateMinute(Number($event.target.value))" :class="{'error-text': error && !disabled}">
-        <option  v-for="m in mins" :key="m" class="options">
+      <span :class="{'placeholder-color': disabled,'error-text':error && !disabled}">
+        :
+      </span>
+      <select :class="{'error-text': error && !disabled}"
+        @change="updateMinute(Number($event.target.value))"
+        :value="time.min===0 ? '00' : time.min"
+        :disabled="disabled">
+        <option class="options"
+          v-for="m in mins" :key="m">
           {{ m<15 ? m+'0':m }}
         </option>
       </select>
-      <button class="toggle" @click="time['pm']=!time['pm']; updatePM(time['pm'])" :disabled="disabled" :class="{'error-text': error && !disabled}">
+      <button class="toggle" :class="{'error-text': error && !disabled}"
+        @click="time.pm=!time.pm; updatePM(time.pm)"
+        :disabled="disabled" >
         <Transition name="slide-fade">
-          <span v-if="time['pm']" :class="{'placeholder-color': disabled}">PM</span>
-          <span v-else :class="{'placeholder-color': disabled}">AM</span>
+          <span :class="{'placeholder-color': disabled}" 
+            v-if="time.pm">PM</span>
+          <span :class="{'placeholder-color': disabled}"
+            v-else>AM</span>
         </Transition>
       </button>
     </div>
@@ -56,6 +63,7 @@ const updateMinute = (min) => {emit('update:time', { ...time, min });}
   align-items: center;
   justify-content: center;
   gap: 5px;
+  text-align: right;
 }
 .options{
   font-size: 12px;

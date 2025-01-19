@@ -76,9 +76,6 @@ containers
   justify-content: flex-start;
   flex-direction: column;
   align-content: center;
-  background-color: azure;
-  border-radius: 10px;
-  width: 60vw;
 }
 .container{
     display: flex;
@@ -102,7 +99,7 @@ containers
     left: 5vh;
     right: 5vh; 
     overflow: scroll;
-    background-color: rgb(233, 235, 238);
+    background-color: rgb(247, 249, 252);
 }
 .container-body{
     position: relative;   
@@ -397,6 +394,7 @@ containers
     position: absolute;
     right: 0;
     font-size: 18px;
+    margin-right: 5px;
 }
 .btn.register{
     margin: 0 10px;

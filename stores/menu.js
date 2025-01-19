@@ -35,7 +35,7 @@ export const useMenuStore = defineStore('menu', {
         method: 'POST',
         body: menu,
       })
-      console.log(response)
+      return response;
     },
     async updateMenu(menu){
       const response = await $fetch('/api/menus/'+menu._id,{

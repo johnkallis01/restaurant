@@ -1,8 +1,8 @@
 <script setup>
 const { data: menus } = await useFetch("/api/menus");
-const route = useRoute()
+const route = useRoute();
 const menu = computed(()=>{
-  const id = route['params'].id;
+  const id = route.params.id;
   return menus.value?.find((menu)=>menu._id === id) || null;
 });
 

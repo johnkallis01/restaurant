@@ -1,41 +1,43 @@
 <script setup>
 const {day} = defineProps({day: {type: Object, required: true}});
+const localDay=reactive(day)
 const emit = defineEmits(['send-day']);
 const errorTime = computed(()=>{
-  if(day['start'].hour > day['end'].hour) {
-    day['error']=true;
+  if(localDay.start.hour > localDay.end.hour) {
+    localDay.error=true;
     return true;
   }else {
-    day['error']=false;
+    localDay.error=false;
     return false;
   }
 });
 const getStart = (d) =>{
-  day['start']=d;
-  emit('send-day',day);
+  localDay.start=d;
+  emit('send-day',localDay);
 }
 const getEnd = (d)=>{
-  day['end']=d;
-  emit('send-day', day);
+  console.log(d)
+  localDay.end=d;
+  emit('send-day', localDay);
 }
 
 </script>
 <template>
   <div class="day-card">
-    <div>{{ day['day'].name + ":"}}</div>
+    <div>{{ localDay.day.name + ":"}}</div>
     <div class="times">
-      <div @click="day['open']=!day['open']" class="toggle">
+      <div @click="localDay.open=!localDay.open" class="toggle">
         <Transition name="slide-fade">
-          <span v-if="day['open']">open</span>
+          <span v-if="localDay.open">open</span>
           <span v-else>closed</span>
         </Transition>
       </div>
       <TimeInput :error="errorTime"
-          :time="day['start']" :disabled="!day['open']" 
+          :time="localDay.start" :disabled="!localDay.open" 
           @update:time="getStart"/>
-      <span :class="{'placeholder-color': !day['open'],'error-text': errorTime && day['open']}">-</span>
+      <span :class="{'placeholder-color': !localDay.open,'error-text': errorTime && localDay.open}">-</span>
       <TimeInput :error="errorTime"
-        :time="day['end']" :disabled="!day['open']" @update:time="getEnd"/>
+        :time="localDay.end" :disabled="!localDay.open" @update:time="getEnd"/>
     </div>
   </div>
 </template>

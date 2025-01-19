@@ -1,13 +1,15 @@
 <script setup>
-const props = defineProps({
+const {props, name} = defineProps({
     placeHolder: { type: String, required: true},
     req: {type: Boolean, required: true},
     password: {type: Boolean, required: false},
-    isValid: {type: Boolean, required: false, default: true}
+    isValid: {type: Boolean, required: false, default: true},
+    name: {type: String, required: false, default: ""},
+    bgColor: {type: String, required: false}
 });
-const emit = defineEmits(['send-input']);
-const str = ref("");
 
+const emit = defineEmits(['send-input']);
+const localName = ref(name);
 const capitalizeFirstLetter = (word)=>{
     word.trim();
     word = word.charAt(0).toUpperCase()+word.slice(1);
@@ -23,8 +25,8 @@ const updateText = (event) => {
     emit('send-input', event.target.value);
 }
 const onInput = (event) => {
-    str.value = event.target.value;
-  emit('send-input', str.value);
+    localName.value = event.target.value;
+  emit('send-input', localName.value);
 };
 </script>
 <template>
@@ -35,7 +37,7 @@ const onInput = (event) => {
             :class="{ invalid: isValid===false }"
             placeholder=" "
             :required="req"
-            v-model="str"
+            v-model="localName"
             :aria-label="'Enter '+ placeHolder"
             @blur="onInput($event)"
             />
@@ -55,6 +57,7 @@ const onInput = (event) => {
     position: absolute;
     transition: 0.2s ease;
     pointer-events: none;
+    border-radius: 3px 3px 0 0;
 }
 .floating-text-field input{
     padding: 10px 10px 10px 15px;

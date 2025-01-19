@@ -5,10 +5,10 @@ const {menu, menus} = defineProps({ menu: { type: Object, required: true, },
     menus: {type: Array, required: true}});
 const menuStore = useMenuStore();
 const deleteMenu = (menu) =>{
-    const menuIndex = menus.findIndex(m => menu['_id'] === m['_id']);
+    const menuIndex = menus.findIndex(m => menu._id === m._id);
     menus.slice(menuIndex, 1);
     console.log('delete menu', menu)
-    menuStore.deleteMenu(menu['_id']);
+    menuStore.deleteMenu(menu._id);
     router.push('/')
 }
 const addSection = ref(false);
@@ -30,38 +30,38 @@ const newSection = ref({
     description: "",
     _id: uuidv4(),
 });
+const showTimes=ref(false);
 </script>
 <template>
     <div class="menu-container">
         <div class="container-title menu">
-            <button class="btn menu" @click="deleteMenu(menu)">
+            <button class="btn" @click="deleteMenu(menu)">
                 <i class="mdi mdi-close"/>
                 <span class="tooltip">delete</span>
             </button>
-            <span class="title-text">{{ menu['name'] }}</span>
-            <span class="btn-icons-group">
-                
+            <div class="title-text">{{ menu.name }}</div>
+            <div class="btn-icons-group">
                 <button class="btn" @click="addNewSection">
-                    <span>section</span>
                     <i class="mdi mdi-plus"/>
+                    <span>section</span>
                     <span class="tooltip">add section</span>
-                </button> 
-            </span>
+                </button>
+                <span class="spacer"></span>
+                <button class="btn times" @click="showTimes=!showTimes">
+                    <i class="mdi mdi-calendar-edit"/>
+                    <span>times</span>
+                    <span class="tooltip">edit menu times</span>
+                </button>
+            </div>
         </div>
         <div class="sections">
-            <span class="menu-schedule">
-               <span v-for="(day, i) in menu['days']" :key="i" >
-                    <span v-if="day.open">{{  day.day.name }}</span><br>
-                    <span v-if="day.open">{{ day.start.hour + ":" + day.start.min + (day.start.pm ? "PM" : "AM") }}</span><br>
-                    <span v-if="day.open">{{ day.end.hour + ":" + day.end.min + (day.end.pm ? "PM" : "AM") }}</span>
-                </span> 
+            <span class="menu-schedule" v-if="showTimes">
+               <EditMenuTimes :menu="menu"/>
             </span>
-            
-
             <div class="section-container" v-if="addSection">
                 <EditSection :section="newSection" :menu="menu" @send-new-section-flag="getNewSectionFlag"/>
             </div>
-            <div class="section-container" v-for="(section, i) in menu['sections']" :key="i">
+            <div class="section-container" v-for="(section, i) in menu.sections" :key="i">
                 <EditSection :section="section" :menu="menu" />              
             </div>
         </div>
@@ -74,6 +74,10 @@ const newSection = ref({
     align-items: baseline;
     justify-content: center;
     gap: 5px;
+}
+.spacer{
+    display: inline-block;
+    width: 15px;
 }
 .container-title.menu{
     height: 8vh;

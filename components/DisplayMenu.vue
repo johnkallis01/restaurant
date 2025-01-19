@@ -1,6 +1,6 @@
 <script setup>
 const {menu} = defineProps({menu: {type: Object, required: false},
-order: {type: Boolean, required: true}});
+    order: {type: Boolean, required: true}});
 const { formatPrice } = usePriceFormatter();
 
 const modalFlag=ref(false);
@@ -13,6 +13,9 @@ const closeModal = () =>{
 </script>
 <template>
     <div class="sections">
+        <div v-if="!order && menu">
+            <DisplaySchedule :menu="menu" />
+        </div>
         <div v-if="menu" class="section-container">
             <div v-for="(section, i) in menu['sections']" :key="i">
                 <div class="section-name">{{ section.name }}</div>

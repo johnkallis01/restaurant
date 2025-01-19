@@ -10,7 +10,6 @@ onMounted(async () => {
 const index = ref(0);
 const visibleMenu = () => {
   return menuStore.menus[index.value];
- // return nowMenus.value[index.value];
 }
 </script>
 <template>
