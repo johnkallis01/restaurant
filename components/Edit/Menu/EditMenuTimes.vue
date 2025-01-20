@@ -38,7 +38,7 @@ const postMenu = async () => {
         <TextField
           :name="localMenu.name||''"
           place-holder="menu name"
-          :bg-color="azure"
+          bg-color="rgb(247, 249, 252)"
           :req="true" @send-input="getName"/>
         <NewDay class="day-row"
             :day="day" v-for="(day, i) in localMenu.days" :key="i" 

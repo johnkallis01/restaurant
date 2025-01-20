@@ -1,14 +1,15 @@
 <script setup>
+const emit = defineEmits(['send-input']);
 const {props, name} = defineProps({
     placeHolder: { type: String, required: true},
     req: {type: Boolean, required: true},
     password: {type: Boolean, required: false},
     isValid: {type: Boolean, required: false, default: true},
     name: {type: String, required: false, default: ""},
-    bgColor: {type: String, required: false}
+    bgColor: {type: String, required: false, default: '#aaaa'}
 });
 
-const emit = defineEmits(['send-input']);
+
 const localName = ref(name);
 const capitalizeFirstLetter = (word)=>{
     word.trim();
@@ -41,7 +42,7 @@ const onInput = (event) => {
             :aria-label="'Enter '+ placeHolder"
             @blur="onInput($event)"
             />
-        <label :for="placeHolder">{{capitalizeFirstLetter(placeHolder)}}</label>
+        <label :for="placeHolder" :style="{'--label-bg-color': bgColor}">{{capitalizeFirstLetter(placeHolder)}}</label>
         <button class="eye-button" type="button" @click="togglePassword" v-if="password">
             <i class="mdi mdi-eye-outline" v-if="isOpen"/>
             <i class="mdi mdi-eye-off-outline" v-else/>
@@ -88,7 +89,7 @@ const onInput = (event) => {
     left: 10px;
     font-size: 12px;
     color: #5264ae; 
-    background-color: white; 
+    background-color: var(--label-bg-color, white); 
 }
 .eye-button{
     position: absolute;
