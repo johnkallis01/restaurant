@@ -25,7 +25,9 @@ const sameTimes = computed(() => {
             innerArr.push(currentDay);
         } else{
             //different from previous
-      /*      const index = outerArr.findIndex((arr)=> (
+      /*      GROUPS DAYS NOT IN ORDER EX. mon & friday with same times
+                // decided not to implement
+      const index = outerArr.findIndex((arr)=> (
                     arr[0].start.hour===currentDay.start.hour &&
                     arr[0].start.min === currentDay.start.min &&
                     arr[0].end.hour === currentDay.end.hour &&
@@ -59,8 +61,8 @@ const sameTimes = computed(() => {
     return  stringArr;
 })
 function printTimes(start, end){
-    return start.hour + ':' + (start.min ? start.min : '00') + 
-        (start.pm ? 'PM' : 'AM') + '-' + end.hour + ':' +
+    return (start.hour ? start.hour : '12') + ':' + (start.min ? start.min : '00') + 
+        (start.pm ? 'PM' : 'AM') + '-' + (end.hour ? end.hour : '12') + ':' +
          (end.min ? end.min : '00') + (end.pm ? 'PM' : 'AM')
 }
 </script>
