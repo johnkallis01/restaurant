@@ -63,7 +63,7 @@ function printTimes(start, end){
 <template>
     <div class="schedule">
       <div v-for="(days, i) in sameTimes" :key="i" class="days">
-        <div>{{days.names + " Open: " + days.times}}</div>
+        <div>{{days.names + ": " + days.times}}</div>
       </div>
     </div>
   </template>

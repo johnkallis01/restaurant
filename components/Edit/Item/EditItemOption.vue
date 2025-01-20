@@ -1,49 +1,39 @@
 <script setup>
-import { reactive } from 'vue';
-
-const {option, item, section_id, menu} = defineProps({
+const emit = defineEmits(['send-reset-option','toggle','close']);
+const {option, item, section_id, menu, index, isOpen } = defineProps({
     option: { type: Object, required: true },
     item: { type: Object, required: true },
     section_id: { type:String, required: true},
     menu: { type:Object, required: true},
+    isOpen: {type: Boolean, required:true},
 });
 const menuStore = useMenuStore();
 const localOption=reactive(option);
 const localMenu=reactive(menu);
 
+const disableValBtn=ref(false)
 const { formatPrice } = usePriceFormatter();
-
+const { nameInputRef, editName, focusNameInput } = useNameInput();
+const { priceInputRef, editPrice, focusPriceInput } = usePriceInput();
+const focusContentInput = () => {nextTick(() => {if (contentInputRef.value) contentInputRef.value.focus();});};
 const newValue = ref({name: "", price: '000.00'});
 
+const isNew = ref(false);
+const addValueFlag=ref(true);
+const contentInputRef=ref(null);
 const sectionIndex = localMenu.sections.findIndex(sec => sec._id === section_id);
 const itemIndex = localMenu.sections[sectionIndex].items.findIndex(it => it._id === item._id);
 const optionIndex = localMenu.sections[sectionIndex].items[itemIndex].options.findIndex((op)=> op._id === localOption._id);
-/***********
- * Edit Option Name
- *************/
- const { nameInputRef, editName, focusNameInput } = useNameInput();
-const submitEditOptionName = (op) => {
-    if(!!localOption.name) editName.value=false;
-    if(!isNew.value) postEditOption(op); 
+
+const getPrice = (p) => {newValue.value.price=p;}
+const deleteOption = () => {
+    localMenu.sections[sectionIndex].items[itemIndex].options.splice(optionIndex, 1);
+    menuStore.updateMenu(localMenu);
 }
-const { priceInputRef, editPrice, focusPriceInput } = usePriceInput();
-//post changes
 const postEditOption = (op) => {
     localMenu.sections[sectionIndex].items[itemIndex].options[optionIndex] = op;   
     menuStore.updateMenu(localMenu);
 }
-/****************
- * new option logic
- ********************/
-const isNew = ref(false);
-onMounted(()=>{
-    if(!localOption?.name || isNew.value){
-        isNew.value = true; editName.value=true;
-        focusPriceInput();
-        focusNameInput();
-    }  
-});
-const emit = defineEmits(['send-reset-option']);
 const postNewOption = (op) => {
     if(op.name){    
         localMenu.sections[sectionIndex].items[itemIndex].options.push(op);
@@ -51,21 +41,66 @@ const postNewOption = (op) => {
         emit('send-reset-option')
     }
 }
-const deleteOption = () => {
-    console.log('del')
-    localMenu.sections[sectionIndex].items[itemIndex].options.splice(optionIndex, 1);
-    menuStore.updateMenu(localMenu)
+const deleteOptionContent = (val) => {
+    console.log(val)
+    const index = localOption.content.findIndex(op=>op.name===val.name)
+    localOption.content.slice(index, 1);
+    console.log(localOption)
 }
 const addValue = (val) => {
-    editPrice.value=false;
-    localOption.content.push(val);
-    newValue.value={name: "", price: '000.00'}
-    //focusPriceInput();
+    if(val.name){
+        editPrice.value=false;
+        localOption.content.push(val);
+        newValue.value={name: "", price: '000.00'}
+    }
 }
-const getPrice = (p) => {newValue.value.price=p;}
+const showAddValue=() => {
+    if(disableValBtn) {
+        addValueFlag.value=false;
+        focusNameInput();
+    }
+    else{
+        addValueFlag.value=!addValueFlag.value;
+        console.log('add value')
+        if(addValueFlag.value){
+            editPrice.value=true;
+            focusContentInput();
+        }
+    }
+}
+const toggle = ()=>{
+    editName.value=false;
+    // console.log('toggle')
+    //console.log(isOpen)
+    emit('toggle')
+}
+const close = () => {
+    editName.value=false;
+    // console.log('close')
+    //console.log(isOpen)
+    emit('toggle')
+}
+const optionsRef=ref(null);
+const handleClickOutside = (event) => {
+    if (optionsRef.value && !optionsRef.value.contains(event.target)) {
+    emit("close");
+  }
+}
+onMounted(()=>{
+    document.addEventListener('click', handleClickOutside);
+    if(!localOption?.name || isNew.value){
+        isNew.value = true; editName.value=true; editPrice.value=true;
+        focusNameInput();
+    }
+    
+});
+onBeforeUnmount(() => {
+    document.removeEventListener('click', handleClickOutside);
+});
 </script>
 <template>
-        <div class="tab-container">
+    <div ref="optionsRef" :class="{'underline': isNew}">
+        <div class="tab-container" >
             <div class="tab-row">
                 <div class="btn-icons-group items">
                     <button class="btn" @click="deleteOption" v-if="!isNew">
@@ -74,67 +109,83 @@ const getPrice = (p) => {newValue.value.price=p;}
                     </button>
                 </div>
                 <div class="tab-name">
-                    <div class="text-field" v-if="editName">
-                        <input type="text" class="name-input" placeholder="option title"
-                            ref="nameInputRef"
-                            @keydown="tabToContent"
-                            v-model="localOption.name"/>
-                            
-                            
-                    </div>
-                    <template v-else>
-                        <span v-if="localOption.name" class="item-title">
-                            <span @click="focusNameInput">{{ localOption.name }}</span> 
+                    <div class="name-checkbox">
+                        <div class="text-field" v-if="isNew || editName">
+                            <input type="text" class="name-input" placeholder="option title"
+                                ref="nameInputRef"
+                                @blur="editName=false"
+                                @keydown="tabToContent"
+                                v-model="localOption.name"/>
+                        </div>
+                        <template v-else>
+                            <span v-if="localOption.name" class="item-title">
+                                <span @click="focusNameInput">{{ localOption.name }}</span> 
+                            </span>
+                            <span class="placeholder-color"
+                                @click="focusNameInput"
+                                v-else>name</span>
+                        </template>
+                        <span class="checkbox">
+                            <label for="req">Required:</label>
+                            <input type="checkbox" name="req"
+                                v-model="localOption.required"
+                                @change="postEditOption(localOption)">
                         </span>
-                        <span class="placeholder-color" @click="focusNameInput" v-else>name</span>
-                    </template>
-                    <span class="checkbox">
-                        <label for="req">Required:</label>
-                        <input type="checkbox" name="req" v-model="localOption.required">
-                    </span>
+                </div>
                     <button class="btn value"
                         @click="postNewOption(localOption)"
-                        v-if="isNew"> add option </button>
-                    <button class="btn value"
-                        v-else
-                        @click="addValue(newValue)"> add value </button>
+                        v-if="isNew"> submit option </button>
+                        <!-- first button  -->
+                    <button class="btn value" @click="toggle"
+                        v-show="!isNew && !isOpen" :disabled="disableValBtn"
+                        > add value </button>
                 </div>
             </div>
         </div>
-        <div v-if="isNew" class="item-title">
-            <div class="text-field intem-name" v-if="editName">
-                <label>Option:</label>
+        <div v-if="(isNew || isOpen)" class="item-title">
+            <div class="text-field intem-name">
+                <label>Value:</label>
                 <input
                     type="text"
                     class="name-input"
                     placeholder="content"
-                    ref="nameInputRef"
+                    ref="contentInputRef"
                     v-model="newValue.name"
                 />
             </div>
-            <PriceInput class="item-price"
+            <PriceInput class="item-price" ref="priceInputRef"
                 v-if="editPrice"
                 :price="newValue.price"
                 @update-price="getPrice" />
             <div v-else @click="editPrice=!editPrice">{{ formatPrice(newValue.price) }}</div>
-            <button class="btn value"
-                @click="addValue(newValue)"
-                v-if="isNew"> add value </button>
+             <!-- second button -->
+            <button class="btn value" 
+                @click="toggle"
+                v-if="isOpen || isNew"> add value </button>
         </div>
-        <div class="tab-container">
-            <div class="tab-row">
-                <div v-for="(val, i) in localOption.content">
+        <div class="options-content-row">
+            <div v-for="(val, i) in localOption.content" class="option-content">
+                <button class="btn del" @click="deleteOptionContent(val)">
+                    <i class="mdi mdi-close"/>
+                    <span class="tooltip">delete</span>
+                </button>
+                <div class="tab-name">
                     {{ i===localOption.content.length-1 || localOption.content.length===1 ? 
-                    ( Number(val.price) ? val.name+ "-"+ formatPrice(val.price) : val.name ) : ( Number(val.price) ? val.name + "-" + formatPrice(val.price) + "," : val.name+",")}}<br>
+                ( Number(val.price) ? val.name+ "-"+ formatPrice(val.price) : val.name ) : ( Number(val.price) ? val.name + "-" + formatPrice(val.price) + "," : val.name+",")}}
                 </div>
             </div>
         </div>
+    </div>
 </template>
 <style scoped>
 .checkbox{
     display: flex;
     margin: 0px 30px;
     white-space: nowarp;
+}
+.name-checkbox{
+    display: flex;
+    align-items: center;
 }
 .checkbox input:focus{
     box-sizing: border-box;
@@ -157,5 +208,21 @@ const getPrice = (p) => {newValue.value.price=p;}
 .btn{
     box-sizing: border-box;
     border: 2px solid rgb(233, 235, 235);
+}
+.btn.del{
+    border-radius: 18px;
+    margin-right: 3px;
+    font-size: 10px;
+}
+.options-content-row{
+    display: flex;
+    justify-content: flex-start;
+    margin: 5px;
+}
+.option-content{
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: row;
+    margin-right: 5px;
 }
 </style>

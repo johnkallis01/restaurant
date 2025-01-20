@@ -14,11 +14,14 @@ const menuStore = useMenuStore();
 
 const { formatPrice } = usePriceFormatter();
 const { nameInputRef, editName, focusNameInput } = useNameInput();
-const { tabToDescription, descriptionInputRef,
-    editDescription, focusDescriptionInput} = useTabToDescription();
-    const { priceInputRef, editPrice, focusPriceInput } = usePriceInput();
-    const {addOnsFlag, removesFlag, optionsFlag,
-        resetFlags, viewAddOns, viewRemoves, viewOptions } = useAROFlags();
+
+const { tabToDescription, descriptionInputRef,editDescription,
+    focusDescriptionInput} = useTabToDescription();
+
+const { priceInputRef, editPrice, focusPriceInput } = usePriceInput();
+
+const {addOnsFlag, removesFlag, optionsFlag,resetFlags, viewAddOns,
+     viewRemoves } = useAROFlags();
 
 
 
@@ -31,6 +34,10 @@ const OAR = ref([
     {name:'addOns', flag: addOnsFlag, callback: viewAddOns},
     {name:'removes', flag: removesFlag, callback: viewRemoves},
     ]);
+const clickInsideOK = ref(null);
+const handleClickOutside = (event) => {
+  if (clickInsideOK.value && !clickInsideOK.value.contains(event.target)) resetFlags();
+}
 onMounted(()=>{
     if(!localItem.name){
         isNew.value = true; 
@@ -42,10 +49,7 @@ onMounted(()=>{
 onBeforeUnmount(() => {
     document.removeEventListener('click', handleClickOutside);
 });
-const clickInsideOK = ref(null);
-const handleClickOutside = (event) => {
-  if (clickInsideOK.value && !clickInsideOK.value.contains(event.target)) resetFlags();
-}
+
 // **************
 // From Emits
 // **************
@@ -163,7 +167,7 @@ const postNewItem = (it) => {
                 <span class="placeholder-color" @click="focusDescriptionInput" v-else>description</span>
             </template>
         </div>
-        <div class="item-addons-removes-options" ref="clickInsideOK" @click.stop>
+        <div class="item-addons-removes-options" ref="clickInsideOK">
             <div class="item-a-r-o-titles" >
                 <template v-for="(el, i) in OAR" :key="i">
                     <button class="btn"
@@ -214,3 +218,11 @@ const postNewItem = (it) => {
         </div>
     </div>
 </template>
+<style scoped>
+.modal{
+    top: 15vh;
+    left: 5vw;
+    height: 80vh;
+    width: 90vw;
+}
+</style>

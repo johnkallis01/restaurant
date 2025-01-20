@@ -246,8 +246,8 @@ containers
 /*** end floating input **/
 
 .text-field.description textarea{
-    height: 10vh;
-    width: auto;
+    height: 8vh;
+    width: 100%;
     min-width: 90%;
 }
 .tab-container{

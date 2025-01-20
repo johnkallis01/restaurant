@@ -1,12 +1,12 @@
 export function useNameInput() {
-  const nameInputRef = ref(null); // Ref for the input element
-  const editName = ref(false); // Tracks if the input is in edit mode
+  const nameInputRef = ref(null);
+  const editName = ref(false);
 
   const focusNameInput = () => {
-    editName.value = true; // Set edit mode to true
+    editName.value = true;
     nextTick(() => {
       if (nameInputRef.value) {
-        nameInputRef.value.focus(); // Safely focus the input
+        nameInputRef.value.focus();
       }
     });
   };

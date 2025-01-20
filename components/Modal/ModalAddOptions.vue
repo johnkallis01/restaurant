@@ -1,12 +1,14 @@
 <script setup>
 import { v4 as uuidv4 } from 'uuid';
-import { reactive } from 'vue';
+
+const emit = defineEmits(['close-modal']);
+
 const {item, section_id, menu} = defineProps({
     item: { type: Object, required: true },
     section_id: { type:String, required: true},
     menu: { type:Object, required: true},
 });
-const emit = defineEmits(['close-modal']);
+
 const closeModal = ()=>{ emit('close-modal');}
 const submitOption = ()=>{ emit('close-modal');}
 const localMenu=reactive(menu);
@@ -27,6 +29,24 @@ const resetOption = () => {
         _id: uuidv4(),
     }
 }
+const openIndex = ref(-1);
+const closeOpen=(i)=>{
+    // console.log('p close')
+    // console.log('close',i, openIndex.value)
+    if(openIndex.value===i) openIndex.value=-1;
+
+}
+const toggleOpen=(i)=>{
+    // console.log('p togg', i, openIndex.value)
+    if(openIndex.value===i) openIndex.value=-1;
+    else openIndex.value=i;
+}
+
+const disableBtn=ref(false);
+const toggleAddNew = () => {
+        addNew.value=!addNew.value;
+       // disableBtn.value=!disableBtn.value;
+}
 </script>
 <template>
     <div class="container">
@@ -35,23 +55,29 @@ const resetOption = () => {
                 {{ localItem.name }}
             </div>
             <div>
-                <button class="btn add" @click="addNew=!addNew">add option</button>
+                <button class="btn add" @click="toggleAddNew">add option</button>
             </div>
         </div>
         <div class="form-body">
-            <EditItemOption
+            <EditItemOption 
                 v-if="addNew"
                 @send-reset-option="resetOption"
                 :option="option"
+                :is-open="false"
                 :item="localItem"
                 :menu="localMenu"
-                :section_id="section_id" />
+                :section_id="section_id"/>
+          
             <EditItemOption
-                v-for="(op, i) in localItem.options"
-                :option="op"
+                v-for="(op, i) in localItem.options" :key="i"
+                :option="op"                
                 :item="localItem"
                 :menu="localMenu"
-                :section_id="section_id" />     
+                :section_id="section_id"
+                :is-open="openIndex===i"
+                @toggle="toggleOpen(i)"
+                @close="closeOpen(i)"/>
+           
         </div>
         <div class="form-actions">
             <button class="btn close" @click="submitOption">submit</button>

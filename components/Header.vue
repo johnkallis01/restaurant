@@ -14,7 +14,7 @@ onBeforeUnmount(() => {
 const closeDropdown = (event) => {
   if (dropdownRef.value && !dropdownRef.value.$el?.contains(event.target)) dropdown.value=false;
 }
-defineExpose({cartButtonRef})
+defineExpose({cartButtonRef});
 const logout = () => {
   authStore.logout();
   router.push('/auth/login');
