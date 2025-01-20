@@ -1,36 +1,38 @@
 <script setup>
 import { v4 as uuidv4 } from 'uuid';
+import { reactive } from 'vue';
 const router=useRouter();
-const {menu, menus} = defineProps({ menu: { type: Object, required: true, },
-    menus: {type: Array, required: true}});
+const {menu, menus} = defineProps(
+    { menu: { type: Object, required: true, },
+    menus: {type: Array, required: true}}
+);
 const menuStore = useMenuStore();
-const deleteMenu = (menu) =>{
-    const menuIndex = menus.findIndex(m => menu._id === m._id);
-    menus.slice(menuIndex, 1);
-    console.log('delete menu', menu)
-    menuStore.deleteMenu(menu._id);
-    router.push('/')
-}
+const localMenu = reactive(menu);
+const localMenus = reactive(menus);
+const showTimes = ref(false);
 const addSection = ref(false);
+const newSection = reactive({
+    name: "",
+    description: "",
+    _id: uuidv4(),
+});
+const getNewSectionFlag = () => {addSection.value=false;}
+const getCloseTimes = () => {showTimes.value=false;}
+const deleteMenu = (menu) =>{
+    const menuIndex = localMenus.findIndex(m => menu._id === m._id);
+    localMenus.slice(menuIndex, 1);
+    menuStore.deleteMenu(menu._id);
+    router.push('/');
+}
 const addNewSection = () =>{
     addSection.value=!addSection.value;
-    newSection.value = {
+    newSection = {
         name: "",
         description: "",
         _id: uuidv4(),
         items: []
     }
 }
-const getNewSectionFlag = () => {
-    console.log('flag in section')
-    addSection.value=false;
-}
-const newSection = ref({
-    name: "",
-    description: "",
-    _id: uuidv4(),
-});
-const showTimes=ref(false);
 </script>
 <template>
     <div class="menu-container">
@@ -56,13 +58,13 @@ const showTimes=ref(false);
         </div>
         <div class="sections">
             <span class="menu-schedule" v-if="showTimes">
-               <EditMenuTimes :menu="menu"/>
+               <EditMenuTimes :menu="localMenu" @close-window="getCloseTimes"/>
             </span>
             <div class="section-container" v-if="addSection">
-                <EditSection :section="newSection" :menu="menu" @send-new-section-flag="getNewSectionFlag"/>
+                <EditSection :section="newSection" :menu="localMenu" @send-new-section-flag="getNewSectionFlag"/>
             </div>
-            <div class="section-container" v-for="(section, i) in menu.sections" :key="i">
-                <EditSection :section="section" :menu="menu" />              
+            <div class="section-container" v-for="(sec, i) in localMenu.sections" :key="i">
+                <EditSection :section="sec" :menu="localMenu" />              
             </div>
         </div>
     </div>

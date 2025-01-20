@@ -1,4 +1,6 @@
 <script setup>
+import { reactive } from 'vue';
+
 const {option, item, section_id, menu} = defineProps({
     option: { type: Object, required: true },
     item: { type: Object, required: true },
@@ -6,31 +8,36 @@ const {option, item, section_id, menu} = defineProps({
     menu: { type:Object, required: true},
 });
 const menuStore = useMenuStore();
+const localOption=reactive(option);
+const localMenu=reactive(menu);
+
 const { formatPrice } = usePriceFormatter();
+
 const newValue = ref({name: "", price: '000.00'});
-const sectionIndex = menu.sections.findIndex(sec => sec._id === section_id);
-const itemIndex = menu.sections[sectionIndex].items.findIndex(it => it._id === item._id);
-const optionIndex = menu.sections[sectionIndex].items[itemIndex].options.findIndex((op)=> op._id === option._id);
+
+const sectionIndex = localMenu.sections.findIndex(sec => sec._id === section_id);
+const itemIndex = localMenu.sections[sectionIndex].items.findIndex(it => it._id === item._id);
+const optionIndex = localMenu.sections[sectionIndex].items[itemIndex].options.findIndex((op)=> op._id === localOption._id);
 /***********
  * Edit Option Name
  *************/
  const { nameInputRef, editName, focusNameInput } = useNameInput();
-const submitEditOptionName = (option) => {
-    if(!!option.name) editName.value=false;
-    if(!isNew.value) postEditOption(option); 
+const submitEditOptionName = (op) => {
+    if(!!localOption.name) editName.value=false;
+    if(!isNew.value) postEditOption(op); 
 }
 const { priceInputRef, editPrice, focusPriceInput } = usePriceInput();
 //post changes
-const postEditOption = (option) => {
-    menu.sections[sectionIndex].items[itemIndex].options[optionIndex] = option;   
-    menuStore.updateMenu(menu);
+const postEditOption = (op) => {
+    localMenu.sections[sectionIndex].items[itemIndex].options[optionIndex] = op;   
+    menuStore.updateMenu(localMenu);
 }
 /****************
  * new option logic
  ********************/
 const isNew = ref(false);
 onMounted(()=>{
-    if(!option?.name || isNew.value){
+    if(!localOption?.name || isNew.value){
         isNew.value = true; editName.value=true;
         focusPriceInput();
         focusNameInput();
@@ -39,25 +46,23 @@ onMounted(()=>{
 const emit = defineEmits(['send-reset-option']);
 const postNewOption = (op) => {
     if(op.name){    
-        menu.sections[sectionIndex].items[itemIndex].options.push(op);
-        menuStore.updateMenu(menu);
+        localMenu.sections[sectionIndex].items[itemIndex].options.push(op);
+        menuStore.updateMenu(localMenu);
         emit('send-reset-option')
     }
 }
 const deleteOption = () => {
     console.log('del')
-    menu.sections[sectionIndex].items[itemIndex].options.splice(optionIndex, 1);
-    menuStore.updateMenu(menu)
+    localMenu.sections[sectionIndex].items[itemIndex].options.splice(optionIndex, 1);
+    menuStore.updateMenu(localMenu)
 }
 const addValue = (val) => {
     editPrice.value=false;
-    option.content.push(val);
+    localOption.content.push(val);
     newValue.value={name: "", price: '000.00'}
     //focusPriceInput();
 }
-const getPrice = (p) => {
-    newValue.value.price=p;
-}
+const getPrice = (p) => {newValue.value.price=p;}
 </script>
 <template>
         <div class="tab-container">
@@ -73,22 +78,22 @@ const getPrice = (p) => {
                         <input type="text" class="name-input" placeholder="option title"
                             ref="nameInputRef"
                             @keydown="tabToContent"
-                            v-model="option.name"/>
+                            v-model="localOption.name"/>
                             
                             
                     </div>
                     <template v-else>
-                        <span v-if="option.name" class="item-title">
-                            <span @click="focusNameInput">{{ option.name }}</span> 
+                        <span v-if="localOption.name" class="item-title">
+                            <span @click="focusNameInput">{{ localOption.name }}</span> 
                         </span>
                         <span class="placeholder-color" @click="focusNameInput" v-else>name</span>
                     </template>
                     <span class="checkbox">
                         <label for="req">Required:</label>
-                        <input type="checkbox" name="req" v-model="option.required">
+                        <input type="checkbox" name="req" v-model="localOption.required">
                     </span>
                     <button class="btn value"
-                        @click="postNewOption(option)"
+                        @click="postNewOption(localOption)"
                         v-if="isNew"> add option </button>
                     <button class="btn value"
                         v-else
@@ -118,8 +123,8 @@ const getPrice = (p) => {
         </div>
         <div class="tab-container">
             <div class="tab-row">
-                <div v-for="(val, i) in option.content">
-                    {{ i===option.content.length-1 || option.content.length===1 ? 
+                <div v-for="(val, i) in localOption.content">
+                    {{ i===localOption.content.length-1 || localOption.content.length===1 ? 
                     ( Number(val.price) ? val.name+ "-"+ formatPrice(val.price) : val.name ) : ( Number(val.price) ? val.name + "-" + formatPrice(val.price) + "," : val.name+",")}}<br>
                 </div>
             </div>

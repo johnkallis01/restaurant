@@ -2,7 +2,6 @@
 const {menu} = defineProps({menu: {type: Object, required: false},
     order: {type: Boolean, required: true}});
 const { formatPrice } = usePriceFormatter();
-
 const modalFlag=ref(false);
 const modalItem = ref();
 const displayModal = (item)=>{modalFlag.value=true;modalItem.value=item;}

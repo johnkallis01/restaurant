@@ -5,13 +5,16 @@ const {menu,section_id,item} = defineProps({
     section_id: { type: String, required: true},
     item: { type: Object, required: true},
 });
+const localItem=reactive(item);
+const localMenu=reactive(menu);
 const menuStore = useMenuStore();
-const sectionIndex = menu['sections'].findIndex(sec => sec['_id'] === section_id);
-const itemIndex = menu['sections'][sectionIndex].items.findIndex(it => it['_id'] === item['_id']);
+const { formatPrice } = usePriceFormatter();
+const sectionIndex = menu.sections.findIndex(sec => sec._id === section_id);
+const itemIndex = menu.sections[sectionIndex].items.findIndex(it => it._id === item._id);
 //checks if item is new
 const isNew = ref(false);
 onMounted(()=>{
-    if(!item['name']){
+    if(!localItem.name){
         isNew.value = true; 
         focusNameInput();
     }
@@ -35,10 +38,10 @@ const tabToName = (event)=>{
     if(event.key==="Tab"){event.preventDefault();focusNameInput();}
 }
 //reusable put menu change
-const postItemEdit = (item) => {
+const postItemEdit = (it) => {
     if(!isNew.value){
-        menu['sections'][sectionIndex].items[itemIndex]=item;
-        menuStore.updateMenu(menu);
+        localMenu.sections[sectionIndex].items[itemIndex]=it;
+        menuStore.updateMenu(localMenu);
     }
     
 }
@@ -46,9 +49,9 @@ const postItemEdit = (item) => {
 **edit item name logic
 *************************/
 const { nameInputRef, editName, focusNameInput } = useNameInput();
-const submitEditItemName = (item) => { 
-    if(!!item['name']) editName.value=false;
-    if(!isNew.value) postItemEdit(item);
+const submitEditItemName = (it) => { 
+    if(!!localItem.name) editName.value=false;
+    if(!isNew.value) postItemEdit(it);
 }
 /************************
 **edit item description logic
@@ -56,28 +59,28 @@ const submitEditItemName = (item) => {
 const addonsRef = ref(null)
 const { tabToDescription, descriptionInputRef,
     editDescription, focusDescriptionInput} = useTabToDescription();
-const submitEditItemDescription = (item, event) => { 
+const submitEditItemDescription = (it, event) => { 
     editDescription.value=false;
     if(event?.key==="Enter"){
     }
-    if(!isNew.value) {postItemEdit(item);}
-    else postNewItem(item)
+    if(!isNew.value) {postItemEdit(it);}
+    else postNewItem(it)
 }
 /***********
  * Edit Item Price
  *************/
  const { priceInputRef, editPrice, focusPriceInput } = usePriceInput();
 //from <PriceInput/> emit
-const getItemPrice = (newPrice) => {
+const getItemPrice = (np) => {
     editPrice.value = false;
-    item['price'] = newPrice;
-    if(!isNew.value) postItemEdit(item);
+    localItem.price = np;
+    if(!isNew.value) postItemEdit(localItem);
 }
-const submitNewItem = (item) => {
-    if(isNew.value) postItemEdit(item)
+const submitNewItem = (it) => {
+    if(isNew.value) postItemEdit(it)
 }
 //remove leading zeros + $
-const { formatPrice } = usePriceFormatter();
+
 /************
  * Add-ons Removes Options
  ************/
@@ -91,30 +94,27 @@ const OAR = ref([
 // new add-ons/remove/options
 const newAddOn = ref({ name: "", price: "000.00", _id: uuidv4(), });
 const newRemove = ref({ name: "", _id: uuidv4(), });
-const newOption = ref({ name: "", values: [], _id: uuidv4(), });
 const getResetAddOn = () => 
 {newAddOn.value = { name: "", price: "000.00", _id: uuidv4(),}}
 const getResetRemove = () =>{ 
     newRemove.value = { name: "", _id: uuidv4(), }}
-const getResetOption = () =>{ 
-    newOption.value = { name: "", values: [], _id: uuidv4(), }}
 /*********
  * delete item logic
  ************/
 const deleteItem = ()=>{
-    menu['sections'][sectionIndex].items.splice(itemIndex, 1);
-    menuStore.updateMenu(menu);
+    localMenu.sections[sectionIndex].items.splice(itemIndex, 1);
+    menuStore.updateMenu(localMenu);
   //  console.log('delete item disabled')
 }
 /*********
  * new item logicF
  ************/
 const emit = defineEmits(['send-new-item-flag']);
-const postNewItem = (item) => {
-    if(item['name']){
-        const sectionIndex = menu['sections'].findIndex(sec => sec['_id'] === section_id);
-        menu['sections'][sectionIndex].items.push(item);
-        menuStore.updateMenu(menu);
+const postNewItem = (it) => {
+    if(it.name){
+        const sectionIndex = localMenu.sections.findIndex(sec => sec._id === section_id);
+        localMenu.sections[sectionIndex].items.push(it);
+        menuStore.updateMenu(localMenu);
         emit('send-new-item-flag', false);
     }
 }
@@ -135,7 +135,7 @@ const closeModal = ()=>{
                         </button>
                     </template>
                     <template v-else>
-                        <button class="btn" @click="postNewItem(item)" @keydown="tabToName" ref="buttonRef">
+                        <button class="btn" @click="postNewItem(localItem)" @keydown="tabToName" ref="buttonRef">
                             <i class="mdi mdi-plus"/>
                             <span class="tooltip">add new item</span>
                         </button>
@@ -145,17 +145,17 @@ const closeModal = ()=>{
                     <div class="text-field item-name">
                         <input type="text" placeholder="name"
                             ref="nameInputRef"
-                            v-model="item.name"
-                            @blur="submitEditItemName(item)"
+                            v-model="localItem.name"
+                            @blur="submitEditItemName(localItem)"
                             @keydown="tabToPrice"
                             />
                     </div>
                 </template>
                 <template v-if="!editName">
                     <span class="item-name"
-                        v-if="item.name"
+                        v-if="localItem.name"
                         @click="focusNameInput"
-                        >{{ item.name }}</span>
+                        >{{ localItem.name }}</span>
                         <span class="placeholder-color"
                             @click="focusNameInput"
                             v-else
@@ -164,12 +164,12 @@ const closeModal = ()=>{
             </div>
             <template v-if="editPrice">
                 <PriceInput class="item-price" ref="priceInputRef"
-                    :price="item.price"
+                    :price="localItem.price"
                     @keydown="tabToDescription"
                     @update-price="getItemPrice"/>
             </template>
             <template v-else>
-                <span class="item-price" @click="focusPriceInput">{{ formatPrice(item.price)}}</span>
+                <span class="item-price" @click="focusPriceInput">{{ formatPrice(localItem.price)}}</span>
             </template>
          
         </div>
@@ -177,15 +177,15 @@ const closeModal = ()=>{
             <template v-if="editDescription">
                 <div class="text-field description">
                     <textarea type="text" placeholder="description" ref="descriptionInputRef"
-                        v-model="item.description"
-                        @blur="submitEditItemDescription(item)"
+                        v-model="localItem.description"
+                        @blur="submitEditItemDescription(localItem)"
                         />
                 </div>
             </template>
             <template v-if="!editDescription">
                 <span class="item-description-text"
-                    v-if="item.description" 
-                    @click="focusDescriptionInput">{{ item.description }}
+                    v-if="localItem.description" 
+                    @click="focusDescriptionInput">{{ localItem.description }}
                 </span>
                 <span class="placeholder-color" @click="focusDescriptionInput" v-else>description</span>
             </template>
@@ -203,41 +203,41 @@ const closeModal = ()=>{
                 <div v-if="addOnsFlag">
                     <EditItemAddOn 
                         :addOn="newAddOn"
-                        :item_id="item._id"
+                        :item_id="localItem._id"
                         :section_id="section_id"
-                        :menu="menu"
+                        :menu="localMenu"
                         @send-reset-addon="getResetAddOn"
                     />
                     <EditItemAddOn 
                         :addOn="addOn"
-                        :item_id="item._id"
+                        :item_id="localItem._id"
                         :section_id="section_id"
-                        :menu="menu"
-                        v-for="(addOn, i) in item.addOns" :key="i"
+                        :menu="localMenu"
+                        v-for="(addOn, i) in localItem.addOns" :key="i"
                     />   
                 </div>
                 <div v-if="removesFlag">
                     <EditItemRemove 
                         :remove="newRemove"
-                        :item_id="item._id"
+                        :item_id="localItem._id"
                         :section_id="section_id"
-                        :menu="menu"
+                        :menu="localMenu"
                         @send-reset-remove="getResetRemove"
                     />
                     <EditItemRemove
                         :remove="remove"
-                        :item_id="item._id"
+                        :item_id="localItem._id"
                         :section_id="section_id"
-                        :menu="menu"
-                        v-for="(remove, i) in item.removes" :key="i"
+                        :menu="localMenu"
+                        v-for="(remove, i) in localItem.removes" :key="i"
                     /> 
                 </div>
                
             </div>
         </div>
         <div v-if="modalFlag" class="modal">
-            <ModalAddOptions :item="item" :section_id="section_id"
-                :menu="menu" @close-modal="closeModal"/>               
+            <ModalAddOptions :item="localItem" :section_id="section_id"
+                :menu="localMenu" @close-modal="closeModal"/>               
         </div>
     </div>
 </template>

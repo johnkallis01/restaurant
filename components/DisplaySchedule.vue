@@ -47,15 +47,9 @@ const sameTimes = computed(() => {
            // }
         }
     }
-     if(innerArr.length){
-         outerArr.push(innerArr)
-     }
+     if(innerArr.length) outerArr.push(innerArr);
      outerArr.forEach((arr, i)=>{
-        if(arr.length>1) {
-            //if(stringArr[i].names[stringArr[i].names.length-1]==='-') stringArr[i].names.slice(stringArr[i].names.length-1, 1); 
-            stringArr[i].names+='-'+arr[arr.length-1].day.name;
-        }
-        
+        if(arr.length>1) stringArr[i].names+='-'+arr[arr.length-1].day.name;
         stringArr[i].times=printTimes(stringArr[i].times.start, stringArr[i].times.end);
      })
     return  stringArr;

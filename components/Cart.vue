@@ -1,10 +1,8 @@
 <script setup>
 const cartStore = useCartStore();
-const cartItems = cartStore.getItems;
+const cartItems = reactive(cartStore.getItems);
 const { formatPrice } = usePriceFormatter();
-const deleteItem=(index)=>{
-    cartStore.removeItem(index);
-}
+const deleteItem=(i)=>{cartStore.removeItem(i);}
 </script>
 <template>
     <div class="cart-container">
@@ -20,9 +18,9 @@ const deleteItem=(index)=>{
                 <i class="mdi mdi-close"/>
                 <span class="tooltip">delete</span>
             </button>
-            <span class="cart-item-name">{{ item['name'] }}</span>
+            <span class="cart-item-name">{{ item.name }}</span>
             <span class="dotted-line"></span>
-            <span class="cart-item-price">{{ formatPrice(item['price']) }}</span>
+            <span class="cart-item-price">{{ formatPrice(item.price) }}</span>
         </div>
         
     </div>

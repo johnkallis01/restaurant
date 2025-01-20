@@ -12,9 +12,9 @@ function selectOption(id) {
         <li 
             v-for="(menu, index) in menus" 
             :key="index" 
-            @click="selectOption(menu['_id'])"
+            @click="selectOption(menu._id)"
             class="dropdown-item"
-        >{{ menu['name'] }}</li>
+        >{{ menu.name }}</li>
     </ul>
 </template>  
 <style scoped>

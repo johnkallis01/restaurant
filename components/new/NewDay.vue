@@ -1,7 +1,7 @@
 <script setup>
+const emit = defineEmits(['send-day']);
 const {day} = defineProps({day: {type: Object, required: true}});
 const localDay=reactive(day)
-const emit = defineEmits(['send-day']);
 const errorTime = computed(()=>{
   if(localDay.start.hour > localDay.end.hour) {
     localDay.error=true;
@@ -58,7 +58,6 @@ const getEnd = (d)=>{
   }
   .toggle{
     margin: 0;
-
   }
 }
 .times{

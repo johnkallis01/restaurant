@@ -1,6 +1,7 @@
 <script setup>
 const { price } = defineProps({ price:{ type: String, required: true, default: '000.00'}});
 const emit = defineEmits(['update-price']);
+
 //emit to parent component
 const submitPrice = () => emit('update-price', formattedPrice.value);
 const rawPrice = ref(price.replace('.', ''));

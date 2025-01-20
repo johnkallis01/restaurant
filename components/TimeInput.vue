@@ -1,32 +1,33 @@
 <script setup>
+
 const emit = defineEmits(['update:time']);
+
 const {time, disabled, error} = defineProps({
     time: { type: Object,required: true},
     disabled: { type: Boolean, required: true},
     error: { type: Boolean, required: false, default: false},  
 });
+const localTime=ref(time);
 const hours=[0,1,2,3,4,5,6,7,8,9,10,11];
 const mins = [0,15,30,45];
 const displayHour = (hour) => (hour === 0 ? 12 : hour);
 
-const updateHour = (hour) => {
-  emit('update:time', {...time, hour: time.pm & hour<12 ? hour + 12 : hour,});
+const updateHour = (h) => {
+  emit('update:time', {...localTime.value, hour: localTime.value.pm & h<12 ? h + 12 : h,});
 };
 const updatePM = (pm) => {
-  let newHour = time.hour;
-  if (pm && time.hour < 12) newHour += 12;
-  if (!pm && time.hour >= 12) newHour -= 12;
-  emit('update:time', { ...time, pm, hour: newHour });
+  const newHour = localTime.value.hour;
+  if (pm && localTime.value.hour < 12) newHour += 12;
+  if (!pm && localTime.value.hour >= 12) newHour -= 12;
+  emit('update:time', { ...localTime.value, pm, hour: newHour });
 };
-const updateMinute = (min) => {
-  emit('update:time', { ...time, min });
-};
+const updateMinute = (m) => {emit('update:time', { ...localTime.value, m });};
 </script>
 <template>
     <div class="time-group">
       <select :class="{'error-text': error && !disabled}"
         @change="updateHour(Number($event.target.value))"
-        :value="(time.hour === 0 || time.hour % 12 ===0) ? 12 : time.hour % 12" 
+        :value="(localTime.hour === 0 || localTime.hour % 12 ===0) ? 12 : localTime.hour % 12" 
         :disabled="disabled">
         <option class="options" type="number"
           v-for="h in hours" :key="h">
@@ -38,7 +39,7 @@ const updateMinute = (min) => {
       </span>
       <select :class="{'error-text': error && !disabled}"
         @change="updateMinute(Number($event.target.value))"
-        :value="time.min===0 ? '00' : time.min"
+        :value="localTime.min===0 ? '00' : localTime.min"
         :disabled="disabled">
         <option class="options"
           v-for="m in mins" :key="m">
@@ -46,11 +47,11 @@ const updateMinute = (min) => {
         </option>
       </select>
       <button class="toggle" :class="{'error-text': error && !disabled}"
-        @click="time.pm=!time.pm; updatePM(time.pm)"
+        @click="localTime.pm=!localTime.pm; updatePM(localTime.pm)"
         :disabled="disabled" >
         <Transition name="slide-fade">
           <span :class="{'placeholder-color': disabled}" 
-            v-if="time.pm">PM</span>
+            v-if="localTime.pm">PM</span>
           <span :class="{'placeholder-color': disabled}"
             v-else>AM</span>
         </Transition>

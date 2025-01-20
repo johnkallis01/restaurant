@@ -1,4 +1,5 @@
 <script setup>
+const emit = defineEmits(['close-window']);
 const { menu, isNew } = defineProps({menu: {type: Object, required: false},
   isNew:{type:Boolean, required: false, default: false}});
 const localMenu = reactive({ ...menu, days: [...menu.days] });
@@ -9,16 +10,16 @@ const hasError = computed(() => localMenu.days.some(day => day.error));
 const hasOpenDay = computed(() => localMenu.days.some(day => day.open));
 const isDisabled = computed(() => hasError.value && !hasOpenDay.value);
 
-const getName = (name) => { localMenu.name = name; };
+const getName = (n) => { localMenu.name = n; };
 //recieves schedule data from NewDay
 const getDay = (d) => {
-  const dayIndex = localMenu.days.findIndex(day => day.position === d.position);
-  if (dayIndex !== -1) localMenu.days[dayIndex] = d;
+  localMenu.days[d.position] = d;
 };
 const postMenu = async () => {
   if(!isNew){
     console.log('update M', localMenu )
     await menuStore.updateMenu(localMenu)
+    emit('close-window');
   }
   else{
     if(localMenu.name){
@@ -29,7 +30,6 @@ const postMenu = async () => {
     }
     else{console.warn('name req');}
   }
-  
 }
 </script>
 <template>

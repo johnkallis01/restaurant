@@ -1,21 +1,24 @@
 <script setup>
 import { v4 as uuidv4 } from 'uuid';
+import { reactive } from 'vue';
 const {item, section_id, menu} = defineProps({
     item: { type: Object, required: true },
     section_id: { type:String, required: true},
     menu: { type:Object, required: true},
 });
 const emit = defineEmits(['close-modal']);
-const { formatPrice } = usePriceFormatter();
+const closeModal = ()=>{ emit('close-modal');}
+const submitOption = ()=>{ emit('close-modal');}
+const localMenu=reactive(menu);
+const localItem=reactive(item);
 const addNew=ref(false);
-const closeModal = ()=>{
-    emit('close-modal');
-}
-const submitOption = ()=>{
-    emit('close-modal');
-}
+const option = ref({
+    name: "",
+    required: false,
+    content: [],
+    _id: uuidv4(),
+})
 const resetOption = () => {
-    console.log('reset')
     addNew.value=false;
     option.value={
         name: "",
@@ -24,18 +27,12 @@ const resetOption = () => {
         _id: uuidv4(),
     }
 }
-const option = ref({
-    name: "",
-    required: false,
-    content: [],
-    _id: uuidv4(),
-})
 </script>
 <template>
     <div class="container">
         <div class="item-title">
             <div class="item-name">
-                {{ item.name }}
+                {{ localItem.name }}
             </div>
             <div>
                 <button class="btn add" @click="addNew=!addNew">add option</button>
@@ -46,14 +43,14 @@ const option = ref({
                 v-if="addNew"
                 @send-reset-option="resetOption"
                 :option="option"
-                :item="item"
-                :menu="menu"
+                :item="localItem"
+                :menu="localMenu"
                 :section_id="section_id" />
             <EditItemOption
-                v-for="(op, i) in item.options"
+                v-for="(op, i) in localItem.options"
                 :option="op"
-                :item="item"
-                :menu="menu"
+                :item="localItem"
+                :menu="localMenu"
                 :section_id="section_id" />     
         </div>
         <div class="form-actions">

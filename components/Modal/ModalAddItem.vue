@@ -4,14 +4,14 @@ const { item } = defineProps({item: {type: Object, required: true}})
 const emit = defineEmits(['close-modal']);
 const { formatPrice } = usePriceFormatter();
 
-const selectedItem = {
+const selectedItem = reactive({
     name: item.name,
     price: item.price,
     addOns: [],
     removes: [],
     options:[],
     comments: '',
-}
+})
 const addItem = (item)=>{
     console.log(item)
     cartStore.addItemToCart(item);

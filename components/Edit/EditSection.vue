@@ -1,60 +1,59 @@
 <script setup>
 import { v4 as uuidv4 } from 'uuid';
+import { reactive } from 'vue';
+const emit = defineEmits(['send-new-section-flag']);
 const {section, menu} = defineProps({
     section: { type:Object, required: true},
     menu: { type:Object, required: true},
 });
 const menuStore = useMenuStore();
+const localMenu = reactive(menu);
+const localSection = reactive(section);
+const sectionIndex = menu.sections.findIndex(sec => sec._id === section._id);
 //new section logic
 const isNew = ref(false);
 onMounted(()=>{
-    if(!section['name']){
+    if(!localSection.name){
         isNew.value = true;
         focusNameInput();
     }
 })
 // reusable post edits to db logic
-const postSectionEdit = (section) => {
+const postSectionEdit = (s) => {
     if(!isNew.value){
-        const sectionIndex = menu['sections'].findIndex(sec => sec['_id'] === section['_id']);
-        menu['sections'][sectionIndex]=section;
-        menuStore.updateMenu(menu);
-    }else{
-        postNewSection(section);
-    }
-
-    
+        localMenu.sections[sectionIndex]=s;
+        menuStore.updateMenu(localMenu);
+    }else postNewSection(s);
 }
 /************************
 **edit section name logic
 *************************/
 const { nameInputRef, editName, focusNameInput } = useNameInput();
-const submitEditSectionName = (section) => {
+const submitEditSectionName = (s) => {
     editName.value = false;
-    if(!isNew.value) postSectionEdit(section);
+    if(!isNew.value) postSectionEdit(s);
 };
 /************************
 **edit section description logic
 *************************/
 const { tabToDescription, descriptionInputRef,
     editDescription, focusDescriptionInput} = useTabToDescription();
-const submitEditSectionDescription = (section) => { 
+const submitEditSectionDescription = (s) => { 
     editDescription.value = false; 
-    if(!isNew.value) postSectionEdit(section);
+    if(!isNew.value) postSectionEdit(s);
 }
 //delete section
-const deleteSection = ( section )=>{
-    const sectionIndex = menu['sections'].findIndex(sec => sec['_id'] === section['_id']);
-    menu['sections'].splice(sectionIndex, 1);
-   // menuStore.updateMenu(props.menu);
+const deleteSection = ()=>{
+    localMenu.sections.splice(sectionIndex, 1);
+    menuStore.updateMenu(localMenu);
     console.log('delete section disabled')
 }
-const postNewSection = (section) => {
+const postNewSection = (s) => {
     console.log('postNewSection')
-    if(section['name']){
+    if(s.name){
      //   console.log('if section name')
-        menu['sections'].push(section);
-        menuStore.updateMenu(menu);
+     localMenu.sections.push(s);
+        menuStore.updateMenu(localMenu);
         emit('send-new-section-flag');  
     }
 }
@@ -82,20 +81,17 @@ const addNewItem = () => {
         _id: uuidv4(),
     }
 }
-const emit = defineEmits(['send-new-section-flag']);
-const getNewItemFlag = () => {
-   // console.log('flag in section')
-    addItem.value=false;
-}
+
+const getNewItemFlag = () => {addItem.value=false;}
 </script>
 <template>
     <div class="section-container">
         <div class="section-name">
-            <button class="btn delete" @click="postNewSection(section)" v-if="isNew">
+            <button class="btn delete" @click="postNewSection(localSection)" v-if="isNew">
                 <i class="mdi mdi-plus"/>
                 <span class="tooltip">add section</span>
             </button>
-            <button class="btn delete" @click="deleteSection(section)" v-else>
+            <button class="btn delete" @click="deleteSection(localSection)" v-else>
                 <i class="mdi mdi-close"/>
                 <span class="tooltip">delete section</span>
             </button>
@@ -104,15 +100,15 @@ const getNewItemFlag = () => {
                     <input
                         type="text"
                         ref="nameInputRef"
-                        v-model="section['name']"
-                        @blur="submitEditSectionName(section)"
-                        @keydown.enter="postNewSection(section)"
+                        v-model="localSection.name"
+                        @blur="submitEditSectionName(localSection)"
+                        @keydown.enter="postNewSection(localSection)"
                         @keydown=tabToDescription
                     />
                 </div>
             </template>
             <template v-else>
-                <span @click="focusNameInput" v-if="section['name']">{{ section['name'] }}</span>
+                <span @click="focusNameInput" v-if="localSection.name">{{ localSection.name }}</span>
                 <span class="placeholder-color" @click="focusNameInput" v-else>name</span>
             </template>
             <button class="btn add-item" @click="addNewItem" v-if="!isNew">
@@ -128,14 +124,14 @@ const getNewItemFlag = () => {
                         type="text"
                         class="input-description"
                         ref="descriptionInputRef"
-                        v-model="section['description']"
-                        @keydown.enter="postNewSection(section)"
-                        @blur="submitEditSectionDescription(section)"
+                        v-model="localSection.description"
+                        @keydown.enter="postNewSection(localSection)"
+                        @blur="submitEditSectionDescription(localSection)"
                     />
                 </div>
             </template>
             <template v-else>
-                <span @click="focusDescriptionInput" v-if="section['description']">{{ section['description'] }}</span>
+                <span @click="focusDescriptionInput" v-if="localSection.description">{{ localSection.description }}</span>
                 <span class="placeholder-color" @click="focusDescriptionInput" v-else>description</span>
             </template>
         </div>
@@ -143,16 +139,16 @@ const getNewItemFlag = () => {
             <EditItem
                 v-if="addItem"
                 :item="newItem"
-                :section_id="section['_id']"
-                :menu="menu"
+                :section_id="localSection._id"
+                :menu="localMenu"
                 @send-new-item-flag="getNewItemFlag"/>
             <EditItem 
-                v-for="(item, i) in section['items']"
+                v-for="(item, i) in localSection.items"
                 :key="i"
                 ref="it"
                 :item="item"
-                :section_id="section['_id']"
-                :menu="menu"/>
+                :section_id="localSection._id"
+                :menu="localMenu"/>
         </div>
     </div>
 </template>
