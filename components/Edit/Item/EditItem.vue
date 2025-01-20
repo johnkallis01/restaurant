@@ -1,18 +1,36 @@
 <script setup>
 import { v4 as uuidv4 } from 'uuid';
-const {menu,section_id,item} = defineProps({
+const emit = defineEmits(['send-new-item-flag']);
+const { menu, section_id, item } = defineProps({
     menu: { type: Object, required: true},
     section_id: { type: String, required: true},
     item: { type: Object, required: true},
 });
+const sectionIndex = menu.sections.findIndex(sec => sec._id === section_id);
+const itemIndex = menu.sections[sectionIndex].items.findIndex(it => it._id === item._id);
 const localItem=reactive(item);
 const localMenu=reactive(menu);
 const menuStore = useMenuStore();
+
 const { formatPrice } = usePriceFormatter();
-const sectionIndex = menu.sections.findIndex(sec => sec._id === section_id);
-const itemIndex = menu.sections[sectionIndex].items.findIndex(it => it._id === item._id);
-//checks if item is new
+const { nameInputRef, editName, focusNameInput } = useNameInput();
+const { tabToDescription, descriptionInputRef,
+    editDescription, focusDescriptionInput} = useTabToDescription();
+    const { priceInputRef, editPrice, focusPriceInput } = usePriceInput();
+    const {addOnsFlag, removesFlag, optionsFlag,
+        resetFlags, viewAddOns, viewRemoves, viewOptions } = useAROFlags();
+
+
+
 const isNew = ref(false);
+const modalFlag=ref(false);
+const newAddOn = ref({ name: "", price: "000.00", _id: uuidv4(), });
+const newRemove = ref({ name: "", _id: uuidv4(), });
+const OAR = ref([
+    {name:'options', flag: optionsFlag, callback: ()=>modalFlag.value=true},
+    {name:'addOns', flag: addOnsFlag, callback: viewAddOns},
+    {name:'removes', flag: removesFlag, callback: viewRemoves},
+    ]);
 onMounted(()=>{
     if(!localItem.name){
         isNew.value = true; 
@@ -28,6 +46,17 @@ const clickInsideOK = ref(null);
 const handleClickOutside = (event) => {
   if (clickInsideOK.value && !clickInsideOK.value.contains(event.target)) resetFlags();
 }
+// **************
+// From Emits
+// **************
+const getItemPrice = (np) => {
+    editPrice.value = false;
+    localItem.price = np;
+    if(!isNew.value) postItemEdit(localItem);
+}
+const getResetAddOn = () => {newAddOn.value = { name: "", price: "000.00", _id: uuidv4(),}}
+const getResetRemove = () =>{newRemove.value = { name: "", _id: uuidv4(), }}
+const closeModal = ()=>{modalFlag.value=false;}
 /****************
  * Tab Controls
  ****************/
@@ -37,79 +66,27 @@ const tabToPrice = (event)=>{
 const tabToName = (event)=>{
     if(event.key==="Tab"){event.preventDefault();focusNameInput();}
 }
-//reusable put menu change
-const postItemEdit = (it) => {
-    if(!isNew.value){
-        localMenu.sections[sectionIndex].items[itemIndex]=it;
-        menuStore.updateMenu(localMenu);
-    }
-    
-}
-/************************
-**edit item name logic
-*************************/
-const { nameInputRef, editName, focusNameInput } = useNameInput();
-const submitEditItemName = (it) => { 
-    if(!!localItem.name) editName.value=false;
-    if(!isNew.value) postItemEdit(it);
-}
-/************************
-**edit item description logic
-*************************/
-const addonsRef = ref(null)
-const { tabToDescription, descriptionInputRef,
-    editDescription, focusDescriptionInput} = useTabToDescription();
-const submitEditItemDescription = (it, event) => { 
-    editDescription.value=false;
-    if(event?.key==="Enter"){
-    }
-    if(!isNew.value) {postItemEdit(it);}
-    else postNewItem(it)
-}
-/***********
- * Edit Item Price
- *************/
- const { priceInputRef, editPrice, focusPriceInput } = usePriceInput();
-//from <PriceInput/> emit
-const getItemPrice = (np) => {
-    editPrice.value = false;
-    localItem.price = np;
-    if(!isNew.value) postItemEdit(localItem);
-}
-const submitNewItem = (it) => {
-    if(isNew.value) postItemEdit(it)
-}
-//remove leading zeros + $
 
-/************
- * Add-ons Removes Options
- ************/
- const {addOnsFlag, removesFlag, optionsFlag,
-    resetFlags, viewAddOns, viewRemoves, viewOptions } = useAROFlags();
-const OAR = ref([
-    {name:'options', flag: optionsFlag, callback: ()=>modalFlag.value=true},
-    {name:'addOns', flag: addOnsFlag, callback: viewAddOns},
-    {name:'removes', flag: removesFlag, callback: viewRemoves},
-    ]);
-// new add-ons/remove/options
-const newAddOn = ref({ name: "", price: "000.00", _id: uuidv4(), });
-const newRemove = ref({ name: "", _id: uuidv4(), });
-const getResetAddOn = () => 
-{newAddOn.value = { name: "", price: "000.00", _id: uuidv4(),}}
-const getResetRemove = () =>{ 
-    newRemove.value = { name: "", _id: uuidv4(), }}
-/*********
- * delete item logic
- ************/
 const deleteItem = ()=>{
     localMenu.sections[sectionIndex].items.splice(itemIndex, 1);
     menuStore.updateMenu(localMenu);
   //  console.log('delete item disabled')
 }
-/*********
- * new item logicF
- ************/
-const emit = defineEmits(['send-new-item-flag']);
+const postItemEdit = (it) => {
+    if(!isNew.value){
+        localMenu.sections[sectionIndex].items[itemIndex]=it;
+        menuStore.updateMenu(localMenu);
+    }
+}
+const submitEditItemName = (it) => { 
+    if(!!localItem.name) editName.value=false;
+    if(!isNew.value) postItemEdit(it);
+}
+const submitEditItemDescription = (it, event) => { 
+    editDescription.value=false;
+    if(!isNew.value) {postItemEdit(it);}
+    else postNewItem(it)
+}
 const postNewItem = (it) => {
     if(it.name){
         const sectionIndex = localMenu.sections.findIndex(sec => sec._id === section_id);
@@ -117,10 +94,6 @@ const postNewItem = (it) => {
         menuStore.updateMenu(localMenu);
         emit('send-new-item-flag', false);
     }
-}
-const modalFlag=ref(false);
-const closeModal = ()=>{
-    modalFlag.value=false;
 }
 </script>
 <template>

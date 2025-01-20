@@ -1,62 +1,17 @@
 <script setup>
 import { v4 as uuidv4 } from 'uuid';
-import { reactive } from 'vue';
 const emit = defineEmits(['send-new-section-flag']);
 const {section, menu} = defineProps({
     section: { type:Object, required: true},
     menu: { type:Object, required: true},
 });
 const menuStore = useMenuStore();
+const { nameInputRef, editName, focusNameInput } = useNameInput();
+const { tabToDescription, descriptionInputRef,
+    editDescription, focusDescriptionInput} = useTabToDescription();
 const localMenu = reactive(menu);
 const localSection = reactive(section);
 const sectionIndex = menu.sections.findIndex(sec => sec._id === section._id);
-//new section logic
-const isNew = ref(false);
-onMounted(()=>{
-    if(!localSection.name){
-        isNew.value = true;
-        focusNameInput();
-    }
-})
-// reusable post edits to db logic
-const postSectionEdit = (s) => {
-    if(!isNew.value){
-        localMenu.sections[sectionIndex]=s;
-        menuStore.updateMenu(localMenu);
-    }else postNewSection(s);
-}
-/************************
-**edit section name logic
-*************************/
-const { nameInputRef, editName, focusNameInput } = useNameInput();
-const submitEditSectionName = (s) => {
-    editName.value = false;
-    if(!isNew.value) postSectionEdit(s);
-};
-/************************
-**edit section description logic
-*************************/
-const { tabToDescription, descriptionInputRef,
-    editDescription, focusDescriptionInput} = useTabToDescription();
-const submitEditSectionDescription = (s) => { 
-    editDescription.value = false; 
-    if(!isNew.value) postSectionEdit(s);
-}
-//delete section
-const deleteSection = ()=>{
-    localMenu.sections.splice(sectionIndex, 1);
-    menuStore.updateMenu(localMenu);
-    console.log('delete section disabled')
-}
-const postNewSection = (s) => {
-    console.log('postNewSection')
-    if(s.name){
-     //   console.log('if section name')
-     localMenu.sections.push(s);
-        menuStore.updateMenu(localMenu);
-        emit('send-new-section-flag');  
-    }
-}
 const addItem = ref(false);
 const newItem = ref({
         new: true,
@@ -68,7 +23,38 @@ const newItem = ref({
         options: [],
         _id: uuidv4(),
     })
-//add item
+const isNew = ref(false);
+
+const getNewItemFlag = () => {addItem.value=false;}
+
+const postSectionEdit = (s) => {
+    if(!isNew.value){
+        localMenu.sections[sectionIndex]=s;
+        menuStore.updateMenu(localMenu);
+    }else postNewSection(s);
+}
+const submitEditSectionName = (s) => {
+    editName.value = false;
+    if(!isNew.value) postSectionEdit(s);
+};
+const submitEditSectionDescription = (s) => { 
+    editDescription.value = false; 
+    if(!isNew.value) postSectionEdit(s);
+}
+const deleteSection = ()=>{
+    localMenu.sections.splice(sectionIndex, 1);
+    menuStore.updateMenu(localMenu);
+    //console.log('delete section disabled')
+}
+const postNewSection = (s) => {
+    console.log('postNewSection')
+    if(s.name){
+     //   console.log('if section name')
+     localMenu.sections.push(s);
+        menuStore.updateMenu(localMenu);
+        emit('send-new-section-flag');  
+    }
+}
 const addNewItem = () => {
     addItem.value=!addItem.value;
     newItem.value = {
@@ -81,8 +67,12 @@ const addNewItem = () => {
         _id: uuidv4(),
     }
 }
-
-const getNewItemFlag = () => {addItem.value=false;}
+onMounted(()=>{
+    if(!localSection.name){
+        isNew.value = true;
+        focusNameInput();
+    }
+})
 </script>
 <template>
     <div class="section-container">

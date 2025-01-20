@@ -1,16 +1,16 @@
 <script setup>
 const emit = defineEmits(['send-input']);
-const {props, name} = defineProps({
+const { name } = defineProps({
     placeHolder: { type: String, required: true},
     req: {type: Boolean, required: true},
     password: {type: Boolean, required: false},
     isValid: {type: Boolean, required: false, default: true},
     name: {type: String, required: false, default: ""},
-    bgColor: {type: String, required: false, default: '#aaaa'}
+    bgColor: {type: String, required: false, default: 'white'}
 });
-
-
 const localName = ref(name);
+const isOpen = ref(false);
+
 const capitalizeFirstLetter = (word)=>{
     word.trim();
     word = word.charAt(0).toUpperCase()+word.slice(1);
@@ -18,13 +18,8 @@ const capitalizeFirstLetter = (word)=>{
     if(index) return word.slice(0,index+1) + word.charAt(index+1).toUpperCase() + word.slice(index+2);
     return word;
 }
-const isOpen = ref(false);
-const togglePassword = () => {
-    isOpen.value=!isOpen.value;
-}
-const updateText = (event) => {
-    emit('send-input', event.target.value);
-}
+
+const togglePassword = () => {isOpen.value=!isOpen.value;}
 const onInput = (event) => {
     localName.value = event.target.value;
   emit('send-input', localName.value);

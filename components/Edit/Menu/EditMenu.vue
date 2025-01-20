@@ -11,11 +11,13 @@ const localMenu = reactive(menu);
 const localMenus = reactive(menus);
 const showTimes = ref(false);
 const addSection = ref(false);
-const newSection = reactive({
+const newSection = ref({
     name: "",
     description: "",
     _id: uuidv4(),
+    items: []
 });
+
 const getNewSectionFlag = () => {addSection.value=false;}
 const getCloseTimes = () => {showTimes.value=false;}
 const deleteMenu = (menu) =>{
@@ -26,12 +28,12 @@ const deleteMenu = (menu) =>{
 }
 const addNewSection = () =>{
     addSection.value=!addSection.value;
-    newSection = {
-        name: "",
-        description: "",
-        _id: uuidv4(),
-        items: []
-    }
+    newSection.value = {
+    name: "",
+    description: "",
+    _id: uuidv4(),
+    items: []
+  };
 }
 </script>
 <template>

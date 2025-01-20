@@ -3,9 +3,6 @@ const authStore = useAuthStore();
 const email = ref('');
 const password = ref('');
 const loginRef=ref(null);
-const showpassword = ref(false);
-const eye = ref(["mdi-eye-outline", "mdi-eye-off-outline"]);
-const rules = {required: (v) => !!v || 'Required'};
 const login = async () => {
   try {
     await authStore.login({
