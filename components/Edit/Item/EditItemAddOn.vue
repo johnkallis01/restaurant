@@ -1,106 +1,88 @@
 <script setup>
-import { reactive } from 'vue';
 
-const emit = defineEmits(['send-reset-addon']);
+const emit = defineEmits(['send-reset-addOn', 'delete-add-on']);
 const {addOn,item_id, section_id, menu} = defineProps(
 {
     addOn: { type: Object, required: false },
     item_id: { type: String, required: true },
     section_id: { type:String, required: true},
     menu: { type:Object, required: true},});
+
 const menuStore = useMenuStore();
 const localMenu=reactive(menu);
 const localAddOn=reactive(addOn);
+const isNew = ref(false);
+
 const sectionIndex = localMenu.sections.findIndex(sec => sec._id === section_id);
 const itemIndex = localMenu.sections[sectionIndex].items.findIndex(it => it._id === item_id);
-const addOnIndex = localMenu.sections[sectionIndex].items[itemIndex].addOns.findIndex((ao)=> ao._id === addOn._id);
 const { formatPrice } = usePriceFormatter();
-const tabToName = (event)=>{ if(event.key==="Tab"){ event.preventDefault(); focusNameInput();}}
-const tabToPrice = (event)=>{ if(event.key==="Tab"){ event.preventDefault(); focusPriceInput();}}
-/***********
- * Edit Add-on Name
- *************/
-const { nameInputRef, editName, focusNameInput } = useNameInput();
-const submitEditAddOnName = (ao) => {
-    if(!!ao.name) editName.value=false;
-    if(!isNew.value) postEditAddOn(ao);
-}
-/******************
- * Edit Add-on Price
- ******************/
 const { priceInputRef, editPrice, focusPriceInput } = usePriceInput();
+const { nameInputRef, editName, focusNameInput } = useNameInput();
+
+const postEditAddOn = () => {
+    editName.value=false;
+    const addOnIndex = localMenu.sections[sectionIndex].items[itemIndex].addOns.findIndex((addOn)=> localAddOn._id === addOn._id);
+    localMenu.sections[sectionIndex].items[itemIndex].addOns[addOnIndex] = localAddOn;  
+    menuStore.updateMenu(localMenu);
+} 
+const postNewAddOn = (ao) => {
+    if(ao.name){
+        localMenu.sections[sectionIndex].items[itemIndex].addOns.push(ao);
+        menuStore.updateMenu(localMenu);
+        emit('send-reset-addOn');
+        focusNameInput();
+    }
+}
+ const tabToName = (event)=>{ if(event.key==="Tab"){ event.preventDefault(); focusNameInput();}}
+ const tabToPrice = (event)=>{ if(event.key==="Tab"){ event.preventDefault(); focusPriceInput();}}
+
 const getAddOnPrice = (np) => {
     editPrice.value = false;
     console.log('edit price')
     if(!isNew.value) {
         localAddOn.price = np;
-        postEditAddOn(localAddOn);
+        postEditAddOn;
     }
     else if (localAddOn.name) postNewAddOn({
         _id: localAddOn._id,
         name: localAddOn.name,
-        price: newPrice
+        price: np
     });
-}
-/****************
- * new add on logic
- ********************/
-const isNew = ref(false);
+} 
 onMounted(()=>{
     if(!localAddOn.name){
         isNew.value = true;
         focusNameInput();
     }
 });
-
-const postNewAddOn = (ao) => {
-    if(localAddO.name){    
-        localMenu.sections[sectionIndex].items[itemIndex].addOns.push(ao);
-        menuStore.updateMenu(localMenu);
-        emit('send-reset-addon');
-    }
-}
-//post changes
-const postEditAddOn = (ao) => {
-    localMenu.sections[sectionIndex].items[itemIndex].addOns[addOnIndex] = ao;  
-    menuStore.updateMenu(localMenu);
-}   
-const deleteAddOn = () => {
-    localMenu.sections[sectionIndex].items[itemIndex].addOns.splice(addOnIndex, 1);
-    menuStore.updateMenu(localMenu)
-}
 </script>
 <template>
-    <div class="tab-container">
+    <div class="tab-container" @click.stop>
         <div class="item-title">
             <div class="button-name">
                 <span class="btn-icons-group items">
-                    <template v-if="!isNew">
-                        <button class="btn" @click="deleteAddOn" @keydown="tabToName">
-                            <i class="mdi mdi-close"/>
-                            <span class="tooltip">delete</span>
-                        </button>
-                    </template>
-                    <template v-else>
-                        <button class="btn" @click="postNewAddOn(localAddOn)" @keydown="tabToName">
-                            <i class="mdi mdi-plus"/>
-                            <span class="tooltip">add new add-on</span>
-                        </button>
-                    </template>
+                    <button class="btn" @click="emit('delete-add-on')" v-if="!isNew">
+                        <i class="mdi mdi-close"/>
+                        <span class="tooltip">delete</span>
+                    </button>
+                    <button class="btn" @click="postNewAddOn(localAddOn)" v-else>
+                        <i class="mdi mdi-plus"/>
+                        <span class="tooltip">add new add-on</span>
+                    </button>
                 </span>
                 <template v-if="editName">
                     <div class="text-field item-name">
                         <input 
                             type="text" placeholder="name" ref="nameInputRef"
                             v-model="localAddOn.name"
-                            @blur="submitEditAddOnName(localAddOn)"
+                            @blur="postEditAddOn"
                             @keydown="tabToPrice"
                         />
                     </div>
                 </template>
                 <template v-if="!editName">
                     <span  class="item-name"
-                        @click="focusNameInput"
+                        @click="focusNameInput; editName=true"
                         v-if="localAddOn.name"
                         >{{ localAddOn.name }}</span>
                     <span class="placeholder-color"

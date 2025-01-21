@@ -27,6 +27,8 @@ const {addOnsFlag, removesFlag, optionsFlag,resetFlags, viewAddOns,
 
 const isNew = ref(false);
 const modalFlag=ref(false);
+const newAddOnFlag=ref(true);
+const newRemoveFlag=ref(true);
 const newAddOn = ref({ name: "", price: "000.00", _id: uuidv4(), });
 const newRemove = ref({ name: "", _id: uuidv4(), });
 const OAR = ref([
@@ -58,8 +60,8 @@ const getItemPrice = (np) => {
     localItem.price = np;
     if(!isNew.value) postItemEdit(localItem);
 }
-const getResetAddOn = () => {newAddOn.value = { name: "", price: "000.00", _id: uuidv4(),}}
-const getResetRemove = () =>{newRemove.value = { name: "", _id: uuidv4(), }}
+const getResetAddOn = () => {newAddOn.value.name="";newAddOn.value.price="000.00";newAddOn.value._id=uuidv4();}
+const getResetRemove = () =>{ newRemove.value.name= ""; newRemove.value._id=uuidv4(); }
 const closeModal = ()=>{modalFlag.value=false;}
 /****************
  * Tab Controls
@@ -98,6 +100,16 @@ const postNewItem = (it) => {
         menuStore.updateMenu(localMenu);
         emit('send-new-item-flag', false);
     }
+}
+const getDeleteAddOn = (index) => {
+    localItem.addOns.splice(index, 1);
+    localMenu.sections[sectionIndex].items[itemIndex]=localItem;
+    menuStore.updateMenu(localMenu);
+}
+const getDeleteRemove = (index) => {
+    localItem.removes.splice(index, 1);
+    localMenu.sections[sectionIndex].items[itemIndex]=localItem;
+    menuStore.updateMenu(localMenu);
 }
 </script>
 <template>
@@ -178,23 +190,27 @@ const postNewItem = (it) => {
             </div>
             <div class="item-a-r-o-components">
                 <div v-if="addOnsFlag">
-                    <EditItemAddOn 
+                    <EditItemAddOn
+                        v-if="newAddOnFlag"
                         :addOn="newAddOn"
                         :item_id="localItem._id"
                         :section_id="section_id"
                         :menu="localMenu"
-                        @send-reset-addon="getResetAddOn"
+                        @send-reset-addOn="getResetAddOn"
                     />
-                    <EditItemAddOn 
-                        :addOn="addOn"
+                    <EditItemAddOn
+                        v-for="(ao, i) in localItem.addOns" :key="ao._id"
+                        @delete-add-on="getDeleteAddOn(i)"
+                        :addOn="ao"
                         :item_id="localItem._id"
                         :section_id="section_id"
                         :menu="localMenu"
-                        v-for="(addOn, i) in localItem.addOns" :key="i"
+                        
                     />   
                 </div>
                 <div v-if="removesFlag">
                     <EditItemRemove 
+                        v-if="newRemoveFlag"
                         :remove="newRemove"
                         :item_id="localItem._id"
                         :section_id="section_id"
@@ -202,11 +218,13 @@ const postNewItem = (it) => {
                         @send-reset-remove="getResetRemove"
                     />
                     <EditItemRemove
-                        :remove="remove"
+                        v-for="(r, i) in localItem.removes" :key="r._id"
+                        @delete-remove="getDeleteRemove(i)"
+                        :remove="r"
                         :item_id="localItem._id"
                         :section_id="section_id"
                         :menu="localMenu"
-                        v-for="(remove, i) in localItem.removes" :key="i"
+                        
                     /> 
                 </div>
                
@@ -219,10 +237,4 @@ const postNewItem = (it) => {
     </div>
 </template>
 <style scoped>
-.modal{
-    top: 15vh;
-    left: 5vw;
-    height: 80vh;
-    width: 90vw;
-}
 </style>

@@ -1,7 +1,7 @@
 <script setup>
 import { reactive } from 'vue';
 
-const emit = defineEmits(['send-reset-remove']);
+const emit = defineEmits(['send-reset-remove','delete-remove']);
 const {remove, item_id, section_id, menu} = defineProps({
     remove: { type: Object, required: false },
     item_id: { type: String, required: true },
@@ -10,51 +10,43 @@ const {remove, item_id, section_id, menu} = defineProps({
 const menuStore = useMenuStore();
 const localMenu=reactive(menu);
 const localRemove=reactive(remove);
+const isNew = ref(false);
 const sectionIndex = menu.sections.findIndex(sec => sec._id === section_id);
 const itemIndex = menu.sections[sectionIndex].items.findIndex(it => it._id === item_id);
-const removeIndex = menu.sections[sectionIndex].items[itemIndex].removes.findIndex((rem)=> rem._id === localRemove._id);
+
 const { nameInputRef, editName, focusNameInput } = useNameInput();
-/***********
- * Edit Remove Name
- *************/
-const submitEditRemoveName = (r) => {
-    if(!!r.name) editName.value=false;
-    if(!isNew.value) postEditRemove(r);
-}
-//post changes
-const postEditRemove = (r) => {
-    localMenu.sections[sectionIndex].items[itemIndex].removes[removeIndex] = r;   
+
+const postEditRemove = () => {
+    editName.value=false;
+    const removeIndex = menu.sections[sectionIndex].items[itemIndex].removes.findIndex((rem)=> rem._id === localRemove._id);
+    localMenu.sections[sectionIndex].items[itemIndex].removes[removeIndex] = localRemove;   
     menuStore.updateMenu(localMenu);
 }
-/****************
- * new  remove logic
- ********************/
-const isNew = ref(false);
+
+const postNewRemove = (r) => {
+    if(r.name){    
+        localMenu.sections[sectionIndex].items[itemIndex].removes.push({
+            name: r.name,
+            _id: r._id,
+        });
+        menuStore.updateMenu(localMenu);
+        emit('send-reset-remove');
+        focusNameInput();
+    }
+}
 onMounted(()=>{
     if(!localRemove?.name){
         isNew.value = true; editName.value=true;
         focusNameInput();
     }  
 });
-const postNewRemove = (r) => {
-    if(r.name){    
-        localMenu.sections[sectionIndex].items[itemIndex].removes.push(r);
-        menuStore.updateMenu(localMenu);
-        emit('send-reset-remove');
-    }
-}
-const deleteRemove = () => {
-    console.log('del')
-    localMenu.sections[sectionIndex].items[itemIndex].removes.splice(removeIndex, 1);
-    menuStore.updateMenu(localMenu)
-}
 </script>
 <template>
-    <div class="tab-container">
+    <div class="tab-container" @click.stop>
         <div class="item-title">
             <div class="button-name">
                 <span class="btn-icons-group items">
-                    <button class="btn" @click="deleteRemove" v-if="!isNew">
+                    <button class="btn" @click="emit('delete-remove')" v-if="!isNew">
                         <i class="mdi mdi-close"/>
                         <span class="tooltip">delete</span>
                     </button>                    
@@ -71,7 +63,7 @@ const deleteRemove = () => {
                             placeholder="name"
                             ref="nameInputRef"
                             v-model="localRemove.name"
-                            @blur="isNew ? postNewRemove(localRemove) : submitEditRemoveName(localRemove)"
+                            @blur="isNew ? postNewRemove(localRemove) : postEditRemove"
                             @keydown.enter="postNewRemove(localRemove)"
                         />
                     </div>

@@ -101,8 +101,8 @@ const toggleAddNew = () => {
     height: 100%;
     width: 100%;
     padding: 5px;
-    border: 1px solid green;
     box-sizing: border-box;
+    overflow-y: auto;
 }
 .item-title{
     display: flex;

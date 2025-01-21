@@ -69,10 +69,12 @@ const showAddValue=() => {
     }
 }
 const toggle = ()=>{
-    editName.value=false;
+
+    editPrice.value=true;
     // console.log('toggle')
     //console.log(isOpen)
-    emit('toggle')
+    emit('toggle');
+    focusContentInput();
 }
 const close = () => {
     editName.value=false;
@@ -110,7 +112,8 @@ onBeforeUnmount(() => {
                 </div>
                 <div class="tab-name">
                     <div class="name-checkbox">
-                        <div class="text-field" v-if="isNew || editName">
+                        <div class="text-field item-title option"
+                            v-if="isNew || editName">
                             <input type="text" class="name-input" placeholder="option title"
                                 ref="nameInputRef"
                                 @blur="editName=false"
@@ -118,8 +121,8 @@ onBeforeUnmount(() => {
                                 v-model="localOption.name"/>
                         </div>
                         <template v-else>
-                            <span v-if="localOption.name" class="item-title">
-                                <span @click="focusNameInput">{{ localOption.name }}</span> 
+                            <span v-if="localOption.name" class="item-title option" >
+                                <span @click="focusNameInput" :class="{'underline': !editName}">{{ localOption.name }}</span> 
                             </span>
                             <span class="placeholder-color"
                                 @click="focusNameInput"
@@ -137,7 +140,7 @@ onBeforeUnmount(() => {
                         v-if="isNew"> submit option </button>
                         <!-- first button  -->
                     <button class="btn value" @click="toggle"
-                        v-show="!isNew && !isOpen" :disabled="disableValBtn"
+                        v-show="!isNew" :disabled="disableValBtn"
                         > add value </button>
                 </div>
             </div>
@@ -159,9 +162,6 @@ onBeforeUnmount(() => {
                 @update-price="getPrice" />
             <div v-else @click="editPrice=!editPrice">{{ formatPrice(newValue.price) }}</div>
              <!-- second button -->
-            <button class="btn value" 
-                @click="toggle"
-                v-if="isOpen || isNew"> add value </button>
         </div>
         <div class="options-content-row">
             <div v-for="(val, i) in localOption.content" class="option-content">
@@ -206,11 +206,9 @@ onBeforeUnmount(() => {
     gap: 5px;
 }
 .btn{
-    box-sizing: border-box;
-    border: 2px solid rgb(233, 235, 235);
+    border-radius: 18px;
 }
 .btn.del{
-    border-radius: 18px;
     margin-right: 3px;
     font-size: 10px;
 }
@@ -224,5 +222,8 @@ onBeforeUnmount(() => {
     justify-content: flex-start;
     flex-direction: row;
     margin-right: 5px;
+}
+.option{
+    font-size: 18px;
 }
 </style>
