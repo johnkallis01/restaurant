@@ -134,7 +134,7 @@ onMounted(()=>{
                 @send-new-item-flag="getNewItemFlag"/>
             <EditItem 
                 v-for="(item, i) in localSection.items"
-                :key="i"
+                :key="item._id"
                 ref="it"
                 :item="item"
                 :section_id="localSection._id"

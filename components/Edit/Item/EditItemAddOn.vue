@@ -70,17 +70,15 @@ onMounted(()=>{
                         <span class="tooltip">add new add-on</span>
                     </button>
                 </span>
-                <template v-if="editName">
-                    <div class="text-field item-name">
-                        <input 
-                            type="text" placeholder="name" ref="nameInputRef"
-                            v-model="localAddOn.name"
-                            @blur="postEditAddOn"
-                            @keydown="tabToPrice"
-                        />
-                    </div>
-                </template>
-                <template v-if="!editName">
+                <div class="text-field item-name" v-if="editName">
+                    <input 
+                        type="text" placeholder="name" ref="nameInputRef"
+                        v-model="localAddOn.name"
+                        @blur="postEditAddOn"
+                        @keydown="tabToPrice"
+                    />
+                </div>
+                <div v-if="!editName">
                     <span  class="item-name"
                         @click="focusNameInput; editName=true"
                         v-if="localAddOn.name"
@@ -88,17 +86,18 @@ onMounted(()=>{
                     <span class="placeholder-color"
                         @click="focusNameInput"
                         v-else>name</span>
-                </template>
+                </div>
             </div>
-            <template v-if="editPrice">
-                <PriceInput class="item-price" ref="priceInputRef" 
-                    :price="localAddOn.price"
-                    @update-price="getAddOnPrice"
-                    />
-            </template>
-            <template v-else>
-                <span class="item-price" @click="focusPriceInput">{{ formatPrice(localAddOn.price) }}</span>
-            </template>
+            <PriceInput class="item-price" ref="priceInputRef"
+                v-if="editPrice"
+                :price="localAddOn.price"
+                @update-price="getAddOnPrice"
+                />
+            <span class="item-price"
+                @click="focusPriceInput"
+                v-else>
+                {{ formatPrice(localAddOn.price) }}
+            </span>
         </div>
     </div>
 </template>

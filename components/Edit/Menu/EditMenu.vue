@@ -65,7 +65,7 @@ const addNewSection = () =>{
             <div class="section-container" v-if="addSection">
                 <EditSection :section="newSection" :menu="localMenu" @send-new-section-flag="getNewSectionFlag"/>
             </div>
-            <div class="section-container" v-for="(sec, i) in localMenu.sections" :key="i">
+            <div class="section-container" v-for="(sec, i) in localMenu.sections" :key="sec._id">
                 <EditSection :section="sec" :menu="localMenu" />              
             </div>
         </div>

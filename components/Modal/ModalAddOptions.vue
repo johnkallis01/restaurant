@@ -69,7 +69,7 @@ const toggleAddNew = () => {
                 :section_id="section_id"/>
           
             <EditItemOption
-                v-for="(op, i) in localItem.options" :key="i"
+                v-for="(op, i) in localItem.options" :key="op._id"
                 :option="op"                
                 :item="localItem"
                 :menu="localMenu"

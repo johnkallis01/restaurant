@@ -14,12 +14,9 @@ const menuStore = useMenuStore();
 
 const { formatPrice } = usePriceFormatter();
 const { nameInputRef, editName, focusNameInput } = useNameInput();
-
 const { tabToDescription, descriptionInputRef,editDescription,
     focusDescriptionInput} = useTabToDescription();
-
 const { priceInputRef, editPrice, focusPriceInput } = usePriceInput();
-
 const {addOnsFlag, removesFlag, optionsFlag,resetFlags, viewAddOns,
      viewRemoves } = useAROFlags();
 
@@ -37,20 +34,7 @@ const OAR = ref([
     {name:'removes', flag: removesFlag, callback: viewRemoves},
     ]);
 const clickInsideOK = ref(null);
-const handleClickOutside = (event) => {
-  if (clickInsideOK.value && !clickInsideOK.value.contains(event.target)) resetFlags();
-}
-onMounted(()=>{
-    if(!localItem.name){
-        isNew.value = true; 
-        focusNameInput();
-    }
-    document.addEventListener('click', handleClickOutside);
-});
 
-onBeforeUnmount(() => {
-    document.removeEventListener('click', handleClickOutside);
-});
 
 // **************
 // From Emits
@@ -86,7 +70,7 @@ const postItemEdit = (it) => {
 }
 const submitEditItemName = (it) => { 
     if(!!localItem.name) editName.value=false;
-    if(!isNew.value) postItemEdit(it);
+    else if(!isNew.value) postItemEdit(it);
 }
 const submitEditItemDescription = (it, event) => { 
     editDescription.value=false;
@@ -111,36 +95,50 @@ const getDeleteRemove = (index) => {
     localMenu.sections[sectionIndex].items[itemIndex]=localItem;
     menuStore.updateMenu(localMenu);
 }
+const handleClickOutside = (event) => {
+  if (clickInsideOK.value && !clickInsideOK.value.contains(event.target)) resetFlags();
+}
+onMounted(()=>{
+    if(!localItem.name){
+        isNew.value = true; 
+        focusNameInput();
+    }
+    document.addEventListener('click', handleClickOutside);
+});
+
+onBeforeUnmount(() => {
+    document.removeEventListener('click', handleClickOutside);
+});
 </script>
 <template>
     <div class="item-container">
         <div class="item-title">
             <div class="button-name">
                 <span class="btn-icons-group items">
-                    <template v-if="!isNew">
-                        <button class="btn" @click="deleteItem" @keydown="tabToName" ref="buttonRef">
-                            <i class="mdi mdi-close"/>
-                            <span class="tooltip">delete</span>
-                        </button>
-                    </template>
-                    <template v-else>
-                        <button class="btn" @click="postNewItem(localItem)" @keydown="tabToName" ref="buttonRef">
-                            <i class="mdi mdi-plus"/>
-                            <span class="tooltip">add new item</span>
-                        </button>
-                    </template>
+                    <button class="btn" ref="buttonRef"
+                        @click="deleteItem"
+                        @keydown="tabToName"
+                        v-if="!isNew">
+                        <i class="mdi mdi-close"/>
+                        <span class="tooltip">delete</span>
+                    </button>
+                    <button class="btn" ref="buttonRef"
+                        @click="postNewItem(localItem)"
+                        @keydown="tabToName" 
+                        v-else>
+                        <i class="mdi mdi-plus"/>
+                        <span class="tooltip">add new item</span>
+                    </button>
                 </span>
-                <template v-if="editName">
-                    <div class="text-field item-name">
-                        <input type="text" placeholder="name"
-                            ref="nameInputRef"
-                            v-model="localItem.name"
-                            @blur="submitEditItemName(localItem)"
-                            @keydown="tabToPrice"
-                            />
-                    </div>
-                </template>
-                <template v-if="!editName">
+                <div class="text-field item-name" v-if="editName">
+                    <input type="text" placeholder="name"
+                        ref="nameInputRef"
+                        v-model="localItem.name"
+                        @blur="submitEditItemName(localItem)"
+                        @keydown="tabToPrice"
+                        />
+                </div>
+                <div v-else>
                     <span class="item-name"
                         v-if="localItem.name"
                         @click="focusNameInput"
@@ -149,44 +147,41 @@ const getDeleteRemove = (index) => {
                             @click="focusNameInput"
                             v-else
                         >name</span>
-                </template>
+                </div>
             </div>
-            <template v-if="editPrice">
-                <PriceInput class="item-price" ref="priceInputRef"
-                    :price="localItem.price"
-                    @keydown="tabToDescription"
-                    @update-price="getItemPrice"/>
-            </template>
-            <template v-else>
-                <span class="item-price" @click="focusPriceInput">{{ formatPrice(localItem.price)}}</span>
-            </template>
-         
+            
+            <PriceInput class="item-price" ref="priceInputRef"
+                v-if="editPrice"
+                :price="localItem.price"
+                @keydown="tabToDescription"
+                @update-price="getItemPrice"/>
+            <span class="item-price" @click="focusPriceInput" v-else>
+                {{ formatPrice(localItem.price)}}
+            </span>
         </div>
         <div class="item-description">
-            <template v-if="editDescription">
-                <div class="text-field description">
-                    <textarea type="text" placeholder="description" ref="descriptionInputRef"
-                        v-model="localItem.description"
-                        @blur="submitEditItemDescription(localItem)"
-                        />
-                </div>
-            </template>
-            <template v-if="!editDescription">
+            <div class="text-field description" v-if="editDescription">
+                <textarea type="text" placeholder="description" ref="descriptionInputRef"
+                    v-model="localItem.description"
+                    @blur="submitEditItemDescription(localItem)"
+                    />
+            </div>
+            <div v-if="!editDescription">
                 <span class="item-description-text"
                     v-if="localItem.description" 
                     @click="focusDescriptionInput">{{ localItem.description }}
                 </span>
                 <span class="placeholder-color" @click="focusDescriptionInput" v-else>description</span>
-            </template>
+            </div>
         </div>
         <div class="item-addons-removes-options" ref="clickInsideOK">
             <div class="item-a-r-o-titles" >
-                <template v-for="(el, i) in OAR" :key="i">
-                    <button class="btn"
-                        @click="el.callback" @keydown.enter="el.callback">
-                        <span :class="{'underline': el.flag}" >{{ el.name }}</span>
-                    </button>
-                </template>
+                <button class="btn"
+                    v-for="(el, i) in OAR" :key="i"
+                    @click="el.callback"
+                    @keydown.enter="el.callback">
+                    <span :class="{'underline': el.flag}" >{{ el.name }}</span>
+                </button>
             </div>
             <div class="item-a-r-o-components">
                 <div v-if="addOnsFlag">
@@ -224,7 +219,6 @@ const getDeleteRemove = (index) => {
                         :item_id="localItem._id"
                         :section_id="section_id"
                         :menu="localMenu"
-                        
                     /> 
                 </div>
                
@@ -236,5 +230,3 @@ const getDeleteRemove = (index) => {
         </div>
     </div>
 </template>
-<style scoped>
-</style>
