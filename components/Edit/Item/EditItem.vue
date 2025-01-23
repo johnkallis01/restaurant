@@ -24,12 +24,13 @@ const {addOnsFlag, removesFlag, optionsFlag,resetFlags, viewAddOns,
 
 const isNew = ref(false);
 const modalFlag=ref(false);
+const modalRef=ref(null);
 const newAddOnFlag=ref(true);
 const newRemoveFlag=ref(true);
 const newAddOn = ref({ name: "", price: "000.00", _id: uuidv4(), });
 const newRemove = ref({ name: "", _id: uuidv4(), });
 const OAR = ref([
-    {name:'options', flag: optionsFlag, callback: ()=> {if(localItem.name) modalFlag.value=true}},
+    {name:'options', flag: optionsFlag, callback: ()=> {if(localItem.name) {resetFlags();modalFlag.value=true}}},
     {name:'addOns', flag: addOnsFlag, callback: viewAddOns},
     {name:'removes', flag: removesFlag, callback: viewRemoves},
     ]);
@@ -95,24 +96,24 @@ const getDeleteRemove = (index) => {
     localMenu.sections[sectionIndex].items[itemIndex]=localItem;
     menuStore.updateMenu(localMenu);
 }
-const handleClickOutside = (event) => {
-  if (clickInsideOK.value && !clickInsideOK.value.contains(event.target)) resetFlags();
+const itemContainerRef=ref(null);
+const clickOutsideOARtab = (event) => {
+    if (clickInsideOK.value && !clickInsideOK.value.contains(event.target)) resetFlags();
 }
 onMounted(()=>{
     if(!localItem.name){
         isNew.value = true; 
         focusNameInput();
     }
-    //need modal event listener
-    document.addEventListener('click', handleClickOutside);
+    document.addEventListener('click', clickOutsideOARtab);
 });
 
 onBeforeUnmount(() => {
-    document.removeEventListener('click', handleClickOutside);
+    document.removeEventListener('click', clickOutsideOARtab);
 });
 </script>
 <template>
-    <div class="item-container">
+    <div class="item-container" ref="itemContainerRef">
         <div class="item-title">
             <div class="button-name">
                 <span class="btn-icons-group items">
@@ -226,10 +227,11 @@ onBeforeUnmount(() => {
                
             </div>
         </div>
-        
-        <div v-if="modalFlag" class="modal">
-            <ModalAddOptions :item="localItem" :section_id="section_id"
-                :menu="localMenu" @close-modal="closeModal"/>               
+        <div class="modalWrapper" v-if="modalFlag">
+            <div class="modal" ref="modalRef">
+                <ModalAddOptions :item="localItem" :section_id="section_id" 
+                    :menu="localMenu" @close-modal="closeModal"/>               
+            </div>
         </div>
     </div>
 </template>

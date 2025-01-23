@@ -46,7 +46,7 @@ const getNew = (op) => {
             </div>
             <div>
                 <button class="btn add"
-                    v-if="localItem.options.length"
+                    v-if="detachedItem.options.length"
                     @click="addNew=!addNew">add option</button>
             </div>
         </div>

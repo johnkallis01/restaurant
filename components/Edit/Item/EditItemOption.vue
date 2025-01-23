@@ -20,7 +20,7 @@ const contentInputRef=ref(null);
 const optionsRef=ref(null);
 const isNew = ref(false);
 
-const getPrice = (p) => {newContent.price=p;}
+
 const deleteOption = () => {
     const optionIndex = localItem.options.findIndex((op)=> op._id === localOption._id);
     localItem.options.splice(optionIndex, 1);
@@ -62,19 +62,14 @@ const deleteOptionContent = (val) => {
 }
 const addValue = () => {
     if(newContent.name){
-        console.log('add val')
-        console.log(newContent.name)
         focusContentInput();
         editPrice.value=false;
         const detachContent=detachObject(newContent);
-
         localOption.content.push(detachContent);
         console.log(localOption.content)
         newContent.name=""; newContent.price='000.00';
-
         const optionIndex = localItem.options.findIndex((op)=> {op._id === localOption._id});
         localItem.options[optionIndex]=localOption;
-
         emit('update-options', localItem.options);
     }
 }
@@ -162,7 +157,7 @@ onBeforeUnmount(() => {
             <PriceInput class="item-price" ref="priceInputRef"
                 v-if="editPrice"
                 :price="newContent.price"
-                @update-price="getPrice" />
+                @update-price="(p)=>newContent.price=p" />
             <div v-else @click="editPrice=!editPrice">{{ formatPrice(newContent.price) }}</div>
              <!-- second button -->
              <button class="btn value"

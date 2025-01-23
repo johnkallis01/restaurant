@@ -311,6 +311,7 @@ containers
     item 
         addon-removes-options classes 
 ********/
+
 .item-a-r-o-titles{
     display: flex;
     justify-content: space-between;
@@ -451,6 +452,15 @@ containers
     align-items: center;
 }
 /* Modal */
+.modalWrapper{
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 500;
+  height: 100vh;
+  width: 100vw;
+  background-color: transparent;
+}
 .modal{
   background-color: white;
   z-index: 1000;

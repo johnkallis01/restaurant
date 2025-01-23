@@ -5,7 +5,6 @@ const { formatPrice } = usePriceFormatter();
 const modalFlag=ref(false);
 const modalItem = ref();
 const displayModal = (item)=>{modalFlag.value=true;modalItem.value=item;}
-const sendToModal = ()=>{return modalItem.value;}
 const closeModal = () =>{
     modalFlag.value=false;
 }
@@ -35,9 +34,12 @@ const closeModal = () =>{
         <div v-else>
             {{ "no menu available at this time" }}
         </div>
-        <div class="modal" v-if="modalFlag">
-            <ModalSelectItem :item="sendToModal()" @close-modal="closeModal"/> 
+        <div class="modalWrapper" v-if="modalFlag">
+            <div class="modal" >
+                <ModalSelectItem :item="modalItem" @close-modal="closeModal"/> 
+            </div>
         </div>
+        
     </div>
 </template>
 <style scoped>
