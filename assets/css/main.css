@@ -262,7 +262,7 @@ containers
     align-items: center;
     align-content: center;  
     flex-direction: row;
-    margin: 6px 0;
+    padding: 6px 0;
     width: 100%;
 }
 .button-name{
@@ -547,7 +547,12 @@ containers
       transform: translateX(60px);
     }
   }
-
+@media (max-width: 940px){
+  .modal{
+    width: 80vw;
+      left: 10vw;
+  }
+}
 @media (max-width: 740px) {
     .page-container {
         left: 0;
@@ -577,7 +582,9 @@ containers
         width: 59vw;
     }
     .modal{
-      width: 80vw;
+      width: 100vw;
+      left:0;
+
     }
     .cart{
       width: 80vw;

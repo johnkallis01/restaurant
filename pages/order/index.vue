@@ -1,18 +1,13 @@
 <script setup>
 const menuStore = useMenuStore();
-onMounted(async () => {
-  try {
-    await menuStore.fetchMenus();
-  } catch (error) {
-    console.error("Failed to fetch menus:", error);
-  }
-});
 let now = new Date();
 const today = ref({
   day: now.getDay(),
   hour: now.getHours(),
   min: now.getMinutes(),
 });
+const index = ref(0);
+const visibleMenu = () => {return nowMenus.value[index.value];}
 const todayMenus = computed(()=>{
   return menuStore.menus.filter((menu)=>{
     return menu.days.some((day)=> day.day.position === today.value.day && day.open)
@@ -26,10 +21,13 @@ const nowMenus = computed(() => {
             &&
         (day.end.hour > today.value.hour || (day.end.hour === today.value.hour && day.end.min > today.value.min)))})})
 });
-const index = ref(0);
-const visibleMenu = () => {
-  return nowMenus.value[index.value];
-}
+onMounted(async () => {
+  try {
+    await menuStore.fetchMenus();
+  } catch (error) {
+    console.error("Failed to fetch menus:", error);
+  }
+});
 </script>
 <template>
     <div class="page-container">

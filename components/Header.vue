@@ -5,16 +5,12 @@ const router = useRouter();
 
 const cartButtonRef=ref(null);
 const dropdownRef=ref(null);
-onMounted(()=>{
-    document.addEventListener('click', closeDropdown);
-});
-onBeforeUnmount(() => {
-    document.removeEventListener('click', closeDropdown);
-});
+const dropdown = ref(false);
+defineExpose({cartButtonRef});
 const closeDropdown = (event) => {
   if (dropdownRef.value && !dropdownRef.value.$el?.contains(event.target)) dropdown.value=false;
 }
-defineExpose({cartButtonRef});
+
 const logout = () => {
   authStore.logout();
   router.push('/auth/login');
@@ -38,8 +34,14 @@ const focusLogin = () =>{
     loginButton.value.focus();
   }
 }
-const dropdown = ref(false);
+
 const toggleDropdown = () => {dropdown.value = !dropdown.value;}
+onMounted(()=>{
+    document.addEventListener('click', closeDropdown);
+});
+onBeforeUnmount(() => {
+    document.removeEventListener('click', closeDropdown);
+});
 </script>
 <template>
     <header class="header">

@@ -11,8 +11,6 @@ export default defineNuxtConfig({
   components: {
     dirs: [
       '~/components',
-      '~/components/new',
-      '~/components/new/day',
     ]
   },
   modules: [

@@ -1,13 +1,13 @@
 <script setup>
 const menuStore = useMenuStore();
-onMounted(async () => {
-  try {
-    await menuStore.fetchMenus();
+// onMounted(async () => {
+//   try {
+//     await menuStore.fetchMenus();
     
-  } catch (error) {
-    console.error("Failed to fetch menus:", error);
-  }
-});
+//   } catch (error) {
+//     console.error("Failed to fetch menus:", error);
+//   }
+// });
 const index = ref(0);
 const visibleMenu = () => {
   return menuStore.menus[index.value];

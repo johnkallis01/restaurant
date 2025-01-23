@@ -1,90 +1,88 @@
 <script setup>
-const emit = defineEmits(['send-reset-option','toggle','close']);
-const {option, item, section_id, menu, index, isOpen } = defineProps({
-    option: { type: Object, required: true },
-    item: { type: Object, required: true },
-    section_id: { type:String, required: true},
-    menu: { type:Object, required: true},
-    isOpen: {type: Boolean, required:true},
-});
-const menuStore = useMenuStore();
-const localOption=reactive(option);
-const localMenu=reactive(menu);
-
-const disableValBtn=ref(false)
+const emit = defineEmits(['update-options','create-new-option','send-reset-option','toggle','close',]);
+const { detachObject } = useDetachObject();
 const { formatPrice } = usePriceFormatter();
 const { nameInputRef, editName, focusNameInput } = useNameInput();
 const { priceInputRef, editPrice, focusPriceInput } = usePriceInput();
-const focusContentInput = () => {nextTick(() => {if (contentInputRef.value) contentInputRef.value.focus();});};
-const newValue = ref({name: "", price: '000.00'});
+const {option, item, isOpen } = defineProps({
+    option: { type: Object, required: true },
+    item: { type: Object, required: true },
+    disableValBtn: {type: Boolean, required: false, default: false},
+    isOpen: {type: Boolean, required:true},
+});
+ const localItem=reactive(item);
+ const localOption=reactive(option);
 
-const isNew = ref(false);
-const addValueFlag=ref(true);
+const focusContentInput = () => {nextTick(() => {if (contentInputRef.value) contentInputRef.value.focus();});};
+const newContent = reactive({name: "", price: '000.00'});
+
 const contentInputRef=ref(null);
 const optionsRef=ref(null);
-const sectionIndex = localMenu.sections.findIndex(sec => sec._id === section_id);
-const itemIndex = localMenu.sections[sectionIndex].items.findIndex(it => it._id === item._id);
-const optionIndex = localMenu.sections[sectionIndex].items[itemIndex].options.findIndex((op)=> op._id === localOption._id);
+const isNew = ref(false);
 
-const getPrice = (p) => {newValue.value.price=p;}
+const getPrice = (p) => {newContent.price=p;}
 const deleteOption = () => {
-    //needs emit 
-    localMenu.sections[sectionIndex].items[itemIndex].options.splice(optionIndex, 1);
-    menuStore.updateMenu(localMenu);
+    const optionIndex = localItem.options.findIndex((op)=> op._id === localOption._id);
+    localItem.options.splice(optionIndex, 1);
+    emit('update-options', localItem.options);
 }
-const postEditOption = (op) => {
-    localMenu.sections[sectionIndex].items[itemIndex].options[optionIndex] = op;   
-    menuStore.updateMenu(localMenu);
+const postEditOption = () => {
+    const optionIndex = localItem.options.findIndex((op)=> op._id === localOption._id);
+    localItem.options[optionIndex] = localOption;
+    emit('update-options', localItem.options);
 }
-const postNewOption = (op) => {
-    if(op.name){    
-        localMenu.sections[sectionIndex].items[itemIndex].options.push(op);
-        menuStore.updateMenu(localMenu);
-        emit('send-reset-option')
+const postNewOption = () => {
+    if(localOption.name){ 
+        const newOp = detachObject(localOption);
+        emit('create-new-option', newOp);
+        isNew.value=false;
     }
+    ;
 }
 const deleteOptionContent = (val) => {
-    console.log(val)
-    const index = localOption.content.findIndex(op=>op.name===val.name)
-    localOption.content.slice(index, 1);
-    console.log(localOption)
-}
-const addValue = (val) => {
-    if(val.name){
-        editPrice.value=false;
-        localOption.content.push(val);
-        newValue.value={name: "", price: '000.00'}
-    }
-}
-const showAddValue=() => {
-    if(disableValBtn) {
-        addValueFlag.value=false;
-        focusNameInput();
-    }
-    else{
-        addValueFlag.value=!addValueFlag.value;
-        console.log('add value')
-        if(addValueFlag.value){
-            editPrice.value=true;
-            focusContentInput();
+    const index = localOption.content.findIndex(op=>op.name===val.name);
+    if(index>=0){
+        localOption.content.splice(index, 1);
+        const optionIndex = localItem.options.findIndex((op)=> op._id === localOption._id);
+        // console.log(optionIndex)
+        // console.log(val)
+        if(optionIndex>=0) {
+            localItem.options[optionIndex] = localOption;
+            // console.log(optionIndex)
+            emit('update-options', localItem.options)
+        }else{
+            console.log('op i out of range')
         }
+        
+    }else{
+        console.log('index out of range')
+    }
+    
+    
+}
+const addValue = () => {
+    if(newContent.name){
+        console.log('add val')
+        console.log(newContent.name)
+        focusContentInput();
+        editPrice.value=false;
+        const detachContent=detachObject(newContent);
+
+        localOption.content.push(detachContent);
+        console.log(localOption.content)
+        newContent.name=""; newContent.price='000.00';
+
+        const optionIndex = localItem.options.findIndex((op)=> {op._id === localOption._id});
+        localItem.options[optionIndex]=localOption;
+
+        emit('update-options', localItem.options);
     }
 }
 const toggle = ()=>{
-
     editPrice.value=true;
-    // console.log('toggle')
-    //console.log(isOpen)
     emit('toggle');
     focusContentInput();
 }
-const close = () => {
-    editName.value=false;
-    // console.log('close')
-    //console.log(isOpen)
-    emit('toggle')
-}
-
 const handleClickOutside = (event) => {
     if (optionsRef.value && !optionsRef.value.contains(event.target)) {
     emit("close");
@@ -136,17 +134,17 @@ onBeforeUnmount(() => {
                             <label for="req">Required:</label>
                             <input type="checkbox" name="req"
                                 v-model="localOption.required"
-                                @change="postEditOption(localOption)">
+                                @change="isNew ? null : postEditOption">
                         </span>
                     </div>
                     <button class="btn value"
                         v-if="isNew"
-                        @click="postNewOption(localOption)"> 
-                       <span>submit option</span> 
+                        > 
+                       <span @click="postNewOption">submit option</span> 
                     </button>
                         <!-- first button  -->
                     <button class="btn value" @click="toggle"
-                        v-show="!isNew" :disabled="disableValBtn"> add value </button>
+                        v-show="!isNew" :disabled="disableValBtn">{{!isOpen ? 'new value' : 'close'}}</button>
                 </div>
             </div>
         </div>
@@ -156,20 +154,25 @@ onBeforeUnmount(() => {
                 <input
                     type="text"
                     class="name-input"
-                    placeholder="content"
+                    placeholder="name"
                     ref="contentInputRef"
-                    v-model="newValue.name"
+                    v-model="newContent.name"
                 />
             </div>
             <PriceInput class="item-price" ref="priceInputRef"
                 v-if="editPrice"
-                :price="newValue.price"
+                :price="newContent.price"
                 @update-price="getPrice" />
-            <div v-else @click="editPrice=!editPrice">{{ formatPrice(newValue.price) }}</div>
+            <div v-else @click="editPrice=!editPrice">{{ formatPrice(newContent.price) }}</div>
              <!-- second button -->
+             <button class="btn value"
+                v-if="isNew || isOpen"
+                :disabled="disableValBtn"
+                @click="addValue"
+                >add value</button>
         </div>
         <div class="options-content-row">
-            <div v-for="(val, i) in localOption.content" class="option-content">
+            <div class="option-content" v-for="(val,i) in localOption.content" :key="val.name">
                 <button class="btn del" @click="deleteOptionContent(val)">
                     <i class="mdi mdi-close"/>
                     <span class="tooltip">delete</span>

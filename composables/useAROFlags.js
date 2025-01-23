@@ -13,5 +13,5 @@ export function useAROFlags(){
     const viewRemoves = ()=>{ resetFlags(); removesFlag.value=true;}
     const viewOptions = ()=>{ resetFlags(); optionsFlag.value=true;}
     const viewComments = ()=>{ resetFlags(); commentsFlag.value=true;}
-    return {addOnsFlag, removesFlag, optionsFlag, commentsFlag, resetFlags, viewAddOns, viewRemoves, viewComments };
+    return {addOnsFlag, removesFlag, optionsFlag, commentsFlag,viewOptions, resetFlags, viewAddOns, viewRemoves, viewComments };
 }

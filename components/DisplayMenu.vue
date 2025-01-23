@@ -21,7 +21,7 @@ const closeModal = () =>{
                 <div class="section-description">{{ section?.description }}</div>
                 <div class="section-items">
                     <button class="item-container" :disabled="!order"
-                        v-for="(item, j) in section['items']"
+                        v-for="(item, j) in section.items"
                         @click="displayModal(item)">
                         <div class="item-title" >
                             <span class="item-name">{{ item.name }}</span>
@@ -36,7 +36,7 @@ const closeModal = () =>{
             {{ "no menu available at this time" }}
         </div>
         <div class="modal" v-if="modalFlag">
-            <ModalAddItem :item="sendToModal()" @close-modal="closeModal"/> 
+            <ModalSelectItem :item="sendToModal()" @close-modal="closeModal"/> 
         </div>
     </div>
 </template>

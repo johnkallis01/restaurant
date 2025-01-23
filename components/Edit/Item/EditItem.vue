@@ -29,7 +29,7 @@ const newRemoveFlag=ref(true);
 const newAddOn = ref({ name: "", price: "000.00", _id: uuidv4(), });
 const newRemove = ref({ name: "", _id: uuidv4(), });
 const OAR = ref([
-    {name:'options', flag: optionsFlag, callback: ()=>modalFlag.value=true},
+    {name:'options', flag: optionsFlag, callback: ()=> {if(localItem.name) modalFlag.value=true}},
     {name:'addOns', flag: addOnsFlag, callback: viewAddOns},
     {name:'removes', flag: removesFlag, callback: viewRemoves},
     ]);
@@ -103,6 +103,7 @@ onMounted(()=>{
         isNew.value = true; 
         focusNameInput();
     }
+    //need modal event listener
     document.addEventListener('click', handleClickOutside);
 });
 
@@ -146,7 +147,7 @@ onBeforeUnmount(() => {
                         <span class="placeholder-color"
                             @click="focusNameInput"
                             v-else
-                        >name</span>
+                        >{{ 'name' }}</span>
                 </div>
             </div>
             
@@ -160,7 +161,7 @@ onBeforeUnmount(() => {
             </span>
         </div>
         <div class="item-description">
-            <div class="text-field description" v-if="editDescription">
+            <div class="text-field description" v-if="localItem.name ? editDescription : false">
                 <textarea type="text" placeholder="description" ref="descriptionInputRef"
                     v-model="localItem.description"
                     @blur="submitEditItemDescription(localItem)"
@@ -175,7 +176,7 @@ onBeforeUnmount(() => {
             </div>
         </div>
         <div class="item-addons-removes-options" ref="clickInsideOK">
-            <div class="item-a-r-o-titles" >
+            <div class="item-a-r-o-titles" v-if="!isNew">
                 <button class="btn"
                     v-for="(el, i) in OAR" :key="i"
                     @click="el.callback"
@@ -183,6 +184,7 @@ onBeforeUnmount(() => {
                     <span :class="{'underline': el.flag}" >{{ el.name }}</span>
                 </button>
             </div>
+            <div class="item-a-r-o-titles mods" v-else>{{ "Add Mods after item creation" }}</div>
             <div class="item-a-r-o-components">
                 <div v-if="addOnsFlag">
                     <EditItemAddOn
@@ -224,9 +226,15 @@ onBeforeUnmount(() => {
                
             </div>
         </div>
+        
         <div v-if="modalFlag" class="modal">
             <ModalAddOptions :item="localItem" :section_id="section_id"
                 :menu="localMenu" @close-modal="closeModal"/>               
         </div>
     </div>
 </template>
+<style scoped>
+.item-a-r-o-titles.mods{
+    font-size: 12px;
+}
+</style>

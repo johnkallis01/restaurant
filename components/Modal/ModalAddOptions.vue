@@ -1,51 +1,41 @@
 <script setup>
 import { v4 as uuidv4 } from 'uuid';
-
+const menuStore=useMenuStore();
+const { detachObject } = useDetachObject();
 const emit = defineEmits(['close-modal']);
-
 const {item, section_id, menu} = defineProps({
     item: { type: Object, required: true },
     section_id: { type:String, required: true},
     menu: { type:Object, required: true},
 });
-
-const closeModal = ()=>{ emit('close-modal');}
-const submitOption = ()=>{ emit('close-modal');}
 const localMenu=reactive(menu);
 const localItem=reactive(item);
+const detachedItem=reactive(detachObject(item));
+
 const addNew=ref(false);
-const option = ref({
-    name: "",
-    required: false,
-    content: [],
-    _id: uuidv4(),
-})
-const resetOption = () => {
-    addNew.value=false;
-    option.value={
-        name: "",
-        required: false,
-        content: [],
-        _id: uuidv4(),
-    }
-}
 const openIndex = ref(-1);
-const closeOpen=(i)=>{
-    // console.log('p close')
-    // console.log('close',i, openIndex.value)
-    if(openIndex.value===i) openIndex.value=-1;
-
+const newOption = reactive(detachObject({name: "",required: false,content: [],_id: uuidv4(),}));
+const closeModal = ()=>{
+    const detachedItem = detachObject(item); 
+    Object.assign(localItem, detachedItem);
+    emit('close-modal');
 }
-const toggleOpen=(i)=>{
-    // console.log('p togg', i, openIndex.value)
-    if(openIndex.value===i) openIndex.value=-1;
-    else openIndex.value=i;
+const submitChanges = ()=>{
+    if(newOption.name) getNew(newOption);
+    const sectionIndex = localMenu.sections.findIndex(sec => sec._id === section_id);
+    const itemIndex = localMenu.sections[sectionIndex].items.findIndex(it => it._id === localItem._id);
+    localMenu.sections[sectionIndex].items[itemIndex].options=detachedItem.options;
+    menuStore.updateMenu(localMenu);
+    emit('close-modal');
 }
-
-const disableBtn=ref(false);
-const toggleAddNew = () => {
-        addNew.value=!addNew.value;
-       // disableBtn.value=!disableBtn.value;
+const getNew = (op) => {
+    addNew.value=false; 
+    const newOp = detachObject(op);
+    detachedItem.options.push(newOp);
+    newOption.name="";
+    newOption.required=false;
+    newOption.content=[];
+    newOption._id=uuidv4();
 }
 </script>
 <template>
@@ -55,32 +45,30 @@ const toggleAddNew = () => {
                 {{ localItem.name }}
             </div>
             <div>
-                <button class="btn add" @click="toggleAddNew">add option</button>
+                <button class="btn add"
+                    v-if="localItem.options.length"
+                    @click="addNew=!addNew">add option</button>
             </div>
         </div>
         <div class="form-body">
             <EditItemOption 
-                v-if="addNew"
-                @send-reset-option="resetOption"
-                :option="option"
+                v-if="detachedItem.options?.length ? addNew : true"
+                @create-new-option="getNew"
+                :option="newOption"
                 :is-open="false"
-                :item="localItem"
-                :menu="localMenu"
-                :section_id="section_id"/>
-          
+                :item="detachedItem"/>
             <EditItemOption
-                v-for="(op, i) in localItem.options" :key="op._id"
-                :option="op"                
-                :item="localItem"
-                :menu="localMenu"
-                :section_id="section_id"
+                v-for="(op, i) in detachedItem.options" :key="op._id"
+                :option="op" :item="detachedItem"               
+                :disable-val-btn="addNew"
                 :is-open="openIndex===i"
-                @toggle="toggleOpen(i)"
-                @close="closeOpen(i)"/>
+                @update-options="(getOptions) => detachedItem.options=getOptions"
+                @toggle="openIndex===i ? openIndex=-1 : openIndex=i"
+                @close="openIndex===i ? openIndex=-1 : openIndex=openIndex"/>
            
         </div>
         <div class="form-actions">
-            <button class="btn close" @click="submitOption">submit</button>
+            <button class="btn close" @click="submitChanges">Submit</button>
             <button class="btn close" @click="closeModal">cancel</button>
         </div>
     </div>

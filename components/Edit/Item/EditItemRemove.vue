@@ -1,6 +1,4 @@
 <script setup>
-import { reactive } from 'vue';
-
 const emit = defineEmits(['send-reset-remove','delete-remove']);
 const {remove, item_id, section_id, menu} = defineProps({
     remove: { type: Object, required: false },
@@ -17,6 +15,7 @@ const itemIndex = menu.sections[sectionIndex].items.findIndex(it => it._id === i
 const { nameInputRef, editName, focusNameInput } = useNameInput();
 
 const postEditRemove = () => {
+    console.log('p edit')
     editName.value=false;
     const removeIndex = menu.sections[sectionIndex].items[itemIndex].removes.findIndex((rem)=> rem._id === localRemove._id);
     localMenu.sections[sectionIndex].items[itemIndex].removes[removeIndex] = localRemove;   
@@ -24,6 +23,7 @@ const postEditRemove = () => {
 }
 
 const postNewRemove = (r) => {
+    console.log('p new')
     if(r.name){    
         localMenu.sections[sectionIndex].items[itemIndex].removes.push({
             name: r.name,
@@ -64,7 +64,7 @@ onMounted(()=>{
                             ref="nameInputRef"
                             v-model="localRemove.name"
                             @blur="isNew ? postNewRemove(localRemove) : postEditRemove"
-                            @keydown.enter="postNewRemove(localRemove)"
+                            @keydown.enter="isNew ? postNewRemove(localRemove) : postEditRemove"
                         />
                     </div>
         

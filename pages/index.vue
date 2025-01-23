@@ -1,18 +1,15 @@
 <template>
   <div class="restaurant-container">
       <div class="rest-info">
-          <h1>John's Restaurant</h1><br/>
-          <p>Phone: 667-940-8868 </p>
-          <p>johnkallis01@gmail.com</p>
+          <h1>{{ title }}</h1><br/>
+          <p v-for="(val,i) in info">{{ val }}</p>
+          <p></p>
       </div>
     </div>
 </template>
-<script>
-export default {
-data(){
-    return{}
-}
-}
+<script setup>
+const title=ref("John's Restaurant")
+const info=ref(['Phone: 667-940-8868','johnkallis01@gmail.com'])
 </script>
 <style>
 .restaurant-container {

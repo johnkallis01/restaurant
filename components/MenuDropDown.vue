@@ -1,10 +1,6 @@
 <script setup>
 const { data: menus } = await useFetch("/api/menus");
 const router = useRouter();
-function selectOption(id) {
-  console.log('select')
-  router.push("/edit/menus/"+id)
-}
 </script>
 <template>
     <ul class="dropdown-menu">
@@ -12,7 +8,7 @@ function selectOption(id) {
         <li 
             v-for="(menu, index) in menus" 
             :key="index" 
-            @click="selectOption(menu._id)"
+            @click="router.push('/edit/menus/'+menu._id)"
             class="dropdown-item"
         >{{ menu.name }}</li>
     </ul>

@@ -27,7 +27,11 @@ const postEditAddOn = () => {
 } 
 const postNewAddOn = (ao) => {
     if(ao.name){
-        localMenu.sections[sectionIndex].items[itemIndex].addOns.push(ao);
+        localMenu.sections[sectionIndex].items[itemIndex].addOns.push({
+            name: ao.name,
+            price: ao.price,
+            _id: ao._id,
+    });
         menuStore.updateMenu(localMenu);
         emit('send-reset-addOn');
         focusNameInput();
@@ -74,8 +78,9 @@ onMounted(()=>{
                     <input 
                         type="text" placeholder="name" ref="nameInputRef"
                         v-model="localAddOn.name"
-                        @blur="postEditAddOn"
+                        @blur="isNew ? postNewAddOn : postEditAddOn"
                         @keydown="tabToPrice"
+                        @keydown.enter="isNew ? postNewAddOn : postEditAddOn"
                     />
                 </div>
                 <div v-if="!editName">

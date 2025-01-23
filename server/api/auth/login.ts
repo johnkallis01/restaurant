@@ -6,11 +6,8 @@ export default defineEventHandler( async (event) => {
     const config = useRuntimeConfig();
     const SECRET_KEY = config.JWT_SECRET;
     const {email, password} = await readBody(event);
-    console.log('log in ')
-    console.log('email ',email)
-    console.log('password ', password)
+
     const user = await User.findOne({  email });
-    console.log('user')
     console.log(user)
 
     if(!user){throw createError({ statusCode: 401, message: "invalid email"})}
