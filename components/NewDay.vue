@@ -16,7 +16,6 @@ const getStart = (d) =>{
   emit('send-day',localDay);
 }
 const getEnd = (d)=>{
-  console.log(d)
   localDay.end=d;
   emit('send-day', localDay);
 }

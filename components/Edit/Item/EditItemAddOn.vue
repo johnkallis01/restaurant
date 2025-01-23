@@ -42,7 +42,6 @@ const postNewAddOn = (ao) => {
 
 const getAddOnPrice = (np) => {
     editPrice.value = false;
-    console.log('edit price')
     if(!isNew.value) {
         localAddOn.price = np;
         postEditAddOn;

@@ -35,7 +35,7 @@ const onInput = (event) => {
             :required="req"
             v-model="localName"
             :aria-label="'Enter '+ placeHolder"
-            @blur="onInput($event)"
+            @input="onInput($event)"
             />
         <label :for="placeHolder" :style="{'--label-bg-color': bgColor}">{{capitalizeFirstLetter(placeHolder)}}</label>
         <button class="eye-button" type="button" @click="togglePassword" v-if="password">

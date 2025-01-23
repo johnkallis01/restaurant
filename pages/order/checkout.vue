@@ -1,7 +1,7 @@
 <script setup>
 const cartStore = useCartStore();
 const authStore = useAuthStore();
-// const localUser=ref(authStore.getUser);
+
 const rules = {
     name: /^[a-zA-Z]{2,30}$/,
     zip: /^\d{5}$/,

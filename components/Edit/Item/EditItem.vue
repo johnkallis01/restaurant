@@ -61,7 +61,6 @@ const tabToName = (event)=>{
 const deleteItem = ()=>{
     localMenu.sections[sectionIndex].items.splice(itemIndex, 1);
     menuStore.updateMenu(localMenu);
-  //  console.log('delete item disabled')
 }
 const postItemEdit = (it) => {
     if(!isNew.value){

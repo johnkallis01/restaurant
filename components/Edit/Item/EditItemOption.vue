@@ -44,18 +44,10 @@ const deleteOptionContent = (val) => {
     if(index>=0){
         localOption.content.splice(index, 1);
         const optionIndex = localItem.options.findIndex((op)=> op._id === localOption._id);
-        // console.log(optionIndex)
-        // console.log(val)
         if(optionIndex>=0) {
             localItem.options[optionIndex] = localOption;
-            // console.log(optionIndex)
             emit('update-options', localItem.options)
-        }else{
-            console.log('op i out of range')
-        }
-        
-    }else{
-        console.log('index out of range')
+        } 
     }
     
     
@@ -66,7 +58,6 @@ const addValue = () => {
         editPrice.value=false;
         const detachContent=detachObject(newContent);
         localOption.content.push(detachContent);
-        console.log(localOption.content)
         newContent.name=""; newContent.price='000.00';
         const optionIndex = localItem.options.findIndex((op)=> {op._id === localOption._id});
         localItem.options[optionIndex]=localOption;

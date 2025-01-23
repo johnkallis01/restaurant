@@ -282,6 +282,7 @@ containers
 .item-name{
   display: flex;
   width: 100%;
+  text-wrap: nowrap;
 }
 .item-title .addon{
     border: 2px;

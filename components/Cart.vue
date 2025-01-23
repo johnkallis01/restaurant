@@ -7,7 +7,6 @@ const deleteItem=(i)=>{cartStore.removeItem(i);}
 <template>
     <div class="cart-container">
         <!-- <div class="triangle-border">
-            
         </div><div class="inner-triangle"></div> -->
         <div class="cart-title">
             <div class="item-name" @click="handelCheckout">{{ "Your Cart" }}</div>
@@ -17,14 +16,38 @@ const deleteItem=(i)=>{cartStore.removeItem(i);}
             </span>
         </div>
         <div class="cart-item-container">
-            <div v-for="(item, i) in cartItems" class="cart-item">
-                <button class="btn" @click="deleteItem(i)">
-                    <i class="mdi mdi-close"/>
-                    <span class="tooltip">delete</span>
-                </button>
-                <span class="cart-item-name">{{ item.name }}</span>
-                <span class="dotted-line"></span>
-                <span class="cart-item-price">{{ formatPrice(item.price) }}</span>
+            <div v-for="(item, i) in cartItems" >
+                <div class="cart-item">
+                    <button class="btn" @click="deleteItem(i)">
+                        <i class="mdi mdi-close"/>
+                        <span class="tooltip">delete</span>
+                    </button>
+                    <span class="cart-item-name">{{ item.name }}</span>
+                    <span class="dotted-line"></span>
+                    <span class="cart-item-price">{{ formatPrice(item.price) }}</span>
+                </div>
+                <div class="item-mods">
+                    <div class="item-options" 
+                        v-if="item.options.length"
+                        v-for="(op, j) in item.options" :key="op._id">
+                        {{ op.name + ": " + op.choice[0].name }}{{ op.choice[0].price>0 ? "- " +  formatPrice(op.choice[0].price) : null }}
+                    </div>
+                    <div class="item-addons" v-if="item.addOns.length">
+                        <span>{{ 'Add: '}}</span>
+                        <span class="addons">
+                            <div v-for="ao in item.addOns" :key="ao.name">{{ ao.name + " "}}{{  ao.price>0 ? formatPrice(ao.price) : '' }}</div>
+                        </span>
+                    </div>
+                    <div class="item-options" v-if="item.removes.length">
+                        <span>{{ 'No: '}}</span>
+                        <span v-for="r in item.removes" r.name>{{ r.name + " "}}</span>
+                    </div>
+                    <div class="item-options" 
+                        v-if="item.comments">
+                        <div>Comments:</div>
+                        <div>{{ item.comments }}</div>
+                    </div>
+                </div>
             </div>   
         </div>
         <div class="cart-actions">
@@ -35,8 +58,19 @@ const deleteItem=(i)=>{cartStore.removeItem(i);}
     </div>
 </template>
 <style scoped>
+.item-mods{
+    font-size: 14px;
+    margin-left: 45px;
+}
+.item-addons{
+    display: flex;
+    flex-direction: row;
+}
+.addons{
+    margin-left: 5px;
+}
 .triangle-border{
-    position: absolute;
+    position: relative;
     border-bottom: 22px solid black;
     border-left: 12px solid transparent;
     border-right: 12px solid transparent;
@@ -97,7 +131,7 @@ const deleteItem=(i)=>{cartStore.removeItem(i);}
     padding: 10px;
 }
 .cart-item-container{
-    border: 2px solid red;
+    overflow: auto;
     height: 75%;
 }
 .cart-item-name{
@@ -116,10 +150,11 @@ const deleteItem=(i)=>{cartStore.removeItem(i);}
 }
 .cart-actions{
     display: flex;
+    justify-content: flex-end;
     align-items: center;
-    padding: 2px;
+    padding: 4px;
     width: 100%;
     height: 10%;
-    border: 2px solid green;
+    border-top: 2px solid black;
 }
 </style>

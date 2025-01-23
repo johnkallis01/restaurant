@@ -18,7 +18,6 @@ const validationStatus= reactive({
 });
 const isDisabled = computed(()=>{
   for(const val in validationStatus){
-    console.log(validationStatus[val])
     if(!!validationStatus[val]);
     else return false;
   }
@@ -33,15 +32,16 @@ const user= reactive({
   confirmPassword: '',
 })
 const validateInput = (rule, value, inputVar) =>{
-  if(rules[rule] && value.length){
-    validationStatus[inputVar] = rules[rule].test(value);
-    if(validationStatus[inputVar]) user[inputVar] = value;
-  }
   if(inputVar==='confirmPassword') {
     validationStatus['confirmPassword'] = user['password'] === value;
     validationStatus['password']=validationStatus['confirmPassword'];
     if(!validationStatus['confirmPassword']) validationStatus['password']=false;
   }
+  if(rules[rule] && value.length){
+    validationStatus[inputVar] = rules[rule].test(value); //test input
+    if(validationStatus[inputVar]) user[inputVar] = value; //if good assign to user
+  }
+  
 }
 const fNameRef=ref(null);
 const pwRef=ref(null);
@@ -63,10 +63,6 @@ const register = async () => {
       }
     }
 }
-// watch(() => isDisabled,
-//   ()=>
-// {
-// })
 </script>
 <template>
   <div class="container">

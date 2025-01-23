@@ -15,7 +15,6 @@ const itemIndex = menu.sections[sectionIndex].items.findIndex(it => it._id === i
 const { nameInputRef, editName, focusNameInput } = useNameInput();
 
 const postEditRemove = () => {
-    console.log('p edit')
     editName.value=false;
     const removeIndex = menu.sections[sectionIndex].items[itemIndex].removes.findIndex((rem)=> rem._id === localRemove._id);
     localMenu.sections[sectionIndex].items[itemIndex].removes[removeIndex] = localRemove;   
@@ -23,7 +22,6 @@ const postEditRemove = () => {
 }
 
 const postNewRemove = (r) => {
-    console.log('p new')
     if(r.name){    
         localMenu.sections[sectionIndex].items[itemIndex].removes.push({
             name: r.name,

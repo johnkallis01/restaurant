@@ -12,10 +12,7 @@ const closeCart = (event) => {
     const buttonEl = childRef.value?.cartButtonRef;
     if ( cartEl && ! cartEl.contains(event.target) &&
       buttonEl && !buttonEl.contains(event.target)
-    ) {
-        console.log('click detected')
-        cartStore.closeCart()
-      }
+    )cartStore.closeCart();
   }
 }
 onMounted(()=>{

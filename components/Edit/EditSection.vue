@@ -44,12 +44,9 @@ const submitEditSectionDescription = (s) => {
 const deleteSection = ()=>{
     localMenu.sections.splice(sectionIndex, 1);
     menuStore.updateMenu(localMenu);
-    //console.log('delete section disabled')
 }
 const postNewSection = (s) => {
-    console.log('postNewSection')
     if(s.name){
-     //   console.log('if section name')
      localMenu.sections.push(s);
         menuStore.updateMenu(localMenu);
         emit('send-new-section-flag');  

@@ -28,11 +28,8 @@ provide('focusLoginButton', focusLoginButton);
 const toggleCart = ()=>{cartStore.toggleCart();}
 
 const focusLogin = () =>{
-  console.log('fL', loggedIn.value)
-  if(!loggedIn.value) {
-    console.log('not loggedIN')
-    loginButton.value.focus();
-  }
+  if(!loggedIn.value) loginButton.value.focus();
+  
 }
 
 const toggleDropdown = () => {dropdown.value = !dropdown.value;}
