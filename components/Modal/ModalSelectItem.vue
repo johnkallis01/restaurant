@@ -18,11 +18,11 @@ const selectedItem = reactive({
     removes: [],
     options: detachedItem.options.map((op)=> ({_id: op._id, name: op.name,req: op.required, choice: []})),
     comments: '',
-})
+});
 const itemPrice=(item) => {
     const total=Number(item.price);
     const addOnTotal = item.addOns.reduce((subTotal, ao)=> {return subTotal+Number(ao.price)},0);
-    console.log(item.options)
+    // console.log(item.options)
     const opTotal=item?.options.reduce((subTotal, op)=>{return subTotal+Number(op.choice[0]?.price)?Number(op.choice[0]?.price):0},0);
     return total+addOnTotal+opTotal;
 }
@@ -80,7 +80,6 @@ watch(
   }
 );
 onMounted(()=>{
-    console.log(localItem.options)
     openFirstOAR.value; addHasValue.value;
     if(commentsFlag.value){
         focusComment();

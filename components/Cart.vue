@@ -12,7 +12,7 @@ const deleteItem=(i)=>{cartStore.removeItem(i);}
             <div class="item-name" @click="handelCheckout">{{ "Your Cart" }}</div>
             <span class="item-price">
                 <span class="total">Total:</span>
-                ${{ cartStore.getTotal }}
+                <span>{{"$"+ cartStore.getTotal }}</span>
             </span>
         </div>
         <div class="cart-item-container">

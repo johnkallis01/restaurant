@@ -44,12 +44,12 @@ onBeforeUnmount(() => {
     <header class="header">
       <div class="left-btns">
         <ClientOnly>
-          <template v-if="loggedIn">
-            <button @click="toggleCart" ref="cartButtonRef" class="btn cart">
-              <i class="mdi mdi-cart"/>
-              <span class="tooltip" v-if="!cartStore.items.length">add to order to open cart</span>
-            </button>
-          </template>
+
+          <button @click="toggleCart" ref="cartButtonRef" class="btn cart-btn" v-if="loggedIn">
+            <i class="mdi mdi-cart"/>
+            <span class="tooltip" v-if="!cartStore.items.length">add to order to open cart</span>
+          </button>
+
         </ClientOnly>
         <nuxt-link to="/">
           <button class="btn-link">Home</button>
@@ -85,7 +85,7 @@ onBeforeUnmount(() => {
     </header>
 </template>
 <style scoped>
-.cart{
+.cart-btn{
   padding: 2px 7px;
   border-radius: 15px;
 }

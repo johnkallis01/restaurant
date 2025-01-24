@@ -520,12 +520,11 @@ containers
     animation: slide-out 0.4s;
   }
   .slide-fade-enter-from{
-    opacity: 1;
     transform: translateX(-50px);
   }
   .slide-fade-leave-to {
     transform: translateX(50px);
-    opacity: 1;
+
   }
   @keyframes slide-in {
     25%{

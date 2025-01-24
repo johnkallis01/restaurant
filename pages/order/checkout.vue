@@ -2,37 +2,15 @@
 const cartStore = useCartStore();
 const authStore = useAuthStore();
 
-const rules = {
-    name: /^[a-zA-Z]{2,30}$/,
-    zip: /^\d{5}$/,
-}
-const validationStatus= reactive({
-  firstName: null,
-  lastName: null,
-  phone: null,
-  email: null,
-  password: null,
-  confirmPassword: null,
-});
-const isDisabled = computed(()=>{
-  for(const val in validationStatus){
-    console.log(validationStatus[val])
-    if(!!validationStatus[val]);
-    else return false;
-  }
-  return true;
-})
-const validateInput = (rule, value, inputVar) =>{
-  if(rules[rule] && value.length){
-    validationStatus[inputVar] = rules[rule].test(value);
-    if(validationStatus[inputVar]) user[inputVar] = value;
-  }
-  if(inputVar==='confirmPassword') {
-    validationStatus['confirmPassword'] = user['password'] === value;
-    validationStatus['password']=validationStatus['confirmPassword'];
-    if(!validationStatus['confirmPassword']) validationStatus['password']=false;
-  }
-}
+const user = cartStore.getUser;
+// const user= reactive({
+//   firstName: null,
+//   lastName: null,
+//   phone: null,
+//   email: null,
+//   password: null,
+//   confirmPassword: null,
+// });
 // {
 //         firstName: user['firstName'],
 //         lastName: user['lastName'],
@@ -40,11 +18,13 @@ const validateInput = (rule, value, inputVar) =>{
 //         email: user['email'],
 //         password: user['password'],
 //        }
-
+onMounted(async () =>  {
+  await authStore.fetchUser();
+})
 </script>
 <template>
     <div class="container">
-    <div class="form-title">{{  ", here is your CheckOut"}}</div>
+    <div class="form-title">{{ user.firstName + ", here is your CheckOut"}}</div>
       <div class="form-subtitle">Enter Payment Info below</div>
         <!-- <form>
           <TextField class="input-field" :req="true" ref="fNameRef"
