@@ -73,29 +73,6 @@ const deleteItem=(i)=>{cartStore.removeItem(i);}
 .addons{
     margin-left: 5px;
 }
-.triangle-border{
-    position: relative;
-    border-bottom: 22px solid black;
-    border-left: 12px solid transparent;
-    border-right: 12px solid transparent;
-    height: 0;
-    width: 0;
-    top: -22px;
-    left: 5px;
-    z-index: 100;
-}
-.inner-triangle {
-    position: absolute;
-    z-index: 110;
-    left: 6.5px;
-    top: -20px;
-    height: 0;
-    width: 0;
-    font-size: 0px; line-height: 0%; width: 0px;
-    border-bottom: 21px solid white;
-    border-left: 10px solid transparent;
-    border-right: 10px solid transparent;
-}
 .total{
     font-size: 16px;
 }
@@ -126,6 +103,7 @@ const deleteItem=(i)=>{cartStore.removeItem(i);}
     height: 15%;
     padding: 5px;
     border-bottom: 2px solid black;
+    overflow: hidden;
 }
 .cart-item{
     display: flex;
@@ -160,5 +138,6 @@ const deleteItem=(i)=>{cartStore.removeItem(i);}
     width: 100%;
     height: 10%;
     border-top: 2px solid black;
+    overflow: hidden;
 }
 </style>

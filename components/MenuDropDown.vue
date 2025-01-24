@@ -4,7 +4,7 @@ const router = useRouter();
 </script>
 <template>
     <ul class="dropdown-menu">
-        <li class="dropdown-item" @click="selectOption('new')">New Menu</li>
+        <li class="dropdown-item" @click="router.push('/edit/menus/new')">New Menu</li>
         <li 
             v-for="(menu, index) in menus" 
             :key="index" 

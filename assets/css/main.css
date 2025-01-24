@@ -167,6 +167,7 @@ containers
     height: 30px;
     font-size: 12px;
     margin-left: 40px;
+    overflow: hidden;
 }
 .section-items{   
     display: flex;
@@ -187,6 +188,7 @@ containers
     border-radius: 15px;
     box-sizing: border-box;
     border: 2px solid black;
+    overflow: hidden;
 }
 /* item title classes */
 
@@ -264,6 +266,7 @@ containers
     flex-direction: row;
     padding: 6px 0;
     width: 100%;
+    
 }
 .button-name{
     display: flex;  
@@ -573,8 +576,8 @@ containers
     }
     .new-menu-container{
         width: 100vw;
-        height: 90vh;
-        border-radius: 0;
+        border-radius: 0px;
+        overflow: auto;
     }
     .section-items{   
         width: 100vw;
