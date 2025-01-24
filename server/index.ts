@@ -10,5 +10,4 @@ export default async (_nitroApp: Nitro ) => {
     }  catch(e){
         console.error('error connecting:::: ', e)
     }
-    
 }

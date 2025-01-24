@@ -1,12 +1,11 @@
-import vuetify, { transformAssetUrls } from 'vite-plugin-vuetify';
+import { transformAssetUrls } from 'vite-plugin-vuetify';
 export default defineNuxtConfig({
   ssr: true,
   build: {
-    transpile: ['vuetify'],
   },
   css: ['@/assets/css/main.css',],
   plugins: [
-    {src: '~/plugins/auth.js', mode: 'client'}
+    '~/plugins/initAuth.js'
   ],
   components: {
     dirs: [
@@ -15,11 +14,6 @@ export default defineNuxtConfig({
   },
   modules: [
     '@pinia/nuxt',
-    (_options, nuxt) => {
-      nuxt.hooks.hook('vite:extendConfig', (config) => {
-        config.plugins.push(vuetify({ autoImport: true }))
-      })
-    },
   ],
   runtimeConfig: {
     MONGO_DB_URI: process.env.MONGO_DB_URI,

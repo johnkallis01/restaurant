@@ -1,4 +1,5 @@
 <script setup>
+definePageMeta({middleware: 'auth',});
 const menuStore = useMenuStore();
 let now = new Date();
 const today = ref({

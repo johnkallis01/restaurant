@@ -2,10 +2,9 @@
   "name": "nuxt-app",
   "private": true,
   "type": "module",
-  "engines":{
+  "engines": {
     "node": "22.12.0"
   },
-
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
@@ -21,14 +20,15 @@
     "bcrypt": "^5.1.1",
     "dotenv": "^16.4.7",
     "jsonwebtoken": "^9.0.2",
+    "jwt-decode": "^4.0.0",
     "mongodb": "^6.12.0",
     "mongoose": "^8.9.0",
-    "nuxt": "^3.14.1592",
+    "nuxt": "^3.15.2",
     "pinia": "^2.3.0",
     "uuid": "^11.0.3",
+    "vite-plugin-vuetify": "^2.0.4",
     "vue": "latest",
     "vue-router": "latest",
-    "vite-plugin-vuetify": "^2.0.4",
     "vuetify": "^3.7.5"
   }
 }

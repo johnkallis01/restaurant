@@ -5,7 +5,6 @@ useHead({
 const cartStore = useCartStore();
 const cartRef=ref(null);
 const childRef=ref(null);
-
 const closeCart = (event) => {
   if(cartStore.isCartOpen){
     const cartEl = cartRef.value?.$el;
@@ -15,8 +14,10 @@ const closeCart = (event) => {
     )cartStore.closeCart();
   }
 }
+
 onMounted(()=>{
     document.addEventListener('click', closeCart);
+    
 });
 onBeforeUnmount(() => {
     document.removeEventListener('click', closeCart);

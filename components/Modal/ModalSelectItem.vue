@@ -20,12 +20,12 @@ const selectedItem = reactive({
     comments: '',
 });
 const itemPrice=(item) => {
-    console.log('item price')
+    // console.log('item price')
     const total=Number(item.price);
     const addOnTotal = item.addOns.reduce((subTotal, ao)=> {return subTotal+Number(ao.price)},0);
     // console.log(item.options)
     const opTotal=item?.options.reduce((subTotal, op)=>{return subTotal+Number(op.choice[0]?.price)?Number(op.choice[0]?.price):0},0);
-    console.log(total+addOnTotal+opTotal)
+    // console.log(total+addOnTotal+opTotal)
     return total+addOnTotal+opTotal;
 }
 const addItem = ()=>{
@@ -65,12 +65,8 @@ const openFirstOAR = computed(()=>{
     else commentsFlag.value=true;
 })
 const focusComment = () => {
-  console.log('commentsFlag is true!', commentsRef.value);
-    if (commentsRef.value !== null) {
-    console.log('array?')
-    nextTick(() => {
-        commentsRef.value.focus();     
-    })}
+//   console.log('commentsFlag is true!', commentsRef.value);
+    if (commentsRef.value !== null) nextTick(() => commentsRef.value.focus());
    
 };
 watch(

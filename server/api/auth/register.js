@@ -1,4 +1,4 @@
-import  User  from '~~/server/models/User.model';
+import  User  from '~/server/models/User.model';
 import bcrypt from 'bcrypt';
 export default defineEventHandler(async (event) => {
   const body = await readBody(event)

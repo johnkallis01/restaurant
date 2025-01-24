@@ -10,13 +10,13 @@ defineExpose({cartButtonRef});
 const closeDropdown = (event) => {
   if (dropdownRef.value && !dropdownRef.value.$el?.contains(event.target)) dropdown.value=false;
 }
-
 const logout = () => {
   authStore.logout();
+  name.value="";
   router.push('/auth/login');
 };
 const loggedIn = computed(() => {
-  cartStore.closeCart();
+  authStore.loadTokenFromLocalStorage;
   return !!authStore.getToken;
 });
 const loginButton = ref(null);
@@ -31,8 +31,27 @@ const focusLogin = () =>{
   if(!loggedIn.value) loginButton.value.focus();
   
 }
+const name = ref('');
+watch(
+  ()=>loggedIn.value,
+  () => {
+    if(loggedIn.value){
+      if(!name.value) {
+        authStore.loadNameFromLocalStorage();
+        name.value=authStore.getName;
+        console.log(name.value)
+    }
+  }
+});
 
 const toggleDropdown = () => {dropdown.value = !dropdown.value;}
+onBeforeMount(async () => {
+  console.log('obm',authStore.getName)
+  await authStore.fetchUser();
+  authStore.loadNameFromLocalStorage();
+  console.log(authStore.getName)
+  name.value=authStore.getName;
+});
 onMounted(()=>{
     document.addEventListener('click', closeDropdown);
 });
@@ -44,13 +63,14 @@ onBeforeUnmount(() => {
     <header class="header">
       <div class="left-btns">
         <ClientOnly>
-
+      
           <button @click="toggleCart" ref="cartButtonRef" class="btn cart-btn" v-if="loggedIn">
             <i class="mdi mdi-cart"/>
             <span class="tooltip" v-if="!cartStore.items.length">add to order to open cart</span>
           </button>
-
+          <div class="welcome" v-if="loggedIn">{{"Welcome, " + name}}</div>
         </ClientOnly>
+        <span>{{  }}</span>
         <nuxt-link to="/">
           <button class="btn-link">Home</button>
         </nuxt-link>
@@ -85,6 +105,9 @@ onBeforeUnmount(() => {
     </header>
 </template>
 <style scoped>
+.welcome{
+  text-wrap: nowrap;
+}
 .cart-btn{
   padding: 2px 7px;
   border-radius: 15px;

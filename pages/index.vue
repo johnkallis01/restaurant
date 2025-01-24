@@ -1,3 +1,7 @@
+<script setup>
+const title=ref("John's Restaurant")
+const info=ref(['Phone: 667-940-8868','johnkallis01@gmail.com'])
+</script>
 <template>
   <div class="restaurant-container">
       <div class="rest-info">
@@ -7,10 +11,6 @@
       </div>
     </div>
 </template>
-<script setup>
-const title=ref("John's Restaurant")
-const info=ref(['Phone: 667-940-8868','johnkallis01@gmail.com'])
-</script>
 <style>
 .restaurant-container {
   background-image: url("https://thumbs.dreamstime.com/b/night-scene-empty-table-restaurant-background-ads-featuring-wooden-foreground-blurred-under-lights-setting-provides-337072366.jpg");

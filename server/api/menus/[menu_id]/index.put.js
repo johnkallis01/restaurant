@@ -1,4 +1,3 @@
-
 import Menu from "~~/server/models/Menu.model";
 export default defineEventHandler(async (event) => {
 	const body = await readBody(event);

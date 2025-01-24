@@ -1,14 +1,14 @@
 export function usePriceFormatter(){
     const formatPrice=(price)=>{
-        console.log('price formatter', price)
+        // console.log('price formatter', price)
         price=String(price);
         if(price[0] === "0") {
             price = price.replace(0,"");
             if(price[0] === "0") price = price.replace(0,"");
         }
         const index = price.indexOf('.');
-        console.log(index)
-        console.log(price)
+        // console.log(index)
+        // console.log(price)
         if(index > 0){
             if(price[index]===price[price.length-3]) return "$" + price; 
             else if (price[index]===price[price.length-2]) return "$" + price+"0";

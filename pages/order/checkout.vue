@@ -1,8 +1,14 @@
 <script setup>
+definePageMeta({middleware: 'auth',});
+useHead({
+  title: "John's Restaurant - Checkout"
+});
 const cartStore = useCartStore();
 const authStore = useAuthStore();
 
-const user = cartStore.getUser;
+
+const email=authStore.getUser.email;
+const checkoutString = firstName+", time to check out"
 // const user= reactive({
 //   firstName: null,
 //   lastName: null,
@@ -18,15 +24,15 @@ const user = cartStore.getUser;
 //         email: user['email'],
 //         password: user['password'],
 //        }
-onMounted(async () =>  {
-  await authStore.fetchUser();
+onMounted(() => {
+  authStore.fetchUser;
 })
 </script>
 <template>
     <div class="container">
-    <div class="form-title">{{ user.firstName + ", here is your CheckOut"}}</div>
+    <div class="form-title">{{ firstName }}</div>
       <div class="form-subtitle">Enter Payment Info below</div>
-        <!-- <form>
+        <form> <!--
           <TextField class="input-field" :req="true" ref="fNameRef"
             :is-valid="validationStatus['firstName']"
             @send-input="validateInput('name', $event, 'firstName')"
@@ -55,10 +61,10 @@ onMounted(async () =>  {
           <TextField class="input-field" :req="true" ref="cpwRef" :password="true"
             :is-valid="validationStatus['confirmPassword']"
             @send-input="validateInput('password', $event, 'confirmPassword')"
-            place-holder="confirm password"/>
-        </form> -->
+            place-holder="confirm password"/> -->
+        </form> 
         <div class="form-actions">
-          <button class="btn register" :disabled="!isDisabled" @click="register">Register</button>
+          <!-- <button class="btn register" :disabled="!isDisabled" @click="register">Register</button> -->
         </div>
   </div>
 </template>

@@ -1,4 +1,5 @@
 <script setup>
+definePageMeta({middleware: 'auth',});
 const { data: menus } = await useFetch("/api/menus");
 const route = useRoute();
 const menu = computed(()=>{
