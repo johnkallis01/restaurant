@@ -30,12 +30,16 @@ const deleteItem=(i)=>{cartStore.removeItem(i);}
                     <div class="item-options" 
                         v-if="item.options.length"
                         v-for="(op, j) in item.options" :key="op._id">
-                        {{ op.name + ": " + op.choice[0].name }}{{ op.choice[0].price>0 ? "- " +  formatPrice(op.choice[0].price) : null }}
+                        {{ Number(op.choice[0].price)>0 ? formatPrice(op.choice[0].price) + " - " : null }}
+                        {{ op.name + ": " + op.choice[0].name }}
                     </div>
                     <div class="item-addons" v-if="item.addOns.length">
                         <span>{{ 'Add: '}}</span>
                         <span class="addons">
-                            <div v-for="ao in item.addOns" :key="ao.name">{{ ao.name + " "}}{{  ao.price>0 ? formatPrice(ao.price) : '' }}</div>
+                            <div v-for="ao in item.addOns" :key="ao.name">
+                                {{  Number(ao.price)>0 ? formatPrice(ao.price) + " - ": null }}
+                                {{ ao.name + " "}}
+                            </div>
                         </span>
                     </div>
                     <div class="item-options" v-if="item.removes.length">
