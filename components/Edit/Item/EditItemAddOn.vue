@@ -41,7 +41,7 @@ const postNewAddOn = (ao) => {
 const getAddOnPrice = (np) => {
     editPrice.value = false;
     localAddOn.price = np;
-    if(!isNew.value) postEditAddOn;
+    if(!isNew.value) postEditAddOn();
 } 
 onMounted(()=>{
     if(!localAddOn.name){

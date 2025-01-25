@@ -92,7 +92,6 @@ export const useAuthStore = defineStore('auth', {
                             Authorization: `Bearer ${this.token}`,
                         },
                     });
-
                     this.user = response;
                     if(this.user) {
                         // console.log(this.user.firstName)
@@ -123,7 +122,6 @@ export const useAuthStore = defineStore('auth', {
                     this.clearAuth();
                 }
             }
-           
         },
         loadTokenFromLocalStorage(){
             const token = localStorage.getItem('authToken');
