@@ -26,6 +26,6 @@ export const useCartStore = defineStore('cart', {
         },
         closeCart(){
             this.isCartOpen=false;
-        }
+        },
     }
 })

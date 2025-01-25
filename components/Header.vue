@@ -39,17 +39,17 @@ watch(
       if(!name.value) {
         authStore.loadNameFromLocalStorage();
         name.value=authStore.getName;
-        console.log(name.value)
+        // console.log(name.value)
     }
   }
 });
 
 const toggleDropdown = () => {dropdown.value = !dropdown.value;}
 onBeforeMount(async () => {
-  console.log('obm',authStore.getName)
+  // console.log('obm',authStore.getName)
   await authStore.fetchUser();
   authStore.loadNameFromLocalStorage();
-  console.log(authStore.getName)
+  // console.log(authStore.getName)
   name.value=authStore.getName;
 });
 onMounted(()=>{

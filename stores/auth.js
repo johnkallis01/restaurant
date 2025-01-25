@@ -7,12 +7,14 @@ export const useAuthStore = defineStore('auth', {
         token: null,
         name: null,
         isAuthenticated: false,
+        isAdmin: false,
     }),
     getters: {
         getUser: (state) => state.user,
         getName: (state)=>state.name,
         getToken: (state) => state.token,
         getLoggedIn: (state) => state.isAuthenticated,
+        getIsAdmin: (state) => state.isAdmin,
     },
     actions: {
         async login(credentials) {
@@ -55,7 +57,7 @@ export const useAuthStore = defineStore('auth', {
         },
         initialize(){
             if( process.client ){
-                console.log('client init')
+                // console.log('client init')
                 const token=localStorage.getItem('authToken');
                 if( token && !isTokenExpired(token)){
                     this.token=token;
@@ -85,10 +87,10 @@ export const useAuthStore = defineStore('auth', {
 
                     this.user = response;
                     if(this.user) {
-                        console.log(this.user.firstName)
+                        // console.log(this.user.firstName)
                         localStorage.setItem('userName', this.user.firstName);
                         const name = localStorage.getItem('userName');
-                        console.log(name)
+                        // console.log(name)
                     }
                     
                 } catch (error) {
@@ -104,7 +106,7 @@ export const useAuthStore = defineStore('auth', {
             if(this.token){
                 const name = localStorage.getItem('userName');
                 if(name){
-                    console.log(name)
+                    // console.log(name)
                     this.name=name;
                 }else{
                     this.clearAuth();

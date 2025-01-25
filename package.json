@@ -28,7 +28,6 @@
     "uuid": "^11.0.3",
     "vite-plugin-vuetify": "^2.0.4",
     "vue": "latest",
-    "vue-router": "latest",
-    "vuetify": "^3.7.5"
+    "vue-router": "latest"
   }
 }

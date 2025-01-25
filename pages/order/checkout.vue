@@ -7,8 +7,7 @@ const cartStore = useCartStore();
 const authStore = useAuthStore();
 
 
-const email=authStore.getUser.email;
-const checkoutString = firstName+", time to check out"
+
 // const user= reactive({
 //   firstName: null,
 //   lastName: null,
@@ -24,13 +23,19 @@ const checkoutString = firstName+", time to check out"
 //         email: user['email'],
 //         password: user['password'],
 //        }
-onMounted(() => {
-  authStore.fetchUser;
-})
+const name = ref('');
+const checkoutStr = ref('Checkout for ');
+onBeforeMount(async () => {
+  // console.log('obm',authStore.getName)
+  await authStore.fetchUser();
+  authStore.loadNameFromLocalStorage();
+  console.log(authStore.getName)
+  name.value=authStore.getName;
+});
 </script>
 <template>
     <div class="container">
-    <div class="form-title">{{ firstName }}</div>
+    <div class="form-title">{{ checkoutStr + name }}</div>
       <div class="form-subtitle">Enter Payment Info below</div>
         <form> <!--
           <TextField class="input-field" :req="true" ref="fNameRef"
@@ -64,10 +69,13 @@ onMounted(() => {
             place-holder="confirm password"/> -->
         </form> 
         <div class="form-actions">
-          <!-- <button class="btn register" :disabled="!isDisabled" @click="register">Register</button> -->
+           <button class="btn register" @click="register">Register</button>
         </div>
   </div>
 </template>
 <style scoped>
-
+.container{
+  height: 100%;
+  width: 100%;
+}
 </style>

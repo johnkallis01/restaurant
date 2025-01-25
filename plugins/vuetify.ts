@@ -8,5 +8,5 @@ export default defineNuxtPlugin((app) => {
   const vuetify = createVuetify({
     // ... your configuration
   })
-  app.vueApp.use(vuetify)
+ app.vueApp.use(vuetify)
 })

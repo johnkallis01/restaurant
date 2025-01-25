@@ -25,7 +25,8 @@ const postMenu = async () => {
     if(localMenu.name){
       try{
         const res = await menuStore.postMenu(localMenu);
-        router.push('/edit/menus/'+res.res._id);
+        console.log(res.res._id)
+        router.push('/edit/menus/'+ res.res._id);
       }catch(error){console.log("menu didn't post:", error)}
     }
     else{console.warn('name req');}
