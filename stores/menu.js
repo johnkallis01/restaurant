@@ -42,6 +42,7 @@ export const useMenuStore = defineStore('menu', {
           })
           return response;
         }catch{
+          console.log('error')
           useAuthStore().logout();
         }
         
@@ -58,6 +59,7 @@ export const useMenuStore = defineStore('menu', {
             body: menu,
           });
         }catch{
+          console.log('error')
           useAuthStore().logout();
         }
        
@@ -72,6 +74,7 @@ export const useMenuStore = defineStore('menu', {
           headers: {authorization: `Bearer ${token}`},
         })
       }catch{
+        console.log('error')
         useAuthStore().logout();
       }
       

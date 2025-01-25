@@ -1,5 +1,5 @@
 <script setup>
-definePageMeta({middleware: 'auth',});
+definePageMeta({middleware: ['admin','auth']});
 const newMenu = reactive({
   "name":"",
   "days":[

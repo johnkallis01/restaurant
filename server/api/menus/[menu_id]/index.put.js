@@ -13,14 +13,16 @@ export default defineEventHandler(async (event) => {
 		// console.log(email)
 		const user = await User.findOne({  email });
 		isAdmin = user.isAdmin;
+		console.log('is admin')
 		// console.log('user', user)
 	}catch (error){
 		throw createError({ statusCode: 401, message: 'Invalid or expired token' });
 	}
 	// console.log(isAdmin)
 	if(isAdmin){
+		console.log('edit /api/menu/id')
 		const body = await readBody(event);
-		// console.log(body)	
+			
 		const id = event.context.params?.menu_id;
 		// console.log('put', id)
 		try {

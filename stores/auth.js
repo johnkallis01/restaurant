@@ -113,7 +113,6 @@ export const useAuthStore = defineStore('auth', {
            
         },
         loadNameFromLocalStorage(){
-            console.log('load name')
             this.loadTokenFromLocalStorage();
             if(this.token){
                 const name = localStorage.getItem('userName');
@@ -131,8 +130,8 @@ export const useAuthStore = defineStore('auth', {
             if(token && !isTokenExpired(token)){
                 this.token=token;
                 localStorage.setItem('authToken', token);
-                console.log(this.isAdmin)
-                console.log(localStorage.getItem('isAdmin'))
+                console.log('isadmin',this.isAdmin)
+                // console.log(localStorage.getItem('isAdmin'))
                 if(localStorage.getItem('isAdmin')){
                     this.isAdmin=true;
                 }
