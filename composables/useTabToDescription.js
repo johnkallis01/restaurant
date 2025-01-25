@@ -4,7 +4,7 @@ export function useTabToDescription() {
     const tabToDescription = (event)=>{
         if(event.key==="Tab"){
             event.preventDefault();
-            focusDescriptionInput();
+            focusDescriptionInput();    
         }
     };
     return { tabToDescription, descriptionInputRef, editDescription, focusDescriptionInput};

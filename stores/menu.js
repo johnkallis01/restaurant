@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia';
+import { useAuthStore } from './auth.js'
 
 export const useMenuStore = defineStore('menu', {
   state: () => ({
@@ -32,33 +33,48 @@ export const useMenuStore = defineStore('menu', {
     async postMenu(menu){
       const token = localStorage.getItem('authToken');
       if(token){
-         console.log('post menu')
-        const response = await $fetch('/api/menus/',{
-          method: 'POST',
-          headers: {authorization: `Bearer ${token}`},
-          body: menu,
-        })
-        return response;
+        console.log('post menu')
+        try{
+          const response = await $fetch('/api/menus/',{
+            method: 'POST',
+            headers: {authorization: `Bearer ${token}`},
+            body: menu,
+          })
+          return response;
+        }catch{
+          useAuthStore().logout();
+        }
+        
       }
     },
     async updateMenu(menu){
       // console.log('update')
       const token = localStorage.getItem('authToken');
       if(token){
-        const response = await $fetch('/api/menus/'+menu._id,{
-          method: 'PUT',
-          headers: {authorization: `Bearer ${token}`},
-          body: menu,
-        });
+        try{
+          const response = await $fetch('/api/menus/'+menu._id,{
+            method: 'PUT',
+            headers: {authorization: `Bearer ${token}`},
+            body: menu,
+          });
+        }catch{
+          useAuthStore().logout();
+        }
+       
       }
     },
     async deleteMenu(id){
       // console.log('delete menu');
       const token = localStorage.getItem('authToken');
-      const response = await $fetch('/api/menus/'+id,{
-        method: 'DELETE',
-        headers: {authorization: `Bearer ${token}`},
-      })
+      try{
+        const response = await $fetch('/api/menus/'+id,{
+          method: 'DELETE',
+          headers: {authorization: `Bearer ${token}`},
+        })
+      }catch{
+        useAuthStore().logout();
+      }
+      
     }
   },
 });

@@ -27,27 +27,27 @@ const isNew = ref(false);
 
 const getNewItemFlag = () => {addItem.value=false;}
 
-const postSectionEdit = (s) => {
+const postSectionEdit = (str) => {
     if(!isNew.value){
-        localMenu.sections[sectionIndex]=s;
+        localMenu.sections[sectionIndex]=localSection;
         menuStore.updateMenu(localMenu);
-    }else postNewSection(s);
-}
-const submitEditSectionName = (s) => {
-    editName.value = false;
-    if(!isNew.value) postSectionEdit(s);
-};
-const submitEditSectionDescription = (s) => { 
-    editDescription.value = false; 
-    if(!isNew.value) postSectionEdit(s);
+    }
+    switch(str){
+        case 'name':
+            editName.value=false;
+            break;
+        case 'description':
+            editDescription.value=false;
+            break;
+    }
 }
 const deleteSection = ()=>{
     localMenu.sections.splice(sectionIndex, 1);
     menuStore.updateMenu(localMenu);
 }
-const postNewSection = (s) => {
-    if(s.name){
-     localMenu.sections.push(s);
+const postNewSection = () => {
+    if(localSection.name){
+        localMenu.sections.push(localSection);
         menuStore.updateMenu(localMenu);
         emit('send-new-section-flag');  
     }
@@ -74,11 +74,11 @@ onMounted(()=>{
 <template>
     <div class="section-container">
         <div class="section-name">
-            <button class="btn delete" @click="postNewSection(localSection)" v-if="isNew">
+            <button class="btn delete" @click="postNewSection" v-if="isNew">
                 <i class="mdi mdi-plus"/>
                 <span class="tooltip">add section</span>
             </button>
-            <button class="btn delete" @click="deleteSection(localSection)" v-else>
+            <button class="btn delete" @click="deleteSection" v-else>
                 <i class="mdi mdi-close"/>
                 <span class="tooltip">delete section</span>
             </button>
@@ -88,8 +88,8 @@ onMounted(()=>{
                         type="text"
                         ref="nameInputRef"
                         v-model="localSection.name"
-                        @blur="submitEditSectionName(localSection)"
-                        @keydown.enter="postNewSection(localSection)"
+                        @blur="isNew ? editName=false : postSectionEdit('name')"
+                        @keydown.enter="isNew ? postNewSection : postSectionEdit('name')"
                         @keydown=tabToDescription
                     />
                 </div>
@@ -112,8 +112,7 @@ onMounted(()=>{
                         class="input-description"
                         ref="descriptionInputRef"
                         v-model="localSection.description"
-                        @keydown.enter="postNewSection(localSection)"
-                        @blur="submitEditSectionDescription(localSection)"
+                        @blur="isNew ? (localSection.name ? postNewSection : editDesciption=false) : postSectionEdit('description')"
                     />
                 </div>
             </template>

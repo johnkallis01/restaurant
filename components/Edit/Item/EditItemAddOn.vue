@@ -15,9 +15,10 @@ const isNew = ref(false);
 
 const sectionIndex = localMenu.sections.findIndex(sec => sec._id === section_id);
 const itemIndex = localMenu.sections[sectionIndex].items.findIndex(it => it._id === item_id);
+
 const { formatPrice } = usePriceFormatter();
-const { priceInputRef, editPrice, focusPriceInput } = usePriceInput();
-const { nameInputRef, editName, focusNameInput } = useNameInput();
+const { priceInputRef, editPrice, focusPriceInput, tabToPrice } = useTabToPrice();
+const { nameInputRef, editName, focusNameInput, tabToName } = useTabToName();
 
 const postEditAddOn = () => {
     editName.value=false;
@@ -26,31 +27,21 @@ const postEditAddOn = () => {
     menuStore.updateMenu(localMenu);
 } 
 const postNewAddOn = (ao) => {
-    if(ao.name){
+    if(localAddOn.name){
         localMenu.sections[sectionIndex].items[itemIndex].addOns.push({
-            name: ao.name,
-            price: ao.price,
-            _id: ao._id,
+            name: localAddOn.name,
+            price: localAddOn.price,
+            _id: localAddOn._id,
     });
         menuStore.updateMenu(localMenu);
         emit('send-reset-addOn');
         focusNameInput();
     }
 }
- const tabToName = (event)=>{ if(event.key==="Tab"){ event.preventDefault(); focusNameInput();}}
- const tabToPrice = (event)=>{ if(event.key==="Tab"){ event.preventDefault(); focusPriceInput();}}
-
 const getAddOnPrice = (np) => {
     editPrice.value = false;
-    if(!isNew.value) {
-        localAddOn.price = np;
-        postEditAddOn;
-    }
-    else if (localAddOn.name) postNewAddOn({
-        _id: localAddOn._id,
-        name: localAddOn.name,
-        price: np
-    });
+    localAddOn.price = np;
+    if(!isNew.value) postEditAddOn;
 } 
 onMounted(()=>{
     if(!localAddOn.name){
@@ -96,6 +87,7 @@ onMounted(()=>{
                 v-if="editPrice"
                 :price="localAddOn.price"
                 @update-price="getAddOnPrice"
+                @keydown.enter="postNewAddOn"
                 />
             <span class="item-price"
                 @click="focusPriceInput"

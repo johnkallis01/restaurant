@@ -6,113 +6,109 @@ const { menu, section_id, item } = defineProps({
     section_id: { type: String, required: true},
     item: { type: Object, required: true},
 });
-const sectionIndex = menu.sections.findIndex(sec => sec._id === section_id);
-const itemIndex = menu.sections[sectionIndex].items.findIndex(it => it._id === item._id);
 const localItem=reactive(item);
 const localMenu=reactive(menu);
 const menuStore = useMenuStore();
 
 const { formatPrice } = usePriceFormatter();
-const { nameInputRef, editName, focusNameInput } = useNameInput();
+
+const isNew = ref(false);
+const { nameInputRef, editName, focusNameInput, tabToName } = useTabToName();
 const { tabToDescription, descriptionInputRef,editDescription,
     focusDescriptionInput} = useTabToDescription();
-const { priceInputRef, editPrice, focusPriceInput } = usePriceInput();
+const { priceInputRef, editPrice, focusPriceInput, tabToPrice } = useTabToPrice();
 const {addOnsFlag, removesFlag, optionsFlag,resetFlags, viewAddOns,
      viewRemoves } = useAROFlags();
 
 
-
-const isNew = ref(false);
 const modalFlag=ref(false);
-const modalRef=ref(null);
+const placeHolder=ref(false);
 const newAddOnFlag=ref(true);
 const newRemoveFlag=ref(true);
 const newAddOn = ref({ name: "", price: "000.00", _id: uuidv4(), });
 const newRemove = ref({ name: "", _id: uuidv4(), });
+const modalRef=ref(null);
+const clickInsideOK = ref(null);
 const OAR = ref([
     {name:'options', flag: optionsFlag, callback: ()=> {if(localItem.name) {resetFlags();modalFlag.value=true}}},
     {name:'addOns', flag: addOnsFlag, callback: viewAddOns},
     {name:'removes', flag: removesFlag, callback: viewRemoves},
     ]);
-const clickInsideOK = ref(null);
 
-
-// **************
-// From Emits
-// **************
+const sectionIndex=localMenu.sections.findIndex(sec => sec._id === section_id);
+function findItemIndex(menu, secIndex){
+    return menu.sections[secIndex].items.findIndex(it => it._id === item._id);
+}
 const getItemPrice = (np) => {
     editPrice.value = false;
     localItem.price = np;
-    if(!isNew.value) postItemEdit(localItem);
+    if(!isNew.value) postItemEdit();
 }
 const getResetAddOn = () => {newAddOn.value.name="";newAddOn.value.price="000.00";newAddOn.value._id=uuidv4();}
 const getResetRemove = () =>{ newRemove.value.name= ""; newRemove.value._id=uuidv4(); }
 const closeModal = ()=>{modalFlag.value=false;}
-/****************
- * Tab Controls
- ****************/
-const tabToPrice = (event)=>{
-    if(event.key==="Tab"){event.preventDefault();focusPriceInput();}
-}
-const tabToName = (event)=>{
-    if(event.key==="Tab"){event.preventDefault();focusNameInput();}
-}
 
 const deleteItem = ()=>{
+    const itemIndex = findItemIndex(localMenu, sectionIndex);
     localMenu.sections[sectionIndex].items.splice(itemIndex, 1);
     menuStore.updateMenu(localMenu);
 }
-const postItemEdit = (it) => {
+const postItemEdit = (str) => {
+    console.log('blur')
     if(!isNew.value){
-        localMenu.sections[sectionIndex].items[itemIndex]=it;
+        const itemIndex = findItemIndex(localMenu, sectionIndex);
+        localMenu.sections[sectionIndex].items[itemIndex]=localItem;
         menuStore.updateMenu(localMenu);
     }
+    switch(str){
+        case 'name':
+            editName.value=false;
+            break;
+        case 'price':
+            editPrice.value=false;
+            break;
+        case 'description':
+            editDescription.value=false;
+            break;
+    }
+
 }
-const submitEditItemName = (it) => { 
-    if(!!localItem.name) editName.value=false;
-    else if(!isNew.value) postItemEdit(it);
-}
-const submitEditItemDescription = (it, event) => { 
-    editDescription.value=false;
-    if(!isNew.value) {postItemEdit(it);}
-    else postNewItem(it)
-}
-const postNewItem = (it) => {
-    if(it.name){
-        const sectionIndex = localMenu.sections.findIndex(sec => sec._id === section_id);
-        localMenu.sections[sectionIndex].items.push(it);
+const postNewItem = (str) => {
+    if(localItem.name){
+        localMenu.sections[sectionIndex].items.push(localItem);
         menuStore.updateMenu(localMenu);
         emit('send-new-item-flag', false);
     }
 }
 const getDeleteAddOn = (index) => {
     localItem.addOns.splice(index, 1);
+    const itemIndex = findItemIndex(localMenu, sectionIndex);
     localMenu.sections[sectionIndex].items[itemIndex]=localItem;
     menuStore.updateMenu(localMenu);
 }
 const getDeleteRemove = (index) => {
     localItem.removes.splice(index, 1);
+    const itemIndex = findItemIndex(localMenu, sectionIndex);
     localMenu.sections[sectionIndex].items[itemIndex]=localItem;
     menuStore.updateMenu(localMenu);
 }
-const itemContainerRef=ref(null);
+const togglePlaceHolder = () => {
+    if(!localItem.description) placeHolder.value=!placeHolder.value;
+    
+}
 const clickOutsideOARtab = (event) => {
     if (clickInsideOK.value && !clickInsideOK.value.contains(event.target)) resetFlags();
 }
 onMounted(()=>{
-    if(!localItem.name){
-        isNew.value = true; 
-        focusNameInput();
-    }
+    if(!localItem.name){ isNew.value = true; focusNameInput();}
     document.addEventListener('click', clickOutsideOARtab);
 });
-
 onBeforeUnmount(() => {
     document.removeEventListener('click', clickOutsideOARtab);
 });
 </script>
 <template>
-    <div class="item-container" ref="itemContainerRef">
+    <div class="item-container">
         <div class="item-title">
             <div class="button-name">
                 <span class="btn-icons-group items">
@@ -124,7 +120,7 @@ onBeforeUnmount(() => {
                         <span class="tooltip">delete</span>
                     </button>
                     <button class="btn" ref="buttonRef"
-                        @click="postNewItem(localItem)"
+                        @click="postNewItem"
                         @keydown="tabToName" 
                         v-else>
                         <i class="mdi mdi-plus"/>
@@ -135,8 +131,9 @@ onBeforeUnmount(() => {
                     <input type="text" placeholder="name"
                         ref="nameInputRef"
                         v-model="localItem.name"
-                        @blur="submitEditItemName(localItem)"
-                        @keydown="tabToPrice"
+                        @blur="isNew ? editName=false : postItemEdit('name')"
+                        @keydown.enter="isNew ? postNewItem : postItemEdit('name')"
+                        @keydown="tabToPrice" 
                         />
                 </div>
                 <div v-else>
@@ -155,24 +152,27 @@ onBeforeUnmount(() => {
                 v-if="editPrice"
                 :price="localItem.price"
                 @keydown="tabToDescription"
+                @keydown.enter="postNewItem"
                 @update-price="getItemPrice"/>
             <span class="item-price" @click="focusPriceInput" v-else>
                 {{ formatPrice(localItem.price)}}
             </span>
         </div>
         <div class="item-description">
-            <div class="text-field description" v-if="localItem.name ? editDescription : false">
+            <div class="text-field description" v-if="editDescription">
                 <textarea type="text" placeholder="description" ref="descriptionInputRef"
                     v-model="localItem.description"
-                    @blur="submitEditItemDescription(localItem)"
-                    />
+                    @click="console.log('ph')"
+                    @blur="isNew ? 
+                    ( localItem.name ? postNewItem : editDescription=false ) :
+                     postItemEdit('description')"/>
             </div>
             <div v-if="!editDescription">
                 <span class="item-description-text"
-                    v-if="localItem.description" 
+                    v-if="localItem.description.length" 
                     @click="focusDescriptionInput">{{ localItem.description }}
                 </span>
-                <span class="placeholder-color" @click="focusDescriptionInput" v-else>description</span>
+                <span class="placeholder-color" @click="localItem.name.length ? focusDescriptionInput() : null" v-else>description</span>
             </div>
         </div>
         <div class="item-addons-removes-options" ref="clickInsideOK">
