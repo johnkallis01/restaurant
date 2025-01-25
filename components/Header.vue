@@ -65,8 +65,7 @@ onBeforeUnmount(() => {
 <template>
     <header class="header">
       <div class="left-btns">
-        <ClientOnly>
-      
+        <ClientOnly>   
           <button @click="toggleCart" ref="cartButtonRef" class="btn cart-btn" v-if="loggedIn">
             <i class="mdi mdi-cart"/>
             <span class="tooltip" v-if="!cartStore.items.length">add to order to open cart</span>
@@ -83,9 +82,6 @@ onBeforeUnmount(() => {
         <nuxt-link to="/order">
           <button class="btn-link" @click="focusLogin">Order</button>
         </nuxt-link>
-        <nuxt-link to="/test">
-          <button class="btn-link" @click="focusLogin">Test</button>
-        </nuxt-link>
       </div>
       <div class="right-btns">
         <ClientOnly>
@@ -95,9 +91,7 @@ onBeforeUnmount(() => {
                 <button class="btn-link" @click="toggleDropdown">Edit Menu</button>
               </nuxt-link>
             </template>
-            <template v-if="dropdown">
-              <MenuDropDown/>
-            </template>
+              <MenuDropDown v-if="dropdown"/>
             <nuxt-link>
               <button class="btn-link" @click="logout">Logout</button>
             </nuxt-link>

@@ -25,8 +25,10 @@ const tabToLogin = (event) =>{
 const getEmail = (em) =>{ email.value=em;}
 const getPassword = (p) =>{password.value=p;}
 const inputs = ref([
-  { placeholder: 'email', req: true, password: false, sendInput: getEmail, callback: ()=>null },
-  { placeholder: 'password', req: true, password: true, sendInput: getPassword, callback: tabToLogin}]);
+  { placeholder: 'email', req: true, password: false, 
+        sendInput: getEmail, callback: ()=>null },
+  { placeholder: 'password', req: true, password: true,
+        sendInput: getPassword, callback: tabToLogin}]);
 </script>
 <template>
   <div class="container">

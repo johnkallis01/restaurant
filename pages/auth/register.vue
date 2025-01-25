@@ -32,20 +32,27 @@ const user= reactive({
   confirmPassword: '',
 })
 const validateInput = (rule, value, inputVar) =>{
+  console.log('val input', rule)
+  console.log(value, inputVar)
   if(inputVar==='confirmPassword') {
     validationStatus['confirmPassword'] = user['password'] === value;
     validationStatus['password']=validationStatus['confirmPassword'];
     if(!validationStatus['confirmPassword']) validationStatus['password']=false;
   }
   if(rules[rule] && value.length){
+    console.log(rules[rule])
     validationStatus[inputVar] = rules[rule].test(value); //test input
     if(validationStatus[inputVar]) user[inputVar] = value; //if good assign to user
   }
   
 }
 const fNameRef=ref(null);
+const lNameRef=ref(null);
+const phoneRef=ref(null);
+const emailRef=ref(null);
 const pwRef=ref(null);
 const cpwRef=ref(null);
+const buttonRef=ref(null);
 const getConfirmPassword = (p) =>{confirmPassword.value = p;}
 const register = async () => {
     try {
@@ -63,30 +70,36 @@ const register = async () => {
       }
     }
 }
+const tabToSubmit = (event) =>{
+  event.preventDefault();
+  nextTick(() => {
+        if (buttonRef.value) {
+          buttonRef.value.focus();
+          buttonRef.value.click();
+        }});
+}
 const inputs = ref([
-  { placeholder: 'first name', ref: 'fNameRef', req: true, isValid: validationStatus['firstName'],
-      sendInput: validateInput('name', $event, 'firstName'), password: false
+  { placeholder: 'first name', ref: fNameRef, req: true, isValid: validationStatus['firstName'],
+    getInput: (value) => validateInput("name", value, "firstName") , password: false, nextRef: lNameRef, 
   },
-  { placeholder: 'last name', ref: 'lNameRef', req: true, isValid: validationStatus['lastName'],
-          sendInput: validateInput('name', $event, 'lastName'), password: false
+  { placeholder: 'last name', ref: lNameRef, req: true, isValid: validationStatus['lastName'],
+    getInput: (value) => validateInput("name", value, "lastName"), password: false, nextRef: phoneRef, 
   },
-  { placeholder: 'phone', ref: 'phoneRef', req: true, isValid: validationStatus['phone'],
-          sendInput: validateInput('phone', $event, 'phone'), password: false
+  { placeholder: 'phone', ref: phoneRef, req: true, isValid: validationStatus['phone'],
+    getInput: (value) => validateInput("phone", value, "phone"), password: false, nextRef: emailRef, 
   },
-  { placeholder: 'email', ref: 'emailRef', req: true, isValid: validationStatus['email'],
-          sendInput: validateInput('email', $event, 'email'), password: false
+  { placeholder: 'email', ref: emailRef, req: true, isValid: validationStatus['email'],
+    getInput: (value) => validateInput("email", value, "email"), password: false, nextRef: pwRef, 
   },
-  { placeholder: 'email', ref: 'emailRef', req: true, isValid: validationStatus['email'],
-          sendInput: validateInput('email', $event, 'email'), password: false
+  { placeholder: 'password', ref: pwRef, req: true, isValid: validationStatus['password'],
+    getInput: (value) => validateInput("password", value, "password"), password: true, nextRef: cpwRef, 
   },
-  { placeholder: 'password', ref: 'pwRef', req: true, isValid: validationStatus['password'],
-          sendInput: validateInput('password', $event, 'password'), password: true
-  },
-  { placeholder: 'confirm password', ref: 'cpwRef', req: true, isValid: validationStatus['confirmPassword'],
-          sendInput: validateInput('password', $event, 'confirmPassword'), password: true
+  { placeholder: 'confirm password', ref: cpwRef, req: true, isValid: validationStatus['confirmPassword'],
+    getInput: (value) => validateInput("password", value, "confirmPassword"), password: true, nextRef: buttonRef, 
   },
 
 ]);
+
 </script>
 <template>
   <div class="container">
@@ -97,11 +110,14 @@ const inputs = ref([
             v-for="input in inputs" :key="input.placeholder"
             :place-holder="input['placeholder']" :ref="input['ref']" :req="input['req']" 
             :is-valid="input['isValid']"
-            @send-input="input['sendInput']"
-           :password="input['password']" />
+            @send-input="input['getInput']"
+            :password="input['password']"
+         
+           /> <!-- @keydown="tabToNext($event, input['nextRef'])" -->
         </form>
         <div class="form-actions">
-          <button class="btn register" :disabled="!isDisabled" @click="register">Register</button>
+          <button class="btn register" ref="buttonRef"
+            :disabled="!isDisabled" @click="register">Register</button>
         </div>
   </div>
 </template>
