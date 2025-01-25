@@ -30,20 +30,16 @@ export const useMenuStore = defineStore('menu', {
       this.menu = { _id: '', name: '', days: [], sections: [] };
     },
     async postMenu(menu){
-      //
       const token = localStorage.getItem('authToken');
       if(token){
          console.log('post menu')
         const response = await $fetch('/api/menus/',{
           method: 'POST',
-          headers: {
-            authorization: `Bearer ${token}`,
-          },
+          headers: {authorization: `Bearer ${token}`},
           body: menu,
         })
         return response;
       }
-      
     },
     async updateMenu(menu){
       // console.log('update')
@@ -51,23 +47,17 @@ export const useMenuStore = defineStore('menu', {
       if(token){
         const response = await $fetch('/api/menus/'+menu._id,{
           method: 'PUT',
-          headers: {
-            authorization: `Bearer ${token}`,
-          },
+          headers: {authorization: `Bearer ${token}`},
           body: menu,
         });
       }
-      
-      //console.log('res ',response)
     },
     async deleteMenu(id){
       // console.log('delete menu');
       const token = localStorage.getItem('authToken');
       const response = await $fetch('/api/menus/'+id,{
         method: 'DELETE',
-        headers: {
-          authorization: `Bearer ${token}`,
-        },
+        headers: {authorization: `Bearer ${token}`},
       })
     }
   },

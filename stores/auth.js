@@ -28,7 +28,13 @@ export const useAuthStore = defineStore('auth', {
                 this.user= response.user;
                 this.isAuthenticated = true;
                 localStorage.setItem('authToken', this.token);
-                if(this.user) localStorage.setItem('userName', this.user.firstName);
+                if(this.user){ 
+                    localStorage.setItem('userName', this.user.firstName);
+                    if(this.user.isAdmin){
+                        localStorage.setItem('isAdmin', true);
+                        this.isAdmin=true;
+                    }
+                }
                 navigateTo('/');
             } catch (error) {
                 throw new Error('::Invalid Credentials::');
@@ -49,10 +55,12 @@ export const useAuthStore = defineStore('auth', {
             this.token = null;
             this.name = null;
             this.isAuthenticated = false;
+            this.isAdmin = false;
             if(process.client){
                 localStorage.removeItem('authToken');
                 localStorage.removeItem('authUser');
                 localStorage.removeItem('userName');
+                localStorage.removeItem('isAdmin');
             }
         },
         initialize(){
@@ -88,6 +96,10 @@ export const useAuthStore = defineStore('auth', {
                     this.user = response;
                     if(this.user) {
                         // console.log(this.user.firstName)
+                        if(this.user.isAdmin) {
+                            this.isAdmin=true;
+                            localStorage.setItem('isAdmin', true);
+                        }
                         localStorage.setItem('userName', this.user.firstName);
                         const name = localStorage.getItem('userName');
                         // console.log(name)
@@ -119,6 +131,11 @@ export const useAuthStore = defineStore('auth', {
             if(token && !isTokenExpired(token)){
                 this.token=token;
                 localStorage.setItem('authToken', token);
+                console.log(this.isAdmin)
+                console.log(localStorage.getItem('isAdmin'))
+                if(localStorage.getItem('isAdmin')){
+                    this.isAdmin=true;
+                }
             }else{
                 this.clearAuth();
             }

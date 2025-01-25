@@ -6,6 +6,7 @@ const router = useRouter();
 const cartButtonRef=ref(null);
 const dropdownRef=ref(null);
 const dropdown = ref(false);
+const isAdmin = ref(false);
 defineExpose({cartButtonRef});
 const closeDropdown = (event) => {
   if (dropdownRef.value && !dropdownRef.value.$el?.contains(event.target)) dropdown.value=false;
@@ -17,6 +18,7 @@ const logout = () => {
 };
 const loggedIn = computed(() => {
   authStore.loadTokenFromLocalStorage;
+  isAdmin.value=false;
   return !!authStore.getToken;
 });
 const loginButton = ref(null);
@@ -39,7 +41,7 @@ watch(
       if(!name.value) {
         authStore.loadNameFromLocalStorage();
         name.value=authStore.getName;
-        // console.log(name.value)
+        if(authStore.getIsAdmin) isAdmin.value=authStore.getIsAdmin;
     }
   }
 });
@@ -49,6 +51,7 @@ onBeforeMount(async () => {
   // console.log('obm',authStore.getName)
   await authStore.fetchUser();
   authStore.loadNameFromLocalStorage();
+  isAdmin.value=authStore.getIsAdmin; 
   // console.log(authStore.getName)
   name.value=authStore.getName;
 });
@@ -87,9 +90,11 @@ onBeforeUnmount(() => {
       <div class="right-btns">
         <ClientOnly>
           <template v-if="loggedIn">
-            <nuxt-link ref="dropdownRef">
-              <button class="btn-link" @click="toggleDropdown">Edit Menu</button>
-            </nuxt-link>
+            <template v-if="isAdmin">
+              <nuxt-link ref="dropdownRef">
+                <button class="btn-link" @click="toggleDropdown">Edit Menu</button>
+              </nuxt-link>
+            </template>
             <template v-if="dropdown">
               <MenuDropDown/>
             </template>

@@ -63,41 +63,42 @@ const register = async () => {
       }
     }
 }
+const inputs = ref([
+  { placeholder: 'first name', ref: 'fNameRef', req: true, isValid: validationStatus['firstName'],
+      sendInput: validateInput('name', $event, 'firstName'), password: false
+  },
+  { placeholder: 'last name', ref: 'lNameRef', req: true, isValid: validationStatus['lastName'],
+          sendInput: validateInput('name', $event, 'lastName'), password: false
+  },
+  { placeholder: 'phone', ref: 'phoneRef', req: true, isValid: validationStatus['phone'],
+          sendInput: validateInput('phone', $event, 'phone'), password: false
+  },
+  { placeholder: 'email', ref: 'emailRef', req: true, isValid: validationStatus['email'],
+          sendInput: validateInput('email', $event, 'email'), password: false
+  },
+  { placeholder: 'email', ref: 'emailRef', req: true, isValid: validationStatus['email'],
+          sendInput: validateInput('email', $event, 'email'), password: false
+  },
+  { placeholder: 'password', ref: 'pwRef', req: true, isValid: validationStatus['password'],
+          sendInput: validateInput('password', $event, 'password'), password: true
+  },
+  { placeholder: 'confirm password', ref: 'cpwRef', req: true, isValid: validationStatus['confirmPassword'],
+          sendInput: validateInput('password', $event, 'confirmPassword'), password: true
+  },
+
+]);
 </script>
 <template>
   <div class="container">
     <div class="form-title">Registration</div>
       <div class="form-subtitle">password must contain at least one uppercase letter, one number and one symbol !@#$%^&*?</div>
         <form>
-          <TextField class="input-field" :req="true" ref="fNameRef"
-            :is-valid="validationStatus['firstName']"
-            @send-input="validateInput('name', $event, 'firstName')"
-            place-holder="first name" />
-
-          <TextField class="input-field" :req="true" ref="lNameRef"
-            :is-valid="validationStatus['lastName']"
-            @send-input="validateInput('name', $event, 'lastName')"
-            place-holder="last name" />
-
-          <TextField class="input-field" :req="true" ref="phoneRef"
-            :is-valid="validationStatus['phone']"
-            @send-input="validateInput('phone', $event, 'phone')"
-            place-holder="phone"/>
-
-          <TextField class="input-field" :req="true" ref="emailRef"
-            :is-valid="validationStatus['email']"
-            @send-input="validateInput('email', $event, 'email')"
-            place-holder="email"/>
-
-          <TextField class="input-field" :req="true" ref="pwRef" :password="true"
-            :is-valid="validationStatus['password']"
-            @send-input="validateInput('password', $event, 'password')"
-            place-holder="password"/>
-
-          <TextField class="input-field" :req="true" ref="cpwRef" :password="true"
-            :is-valid="validationStatus['confirmPassword']"
-            @send-input="validateInput('password', $event, 'confirmPassword')"
-            place-holder="confirm password"/>
+          <TextField class="input-field"
+            v-for="input in inputs" :key="input.placeholder"
+            :place-holder="input['placeholder']" :ref="input['ref']" :req="input['req']" 
+            :is-valid="input['isValid']"
+            @send-input="input['sendInput']"
+           :password="input['password']" />
         </form>
         <div class="form-actions">
           <button class="btn register" :disabled="!isDisabled" @click="register">Register</button>
