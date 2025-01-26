@@ -17,10 +17,10 @@ const login = async () => {
 const tabToLogin = (event) =>{
   event.preventDefault();
   nextTick(() => {
-        if (loginRef.value) {
-            loginRef.value.focus();
-            loginRef.value.click();
-        }});
+    if (loginRef.value) {
+        loginRef.value.focus();
+        loginRef.value.click();
+    }});
 }
 const getEmail = (em) =>{ email.value=em;}
 const getPassword = (p) =>{password.value=p;}

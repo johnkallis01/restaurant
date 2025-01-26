@@ -1,5 +1,5 @@
 <script setup>
-definePageMeta({middleware: 'auth',});
+definePageMeta({middleware: 'auth'});
 useHead({
   title: "John's Restaurant - Checkout"
 });

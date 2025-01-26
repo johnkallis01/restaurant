@@ -36,27 +36,23 @@ const OAR = ref([
     ]);
 
 const sectionIndex=localMenu.sections.findIndex(sec => sec._id === section_id);
-function findItemIndex(menu, secIndex){
-    return menu.sections[secIndex].items.findIndex(it => it._id === item._id);
-}
+const itemIndex = localMenu.sections[sectionIndex].items.findIndex(it => it._id === item._id);
 const getItemPrice = (np) => {
     editPrice.value = false;
     localItem.price = np;
-    if(!isNew.value) postItemEdit();
+    if(!isNew.value) postItemEdit('price');
 }
 const getResetAddOn = () => {newAddOn.value.name="";newAddOn.value.price="000.00";newAddOn.value._id=uuidv4();}
 const getResetRemove = () =>{ newRemove.value.name= ""; newRemove.value._id=uuidv4(); }
 const closeModal = ()=>{modalFlag.value=false;}
 
 const deleteItem = ()=>{
-    const itemIndex = findItemIndex(localMenu, sectionIndex);
     localMenu.sections[sectionIndex].items.splice(itemIndex, 1);
     menuStore.updateMenu(localMenu);
 }
 const postItemEdit = (str) => {
-    console.log('blur')
+    console.log('post edit')
     if(!isNew.value){
-        const itemIndex = findItemIndex(localMenu, sectionIndex);
         localMenu.sections[sectionIndex].items[itemIndex]=localItem;
         menuStore.updateMenu(localMenu);
     }
@@ -71,10 +67,11 @@ const postItemEdit = (str) => {
             editDescription.value=false;
             break;
     }
-
 }
-const postNewItem = (str) => {
+const postNewItem = () => {
+    console.log('post new')
     if(localItem.name){
+        isNew.value=false;
         localMenu.sections[sectionIndex].items.push(localItem);
         menuStore.updateMenu(localMenu);
         emit('send-new-item-flag', false);
@@ -82,19 +79,13 @@ const postNewItem = (str) => {
 }
 const getDeleteAddOn = (index) => {
     localItem.addOns.splice(index, 1);
-    const itemIndex = findItemIndex(localMenu, sectionIndex);
     localMenu.sections[sectionIndex].items[itemIndex]=localItem;
     menuStore.updateMenu(localMenu);
 }
 const getDeleteRemove = (index) => {
     localItem.removes.splice(index, 1);
-    const itemIndex = findItemIndex(localMenu, sectionIndex);
     localMenu.sections[sectionIndex].items[itemIndex]=localItem;
     menuStore.updateMenu(localMenu);
-}
-const togglePlaceHolder = () => {
-    if(!localItem.description) placeHolder.value=!placeHolder.value;
-    
 }
 const clickOutsideOARtab = (event) => {
     if (clickInsideOK.value && !clickInsideOK.value.contains(event.target)) resetFlags();
@@ -132,7 +123,7 @@ onBeforeUnmount(() => {
                         ref="nameInputRef"
                         v-model="localItem.name"
                         @blur="isNew ? editName=false : postItemEdit('name')"
-                        @keydown.enter="isNew ? postNewItem : postItemEdit('name')"
+                        @keydown.enter="isNew ? postNewItem() : postItemEdit('name')"
                         @keydown="tabToPrice" 
                         />
                 </div>
@@ -152,7 +143,7 @@ onBeforeUnmount(() => {
                 v-if="editPrice"
                 :price="localItem.price"
                 @keydown="tabToDescription"
-                @keydown.enter="postNewItem"
+                @keydown.enter="isNew ? editPrice=false : postItemEdit('price')"
                 @update-price="getItemPrice"/>
             <span class="item-price" @click="focusPriceInput" v-else>
                 {{ formatPrice(localItem.price)}}

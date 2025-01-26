@@ -11,7 +11,10 @@ export default defineEventHandler( async (event) => {
     const isValidPassword = await validatePassword(password, user.password);
     if(!isValidPassword){throw createError({statusCode: 401, message: "invalid password"})}
 
-    const token = generateToken({email, id: user._id });
+    const token = generateToken({email});
     console.log(token)
+    if(user._id){
+        delete user._id;
+    }
     return { token, user };
 });

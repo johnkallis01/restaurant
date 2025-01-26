@@ -7,19 +7,23 @@ const cartButtonRef=ref(null);
 const dropdownRef=ref(null);
 const dropdown = ref(false);
 const isAdmin = ref(false);
+const userName = ref();
 defineExpose({cartButtonRef});
 const closeDropdown = (event) => {
   if (dropdownRef.value && !dropdownRef.value.$el?.contains(event.target)) dropdown.value=false;
 }
 const logout = () => {
   authStore.logout();
-  name.value="";
   router.push('/auth/login');
 };
 const loggedIn = computed(() => {
-  authStore.loadTokenFromLocalStorage;
-  isAdmin.value=false;
-  return !!authStore.getToken;
+  
+  // isAdmin.value=user.value.isAdmin;
+  const token = useCookie('token');
+  isAdmin.value = useCookie('isAdmin');
+  console.log(isAdmin.value)
+  console.log(token.value)
+  return !!token.value;
 });
 const loginButton = ref(null);
 const focusLoginButton = ()=>{
@@ -34,26 +38,30 @@ const focusLogin = () =>{
   
 }
 const name = ref('');
-watch(
-  ()=>loggedIn.value,
-  () => {
-    if(loggedIn.value){
-      if(!name.value) {
-        authStore.loadNameFromLocalStorage();
-        name.value=authStore.getName;
-        if(authStore.getIsAdmin) isAdmin.value=authStore.getIsAdmin;
-    }
-  }
-});
+// watch(
+//   ()=>loggedIn.value,
+//   () => {
+//     if(loggedIn.value){
+//       if(!name.value) {
+//         authStore.loadNameFromLocalStorage();
+//         name.value=authStore.getName;
+//         if(authStore.getIsAdmin) isAdmin.value=authStore.getIsAdmin;
+//     }
+//   }
+// });
 
 const toggleDropdown = () => {dropdown.value = !dropdown.value;}
-onBeforeMount(async () => {
-  // console.log('obm',authStore.getName)
-  await authStore.fetchUser();
-  authStore.loadNameFromLocalStorage();
-  isAdmin.value=authStore.getIsAdmin; 
-  // console.log(authStore.getName)
-  name.value=authStore.getName;
+onBeforeMount( () => {
+  console.log('header')
+  userName.value=useCookie('user');
+  console.log(userName.value);
+  isAdmin.value=useCookie('isAdmin')
+  // // console.log('obm',authStore.getName)
+  // await authStore.fetchUser();
+  // authStore.loadNameFromLocalStorage();
+  // isAdmin.value=authStore.getIsAdmin; 
+  // // console.log(authStore.getName)
+  // name.value=authStore.getName;
 });
 onMounted(()=>{
     document.addEventListener('click', closeDropdown);
@@ -70,7 +78,7 @@ onBeforeUnmount(() => {
             <i class="mdi mdi-cart"/>
             <span class="tooltip" v-if="!cartStore.items.length">add to order to open cart</span>
           </button>
-          <div class="welcome" v-if="loggedIn">{{"Welcome, " + name}}</div>
+          <div class="welcome" v-if="loggedIn">{{"Welcome, " + userName.value}}</div>
         </ClientOnly>
         <span>{{  }}</span>
         <nuxt-link to="/">
@@ -86,7 +94,7 @@ onBeforeUnmount(() => {
       <div class="right-btns">
         <ClientOnly>
           <template v-if="loggedIn">
-            <template v-if="isAdmin">
+            <template v-if="isAdmin.value">
               <nuxt-link ref="dropdownRef">
                 <button class="btn-link" @click="toggleDropdown">Edit Menu</button>
               </nuxt-link>

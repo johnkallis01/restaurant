@@ -5,7 +5,7 @@ export default defineNuxtConfig({
   },
   css: ['@/assets/css/main.css',],
   plugins: [
-    '~/plugins/initAuth.js'
+    // '~/plugins/initAuth.js'
   ],
   components: {
     dirs: [
