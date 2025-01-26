@@ -13,11 +13,11 @@ const orderSchema = new Schema({
         type: String,
         required: true
     },
-    message: {
+    user_email: {
       type: String,
       required: true
     },
-    order: [ 
+    items: [ 
       {
         type: Schema.Types.Mixed,
         required: true

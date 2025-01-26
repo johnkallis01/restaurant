@@ -95,6 +95,11 @@ const deleteItem=(i)=>{cartStore.removeItem(i);}
     background-color: white;
     z-index: 100;
 }
+@media (max-width: 740px ){
+    .cart-container{
+        width: 70vw;
+    }
+}
 .cart-title{
     display: flex;
     justify-content: space-between;

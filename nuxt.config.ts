@@ -18,7 +18,8 @@ export default defineNuxtConfig({
   runtimeConfig: {
     mongoDbUri: process.env.MONGO_DB_URI,
     jwtSecret: process.env.JWT_SECRET,
-    adminEmail: process.env.ADMIN_EMAIL,
+    adminId: process.env.ADMIN_EMAIL,
+    stripPublic: process.env.STRIPE_PUBLIC,
 
   },
   vite: {

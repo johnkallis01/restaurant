@@ -84,7 +84,7 @@ const register = async () => {
       <div class="form-subtitle">password must contain at least one uppercase letter, one number and one symbol !@#$%^&*?</div>
         <form>
           <TextField class="input-field"
-            v-for="input in inputs" :key="input.placeholder"
+            v-for="input in inputs" :key="input.name"
             :place-holder="input.placeholder" :req="input.req" 
             :is-valid="validationStatus[input.name]"
             @send-input="(value) => validateInput(input.rule, value, input.name)"
