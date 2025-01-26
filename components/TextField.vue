@@ -38,10 +38,10 @@ const onInput = (event) => {
             @input="onInput($event)"
             />
         <label :for="placeHolder" :style="{'--label-bg-color': bgColor}">{{capitalizeFirstLetter(placeHolder)}}</label>
-        <button class="eye-button" type="button" @click="togglePassword" v-if="password">
+        <div class="eye-button" type="button" @click="togglePassword" v-if="password">
             <i class="mdi mdi-eye-outline" v-if="isOpen"/>
             <i class="mdi mdi-eye-off-outline" v-else/>
-        </button>
+        </div>
     </div>
 </template>
 <style scoped>

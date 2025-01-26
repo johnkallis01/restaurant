@@ -21,8 +21,8 @@ const loggedIn = computed(() => {
   // isAdmin.value=user.value.isAdmin;
   const token = useCookie('token');
   isAdmin.value = useCookie('isAdmin');
-  console.log(isAdmin.value)
-  console.log(token.value)
+  // console.log(isAdmin.value)
+  // console.log(token.value)
   return !!token.value;
 });
 const loginButton = ref(null);
@@ -52,9 +52,9 @@ const name = ref('');
 
 const toggleDropdown = () => {dropdown.value = !dropdown.value;}
 onBeforeMount( () => {
-  console.log('header')
+  // console.log('header')
   userName.value=useCookie('user');
-  console.log(userName.value);
+  // console.log(userName.value);
   isAdmin.value=useCookie('isAdmin')
   // // console.log('obm',authStore.getName)
   // await authStore.fetchUser();

@@ -30,12 +30,12 @@ export const useAuthStore = defineStore('auth', {
                 const tokenCookie=useCookie('token');
                 // console.log(cookie)
                 tokenCookie.value=response.token;
-                console.log(tokenCookie.value);
+                // console.log(tokenCookie.value);
                 const userCookie=useCookie('user');
                 
                 userCookie.value=response.user.firstName;
                 
-                console.log(userCookie.value)
+                // console.log(userCookie.value)
                 this.user= response.user;
                 // this.isAuthenticated = true;
                 // localStorage.setItem('authToken', this.token);
@@ -44,7 +44,7 @@ export const useAuthStore = defineStore('auth', {
                     if(this.user.isAdmin){
                         const isAdminCookie=useCookie('isAdmin');
                         isAdminCookie.value=true;
-                        console.log('is admin true')
+                        // console.log('is admin true')
                         // this.isAdmin=true;
                     }
                 }
@@ -68,11 +68,11 @@ export const useAuthStore = defineStore('auth', {
             const isAdmin = useCookie('isAdmin');
             isAdmin.value=null;
             const test = useCookie('token')
-            console.log(test.value);
+            // console.log(test.value);
             test.value=useCookie('user');
-            console.log(test.value)
+            // console.log(test.value)
             test.value=useCookie('isAdmin');
-            console.log(test.value);
+            // console.log(test.value);
             test.value=null;
             // this.clearAuth();
         },
