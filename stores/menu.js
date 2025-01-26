@@ -61,6 +61,7 @@ export const useMenuStore = defineStore('menu', {
             headers: {authorization: `Bearer ${token.value}`},
             body: menu,
           });
+          console.log(response)
         }catch{
           console.log('error')
           useAuthStore().logout();

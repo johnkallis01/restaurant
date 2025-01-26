@@ -11,20 +11,22 @@ export default defineEventHandler(async (event) => {
 	try{
 		const decoded = verifyToken(token);
 		const {email} = decoded;
-		// console.log(config.adminEmail)
-		// console.log(email)
+		// console.log('conf',config.adminEmail)
+		// console.log('dec',email)
 		if(email===config.adminEmail){
 			const user = await User.findOne({  email });
 			isAdmin = user.isAdmin;
+			// console.log('u',user)
 		}		
-		// console.log('is admin')
-		// console.log('user', user)
+		// console.log('is admin', isAdmin)
+
 	}catch (error){
 		throw createError({ statusCode: 401, message: 'Invalid or expired token' });
 	}
+	// console.log('why')
 	// console.log(isAdmin)
 	if(isAdmin){
-		console.log('edit /api/menu/id')
+		// console.log('edit /api/menu/id')
 		const body = await readBody(event);
 			
 		const id = event.context.params?.menu_id;
