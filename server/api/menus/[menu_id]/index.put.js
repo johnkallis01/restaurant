@@ -11,7 +11,9 @@ export default defineEventHandler(async (event) => {
 	try{
 		const decoded = verifyToken(token);
 		const {email} = decoded;
-		if(email===config.ADMIN_EMAIL){
+		// console.log(config.adminEmail)
+		// console.log(email)
+		if(email===config.adminEmail){
 			const user = await User.findOne({  email });
 			isAdmin = user.isAdmin;
 		}		

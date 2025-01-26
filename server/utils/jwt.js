@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 const config = useRuntimeConfig();
-const SECRET_KEY = config.JWT_SECRET;
+const SECRET_KEY = config.jwtSecret;
 
 export const generateToken = (payload,
         expiresIn = '1h') => {

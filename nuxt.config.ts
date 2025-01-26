@@ -16,8 +16,10 @@ export default defineNuxtConfig({
     '@pinia/nuxt',
   ],
   runtimeConfig: {
-    MONGO_DB_URI: process.env.MONGO_DB_URI,
-    JWT_SECRET: process.env.JWT_SECRET,
+    mongoDbUri: process.env.MONGO_DB_URI,
+    jwtSecret: process.env.JWT_SECRET,
+    adminEmail: process.env.ADMIN_EMAIL,
+
   },
   vite: {
     vue: {

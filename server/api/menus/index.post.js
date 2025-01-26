@@ -1,6 +1,7 @@
 import User from "~/server/models/User.model";
 import Menu from "~~/server/models/Menu.model";
 export default defineEventHandler(async (event) => {
+	const config = useRuntimeConfig();
 	const authHeader = event.req.headers.authorization;
 	if (!authHeader) {
 		throw createError({ statusCode: 401, message: 'Unauthorized: No token provided' });
@@ -8,11 +9,14 @@ export default defineEventHandler(async (event) => {
 	const token = authHeader.split(' ')[1];
 	let isAdmin;
 	try{
-
 		const decoded = verifyToken(token);
 		const {email} = decoded;
-		const user = await User.findOne({ email });
-		isAdmin = user.isAdmin;
+		// console.log(config.adminEmail)
+		// console.log(email)
+		if(email===config.adminEmail){
+			const user = await User.findOne({  email });
+			isAdmin = user.isAdmin;
+		}
 		console.log('is admin')
 		
 	}catch (error){
