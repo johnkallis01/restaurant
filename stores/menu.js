@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { useAuthStore } from './auth.js'
+// import { useAuthStore } from './auth.js'
 
 export const useMenuStore = defineStore('menu', {
   state: () => ({
@@ -31,15 +31,17 @@ export const useMenuStore = defineStore('menu', {
       this.menu = { _id: '', name: '', days: [], sections: [] };
     },
     async postMenu(menu){
-      const token = localStorage.getItem('authToken');
-      if(token){
+      // const token = localStorage.getItem('authToken');
+      const token=useCookie('token');
+      if(token.value){
         console.log('post menu')
         try{
           const response = await $fetch('/api/menus/',{
             method: 'POST',
-            headers: {authorization: `Bearer ${token}`},
+            headers: {authorization: `Bearer ${token.value}`},
             body: menu,
           })
+          console.log(response)
           return response;
         }catch{
           console.log('error')
@@ -50,12 +52,13 @@ export const useMenuStore = defineStore('menu', {
     },
     async updateMenu(menu){
       // console.log('update')
-      const token = localStorage.getItem('authToken');
-      if(token){
+     // const token = localStorage.getItem('authToken');
+     const token=useCookie('token');
+      if(token.value){
         try{
           const response = await $fetch('/api/menus/'+menu._id,{
             method: 'PUT',
-            headers: {authorization: `Bearer ${token}`},
+            headers: {authorization: `Bearer ${token.value}`},
             body: menu,
           });
         }catch{
@@ -67,16 +70,21 @@ export const useMenuStore = defineStore('menu', {
     },
     async deleteMenu(id){
       // console.log('delete menu');
-      const token = localStorage.getItem('authToken');
-      try{
-        const response = await $fetch('/api/menus/'+id,{
-          method: 'DELETE',
-          headers: {authorization: `Bearer ${token}`},
-        })
-      }catch{
-        console.log('error')
-        useAuthStore().logout();
+      // const token = localStorage.getItem('authToken');
+     const token=useCookie('token');
+
+      if(token.value){
+         try{
+          const response = await $fetch('/api/menus/'+id,{
+            method: 'DELETE',
+            headers: {authorization: `Bearer ${token.value}`},
+          })
+        }catch{
+          console.log('error')
+          useAuthStore().logout();
+        }
       }
+     
       
     }
   },
