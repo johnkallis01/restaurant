@@ -209,11 +209,9 @@ containers
   text-align: left;
   overflow: hidden;
 }
-
 .text-field.description textarea{
-    height: 8vh;
-    width: 100%;
-    min-width: 90%;
+    height: 10vh;
+    width: 35vw;    
 }
 .tab-container{
     display: flex;
@@ -527,7 +525,7 @@ containers
 @media (max-width: 940px){
   .modal{
     width: 80vw;
-      left: 10vw;
+    left: 10vw;
   }
 }
 @media (max-width: 740px) {
@@ -552,6 +550,9 @@ containers
         align-items: center;
         justify-content: center;
     }
+    .text-field.description textarea{
+      width: 55vw;
+    }
     .item-container{
         width: 60vw;
     }
@@ -559,8 +560,8 @@ containers
         width: 59vw;
     }
     .modal{
-      width: 100vw;
-      left:0;
+      width: 90vw;
+      left: 5vw;
 
     }
     .cart{

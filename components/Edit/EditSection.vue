@@ -73,53 +73,55 @@ onMounted(()=>{
 </script>
 <template>
     <div class="section-container">
-        <div class="section-name">
-            <button class="btn delete" @click="postNewSection" v-if="isNew">
-                <i class="mdi mdi-plus"/>
-                <span class="tooltip">add section</span>
-            </button>
-            <button class="btn delete" @click="deleteSection" v-else>
-                <i class="mdi mdi-close"/>
-                <span class="tooltip">delete section</span>
-            </button>
-            <template v-if="editName">
-                <div class="text-field name">
-                    <input
-                        type="text"
-                        ref="nameInputRef"
-                        v-model="localSection.name"
-                        @blur="isNew ? editName=false : postSectionEdit('name')"
-                        @keydown.enter="isNew ? postNewSection : postSectionEdit('name')"
-                        @keydown=tabToDescription
-                    />
-                </div>
-            </template>
-            <template v-else>
-                <span @click="focusNameInput" v-if="localSection.name">{{ localSection.name }}</span>
-                <span class="placeholder-color" @click="focusNameInput" v-else>name</span>
-            </template>
-            <button class="btn add-item" @click="addNewItem" v-if="!isNew">
-                <span class="btn-text">item</span>
-                <i class="mdi mdi-plus"/>
-                <span class="tooltip">add item</span>
-            </button> 
-        </div>
-        <div class="section-description">
-            <template v-if="editDescription">
-                <div class="text-field description">
-                    <input
-                        type="text"
-                        class="input-description"
-                        ref="descriptionInputRef"
-                        v-model="localSection.description"
-                        @blur="isNew ? (localSection.name ? postNewSection : editDesciption=false) : postSectionEdit('description')"
-                    />
-                </div>
-            </template>
-            <template v-else>
-                <span @click="focusDescriptionInput" v-if="localSection.description">{{ localSection.description }}</span>
-                <span class="placeholder-color" @click="focusDescriptionInput" v-else>description</span>
-            </template>
+        <div>
+            <div class="section-name">
+                <button class="btn delete" @click="postNewSection" v-if="isNew">
+                    <i class="mdi mdi-plus"/>
+                    <span class="tooltip">add section</span>
+                </button>
+                <button class="btn delete" @click="deleteSection" v-else>
+                    <i class="mdi mdi-close"/>
+                    <span class="tooltip">delete section</span>
+                </button>
+                <template v-if="editName">
+                    <div class="text-field name">
+                        <input
+                            type="text"
+                            ref="nameInputRef"
+                            v-model="localSection.name"
+                            @blur="isNew ? editName=false : postSectionEdit('name')"
+                            @keydown.enter="isNew ? postNewSection : postSectionEdit('name')"
+                            @keydown=tabToDescription
+                        />
+                    </div>
+                </template>
+                <template v-else>
+                    <span @click="focusNameInput" v-if="localSection.name">{{ localSection.name }}</span>
+                    <span class="placeholder-color" @click="focusNameInput" v-else>name</span>
+                </template>
+                <button class="btn add-item" @click="addNewItem" v-if="!isNew">
+                    <span class="btn-text">item</span>
+                    <i class="mdi mdi-plus"/>
+                    <span class="tooltip">add item</span>
+                </button> 
+            </div>
+            <div class="section-description">
+                <template v-if="editDescription">
+                    <div class="text-field description">
+                        <input
+                            type="text"
+                            class="input-description"
+                            ref="descriptionInputRef"
+                            v-model="localSection.description"
+                            @blur="isNew ? (localSection.name ? postNewSection : editDesciption=false) : postSectionEdit('description')"
+                        />
+                    </div>
+                </template>
+                <template v-else>
+                    <span @click="focusDescriptionInput" v-if="localSection.description">{{ localSection.description }}</span>
+                    <span  class="placeholder-color" @click="focusDescriptionInput" v-else>description</span>
+                </template>
+            </div>
         </div>
         <div class="section-items">
             <EditItem
