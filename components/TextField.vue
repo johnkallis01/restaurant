@@ -87,8 +87,16 @@ const onInput = (event) => {
     top: -8px;
     left: 10px;
     font-size: 12px;
-    color: #5264ae; 
-    background: linear-gradient(var(--label-bg-color) 50%, white 60%);
+    color: #5264ae;
+    background-color: white;
+    background: linear-gradient(var(--label-bg-color) 55%, white 55%);
+
+}
+.floating-text-field input:-webkit-autofill,
+.floating-text-field input:-webkit-autofill:hover,
+.floating-text-field input:-webkit-autofill:focus,
+.floating-text-field input:-webkit-autofill:active {
+    transition: background-color 5000s ease-in-out 0s;
 }
 .eye-button{
     position: absolute;

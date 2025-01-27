@@ -312,6 +312,7 @@ containers
 .text-field input:focus, .text-field textarea:focus{
     outline: none;
     border-color: #1976d2;
+    background-color: white;
     box-shadow: rgba(25, 118, 210, 0.5);
 }
 .placeholder-color{
