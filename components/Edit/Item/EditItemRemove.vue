@@ -16,16 +16,16 @@ const { nameInputRef, editName, focusNameInput } = useNameInput();
 
 const postEditRemove = () => {
     editName.value=false;
-    const removeIndex = menu.sections[sectionIndex].items[itemIndex].removes.findIndex((rem)=> rem._id === localRemove._id);
+    const removeIndex = localMenu.sections[sectionIndex].items[itemIndex].removes.findIndex((rem)=> rem._id === localRemove._id);
     localMenu.sections[sectionIndex].items[itemIndex].removes[removeIndex] = localRemove;   
     menuStore.updateMenu(localMenu);
 }
 
-const postNewRemove = (r) => {
-    if(r.name){    
+const postNewRemove = () => {
+    if(localRemove.name){    
         localMenu.sections[sectionIndex].items[itemIndex].removes.push({
-            name: r.name,
-            _id: r._id,
+            name: localRemove.name,
+            _id: localRemove._id,
         });
         menuStore.updateMenu(localMenu);
         emit('send-reset-remove');

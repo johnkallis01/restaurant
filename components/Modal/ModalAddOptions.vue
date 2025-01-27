@@ -50,14 +50,14 @@ const getNew = (op) => {
                     @click="addNew=!addNew">add option</button>
             </div>
         </div>
-        <div class="form-body">
+        <div class="form-body" >
             <EditItemOption 
                 v-if="detachedItem.options?.length ? addNew : true"
                 @create-new-option="getNew"
                 :option="newOption"
                 :is-open="false"
                 :item="detachedItem"/>
-            <EditItemOption
+            <EditItemOption @click.stop
                 v-for="(op, i) in detachedItem.options" :key="op._id"
                 :option="op" :item="detachedItem"               
                 :disable-val-btn="addNew"
@@ -80,6 +80,7 @@ const getNew = (op) => {
 .btn{
     box-sizing: border-box;
     border: 2px solid rgb(233, 235, 235);
+    margin: 5px;
 }
 .btn.close{
     border: 1px solid black;
@@ -89,7 +90,6 @@ const getNew = (op) => {
     height: 100%;
     width: 100%;
     padding: 5px;
-    box-sizing: border-box;
     overflow-y: auto;
 }
 .item-title{
@@ -107,10 +107,12 @@ const getNew = (op) => {
     justify-content: flex-end;
     align-items: end;
     align-content: end;
+    margin-right: 10px;
 }
 .container{
     height: 100%;
     width: 100%;
+    border-radius: 15px;
 }
 .container.aro{
     display: flex;

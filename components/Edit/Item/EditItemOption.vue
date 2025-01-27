@@ -3,7 +3,7 @@ const emit = defineEmits(['update-options','create-new-option','send-reset-optio
 const { detachObject } = useDetachObject();
 const { formatPrice } = usePriceFormatter();
 const { nameInputRef, editName, focusNameInput } = useNameInput();
-const { priceInputRef, editPrice, focusPriceInput } = usePriceInput();
+const { priceInputRef, editPrice, focusPriceInput, tabToPrice } = useTabToPrice();
 const {option, item, isOpen } = defineProps({
     option: { type: Object, required: true },
     item: { type: Object, required: true },
@@ -46,7 +46,7 @@ const deleteOptionContent = (val) => {
         const optionIndex = localItem.options.findIndex((op)=> op._id === localOption._id);
         if(optionIndex>=0) {
             localItem.options[optionIndex] = localOption;
-            emit('update-options', localItem.options)
+            emit('update-options', localItem.options);
         } 
     }
     
@@ -143,6 +143,8 @@ onBeforeUnmount(() => {
                     placeholder="name"
                     ref="contentInputRef"
                     v-model="newContent.name"
+                    @keydown.enter="addValue"
+                    @keydown="tabToPrice"
                 />
             </div>
             <PriceInput class="item-price" ref="priceInputRef"
@@ -159,7 +161,7 @@ onBeforeUnmount(() => {
         </div>
         <div class="options-content-row">
             <div class="option-content" v-for="(val,i) in localOption.content" :key="val.name">
-                <button class="btn del" @click="deleteOptionContent(val)">
+                <button class="btn del" @click="deleteOptionContent(val)" >
                     <i class="mdi mdi-close"/>
                     <span class="tooltip">delete</span>
                 </button>

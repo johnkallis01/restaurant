@@ -1,5 +1,4 @@
 <script setup>
-
 const emit = defineEmits(['send-reset-addOn', 'delete-add-on']);
 const {addOn,item_id, section_id, menu} = defineProps(
 {
@@ -12,7 +11,6 @@ const menuStore = useMenuStore();
 const localMenu=reactive(menu);
 const localAddOn=reactive(addOn);
 const isNew = ref(false);
-
 const sectionIndex = localMenu.sections.findIndex(sec => sec._id === section_id);
 const itemIndex = localMenu.sections[sectionIndex].items.findIndex(it => it._id === item_id);
 
@@ -41,11 +39,10 @@ const postNewAddOn = () => {
 const getAddOnPrice = (np) => {
     editPrice.value = false;
     localAddOn.price = np;
-    if(!isNew.value) postEditAddOn();
 } 
 onMounted(()=>{
     if(!localAddOn.name){
-        isNew.value = true;
+        isNew.value = true; editName.value=true;
         focusNameInput();
     }
 });
