@@ -6,7 +6,7 @@ export default defineNuxtRouteMiddleware((to) => {
     return navigateTo('/auth/login/');
   }else{
     // console.log('v',authstore.verifyToken())
-    if(!authstore.verifyToken()) {
+    if(!authstore.verifyToken) {
       authstore.logout();
       return navigateTo('/auth/login/');
     }

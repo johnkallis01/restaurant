@@ -50,15 +50,4 @@ const closeModal = () =>{
 .item-name{
     margin-left: 10px;
 }
-.section-container{
-    display: flex;
-    justify-content: flex-start;
-    flex-direction: column;
-    align-items: center;
-    text-align: left;
-    width: 80vw;
-}
-.section-name{
-    width: 80vw;
-}
 </style>

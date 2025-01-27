@@ -3,7 +3,6 @@ useHead({
   title: "John's Restaurant - Edit Menu"
 });
 definePageMeta({middleware: ['admin','auth']});
-// definePageMeta({middleware: ['auth']});
 
 const { data: menus } = await useFetch("/api/menus");
 const route = useRoute();

@@ -62,9 +62,12 @@ function printTimes(start, end){
 </script>
 <template>
     <div class="schedule">
-      <div v-for="(days, i) in sameTimes" :key="i" class="days">
-        <div>{{days.names + ": " + days.times}}</div>
-      </div>
+        <span>
+            <div v-for="(days, i) in sameTimes" :key="i" class="days">
+                <div>{{days.names + ": " + days.times}}</div>
+            </div>
+        </span>
+      
     </div>
   </template>
 <style scoped>
@@ -76,6 +79,7 @@ function printTimes(start, end){
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    
     gap: 5px;
 }
 </style>
