@@ -92,7 +92,7 @@ const register = async () => {
             :place-holder="input.placeholder" :req="input.req" 
             :is-valid="validationStatus[input.name]"
             @send-input="(value) => validateInput(input.rule, value, input.name)"
-            :password="input.password"
+            :password="input.password" bgColor="azure"
             @keydown.enter="tabToSubmit($event)" 
            />
         </form>

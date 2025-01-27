@@ -88,7 +88,7 @@ const onInput = (event) => {
     left: 10px;
     font-size: 12px;
     color: #5264ae; 
-    background-color: var(--label-bg-color, white); 
+    background: linear-gradient(var(--label-bg-color) 50%, white 60%);
 }
 .eye-button{
     position: absolute;

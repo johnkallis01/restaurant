@@ -41,7 +41,7 @@ const inputs = ref([
         <TextField class="input-field login" 
           v-for="input in inputs" :key="input.name"
           :place-holder="input['placeholder']"
-          :req="input['req']"
+          :req="input['req']" bgColor="azure"
           :password="input['password']"
           @send-input="input['sendInput']"
           @keydown.enter="input['callback']"/>

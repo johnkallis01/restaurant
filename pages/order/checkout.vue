@@ -76,7 +76,7 @@ const submitOrder = async ()=>{
             <TextField class="input-field"
             v-for="input in inputs" :key="input.placeholder"
             :place-holder="input.placeholder" :req="input.req" 
-            :is-valid="validationStatus[input.name]"
+            :is-valid="validationStatus[input.name]" bgColor="azure"
             @send-input="(value) => validateInput(input.rule, value, input.name)"
             @keydown.enter="tabToSubmit($event)" 
            />

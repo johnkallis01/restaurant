@@ -87,10 +87,7 @@ onBeforeUnmount(() => {
           <button class="btn-link">Menus</button>
         </nuxt-link>
         <nuxt-link to="/order">
-          <button class="btn-link" @click="focusLogin">
-            Order
-            <span class="tooltip">login to order</span>
-          </button>
+          <button class="btn-link" @click="focusLogin">Order</button>
         </nuxt-link>
       </div>
       <div class="right-btns">
