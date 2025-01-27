@@ -80,7 +80,6 @@ onBeforeUnmount(() => {
           </button>
           <div class="welcome" v-if="loggedIn">{{"Welcome, " + userName.value}}</div>
         </ClientOnly>
-        <span>{{  }}</span>
         <nuxt-link to="/">
           <button class="btn-link">Home</button>
         </nuxt-link>
@@ -88,7 +87,10 @@ onBeforeUnmount(() => {
           <button class="btn-link">Menus</button>
         </nuxt-link>
         <nuxt-link to="/order">
-          <button class="btn-link" @click="focusLogin">Order</button>
+          <button class="btn-link" @click="focusLogin">
+            Order
+            <span class="tooltip">login to order</span>
+          </button>
         </nuxt-link>
       </div>
       <div class="right-btns">

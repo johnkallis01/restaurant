@@ -18,6 +18,9 @@ export const useCartStore = defineStore('cart', {
         removeItem(index){
             this.items.splice(index, 1);
         },
+        clearCart(){
+            this.items=[];
+        },
         toggleCart(){
             if(this.items.length) this.isCartOpen = !this.isCartOpen;  
         },
@@ -27,5 +30,16 @@ export const useCartStore = defineStore('cart', {
         closeCart(){
             this.isCartOpen=false;
         },
+        async submitOrder(order){
+            const token=useCookie('token');
+            const response = await $fetch('/api/orders/', {
+                method: 'POST',
+                body: JSON.stringify(order),
+                headers: {authorization: `Bearer ${token.value}`},
+            });
+            console.log(response)
+            this.clearCart();
+            navigateTo('/');
+        }
     }
 })

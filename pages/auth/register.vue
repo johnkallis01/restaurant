@@ -5,7 +5,7 @@ useHead({
 import { rules } from '~/utils/rules';
 const authStore = useAuthStore();
 
-const buttonRef=ref(null);
+const { buttonRef, tabToSubmit } = useTabToSubmit();
 const user= reactive({
   firstName: '',
   lastName: '',
@@ -57,14 +57,14 @@ const validateInput = (rule, value, inputVar) =>{
     if(validationStatus[inputVar]) user[inputVar] = value; //if good assign to user
   }
 }
-const tabToSubmit = (event) =>{
-  event.preventDefault();
-  nextTick(() => {
-      if (buttonRef.value) {
-        buttonRef.value.focus();
-        buttonRef.value.click();
-      }}); 
-}
+// const tabToSubmit = (event) =>{
+//   event.preventDefault();
+//   nextTick(() => {
+//       if (buttonRef.value) {
+//         buttonRef.value.focus();
+//         buttonRef.value.click();
+//       }}); 
+// }
 const register = async () => {
     try {
       await authStore.register({

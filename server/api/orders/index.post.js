@@ -11,7 +11,8 @@ export default defineEventHandler(async (event) => {
     try{
         const decoded = verifyToken(token);
         const {email} = decoded; 
-        user = await User.findOne({  email });        
+        user = await User.findOne({  email });  
+        console.log('t', user)      
     }catch (error){
         throw createError({ statusCode: 401, message: 'Invalid or expired token' });
     }
@@ -19,9 +20,9 @@ export default defineEventHandler(async (event) => {
     console.log(user)
     const body = await readBody(event);
     console.log('body',body)
-    body.user=user;
+    body.user='/api/user/'+user._id;
     try {
-        console.log("POST /api/order/")
+        console.log("POST /api/orders/")
         const response = await Order.create(body);
         return { message: "Order created", res: response };
     } catch (e) {

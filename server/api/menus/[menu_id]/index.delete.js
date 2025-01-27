@@ -21,7 +21,8 @@ export default defineEventHandler(async (event) => {
 		throw createError({ statusCode: 401, message: 'Invalid or expired token' });
 	}
 	if(isAdmin){
-		const id = event.context.params?.menu_id;
+		console.log(event.context)
+		const id = event.context.params.menu_id;
 		try {
 			console.log("DELETE /api/menu/id")
 			const res = await Menu.findByIdAndDelete(id);

@@ -38,10 +38,10 @@ const onInput = (event) => {
             @input="onInput($event)"
             />
         <label :for="placeHolder" :style="{'--label-bg-color': bgColor}">{{capitalizeFirstLetter(placeHolder)}}</label>
-        <div class="eye-button" type="button" @click="togglePassword" v-if="password">
+        <button class="eye-button" type="button" @click="togglePassword" v-if="password">
             <i class="mdi mdi-eye-outline" v-if="isOpen"/>
             <i class="mdi mdi-eye-off-outline" v-else/>
-        </div>
+        </button>
     </div>
 </template>
 <style scoped>
@@ -54,6 +54,7 @@ const onInput = (event) => {
     transition: 0.2s ease;
     pointer-events: none;
     border-radius: 3px 3px 0 0;
+    overflow: hidden;
 }
 .floating-text-field input{
     padding: 10px 10px 10px 15px;
@@ -66,6 +67,7 @@ const onInput = (event) => {
     border: 2px solid rgb(96, 97, 97);
     border-radius: 5px;
     transition: border-color 0.3s;
+    
 }
 .floating-text-field input:placeholder-shown + label{
     position: absolute;
@@ -74,6 +76,8 @@ const onInput = (event) => {
     font-size: 14px;
     color: #aaaa;
     transition: 0.3s ease;
+    text-wrap: wrap;
+    overflow: hidden;
 }
 .floating-text-field input:hover + label{
     cursor: text;

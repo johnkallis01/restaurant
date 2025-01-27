@@ -5,6 +5,7 @@ useHead({
 });
 import { rules } from '~/utils/rules';
 const cartStore = useCartStore();
+const { buttonRef, tabToSubmit } = useTabToSubmit();
 // const config=useRunTimeConfig();
 // const Stripe = require('stripe');
 // const stripe = Stripe(config.stripPublic);
@@ -14,7 +15,7 @@ const cartStore = useCartStore();
 //     apiKey: config.stripPublic
 //   }
 // );
-const buttonRef=ref(null);
+
 const order= reactive({
   firstName: '',
   lastName: '',
@@ -49,10 +50,12 @@ const validateInput = (rule, value, inputVar) =>{
 }
 const submitOrder = async ()=>{
   try {
-      await authStore.register({
+      await cartStore.submitOrder({
         name: order.lastName+','+order.firstName,
         phone: order.phone,
         email: order.email,
+        total: cartStore.getTotal,
+        items: cartStore.getItems,
       })
     } catch (error) {
       console.log('errrror: ', error['statusCode'])
@@ -64,26 +67,56 @@ const submitOrder = async ()=>{
 </script>
 <template>
   <div class="container">
-    <div class="form-title">Registration</div>
-      <div class="form-subtitle">password must contain at least one uppercase letter, one number and one symbol !@#$%^&*?</div>
-        <form>
-          <TextField class="input-field"
+    <div class="form-title checkout">
+      <span class="text">{{'Checkout Total:  $'+cartStore.getTotal}}</span>
+    </div>
+      <div class="form-subtitle checkout">Please enter your contact information to complete the order</div>
+        <form class="checkout-form">
+          <div class="form-inputs">
+            <TextField class="input-field"
             v-for="input in inputs" :key="input.placeholder"
             :place-holder="input.placeholder" :req="input.req" 
             :is-valid="validationStatus[input.name]"
             @send-input="(value) => validateInput(input.rule, value, input.name)"
             @keydown.enter="tabToSubmit($event)" 
            />
+          </div>
+          <div class="checkout-actions">
+            <button class="btn submit" ref="buttonRef"
+              :disabled="!isDisabled" @click="submitOrder">Order</button>
+          </div>
         </form>
-        <div class="form-actions">
-          <button class="btn register" ref="buttonRef"
-            :disabled="!isDisabled" @click="submitOrder">Order</button>
-        </div>
+        
   </div>
 </template>
 <style scoped>
 .container{
   height: 100%;
   width: 100%;
+  border-radius: 0;
+  align-items: center;
+}
+.form-title.checkout{
+  width: 100%;
+  border-radius: 0px;
+}
+.text{
+  margin-left: 20px;
+  text-wrap: nowrap;
+}
+.form-inputs{
+
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-top: 40px;
+}
+.checkout-form{
+  width: 60vw;
+
+}
+.checkout-actions{
+  width: 100%;
+  margin: 5px;
 }
 </style>
