@@ -62,20 +62,18 @@ export const useAuthStore = defineStore('auth', {
         },
         logout() {
             const cookie = useCookie('token');
-            const user = useCookie('user');
             cookie.value=null;
+            const user = useCookie('user');
             user.value=null;
             const isAdmin = useCookie('isAdmin');
             isAdmin.value=null;
-            const test = useCookie('token')
-            // console.log(test.value);
-            test.value=useCookie('user');
-            // console.log(test.value)
-            test.value=useCookie('isAdmin');
-            // console.log(test.value);
-            test.value=null;
-            // this.clearAuth();
         },
+        verifyToken(){
+            const token = useCookie('token');
+            if(token.value) return !isTokenExpired(token.value);
+            else return false;
+        },
+
     //     clearAuth() {
     //         this.user = null;
     //         this.token = null;
