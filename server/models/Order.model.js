@@ -13,8 +13,12 @@ const orderSchema = new Schema({
         type: String,
         required: true
     },
-    user_email: {
+    email: {
       type: String,
+      required: true
+    },
+    user: {
+      type: Schema.Types.Mixed,
       required: true
     },
     items: [ 
@@ -23,7 +27,7 @@ const orderSchema = new Schema({
         required: true
       }
     ],
-    notes: {
+    comments: {
       type: String,
       required: false
     }},{ timestamps: true });

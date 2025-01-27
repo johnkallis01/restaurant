@@ -1,4 +1,7 @@
 <script setup>
+useHead({
+  title: "John's Restaurant - Order"
+});
 definePageMeta({middleware: 'auth'});
 const menuStore = useMenuStore();
 let now = new Date();

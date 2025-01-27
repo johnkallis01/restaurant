@@ -30,6 +30,7 @@ const deleteItem=(i)=>{cartStore.removeItem(i);}
                     <div class="item-options" 
                         v-if="item.options.length"
                         v-for="(op, j) in item.options" :key="op._id">
+                        <!-- {{ op.choice }} -->
                         {{ Number(op.choice[0].price)>0 ? formatPrice(op.choice[0].price) + " - " : null }}
                         {{ op.name + ": " + op.choice[0].name }}
                     </div>

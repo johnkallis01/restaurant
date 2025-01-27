@@ -1,4 +1,7 @@
 <script setup>
+useHead({
+  title: "John's Restaurant - Edit Menu"
+});
 definePageMeta({middleware: ['admin','auth']});
 // definePageMeta({middleware: ['auth']});
 

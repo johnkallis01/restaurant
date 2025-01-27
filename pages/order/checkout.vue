@@ -3,6 +3,7 @@ definePageMeta({middleware: 'auth'});
 useHead({
   title: "John's Restaurant - Checkout"
 });
+import { rules } from '~/utils/rules';
 const cartStore = useCartStore();
 // const config=useRunTimeConfig();
 // const Stripe = require('stripe');
@@ -13,24 +14,53 @@ const cartStore = useCartStore();
 //     apiKey: config.stripPublic
 //   }
 // );
-const rules = {
-  name: /^[a-zA-Z]{2,30}$/,
-  phone: /^\d{10}$/,
-  email: /.+@.+\..+/,
-  password: /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*?])[A-Za-z\d!@#$%^&*?]{8,}$/,
-}
+const buttonRef=ref(null);
+const order= reactive({
+  firstName: '',
+  lastName: '',
+  phone: '',
+  email: '',
+})
 const validationStatus= reactive({
   firstName: null,
   lastName: null,
   phone: null,
   email: null,
-  password: null,
-  confirmPassword: null,
 });
-// const inputs = ref([
-//   {},{},{},{},{},
-// ]);
-
+const inputs = ref([
+  { name: 'firstName', placeholder: 'first name', req: true, rule: 'name',},
+  { name: 'lastName', placeholder: 'last name',  req: true, rule: 'name',},
+  { name: 'phone', placeholder: 'phone', req: true, rule: 'phone',},
+  { name: 'email', placeholder: 'email', req: true, rule: 'email',},
+]);
+const isDisabled = computed(()=>{
+  for(const val in validationStatus){
+    if(!!validationStatus[val]);
+    else return false;
+  }
+  return true;
+});
+const validateInput = (rule, value, inputVar) =>{
+  if(rules[rule] && value.length){
+    // console.log(rules[rule])
+    validationStatus[inputVar] = rules[rule].test(value); //test input
+    if(validationStatus[inputVar]) order[inputVar] = value; //if good assign to user
+  }
+}
+const submitOrder = async ()=>{
+  try {
+      await authStore.register({
+        name: order.lastName+','+order.firstName,
+        phone: order.phone,
+        email: order.email,
+      })
+    } catch (error) {
+      console.log('errrror: ', error['statusCode'])
+      if(error.response.status === 409){
+        navigateTo('/')
+      }
+    }
+}
 </script>
 <template>
   <div class="container">
@@ -42,13 +72,12 @@ const validationStatus= reactive({
             :place-holder="input.placeholder" :req="input.req" 
             :is-valid="validationStatus[input.name]"
             @send-input="(value) => validateInput(input.rule, value, input.name)"
-            :password="input.password"
             @keydown.enter="tabToSubmit($event)" 
            />
         </form>
         <div class="form-actions">
           <button class="btn register" ref="buttonRef"
-            :disabled="!isDisabled" @click="register">Register</button>
+            :disabled="!isDisabled" @click="submitOrder">Order</button>
         </div>
   </div>
 </template>

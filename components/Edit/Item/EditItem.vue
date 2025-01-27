@@ -123,7 +123,7 @@ onBeforeUnmount(() => {
                         ref="nameInputRef"
                         v-model="localItem.name"
                         @blur="isNew ? editName=false : postItemEdit('name')"
-                        @keydown.enter="isNew ? postNewItem() : postItemEdit('name')"
+                        @keydown.enter="isNew ? postNewItem : postItemEdit('name')"
                         @keydown="tabToPrice" 
                         />
                 </div>

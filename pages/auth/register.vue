@@ -1,4 +1,8 @@
 <script setup>
+useHead({
+  title: "John's Restaurant - Register"
+});
+import { rules } from '~/utils/rules';
 const authStore = useAuthStore();
 
 const buttonRef=ref(null);
@@ -10,12 +14,12 @@ const user= reactive({
   password: '',
   confirmPassword: '',
 })
-const rules = {
-  name: /^[a-zA-Z]{2,30}$/,
-  phone: /^\d{10}$/,
-  email: /.+@.+\..+/,
-  password: /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*?])[A-Za-z\d!@#$%^&*?]{8,}$/,
-}
+// const rules = {
+//   name: /^[a-zA-Z]{2,30}$/,
+//   phone: /^\d{10}$/,
+//   email: /.+@.+\..+/,
+//   password: /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*?])[A-Za-z\d!@#$%^&*?]{8,}$/,
+// }
 const validationStatus= reactive({
   firstName: null,
   lastName: null,

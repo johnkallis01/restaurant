@@ -1,4 +1,7 @@
 <script setup>
+useHead({
+  title: "John's Restaurant - Login"
+});
 const authStore = useAuthStore();
 const email = ref('');
 const password = ref('');

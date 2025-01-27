@@ -1,4 +1,7 @@
 <script setup>
+useHead({
+  title: "John's Restaurant - Home"
+});
 const title=ref("John's Restaurant")
 const info=ref(['Phone: 667-940-8868','johnkallis01@gmail.com'])
 </script>

@@ -1,4 +1,7 @@
 <script setup>
+useHead({
+  title: "John's Restaurant - View Menus"
+});
 const menuStore = useMenuStore();
 const index = ref(0);
 const visibleMenu = () => {

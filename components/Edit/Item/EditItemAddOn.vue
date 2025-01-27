@@ -68,9 +68,9 @@ onMounted(()=>{
                     <input 
                         type="text" placeholder="name" ref="nameInputRef"
                         v-model="localAddOn.name"
-                        @blur="isNew ? postNewAddOn() : postEditAddOn()"
-                        @keydown="tabToPrice()"
-                        @keydown.enter="isNew ? postNewAddOn() : postEditAddOn()"
+                        @blur="isNew ? postNewAddOn : postEditAddOn"
+                        @keydown="tabToPrice"
+                        @keydown.enter="isNew ? postNewAddOn : postEditAddOn"
                     />
                 </div>
                 <div v-if="!editName">
@@ -79,18 +79,18 @@ onMounted(()=>{
                         v-if="localAddOn.name"
                         >{{ localAddOn.name }}</span>
                     <span class="placeholder-color"
-                        @click="focusNameInput()"
+                        @click="focusNameInput"
                         v-else>name</span>
                 </div>
             </div>
             <PriceInput class="item-price" ref="priceInputRef"
                 v-if="editPrice"
                 :price="localAddOn.price"
-                @update-price="getAddOnPrice()"
-                @keydown.enter="postNewAddOn()"
+                @update-price="getAddOnPrice"
+                @keydown.enter="postNewAddOn"
                 />
             <span class="item-price"
-                @click="focusPriceInput()"
+                @click="focusPriceInput"
                 v-else>
                 {{ formatPrice(localAddOn.price) }}
             </span>
