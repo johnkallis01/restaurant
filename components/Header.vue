@@ -5,6 +5,7 @@ const router = useRouter();
 
 const cartButtonRef=ref(null);
 const dropdownRef=ref(null);
+const logoutTimer=ref(null);
 const dropdown = ref(false);
 const isAdmin = ref(false);
 const userName = ref();
@@ -17,12 +18,8 @@ const logout = () => {
   router.push('/auth/login');
 };
 const loggedIn = computed(() => {
-  
-  // isAdmin.value=user.value.isAdmin;
   const token = useCookie('token');
   isAdmin.value = useCookie('isAdmin');
-  // console.log(isAdmin.value)
-  // console.log(token.value)
   return !!token.value;
 });
 const loginButton = ref(null);
@@ -36,37 +33,21 @@ const toggleCart = ()=>{cartStore.toggleCart();}
 const focusLogin = () =>{
   if(!loggedIn.value) loginButton.value.focus();
   
+
 }
 const name = ref('');
-// watch(
-//   ()=>loggedIn.value,
-//   () => {
-//     if(loggedIn.value){
-//       if(!name.value) {
-//         authStore.loadNameFromLocalStorage();
-//         name.value=authStore.getName;
-//         if(authStore.getIsAdmin) isAdmin.value=authStore.getIsAdmin;
-//     }
-//   }
-// });
 
 const toggleDropdown = () => {dropdown.value = !dropdown.value;}
 onBeforeMount( () => {
-  // console.log('header')
   userName.value=useCookie('user');
-  // console.log(userName.value);
   isAdmin.value=useCookie('isAdmin')
-  // // console.log('obm',authStore.getName)
-  // await authStore.fetchUser();
-  // authStore.loadNameFromLocalStorage();
-  // isAdmin.value=authStore.getIsAdmin; 
-  // // console.log(authStore.getName)
-  // name.value=authStore.getName;
 });
 onMounted(()=>{
+    logoutTimer.value = setInterval(authStore.verifyToken, 30000);
     document.addEventListener('click', closeDropdown);
 });
 onBeforeUnmount(() => {
+  if (logoutTimer.value) clearInterval(logoutTimer.value);
     document.removeEventListener('click', closeDropdown);
 });
 </script>

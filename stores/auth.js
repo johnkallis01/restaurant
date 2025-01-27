@@ -70,9 +70,11 @@ export const useAuthStore = defineStore('auth', {
         },
         verifyToken(){
             const token = useCookie('token');
-            if(token.value) return !isTokenExpired(token.value);
-            else return false;
+            if(token.value){
+                if(isTokenExpired(token.value)) this.logout();
+            }
         },
+       
 
     //     clearAuth() {
     //         this.user = null;
