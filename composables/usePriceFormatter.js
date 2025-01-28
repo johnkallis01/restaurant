@@ -1,5 +1,5 @@
 export function usePriceFormatter(){
-    const formatPrice=(price)=>{
+    function formatPrice(price){
         // console.log('price formatter', price)
         price=String(price);
         if(price[0] === "0") {
@@ -10,15 +10,14 @@ export function usePriceFormatter(){
         // console.log(index)
         // console.log(price)
         if(index > 0){
-            if(price[index]===price[price.length-3]) return "$" + price; 
+            if(price[index]===price[price.length-3]) return "$" + price;
+            else if(index===0)  return "$0"+price; 
             else if (price[index]===price[price.length-2]) return "$" + price+"0";
             else return "$" + Number(price).toFixed(2);
         }else{
             if (price) return "$"  + price + ".00";
             else return "$0.00";
         }
-        
-        
     }
     return { formatPrice };
 }

@@ -1,23 +1,17 @@
 <script setup>
 const emit = defineEmits(['close-window']);
+import { rules } from '~/utils/rules';
 const { menu, isNew } = defineProps({menu: {type: Object, required: false},
   isNew:{type:Boolean, required: false, default: false}});
 const localMenu = reactive({ ...menu, days: [...menu.days] });
 const menuStore = useMenuStore();
 const router = useRouter();
-
 const hasError = computed(() => localMenu.days.some(day => day.error));
 const hasOpenDay = computed(() => localMenu.days.some(day => day.open));
 const isDisabled = computed(() => hasError.value && !hasOpenDay.value);
-
-const getName = (n) => { localMenu.name = n; };
-//recieves schedule data from NewDay
-const getDay = (d) => {
-  localMenu.days[d.position] = d;
-};
-const postMenu = async () => {
+async function postMenu(){
   if(!isNew){
-    console.log('update M', localMenu )
+    // console.log('update M', localMenu )
     await menuStore.updateMenu(localMenu)
     emit('close-window');
   }
@@ -25,18 +19,21 @@ const postMenu = async () => {
     if(localMenu.name){
       try{
         const res = await menuStore.postMenu(localMenu);
-        console.log(res.res._id)
+        // console.log(res.res._id)
         router.push('/edit/menus/'+ res.res._id);
       }catch(error){console.log("menu didn't post:", error)}
     }
     else{console.warn('name req');}
   }
 }
+const getName = (n) => { localMenu.name = n; };
+const getDay = (d) => {localMenu.days[d.position] = d;};
 </script>
 <template>
     <div class="new-menu-container">
       <div class="menu-container-body" v-if="localMenu"> 
         <TextField
+          :is-valid="rules['name'].test(localMenu.name)"
           :name="localMenu.name||''"
           place-holder="menu name"
           bg-color="rgb(247, 249, 252)"
@@ -46,7 +43,7 @@ const postMenu = async () => {
             @send-day="getDay"/>
       </div>
       <button class="btn"
-        @click="postMenu"
+        @click="postMenu()"
         :disabled="isDisabled || !hasOpenDay">
         submit
       </button>

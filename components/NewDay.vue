@@ -19,7 +19,6 @@ const getEnd = (d)=>{
   localDay.end=d;
   emit('send-day', localDay);
 }
-
 </script>
 <template>
   <div class="day-card">

@@ -1,16 +1,12 @@
 <script setup>
 const emit = defineEmits(['close-modal']);
+const { item } = defineProps({item: {type: Object, required: true}});
 const cartStore = useCartStore(); 
 const { detachObject } = useDetachObject();
 const { formatPrice } = usePriceFormatter();
-const {addOnsFlag, removesFlag, optionsFlag, commentsFlag,
-    viewAddOns, viewRemoves, viewOptions, viewComments } = useAROFlags();
-
-
-const { item } = defineProps({item: {type: Object, required: true}})
+const {addOnsFlag, removesFlag, optionsFlag, commentsFlag, viewAddOns, viewRemoves, viewOptions, viewComments } = useAROFlags();
 const localItem=reactive(item);
 const detachedItem=detachObject(localItem);
-
 const selectedItem = reactive({
     name: detachedItem.name,
     price: detachedItem.price,
@@ -19,7 +15,15 @@ const selectedItem = reactive({
     options: detachedItem.options.map((op)=> ({_id: op._id, name: op.name,req: op.required, choice: []})),
     comments: '',
 });
-const itemPrice=(item) => {
+const OAR = ref([
+    {name:'options', flag: optionsFlag, callback: viewOptions, },
+    {name:'addOns', flag: addOnsFlag, callback: viewAddOns,},
+    {name:'removes', flag: removesFlag, callback: viewRemoves,},
+    {name:'comments', flag: commentsFlag, callback: viewComments, hasValue: true},
+]);
+const commentsRef = ref(null);
+function focusComment(){if (commentsRef.value !== null) nextTick(() => commentsRef.value.focus());}
+function itemPrice(item){
     // console.log('item price')
     const total=Number(item.price);
     const addOnTotal = item.addOns.reduce((subTotal, ao)=> {return subTotal+Number(ao.price)},0);
@@ -28,7 +32,7 @@ const itemPrice=(item) => {
     // console.log(total+addOnTotal+opTotal)
     return total+addOnTotal+opTotal;
 }
-const addItem = ()=>{
+function addItem(){
     const detachedSelected=detachObject(selectedItem);
     detachedSelected.price=itemPrice(detachedSelected)
     cartStore.addItemToCart(detachedSelected);
@@ -36,7 +40,6 @@ const addItem = ()=>{
     selectedItem.removes=[]; selectedItem.options=[]; selectedItem.comments= '';
     emit('close-modal');
 }
-
 const isDisabled=computed(() => {
     if(selectedItem.options.length){
         const disableBtn = selectedItem.options.some(option => {
@@ -45,16 +48,7 @@ const isDisabled=computed(() => {
     }else{
         return false;
     }
-});
-const commentsRef = ref(null);
-const OAR = ref([
-    {name:'options', flag: optionsFlag, callback: viewOptions, },
-    {name:'addOns', flag: addOnsFlag, callback: viewAddOns,},
-    {name:'removes', flag: removesFlag, callback: viewRemoves,},
-    {name:'comments', flag: commentsFlag, callback: viewComments, hasValue: true},
-    ]);
-    
-    
+});  
 const addHasValue = computed(()=>{
     OAR.value.forEach((oar)=>{
         detachedItem[oar.name]?.length || oar.hasValue ? oar.hasValue=true : oar.hasValue=false;
@@ -64,24 +58,15 @@ const openFirstOAR = computed(()=>{
     if(first) first.flag=true;
     else commentsFlag.value=true;
 })
-const focusComment = () => {
-//   console.log('commentsFlag is true!', commentsRef.value);
-    if (commentsRef.value !== null) nextTick(() => commentsRef.value.focus());
-   
-};
 watch(
   () => commentsFlag.value, // The variable to watch
   (newValue) => {
-    if (newValue) {
-        focusComment();
-    }
+    if (newValue) focusComment();
   }
 );
 onMounted(()=>{
     openFirstOAR.value; addHasValue.value;
-    if(commentsFlag.value){
-        focusComment();
-    }
+    if(commentsFlag.value) focusComment();
 });
 </script>
 <template>
@@ -139,7 +124,7 @@ onMounted(()=>{
         </div>
         <div class="form-actions">
             <span class="warning">{{ isDisabled ? "required option not selected!" : null }}</span>
-            <button class="btn close" @click="addItem" :disabled="isDisabled">submit</button>
+            <button class="btn close" @click="addItem()" :disabled="isDisabled">submit</button>
             <button class="btn close" @click="emit('close-modal')">cancel</button>
         </div>
     </div>

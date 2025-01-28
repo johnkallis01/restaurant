@@ -14,20 +14,15 @@ const closeCart = (event) => {
     )cartStore.closeCart();
   }
 }
-
-onMounted(()=>{
-    document.addEventListener('click', closeCart);
-    
-});
-onBeforeUnmount(() => {
-    document.removeEventListener('click', closeCart);
-});
+useEventListener('click',closeCart);
 </script>
 <template>
   <div class="app">
     <Header ref="childRef"/>
     <main class="main">
-      <Cart ref="cartRef" v-if="cartStore.isCartOpen" />
+      <div class="modalWrapper" v-if="cartStore.isCartOpen">
+        <Cart ref="cartRef" />
+      </div>
       <NuxtPage />
     </main>
   </div>

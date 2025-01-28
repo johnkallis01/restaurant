@@ -1,6 +1,5 @@
-export function useTabToSubmit() {
-    const buttonRef=ref(null);
-    const tabToSubmit = (event) =>{
+export function useTabToButton(buttonRef) {
+    function tabToButton(event){
         event.preventDefault();
         nextTick(() => {
             if (buttonRef.value) {
@@ -8,5 +7,5 @@ export function useTabToSubmit() {
               buttonRef.value.click();
             }}); 
       }
-    return { tabToSubmit, buttonRef};
+    return { tabToButton};
 }

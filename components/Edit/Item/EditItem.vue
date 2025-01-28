@@ -9,50 +9,36 @@ const { menu, section_id, item } = defineProps({
 const localItem=reactive(item);
 const localMenu=reactive(menu);
 const menuStore = useMenuStore();
-
 const { formatPrice } = usePriceFormatter();
-
-const isNew = ref(false);
 const { nameInputRef, editName, focusNameInput, tabToName } = useTabToName();
-const { tabToDescription, descriptionInputRef,editDescription,
-    focusDescriptionInput} = useTabToDescription();
+const { tabToDescription, descriptionInputRef,editDescription,focusDescriptionInput} = useTabToDescription();
 const { priceInputRef, editPrice, focusPriceInput, tabToPrice } = useTabToPrice();
-const {addOnsFlag, removesFlag, optionsFlag,resetFlags, viewAddOns,
-     viewRemoves } = useAROFlags();
+const {addOnsFlag, removesFlag, resetFlags, viewAddOns,viewOptions,viewRemoves } = useAROFlags();
 
-
-const modalFlag=ref(false);
-const placeHolder=ref(false);
-const newAddOnFlag=ref(true);
-const newRemoveFlag=ref(true);
-const newAddOn = ref({ name: "", price: "000.00", _id: uuidv4(), });
-const newRemove = ref({ name: "", _id: uuidv4(), });
 const modalRef=ref(null);
 const clickInsideOK = ref(null);
+
+const isNew = ref(false);
+const newAddOnFlag=ref(true);
+const newRemoveFlag=ref(true);
+const optionsModal=ref(false);
+const sectionIndex=localMenu.sections.findIndex(sec => sec._id === section_id);
+const newAddOn = ref({ name: "", price: "000.00", _id: uuidv4(), });
+const newRemove = ref({ name: "", _id: uuidv4(), });
 const OAR = ref([
-    {name:'options', flag: optionsFlag, callback: ()=> {if(localItem.name) {resetFlags();modalFlag.value=true}}},
+    {name:'options', flag: optionsModal, callback: ()=>{resetFlags();optionsModal.value=true;}},
     {name:'addOns', flag: addOnsFlag, callback: viewAddOns},
     {name:'removes', flag: removesFlag, callback: viewRemoves},
-    ]);
-
-const sectionIndex=localMenu.sections.findIndex(sec => sec._id === section_id);
-const itemIndex = localMenu.sections[sectionIndex].items.findIndex(it => it._id === item._id);
-const getItemPrice = (np) => {
-    editPrice.value = false;
-    localItem.price = np;
-    if(!isNew.value) postItemEdit('price');
-}
-const getResetAddOn = () => {newAddOn.value.name="";newAddOn.value.price="000.00";newAddOn.value._id=uuidv4();}
-const getResetRemove = () =>{ newRemove.value.name= ""; newRemove.value._id=uuidv4(); }
-const closeModal = ()=>{modalFlag.value=false;}
-
-const deleteItem = ()=>{
+]);
+function deleteItem(){
+    const itemIndex = localMenu.sections[sectionIndex].items.findIndex(it => it._id === item._id);
     localMenu.sections[sectionIndex].items.splice(itemIndex, 1);
     menuStore.updateMenu(localMenu);
 }
-const postItemEdit = (str) => {
+function postItemEdit(str){
     console.log('post edit')
     if(!isNew.value){
+        const itemIndex = localMenu.sections[sectionIndex].items.findIndex(it => it._id === item._id);
         localMenu.sections[sectionIndex].items[itemIndex]=localItem;
         menuStore.updateMenu(localMenu);
     }
@@ -68,7 +54,7 @@ const postItemEdit = (str) => {
             break;
     }
 }
-const postNewItem = () => {
+function postNewItem(){
     console.log('post new')
     if(localItem.name){
         isNew.value=false;
@@ -77,25 +63,33 @@ const postNewItem = () => {
         emit('send-new-item-flag', false);
     }
 }
+const getItemPrice = (np) => {
+    console.log('x',np)
+    editPrice.value = false;
+    localItem.price = np;
+    if(!isNew.value) postItemEdit('price');
+}
+const getResetAddOn = () => {newAddOn.value.name="";newAddOn.value.price="000.00";newAddOn.value._id=uuidv4();}
+const getResetRemove = () =>{ newRemove.value.name= ""; newRemove.value._id=uuidv4(); }
+const getCloseModal = ()=>{optionsModal.value=false;}
 const getDeleteAddOn = (index) => {
     localItem.addOns.splice(index, 1);
+    const itemIndex = localMenu.sections[sectionIndex].items.findIndex(it => it._id === item._id);
     localMenu.sections[sectionIndex].items[itemIndex]=localItem;
     menuStore.updateMenu(localMenu);
 }
 const getDeleteRemove = (index) => {
     localItem.removes.splice(index, 1);
+    const itemIndex = localMenu.sections[sectionIndex].items.findIndex(it => it._id === item._id);
     localMenu.sections[sectionIndex].items[itemIndex]=localItem;
     menuStore.updateMenu(localMenu);
 }
 const clickOutsideOARtab = (event) => {
     if (clickInsideOK.value && !clickInsideOK.value.contains(event.target)) resetFlags();
 }
+useEventListener('click', clickOutsideOARtab);
 onMounted(()=>{
     if(!localItem.name){ isNew.value = true; focusNameInput();}
-    document.addEventListener('click', clickOutsideOARtab);
-});
-onBeforeUnmount(() => {
-    document.removeEventListener('click', clickOutsideOARtab);
 });
 </script>
 <template>
@@ -104,14 +98,14 @@ onBeforeUnmount(() => {
             <div class="button-name">
                 <span class="btn-icons-group items">
                     <button class="btn" ref="buttonRef"
-                        @click="deleteItem"
+                        @click="deleteItem()"
                         @keydown="tabToName"
                         v-if="!isNew">
                         <i class="mdi mdi-close"/>
                         <span class="tooltip">delete</span>
                     </button>
                     <button class="btn" ref="buttonRef"
-                        @click="postNewItem"
+                        @click="postNewItem()"
                         @keydown="tabToName" 
                         v-else>
                         <i class="mdi mdi-plus"/>
@@ -123,7 +117,7 @@ onBeforeUnmount(() => {
                         ref="nameInputRef"
                         v-model="localItem.name"
                         @blur="isNew ? editName=false : postItemEdit('name')"
-                        @keydown.enter="isNew ? postNewItem : postItemEdit('name')"
+                        @keydown.enter="isNew ? postNewItem() : postItemEdit('name')"
                         @keydown="tabToPrice" 
                         />
                 </div>
@@ -143,7 +137,7 @@ onBeforeUnmount(() => {
                 v-if="editPrice"
                 :price="localItem.price"
                 @keydown="tabToDescription"
-                @keydown.enter="isNew ? editPrice=false : postItemEdit('price')"
+                @keydown.enter="isNew ? postNewItem() : postItemEdit('price')"
                 @update-price="getItemPrice"/>
             <span class="item-price" @click="focusPriceInput" v-else>
                 {{ formatPrice(localItem.price)}}
@@ -155,7 +149,7 @@ onBeforeUnmount(() => {
                     v-model="localItem.description"
                     @click="console.log('ph')"
                     @blur="isNew ? 
-                    ( localItem.name ? postNewItem : editDescription=false ) :
+                    ( localItem.name ? postNewItem() : editDescription=false ) :
                      postItemEdit('description')"/>
             </div>
             <div v-if="!editDescription">
@@ -163,7 +157,7 @@ onBeforeUnmount(() => {
                     v-if="localItem.description.length" 
                     @click="focusDescriptionInput">{{ localItem.description }}
                 </span>
-                <span class="placeholder-color" @click="localItem.name.length ? focusDescriptionInput() : null" v-else>description</span>
+                <span class="placeholder-color" @click="localItem.name.length ? focusDescriptionInput : null" v-else>description</span>
             </div>
         </div>
         <div class="item-addons-removes-options" ref="clickInsideOK">
@@ -217,10 +211,10 @@ onBeforeUnmount(() => {
                
             </div>
         </div>
-        <div class="modalWrapper" v-if="modalFlag">
+        <div class="modalWrapper" v-if="optionsModal">
             <div class="modal" ref="modalRef">
                 <ModalAddOptions :item="localItem" :section_id="section_id" 
-                    :menu="localMenu" @close-modal="closeModal"/>               
+                    :menu="localMenu" @close-modal="getCloseModal"/>               
             </div>
         </div>
     </div>
@@ -228,5 +222,8 @@ onBeforeUnmount(() => {
 <style scoped>
 .item-a-r-o-titles.mods{
     font-size: 12px;
+}
+.tooltip{
+    left: 80%;
 }
 </style>

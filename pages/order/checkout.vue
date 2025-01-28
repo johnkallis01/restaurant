@@ -1,11 +1,12 @@
 <script setup>
-definePageMeta({middleware: 'auth'});
+definePageMeta({middleware: ['auth', 'has-order']});
 useHead({
   title: "John's Restaurant - Checkout"
 });
 import { rules } from '~/utils/rules';
 const cartStore = useCartStore();
-const { buttonRef, tabToSubmit } = useTabToSubmit();
+const buttonRef=ref(null);
+const { tabToButton } = useTabToButton(buttonRef);
 // const config=useRunTimeConfig();
 // const Stripe = require('stripe');
 // const stripe = Stripe(config.stripPublic);
@@ -48,7 +49,7 @@ const validateInput = (rule, value, inputVar) =>{
     if(validationStatus[inputVar]) order[inputVar] = value; //if good assign to user
   }
 }
-const submitOrder = async ()=>{
+async function submitOrder(){
   try {
       await cartStore.submitOrder({
         name: order.lastName+','+order.firstName,
@@ -78,12 +79,12 @@ const submitOrder = async ()=>{
             :place-holder="input.placeholder" :req="input.req" 
             :is-valid="validationStatus[input.name]" bgColor="azure"
             @send-input="(value) => validateInput(input.rule, value, input.name)"
-            @keydown.enter="tabToSubmit($event)" 
+            @keydown.enter="tabToButton" 
            />
           </div>
           <div class="checkout-actions">
             <button class="btn submit" ref="buttonRef"
-              :disabled="!isDisabled" @click="submitOrder">Order</button>
+              :disabled="!isDisabled" @click="submitOrder()">Order</button>
           </div>
         </form>
         

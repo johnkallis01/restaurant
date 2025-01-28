@@ -10,7 +10,6 @@ const { name } = defineProps({
 });
 const localName = ref(name);
 const isOpen = ref(false);
-
 const capitalizeFirstLetter = (word)=>{
     word.trim();
     word = word.charAt(0).toUpperCase()+word.slice(1);
@@ -18,8 +17,6 @@ const capitalizeFirstLetter = (word)=>{
     if(index) return word.slice(0,index+1) + word.charAt(index+1).toUpperCase() + word.slice(index+2);
     return word;
 }
-
-const togglePassword = () => {isOpen.value=!isOpen.value;}
 const onInput = (event) => {
     localName.value = event.target.value;
   emit('send-input', localName.value);
@@ -38,7 +35,7 @@ const onInput = (event) => {
             @input="onInput($event)"
             />
         <label :for="placeHolder" :style="{'--label-bg-color': bgColor}">{{capitalizeFirstLetter(placeHolder)}}</label>
-        <button class="eye-button" type="button" @click="togglePassword" v-if="password">
+        <button class="eye-button" type="button" @click="isOpen=!isOpen" v-if="password">
             <i class="mdi mdi-eye-outline" v-if="isOpen"/>
             <i class="mdi mdi-eye-off-outline" v-else/>
         </button>

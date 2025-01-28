@@ -1,11 +1,10 @@
 <script setup>
 import { v4 as uuidv4 } from 'uuid';
-import { reactive } from 'vue';
+const {menu, menus} = defineProps({
+     menu: { type: Object, required: true},
+    menus: {type: Array, required: true}
+});
 const router=useRouter();
-const {menu, menus} = defineProps(
-    { menu: { type: Object, required: true, },
-    menus: {type: Array, required: true}}
-);
 const menuStore = useMenuStore();
 const localMenu = reactive(menu);
 const localMenus = reactive(menus);
@@ -17,16 +16,13 @@ const newSection = ref({
     _id: uuidv4(),
     items: []
 });
-
-const getNewSectionFlag = () => {addSection.value=false;}
-const getCloseTimes = () => {showTimes.value=false;}
-const deleteMenu = (menu) =>{
+function deleteMenu(menu){
     const menuIndex = localMenus.findIndex(m => menu._id === m._id);
     localMenus.slice(menuIndex, 1);
     menuStore.deleteMenu(menu._id);
     router.push('/');
 }
-const addNewSection = () =>{
+function addNewSection(){
     addSection.value=!addSection.value;
     newSection.value = {
     name: "",
@@ -35,6 +31,8 @@ const addNewSection = () =>{
     items: []
   };
 }
+const getNewSectionFlag = () => {addSection.value=false;}
+const getCloseTimes = () => {showTimes.value=false;}
 </script>
 <template>
     <div class="menu-container">
@@ -53,7 +51,7 @@ const addNewSection = () =>{
                 <span class="spacer"></span>
                 <button class="btn times" @click="showTimes=!showTimes">
                     <i class="mdi mdi-calendar-edit"/>
-                    <span>times</span>
+                    <span>edit</span>
                     <span class="tooltip">edit menu times</span>
                 </button>
             </div>

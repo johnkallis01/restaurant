@@ -3,15 +3,15 @@ export function useAROFlags(){
     const removesFlag = ref(false);
     const optionsFlag = ref(false);
     const commentsFlag = ref(false);
-    const resetFlags = () => {
+    function resetFlags(){
         addOnsFlag.value=false;
         removesFlag.value=false;
         optionsFlag.value=false;
         commentsFlag.value=false;
     }
-    const viewAddOns = ()=>{ resetFlags(); addOnsFlag.value=true;}
-    const viewRemoves = ()=>{ resetFlags(); removesFlag.value=true;}
-    const viewOptions = ()=>{ resetFlags(); optionsFlag.value=true;}
-    const viewComments = ()=>{ resetFlags(); commentsFlag.value=true;}
+    function viewAddOns(){ resetFlags(); addOnsFlag.value=true;}
+    function viewRemoves(){ resetFlags(); removesFlag.value=true;}
+    function viewOptions(){ resetFlags(); optionsFlag.value=true;}
+    function viewComments(){ resetFlags(); commentsFlag.value=true;}
     return {addOnsFlag, removesFlag, optionsFlag, commentsFlag,viewOptions, resetFlags, viewAddOns, viewRemoves, viewComments };
 }

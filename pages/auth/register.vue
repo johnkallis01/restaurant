@@ -4,30 +4,8 @@ useHead({
 });
 import { rules } from '~/utils/rules';
 const authStore = useAuthStore();
-
-const { buttonRef, tabToSubmit } = useTabToSubmit();
-const user= reactive({
-  firstName: '',
-  lastName: '',
-  phone: '',
-  email: '',
-  password: '',
-  confirmPassword: '',
-})
-// const rules = {
-//   name: /^[a-zA-Z]{2,30}$/,
-//   phone: /^\d{10}$/,
-//   email: /.+@.+\..+/,
-//   password: /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*?])[A-Za-z\d!@#$%^&*?]{8,}$/,
-// }
-const validationStatus= reactive({
-  firstName: null,
-  lastName: null,
-  phone: null,
-  email: null,
-  password: null,
-  confirmPassword: null,
-});
+const buttonRef=ref(null);
+const { tabToButton } = useTabToButton(buttonRef);
 const inputs = ref([
   { name: 'firstName', placeholder: 'first name', req: true, rule: 'name'  , password: false,},
   { name: 'lastName', placeholder: 'last name',  req: true, rule: 'name', password: false,},
@@ -36,36 +14,24 @@ const inputs = ref([
   { name: 'password', placeholder: 'password', req: true,rule: 'password', password: true,},
   { name: 'confirmPassword', placeholder: 'confirm password', req: true, rule: 'password', password: true,},
 ]);
+const user= reactive({
+  firstName: '', lastName: '',
+  phone: '', email: '',
+  password: '', confirmPassword: '',
+})
+const validationStatus= reactive({
+  firstName: null, lastName: null,
+  phone: null, email: null,
+  password: null, confirmPassword: null,
+});
 const isDisabled = computed(()=>{
   for(const val in validationStatus){
     if(!!validationStatus[val]);
     else return false;
   }
   return true;
-})
-
-const validateInput = (rule, value, inputVar) =>{
-  // console.log('val input', rule)
-  if(inputVar==='confirmPassword') {
-    validationStatus['confirmPassword'] = user['password'] === value;
-    validationStatus['password']=validationStatus['confirmPassword'];
-    if(!validationStatus['confirmPassword']) validationStatus['password']=false;
-  }
-  if(rules[rule] && value.length){
-    // console.log(rules[rule])
-    validationStatus[inputVar] = rules[rule].test(value); //test input
-    if(validationStatus[inputVar]) user[inputVar] = value; //if good assign to user
-  }
-}
-// const tabToSubmit = (event) =>{
-//   event.preventDefault();
-//   nextTick(() => {
-//       if (buttonRef.value) {
-//         buttonRef.value.focus();
-//         buttonRef.value.click();
-//       }}); 
-// }
-const register = async () => {
+});
+async function register(){
     try {
       await authStore.register({
         firstName: user['firstName'],
@@ -81,6 +47,20 @@ const register = async () => {
       }
     }
 }
+
+const validateInput = (rule, value, inputVar) =>{
+  // console.log('val input', rule)
+  if(inputVar==='confirmPassword') {
+    validationStatus['confirmPassword'] = user['password'] === value;
+    validationStatus['password']=validationStatus['confirmPassword'];
+    if(!validationStatus['confirmPassword']) validationStatus['password']=false;
+  }
+  if(rules[rule] && value.length){
+    // console.log(rules[rule])
+    validationStatus[inputVar] = rules[rule].test(value); //test input
+    if(validationStatus[inputVar]) user[inputVar] = value; //if good assign to user
+  }
+}
 </script>
 <template>
   <div class="container">
@@ -93,12 +73,12 @@ const register = async () => {
             :is-valid="validationStatus[input.name]"
             @send-input="(value) => validateInput(input.rule, value, input.name)"
             :password="input.password" bgColor="azure"
-            @keydown.enter="tabToSubmit($event)" 
+            @keydown.enter="tabToButton" 
            />
         </form>
         <div class="form-actions">
           <button class="btn register" ref="buttonRef"
-            :disabled="!isDisabled" @click="register">Register</button>
+            :disabled="!isDisabled" @click="register()">Register</button>
         </div>
   </div>
 </template>

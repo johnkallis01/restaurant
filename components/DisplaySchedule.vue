@@ -1,5 +1,10 @@
 <script setup>
 const {menu}=defineProps({menu:{type: Object, required: false}});
+function printTimes(start, end){
+    return (start.hour%12 ? start.hour%12 : '12') + ':' + (start.min ? start.min : '00') + 
+        (start.pm ? ' PM ' : ' AM ') + '-' + (end.hour%12 ? end.hour%12 : '12') + ':' +
+         (end.min ? end.min : '00') + (end.pm ? ' PM' : ' AM')
+}
 const openDays=computed(()=>menu.days.filter(day => day.open)); //filter out closed days
 const sameTimes = computed(() => {
     const outerArr=[];
@@ -54,11 +59,6 @@ const sameTimes = computed(() => {
      })
     return  stringArr;
 })
-function printTimes(start, end){
-    return (start.hour%12 ? start.hour%12 : '12') + ':' + (start.min ? start.min : '00') + 
-        (start.pm ? ' PM ' : ' AM ') + '-' + (end.hour%12 ? end.hour%12 : '12') + ':' +
-         (end.min ? end.min : '00') + (end.pm ? ' PM' : ' AM')
-}
 </script>
 <template>
     <div class="schedule">

@@ -4,9 +4,7 @@ useHead({
 });
 const menuStore = useMenuStore();
 const index = ref(0);
-const visibleMenu = () => {
-  return menuStore.menus[index.value];
-}
+function visibleMenu(){ return menuStore.menus[index.value];}
 </script>
 <template>
     <div class="page-container">
@@ -19,7 +17,7 @@ const visibleMenu = () => {
           <button @click="index=i" :class="{'active': index === i }">{{ menu.name }}</button>
         </div>
       </div>
-      <DisplayMenu  :menu="visibleMenu()" :order="false"/>
+      <DisplayMenu :menu="visibleMenu()" :order="false"/>
     </div>
 </template>
 <style scoped>

@@ -14,20 +14,26 @@ const itemIndex = menu.sections[sectionIndex].items.findIndex(it => it._id === i
 
 const { nameInputRef, editName, focusNameInput } = useNameInput();
 
-const postEditRemove = () => {
+function postEditRemove(){
+    console.log('edit')
     editName.value=false;
     const removeIndex = localMenu.sections[sectionIndex].items[itemIndex].removes.findIndex((rem)=> rem._id === localRemove._id);
     localMenu.sections[sectionIndex].items[itemIndex].removes[removeIndex] = localRemove;   
     menuStore.updateMenu(localMenu);
 }
 
-const postNewRemove = () => {
+function postNewRemove(){
     if(localRemove.name){    
+        const contains = localMenu.sections[sectionIndex].items[itemIndex].removes.some(r => r.name === localRemove.name);
+        console.log(contains)
+        if(!contains){
         localMenu.sections[sectionIndex].items[itemIndex].removes.push({
             name: localRemove.name,
             _id: localRemove._id,
         });
         menuStore.updateMenu(localMenu);
+        
+        }
         emit('send-reset-remove');
         focusNameInput();
     }
@@ -56,13 +62,11 @@ onMounted(()=>{
             
                     <div class="text-field" v-if="editName">
                         <input
-                            type="text"
-                            class="name-input"
-                            placeholder="name"
-                            ref="nameInputRef"
+                            type="text" placeholder="name"
+                            class="name-input" ref="nameInputRef"
                             v-model="localRemove.name"
-                            @blur="isNew ? postNewRemove(localRemove) : postEditRemove"
-                            @keydown.enter="isNew ? postNewRemove(localRemove) : postEditRemove"
+                            @blur="isNew ? postNewRemove() : postEditRemove()"
+                            @keydown.enter="isNew ? postNewRemove() : postEditRemove()"
                         />
                     </div>
         
@@ -74,3 +78,8 @@ onMounted(()=>{
         </div>
     </div>
 </template>
+<style scoped>
+.tooltip{
+    top: -100%; left: 200%;
+}
+</style>

@@ -3,7 +3,7 @@ const { price } = defineProps({ price:{ type: String, required: true, default: '
 const emit = defineEmits(['update-price']);
 
 //emit to parent component
-const submitPrice = () => emit('update-price', formattedPrice.value);
+// const submitPrice = () => emit('update-price', formattedPrice.value);
 const rawPrice = ref(price.replace('.', ''));
 watch(
   () => price,
@@ -44,7 +44,6 @@ defineExpose({ focusInput });
 onMounted(()=>{
     focusInput();
 })
-
 </script>
 <template>
     <span class="text-field price">
@@ -55,11 +54,10 @@ onMounted(()=>{
             placeholder="000.00"
             :value="formattedPrice"
             @input="formatPriceInput"
-            @blur="submitPrice"
-            @keydown.enter="submitPrice"
+            @blur="emit('update-price', formattedPrice)"
+            @keydown.enter="emit('update-price', formattedPrice)"
         >
     </span>
-
 </template>
 <style scoped>
 .text-field.price input{

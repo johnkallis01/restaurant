@@ -18,27 +18,31 @@ const { formatPrice } = usePriceFormatter();
 const { priceInputRef, editPrice, focusPriceInput, tabToPrice } = useTabToPrice();
 const { nameInputRef, editName, focusNameInput, tabToName } = useTabToName();
 
-const postEditAddOn = () => {
+function postEditAddOn() {
     editName.value=false;
     const addOnIndex = localMenu.sections[sectionIndex].items[itemIndex].addOns.findIndex((addOn)=> localAddOn._id === addOn._id);
     localMenu.sections[sectionIndex].items[itemIndex].addOns[addOnIndex] = localAddOn;  
     menuStore.updateMenu(localMenu);
 } 
-const postNewAddOn = () => {
+function postNewAddOn(){
+    console.log(localAddOn.price)
     if(localAddOn.name){
         localMenu.sections[sectionIndex].items[itemIndex].addOns.push({
             name: localAddOn.name,
             price: localAddOn.price,
             _id: localAddOn._id,
-    });
-        menuStore.updateMenu(localMenu);
+        });
         emit('send-reset-addOn');
+        menuStore.updateMenu(localMenu);
         focusNameInput();
     }
 }
 const getAddOnPrice = (np) => {
+    // console.log('get price')
+    // console.log(np)
     editPrice.value = false;
     localAddOn.price = np;
+    if(!isNew.value) postEditAddOn();
 } 
 onMounted(()=>{
     if(!localAddOn.name){
@@ -65,15 +69,15 @@ onMounted(()=>{
                     <input 
                         type="text" placeholder="name" ref="nameInputRef"
                         v-model="localAddOn.name"
-                        @blur="isNew ? postNewAddOn : postEditAddOn"
+                        @blur="isNew ? editName=false : postEditAddOn()"
                         @keydown="tabToPrice"
-                        @keydown.enter="isNew ? postNewAddOn : postEditAddOn"
+                        @keydown.enter="isNew ? postNewAddOn() : postEditAddOn()"
                     />
                 </div>
-                <div v-if="!editName">
+                <div v-else>
                     <span  class="item-name"
-                        @click="focusNameInput; editName=true"
                         v-if="localAddOn.name"
+                        @click="focusNameInput; editName=true"    
                         >{{ localAddOn.name }}</span>
                     <span class="placeholder-color"
                         @click="focusNameInput"
@@ -83,8 +87,8 @@ onMounted(()=>{
             <PriceInput class="item-price" ref="priceInputRef"
                 v-if="editPrice"
                 :price="localAddOn.price"
-                @update-price="getAddOnPrice"
-                @keydown.enter="postNewAddOn"
+                @update-price="getAddOnPrice($event)"
+                @keydown.enter="isNew ? postNewAddOn() : postEditAddOn()"
                 />
             <span class="item-price"
                 @click="focusPriceInput"

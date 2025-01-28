@@ -6,14 +6,15 @@ const router = useRouter();
 const cartButtonRef=ref(null);
 const dropdownRef=ref(null);
 const logoutTimer=ref(null);
+const loginButton = ref(null);
 const dropdown = ref(false);
 const isAdmin = ref(false);
 const userName = ref();
 defineExpose({cartButtonRef});
-const closeDropdown = (event) => {
-  if (dropdownRef.value && !dropdownRef.value.$el?.contains(event.target)) dropdown.value=false;
-}
-const logout = () => {
+function toggleCart(){cartStore.toggleCart();}
+function focusLogin(){if(!loggedIn.value) loginButton.value.focus();}
+function toggleDropdown(){dropdown.value = !dropdown.value;}
+function logout(){
   authStore.logout();
   router.push('/auth/login');
 };
@@ -22,40 +23,21 @@ const loggedIn = computed(() => {
   isAdmin.value = useCookie('isAdmin');
   return !!token.value;
 });
-const loginButton = ref(null);
-const focusLoginButton = ()=>{
-    loginButton?.value.focus();
+const focusLoginButton = ()=>{loginButton?.value.focus();}
+const closeDropdown = (event) => {
+  if (dropdownRef.value && !dropdownRef.value.$el?.contains(event.target)) dropdown.value=false;
 }
+useEventListener('click',closeDropdown);
+onBeforeMount( () => {userName.value=useCookie('user'); isAdmin.value=useCookie('isAdmin')});
+onMounted(()=>{logoutTimer.value = setInterval(authStore.verifyToken, 30000);});
+onBeforeUnmount(() => {if (logoutTimer.value) clearInterval(logoutTimer.value);});
 provide('focusLoginButton', focusLoginButton);
-
-const toggleCart = ()=>{cartStore.toggleCart();}
-
-const focusLogin = () =>{
-  if(!loggedIn.value) loginButton.value.focus();
-  
-
-}
-const name = ref('');
-
-const toggleDropdown = () => {dropdown.value = !dropdown.value;}
-onBeforeMount( () => {
-  userName.value=useCookie('user');
-  isAdmin.value=useCookie('isAdmin')
-});
-onMounted(()=>{
-    logoutTimer.value = setInterval(authStore.verifyToken, 30000);
-    document.addEventListener('click', closeDropdown);
-});
-onBeforeUnmount(() => {
-  if (logoutTimer.value) clearInterval(logoutTimer.value);
-    document.removeEventListener('click', closeDropdown);
-});
 </script>
 <template>
     <header class="header">
       <div class="left-btns">
         <ClientOnly>   
-          <button @click="toggleCart" ref="cartButtonRef" class="btn cart-btn" v-if="loggedIn">
+          <button @click="toggleCart()" ref="cartButtonRef" class="btn cart-btn" v-if="loggedIn">
             <i class="mdi mdi-cart"/>
             <span class="tooltip" v-if="!cartStore.items.length">add to order to open cart</span>
           </button>
@@ -68,7 +50,7 @@ onBeforeUnmount(() => {
           <button class="btn-link">Menus</button>
         </nuxt-link>
         <nuxt-link to="/order">
-          <button class="btn-link" @click="focusLogin">Order</button>
+          <button class="btn-link" @click="focusLogin()">Order</button>
         </nuxt-link>
       </div>
       <div class="right-btns">
@@ -76,12 +58,12 @@ onBeforeUnmount(() => {
           <template v-if="loggedIn">
             <template v-if="isAdmin.value">
               <nuxt-link ref="dropdownRef">
-                <button class="btn-link" @click="toggleDropdown">Edit Menu</button>
+                <button class="btn-link" @click="toggleDropdown()">Edit Menu</button>
               </nuxt-link>
             </template>
               <MenuDropDown v-if="dropdown"/>
             <nuxt-link>
-              <button class="btn-link" @click="logout">Logout</button>
+              <button class="btn-link" @click="logout()">Logout</button>
             </nuxt-link>
           </template>
           <nuxt-link to="/auth/login" v-else>

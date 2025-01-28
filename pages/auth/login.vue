@@ -3,11 +3,13 @@ useHead({
   title: "John's Restaurant - Login"
 });
 const authStore = useAuthStore();
+const buttonRef=ref(null);
+const { tabToButton } = useTabToButton(buttonRef);
 const email = ref('');
 const password = ref('');
-const loginRef=ref(null);
 
-const login = async () => {
+
+async function login(){
   try {
     await authStore.login({
       email: email.value,
@@ -17,21 +19,13 @@ const login = async () => {
    console.error('login faield')
   }
 };
-const tabToLogin = (event) =>{
-  event.preventDefault();
-  nextTick(() => {
-    if (loginRef.value) {
-        loginRef.value.focus();
-        loginRef.value.click();
-    }});
-}
 const getEmail = (em) =>{ email.value=em;}
 const getPassword = (p) =>{password.value=p;}
 const inputs = ref([
   { placeholder: 'email', req: true, password: false, 
         sendInput: getEmail, callback: ()=>null },
   { placeholder: 'password', req: true, password: true,
-        sendInput: getPassword, callback: tabToLogin}]);
+        sendInput: getPassword, callback: tabToButton}]);
 </script>
 <template>
   <div class="container">
@@ -48,7 +42,7 @@ const inputs = ref([
       </div>
     </form>
     <div class="form-actions">
-      <button class="btn login" ref="loginRef" @click="login">Login</button>
+      <button class="btn login" ref="buttonRef" @click="login()">Login</button>
       <nuxt-link to="/auth/register/" >
         <button class="btn register" style="margin-right: 10px;">Register</button>
       </nuxt-link>

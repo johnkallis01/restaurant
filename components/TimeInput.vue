@@ -7,8 +7,6 @@ const {time, disabled, error} = defineProps({
 });
 const hours=[0,1,2,3,4,5,6,7,8,9,10,11];
 const mins = [0,15,30,45];
-const displayHour = (h) => (h === 0 ? 12 : h);
-
 const updateHour = (h) => {
   emit('update:time', {...time, hour: time.pm & h<12 ? h + 12 : h,});
 };
@@ -30,7 +28,7 @@ const updateMinute = (min) => {
         :disabled="disabled">
         <option class="options" type="number"
           v-for="h in hours" :key="h">
-          {{ displayHour(h) }}
+          {{ (h === 0 ? 12 : h) }}
         </option>
       </select>
       <span :class="{'placeholder-color': disabled,'error-text':error && !disabled}">

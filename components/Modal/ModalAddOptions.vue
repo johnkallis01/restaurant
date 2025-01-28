@@ -1,7 +1,5 @@
 <script setup>
 import { v4 as uuidv4 } from 'uuid';
-const menuStore=useMenuStore();
-const { detachObject } = useDetachObject();
 const emit = defineEmits(['close-modal']);
 const {item, section_id, menu} = defineProps({
     item: { type: Object, required: true },
@@ -10,17 +8,18 @@ const {item, section_id, menu} = defineProps({
 });
 const localMenu=reactive(menu);
 const localItem=reactive(item);
+const menuStore=useMenuStore();
+const { detachObject } = useDetachObject();
 const detachedItem=reactive(detachObject(item));
-
-const addNew=ref(false);
 const openIndex = ref(-1);
 const newOption = reactive(detachObject({name: "",required: false,content: [],_id: uuidv4(),}));
-const closeModal = ()=>{
+const addNew=ref(false);
+function closeModal(){
     const detachedItem = detachObject(item); 
     Object.assign(localItem, detachedItem);
     emit('close-modal');
 }
-const submitChanges = ()=>{
+function submitChanges(){
     if(newOption.name) getNew(newOption);
     const sectionIndex = localMenu.sections.findIndex(sec => sec._id === section_id);
     const itemIndex = localMenu.sections[sectionIndex].items.findIndex(it => it._id === localItem._id);
@@ -68,8 +67,8 @@ const getNew = (op) => {
            
         </div>
         <div class="form-actions">
-            <button class="btn close" @click="submitChanges">Submit</button>
-            <button class="btn close" @click="closeModal">cancel</button>
+            <button class="btn close" @click="submitChanges()">Submit</button>
+            <button class="btn close" @click="closeModal()">cancel</button>
         </div>
     </div>
 </template>

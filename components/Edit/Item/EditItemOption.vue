@@ -2,6 +2,8 @@
 const emit = defineEmits(['update-options','create-new-option','send-reset-option','toggle','close',]);
 const { detachObject } = useDetachObject();
 const { formatPrice } = usePriceFormatter();
+const addValBtnRef=ref(null);
+const { tabToButton } = useTabToButton(addValBtnRef)
 const { nameInputRef, editName, focusNameInput } = useNameInput();
 const { priceInputRef, editPrice, focusPriceInput, tabToPrice } = useTabToPrice();
 const {option, item, isOpen } = defineProps({
@@ -13,7 +15,7 @@ const {option, item, isOpen } = defineProps({
  const localItem=reactive(item);
  const localOption=reactive(option);
 
-const focusContentInput = () => {nextTick(() => {if (contentInputRef.value) contentInputRef.value.focus();});};
+function focusContentInput(){nextTick(() => {if (contentInputRef.value) contentInputRef.value.focus();});};
 const newContent = reactive({name: "", price: '000.00'});
 
 const contentInputRef=ref(null);
@@ -52,38 +54,42 @@ const deleteOptionContent = (val) => {
     
     
 }
-const addValue = () => {
+function addValue(){
+    console.log('av',newContent.price)
     if(newContent.name){
         focusContentInput();
         editPrice.value=false;
         const detachContent=detachObject(newContent);
         localOption.content.push(detachContent);
-        newContent.name=""; newContent.price='000.00';
+        newContent.name="";
+        newContent.price='000.00';
+        console.log(newContent.price)
         const optionIndex = localItem.options.findIndex((op)=> {op._id === localOption._id});
         localItem.options[optionIndex]=localOption;
         emit('update-options', localItem.options);
     }
 }
-const toggle = ()=>{
+function toggle(){
     editPrice.value=true;
     emit('toggle');
     focusContentInput();
 }
-const handleClickOutside = (event) => {
+const getPrice=(np)=>{
+    console.log('np', np)
+    newContent.price=np;
+    console.log(newContent.price)
+}
+const closeOpenContent = (event) => {
     if (optionsRef.value && !optionsRef.value.contains(event.target)) {
     emit("close");
   }
 }
+useEventListener('click', closeOpenContent);
 onMounted(()=>{
-    document.addEventListener('click', handleClickOutside);
     if(!localOption?.name || isNew.value){
         isNew.value = true; editName.value=true; editPrice.value=true;
         focusNameInput();
     }
-    
-});
-onBeforeUnmount(() => {
-    document.removeEventListener('click', handleClickOutside);
 });
 </script>
 <template>
@@ -120,13 +126,14 @@ onBeforeUnmount(() => {
                             <label for="req">Required:</label>
                             <input type="checkbox" name="req"
                                 v-model="localOption.required"
+                                @keydown.enter="localOption.required=!localOption.required"
                                 @change="isNew ? null : postEditOption">
                         </span>
                     </div>
-                    <button class="btn value"
-                        v-if="isNew"
-                        > 
-                       <span @click="postNewOption">submit option</span> 
+                    <button class="btn value"  @click="postNewOption"
+                        @keydown.enter="postNewOption"
+                        v-if="isNew"> 
+                       <span>submit option</span> 
                     </button>
                         <!-- first button  -->
                     <button class="btn value" @click="toggle"
@@ -143,20 +150,23 @@ onBeforeUnmount(() => {
                     placeholder="name"
                     ref="contentInputRef"
                     v-model="newContent.name"
-                    @keydown.enter="addValue"
+                    @keydown.enter="addValue()"
                     @keydown="tabToPrice"
                 />
             </div>
             <PriceInput class="item-price" ref="priceInputRef"
                 v-if="editPrice"
                 :price="newContent.price"
-                @update-price="(p)=>newContent.price=p" />
+                @keydown.enter="tabToButton"
+                @update-price="getPrice" />
             <div v-else @click="editPrice=!editPrice">{{ formatPrice(newContent.price) }}</div>
              <!-- second button -->
              <button class="btn value"
+                ref="addValBtnRef"
                 v-if="isNew || isOpen"
                 :disabled="disableValBtn"
-                @click="addValue"
+                @keydown.enter="addValue()"
+                @click="addValue()"
                 >add value</button>
         </div>
         <div class="options-content-row">

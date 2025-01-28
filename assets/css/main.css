@@ -327,6 +327,7 @@ containers
 .error-text{
   color: red;
 }
+
   /****************
     Buttons
   ****************/
@@ -356,6 +357,7 @@ containers
 .btn:hover .tooltip{
     opacity: 1;
     visibility: visible;
+    z-index: 1000;
 }
 .btn-icons-group{
     position: absolute;
