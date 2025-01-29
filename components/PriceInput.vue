@@ -37,13 +37,13 @@ const formatPriceInput = (event) => {
  **************/
 const priceRef= ref(null);
 const focusInput = () => {
-    priceRef.value?.focus();
+    priceRef.value.focus();
 }
-//expose focus to parent
+// expose focus to parent
 defineExpose({ focusInput });
 onMounted(()=>{
     focusInput();
-})
+});
 </script>
 <template>
     <span class="text-field price">

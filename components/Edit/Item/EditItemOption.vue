@@ -2,10 +2,20 @@
 const emit = defineEmits(['update-options','create-new-option','send-reset-option','toggle','close',]);
 const { detachObject } = useDetachObject();
 const { formatPrice } = usePriceFormatter();
+
 const addValBtnRef=ref(null);
-const { tabToButton } = useTabToButton(addValBtnRef)
-const { nameInputRef, editName, focusNameInput } = useNameInput();
-const { priceInputRef, editPrice, focusPriceInput, tabToPrice } = useTabToPrice();
+const { tabToButton } = useTabToButton(addValBtnRef);
+const contentInputRef = ref(null);
+const nameInputRef=ref(null);
+const editName = ref(false);
+
+const focusNameInput = useFocusInput(nameInputRef,editName);
+const { priceInputRef, editPrice, focusPriceInput } = usePriceInput();
+const tabToPrice = useTabToInput(focusPriceInput);
+const focusContentInput = useFocusInput(contentInputRef);
+const tabToContent = useTabToInput(focusContentInput);
+const tabToName=useTabToInput(focusNameInput);
+
 const {option, item, isOpen } = defineProps({
     option: { type: Object, required: true },
     item: { type: Object, required: true },
@@ -15,10 +25,11 @@ const {option, item, isOpen } = defineProps({
  const localItem=reactive(item);
  const localOption=reactive(option);
 
-function focusContentInput(){nextTick(() => {if (contentInputRef.value) contentInputRef.value.focus();});};
+
+
 const newContent = reactive({name: "", price: '000.00'});
 
-const contentInputRef=ref(null);
+
 const optionsRef=ref(null);
 const isNew = ref(false);
 
@@ -91,6 +102,7 @@ onMounted(()=>{
         focusNameInput();
     }
 });
+defineExpose({focusNameInput});
 </script>
 <template>
     <div ref="optionsRef" :class="{'underline': isNew}">
@@ -109,7 +121,6 @@ onMounted(()=>{
                             <input type="text" class="name-input" placeholder="option title"
                                 ref="nameInputRef"
                                 @blur="editName=false"
-                                @keydown="tabToContent"
                                 v-model="localOption.name"/>
                         </div>
                         <div v-else>
@@ -166,6 +177,7 @@ onMounted(()=>{
                 v-if="isNew || isOpen"
                 :disabled="disableValBtn"
                 @keydown.enter="addValue()"
+                @keydown="tabToName"
                 @click="addValue()"
                 >add value</button>
         </div>

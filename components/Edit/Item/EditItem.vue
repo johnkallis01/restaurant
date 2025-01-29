@@ -10,10 +10,6 @@ const localItem=reactive(item);
 const localMenu=reactive(menu);
 const menuStore = useMenuStore();
 const { formatPrice } = usePriceFormatter();
-const { nameInputRef, editName, focusNameInput, tabToName } = useTabToName();
-const { tabToDescription, descriptionInputRef,editDescription,focusDescriptionInput} = useTabToDescription();
-const { priceInputRef, editPrice, focusPriceInput, tabToPrice } = useTabToPrice();
-const {addOnsFlag, removesFlag, resetFlags, viewAddOns,viewOptions,viewRemoves } = useAROFlags();
 
 const modalRef=ref(null);
 const clickInsideOK = ref(null);
@@ -22,6 +18,21 @@ const isNew = ref(false);
 const newAddOnFlag=ref(true);
 const newRemoveFlag=ref(true);
 const optionsModal=ref(false);
+
+const nameInputRef=ref(null);
+const descriptionInputRef=ref(null);
+const editName = ref(false);
+const editDescription = ref(false);
+
+const focusNameInput = useFocusInput(nameInputRef,editName);
+const focusDescriptionInput = useFocusInput(descriptionInputRef,editDescription);
+const { priceInputRef, editPrice, focusPriceInput } = usePriceInput();
+
+const tabToPrice = useTabToInput(focusPriceInput);
+const tabToName=useTabToInput(focusNameInput);
+const tabToDescription=useTabToInput(focusDescriptionInput);
+
+const {addOnsFlag, removesFlag, resetFlags, viewAddOns,viewRemoves } = useAROFlags();
 const sectionIndex=localMenu.sections.findIndex(sec => sec._id === section_id);
 const newAddOn = ref({ name: "", price: "000.00", _id: uuidv4(), });
 const newRemove = ref({ name: "", _id: uuidv4(), });
@@ -89,6 +100,7 @@ const clickOutsideOARtab = (event) => {
 }
 useEventListener('click', clickOutsideOARtab);
 onMounted(()=>{
+    
     if(!localItem.name){ isNew.value = true; focusNameInput();}
 });
 </script>

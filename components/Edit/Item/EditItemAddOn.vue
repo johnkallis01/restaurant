@@ -15,9 +15,11 @@ const sectionIndex = localMenu.sections.findIndex(sec => sec._id === section_id)
 const itemIndex = localMenu.sections[sectionIndex].items.findIndex(it => it._id === item_id);
 
 const { formatPrice } = usePriceFormatter();
-const { priceInputRef, editPrice, focusPriceInput, tabToPrice } = useTabToPrice();
-const { nameInputRef, editName, focusNameInput, tabToName } = useTabToName();
-
+const { priceInputRef, editPrice, focusPriceInput } = usePriceInput();
+const tabToPrice=useTabToInput(focusPriceInput);
+const editName = ref(false);
+const nameInputRef=ref(null);
+const focusNameInput = useFocusInput(nameInputRef,editName);
 function postEditAddOn() {
     editName.value=false;
     const addOnIndex = localMenu.sections[sectionIndex].items[itemIndex].addOns.findIndex((addOn)=> localAddOn._id === addOn._id);

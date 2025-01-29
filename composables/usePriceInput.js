@@ -3,7 +3,7 @@ export function usePriceInput() {
     const editPrice = ref(false);
     const focusPriceInput = () =>{
         editPrice.value=true;
-        requestAnimationFrame(()=>{
+        nextTick(()=>{
             if(priceInputRef.value) {
                 priceInputRef.value.focusInput();
             }

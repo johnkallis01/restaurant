@@ -12,7 +12,10 @@ const isNew = ref(false);
 const sectionIndex = menu.sections.findIndex(sec => sec._id === section_id);
 const itemIndex = menu.sections[sectionIndex].items.findIndex(it => it._id === item_id);
 
-const { nameInputRef, editName, focusNameInput } = useNameInput();
+const nameInputRef=ref(null);
+const editName = ref(false);
+
+const focusNameInput = useFocusInput(nameInputRef,editName);
 
 function postEditRemove(){
     console.log('edit')

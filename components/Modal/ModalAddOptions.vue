@@ -1,5 +1,6 @@
 <script setup>
 import { v4 as uuidv4 } from 'uuid';
+import { onMounted } from 'vue';
 const emit = defineEmits(['close-modal']);
 const {item, section_id, menu} = defineProps({
     item: { type: Object, required: true },
@@ -14,10 +15,16 @@ const detachedItem=reactive(detachObject(item));
 const openIndex = ref(-1);
 const newOption = reactive(detachObject({name: "",required: false,content: [],_id: uuidv4(),}));
 const addNew=ref(false);
+const childRef=ref(null);
+const newChildRef=ref(null);
+const addOptionBtnRef=ref(null);
 function closeModal(){
     const detachedItem = detachObject(item); 
     Object.assign(localItem, detachedItem);
     emit('close-modal');
+}
+function tabToAddOptionsBtn(event){
+    if(event.key==='Tab') addOptionBtnRef.value.focus(); 
 }
 function submitChanges(){
     if(newOption.name) getNew(newOption);
@@ -36,6 +43,9 @@ const getNew = (op) => {
     newOption.content=[];
     newOption._id=uuidv4();
 }
+onMounted(()=>{
+    if(!newChildRef.value) addOptionBtnRef.value.focus();
+})
 </script>
 <template>
     <div class="container">
@@ -44,21 +54,21 @@ const getNew = (op) => {
                 {{ localItem.name }}
             </div>
             <div>
-                <button class="btn add"
+                <button class="btn add" ref="addOptionBtnRef"
                     v-if="detachedItem.options.length"
                     @click="addNew=!addNew">add option</button>
             </div>
         </div>
         <div class="form-body" >
-            <EditItemOption 
+            <EditItemOption ref="newChildRef"
                 v-if="detachedItem.options?.length ? addNew : true"
                 @create-new-option="getNew"
                 :option="newOption"
                 :is-open="false"
                 :item="detachedItem"/>
-            <EditItemOption @click.stop
+            <EditItemOption @click.stop ref="childRef"
                 v-for="(op, i) in detachedItem.options" :key="op._id"
-                :option="op" :item="detachedItem"               
+                :option="op" :item="detachedItem"        
                 :disable-val-btn="addNew"
                 :is-open="openIndex===i"
                 @update-options="(getOptions) => detachedItem.options=getOptions"
@@ -68,7 +78,8 @@ const getNew = (op) => {
         </div>
         <div class="form-actions">
             <button class="btn close" @click="submitChanges()">Submit</button>
-            <button class="btn close" @click="closeModal()">cancel</button>
+            <button class="btn close"
+                @click="closeModal()" @keydown="tabToAddOptionsBtn">cancel</button>
         </div>
     </div>
 </template>

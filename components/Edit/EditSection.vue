@@ -1,12 +1,20 @@
 <script setup>
 import { v4 as uuidv4 } from 'uuid';
+import { useFocusInput } from '../../composables/useFocusInput';
+import { useTabToButton } from '../../composables/useTabToButton';
 const emit = defineEmits(['send-new-section-flag']);
 const {section, menu} = defineProps({
     section: { type:Object, required: true},
     menu: { type:Object, required: true},
 });
-const { nameInputRef, editName, focusNameInput } = useNameInput();
-const { tabToDescription, descriptionInputRef,editDescription, focusDescriptionInput} = useTabToDescription();
+
+const nameInputRef=ref(null);
+const descriptionInputRef = ref(null);
+const editName=ref(false);
+const editDescription = ref(false);
+const focusDescriptionInput = useFocusInput(descriptionInputRef,editDescription);
+const focusNameInput = useFocusInput(nameInputRef, editName);
+const tabToDescription = useTabToInput(focusDescriptionInput);
 const menuStore = useMenuStore();
 const localMenu = reactive(menu);
 const localSection = reactive(section);
@@ -85,8 +93,9 @@ onMounted(()=>{if(!localSection.name){isNew.value = true;focusNameInput();}})
                             v-model="localSection.name"
                             @blur="isNew ? editName=false : postSectionEdit('name')"
                             @keydown.enter="isNew ? postNewSection() : postSectionEdit('name')"
-                            @keydown=tabToDescription
+                            @keydown="tabToDescription"
                         />
+                        <!--  -->
                     </div>
                 </template>
                 <template v-else>

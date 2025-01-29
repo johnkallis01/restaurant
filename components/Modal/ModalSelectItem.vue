@@ -172,6 +172,7 @@ onMounted(()=>{
     height: 100%;
     width: 100%;
     padding: 5px;
+    overflow-y: auto;
 }
 .item-title.bot-bor{
     border-bottom: 2px solid black;

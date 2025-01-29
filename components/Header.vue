@@ -31,7 +31,6 @@ useEventListener('click',closeDropdown);
 onBeforeMount( () => {userName.value=useCookie('user'); isAdmin.value=useCookie('isAdmin')});
 onMounted(()=>{logoutTimer.value = setInterval(authStore.verifyToken, 30000);});
 onBeforeUnmount(() => {if (logoutTimer.value) clearInterval(logoutTimer.value);});
-provide('focusLoginButton', focusLoginButton);
 </script>
 <template>
     <header class="header">
