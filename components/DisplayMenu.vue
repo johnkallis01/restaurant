@@ -18,7 +18,7 @@ function displayModal(item){modalFlag.value=true;modalItem.value=item;}
                 <div class="section-description">{{ section?.description }}</div>
                 <div class="section-items">
                     <button class="item-container" :disabled="!order"
-                        v-for="(item, j) in section.items"
+                        v-for="(item) in section.items" :key="item._id"
                         @click="displayModal(item)">
                         <div class="item-title" >
                             <span class="item-name">{{ item.name }}</span>
@@ -37,13 +37,15 @@ function displayModal(item){modalFlag.value=true;modalItem.value=item;}
                 <ModalSelectItem :item="modalItem" @close-modal="()=>modalFlag=false"/> 
             </div>
         </div>
-        
     </div>
 </template>
 <style scoped>
 .item-container button{
     display: flex;
     justify-content: space-between;
+}
+.item-container:focus{
+    box-shadow: 0 0 15px rgba(0, 123, 255, 0.5);
 }
 .item-name{
     margin-left: 10px;

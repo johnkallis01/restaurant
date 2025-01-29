@@ -32,7 +32,10 @@ function addNewSection(){
   };
 }
 const getNewSectionFlag = () => {addSection.value=false;}
-const getCloseTimes = () => {showTimes.value=false;}
+const getCloseTimes = (name) => {
+    localMenu.name=name;
+    showTimes.value=false;
+}
 </script>
 <template>
     <div class="menu-container">
@@ -41,7 +44,7 @@ const getCloseTimes = () => {showTimes.value=false;}
                 <i class="mdi mdi-close"/>
                 <span class="tooltip">delete</span>
             </button>
-            <div class="title-text">{{ menu.name }}</div>
+            <div class="title-text">{{ localMenu.name }}</div>
             <div class="btn-icons-group">
                 <button class="btn" @click="addNewSection">
                     <i class="mdi mdi-plus"/>

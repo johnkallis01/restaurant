@@ -1,6 +1,6 @@
 <script setup>
 import { v4 as uuidv4 } from 'uuid';
-import { onMounted } from 'vue';
+import { nextTick, onMounted } from 'vue';
 const emit = defineEmits(['close-modal']);
 const {item, section_id, menu} = defineProps({
     item: { type: Object, required: true },
@@ -24,10 +24,14 @@ function closeModal(){
     emit('close-modal');
 }
 function tabToAddOptionsBtn(event){
-    if(event.key==='Tab') addOptionBtnRef.value.focus(); 
+    if(event.key==='Tab') {
+        requestAnimationFrame(()=>{
+            childRef.value[0].nameRef.click(); 
+        });
+    }
 }
 function submitChanges(){
-    if(newOption.name) getNew(newOption);
+    if(newOption.name && newOption.content.length) getNew(newOption);
     const sectionIndex = localMenu.sections.findIndex(sec => sec._id === section_id);
     const itemIndex = localMenu.sections[sectionIndex].items.findIndex(it => it._id === localItem._id);
     localMenu.sections[sectionIndex].items[itemIndex].options=detachedItem.options;

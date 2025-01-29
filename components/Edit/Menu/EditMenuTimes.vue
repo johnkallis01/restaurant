@@ -13,7 +13,7 @@ async function postMenu(){
   if(!isNew){
     // console.log('update M', localMenu )
     await menuStore.updateMenu(localMenu)
-    emit('close-window');
+    emit('close-window', localMenu.name);
   }
   else{
     if(localMenu.name){

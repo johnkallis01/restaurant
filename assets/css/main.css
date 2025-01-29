@@ -179,7 +179,7 @@ containers
     display: flex;
     flex-wrap: wrap;
     align-content: center;
-    align-items: center;
+    align-items: start;
     justify-items: center;
     width: 82vw;
     margin: 5px;

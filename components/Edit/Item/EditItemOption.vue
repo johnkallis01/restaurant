@@ -24,9 +24,6 @@ const {option, item, isOpen } = defineProps({
 });
  const localItem=reactive(item);
  const localOption=reactive(option);
-
-
-
 const newContent = reactive({name: "", price: '000.00'});
 
 
@@ -45,14 +42,14 @@ const postEditOption = () => {
     emit('update-options', localItem.options);
 }
 const postNewOption = () => {
-    if(localOption.name){ 
+    if(localOption.name && localOption.content.length){ 
         const newOp = detachObject(localOption);
         emit('create-new-option', newOp);
         isNew.value=false;
     }
     ;
 }
-const deleteOptionContent = (val) => {
+const deleteOptionValue = (val) => {
     const index = localOption.content.findIndex(op=>op.name===val.name);
     if(index>=0){
         localOption.content.splice(index, 1);
@@ -62,8 +59,6 @@ const deleteOptionContent = (val) => {
             emit('update-options', localItem.options);
         } 
     }
-    
-    
 }
 function addValue(){
     console.log('av',newContent.price)
@@ -102,7 +97,8 @@ onMounted(()=>{
         focusNameInput();
     }
 });
-defineExpose({focusNameInput});
+const nameRef=ref(null);
+defineExpose({nameRef});
 </script>
 <template>
     <div ref="optionsRef" :class="{'underline': isNew}">
@@ -124,11 +120,11 @@ defineExpose({focusNameInput});
                                 v-model="localOption.name"/>
                         </div>
                         <div v-else>
-                            <span v-if="localOption.name" class="item-title option" >
-                                <span @click="focusNameInput" :class="{'underline': !editName}">{{ localOption.name }}</span> 
+                            <span v-if="localOption.name" class="item-title option">
+                                <span ref="nameRef" @click="focusNameInput" :class="{'underline': !editName}" tabindex="0">{{ localOption.name }}</span> 
                             </span>
                             <span class="placeholder-color"
-                                v-else
+                                v-else 
                                 @click="focusNameInput">
                                 name
                             </span>
@@ -183,7 +179,7 @@ defineExpose({focusNameInput});
         </div>
         <div class="options-content-row">
             <div class="option-content" v-for="(val,i) in localOption.content" :key="val.name">
-                <button class="btn del" @click="deleteOptionContent(val)" >
+                <button class="btn del" @click="deleteOptionValue(val)" >
                     <i class="mdi mdi-close"/>
                     <span class="tooltip">delete</span>
                 </button>
@@ -198,15 +194,18 @@ defineExpose({focusNameInput});
 <style scoped>
 .checkbox{
     display: flex;
+    justify-content: flex-start;
     align-content: center;
     margin: 0px 30px;
     white-space: nowarp;
 }
 .name-checkbox{
     display: flex;
-    justify-content: space-between;
     align-items: center;
     width: 100%;
+}
+.item-title.option{
+    width: 300px;
 }
 .checkbox input:focus{
     box-sizing: border-box;
