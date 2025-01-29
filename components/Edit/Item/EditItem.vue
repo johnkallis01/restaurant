@@ -175,7 +175,7 @@ onMounted(()=>{
                     v-if="localItem.description.length" 
                     @click="focusDescriptionInput">{{ localItem.description }}
                 </span>
-                <span class="placeholder-color" @click="localItem.name.length ? focusDescriptionInput : null" v-else>description</span>
+                <span class="placeholder-color" @click="focusDescriptionInput" v-else>description</span>
             </div>
         </div>
         <div class="item-addons-removes-options" ref="clickInsideOK">
@@ -236,7 +236,7 @@ onMounted(()=>{
             </div>
         </div>
         <div class="modalWrapper" v-if="deleteModal">
-            <ModalDelete class="modal delete" :item="localItem" itemType="Item" @close-modal="modalFlag=false" @delete-item="getDelete"/>
+            <ModalDelete class="modal delete" :item="localItem" itemType="Item" @close-modal="deleteModal=false" @delete-item="getDelete"/>
         </div>
     </div>
 </template>
