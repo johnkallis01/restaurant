@@ -1,13 +1,16 @@
 <script setup>
+import { useFocusInput } from '../composables/useFocusInput';
+
 const emit = defineEmits(['send-input']);
 const { name } = defineProps({
     placeHolder: { type: String, required: true},
     req: {type: Boolean, required: true},
-    password: {type: Boolean, required: false},
+    password: {type: Boolean, required: false, default: false},
     isValid: {type: Boolean, required: false, default: true},
     name: {type: String, required: false, default: ""},
     bgColor: {type: String, required: false, default: 'white'}
 });
+const inputRef=ref(null);
 const localName = ref(name);
 const isOpen = ref(false);
 const capitalizeFirstLetter = (word)=>{
@@ -21,10 +24,12 @@ const onInput = (event) => {
     localName.value = event.target.value;
   emit('send-input', localName.value);
 };
+const focusInput = useFocusInput(inputRef)
+defineExpose({ focusInput });
 </script>
 <template>
     <div class="floating-text-field">
-        <input
+        <input ref="inputRef"
             :type="password && !isOpen ? 'password' : 'text'"
             :name="placeHolder"
             :class="{ invalid: isValid===false }"

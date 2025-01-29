@@ -8,6 +8,7 @@ const router=useRouter();
 const menuStore = useMenuStore();
 const localMenu = reactive(menu);
 const localMenus = reactive(menus);
+const modalFlag=ref(false);
 const showTimes = ref(false);
 const addSection = ref(false);
 const newSection = ref({
@@ -16,8 +17,13 @@ const newSection = ref({
     _id: uuidv4(),
     items: []
 });
-function deleteMenu(menu){
-    const menuIndex = localMenus.findIndex(m => menu._id === m._id);
+const getDelete=()=>{
+    console.log('get delete')
+    modalFlag.value=false;
+    deleteMenu();
+}
+function deleteMenu(){
+    const menuIndex = localMenus.findIndex(m => localMenu._id === m._id);
     localMenus.slice(menuIndex, 1);
     menuStore.deleteMenu(menu._id);
     router.push('/');
@@ -40,7 +46,7 @@ const getCloseTimes = (name) => {
 <template>
     <div class="menu-container">
         <div class="container-title menu">
-            <button class="btn" @click="deleteMenu(menu)">
+            <button class="btn" @click="modalFlag=true">
                 <i class="mdi mdi-close"/>
                 <span class="tooltip">delete</span>
             </button>
@@ -69,6 +75,9 @@ const getCloseTimes = (name) => {
             <div class="section-container" v-for="(sec, i) in localMenu.sections" :key="sec._id">
                 <EditSection :section="sec" :menu="localMenu" />              
             </div>
+        </div>
+        <div class="modalWrapper" v-if="modalFlag">
+            <ModalDelete class="modal delete" :item="localMenu" itemType="Menu" @close-modal="modalFlag=false" @delete-item="getDelete"/>
         </div>
     </div>
 </template>

@@ -7,7 +7,7 @@ const {section, menu} = defineProps({
     section: { type:Object, required: true},
     menu: { type:Object, required: true},
 });
-
+const modalFlag=ref(false);
 const nameInputRef=ref(null);
 const descriptionInputRef = ref(null);
 const editName=ref(false);
@@ -46,6 +46,11 @@ function postSectionEdit(str){
             break;
     }
 }
+const getDelete=()=>{
+    console.log('get delete')
+    modalFlag.value=false;
+    deleteSection();
+}
 function deleteSection(){
     const sectionIndex = menu.sections.findIndex(sec => sec._id === section._id);
     localMenu.sections.splice(sectionIndex, 1);
@@ -81,7 +86,7 @@ onMounted(()=>{if(!localSection.name){isNew.value = true;focusNameInput();}})
                     <i class="mdi mdi-plus"/>
                     <span class="tooltip">add section</span>
                 </button>
-                <button class="btn delete" @click="deleteSection()" v-else>
+                <button class="btn delete" @click="modalFlag=true" v-else>
                     <i class="mdi mdi-close"/>
                     <span class="tooltip">delete section</span>
                 </button>
@@ -141,6 +146,9 @@ onMounted(()=>{if(!localSection.name){isNew.value = true;focusNameInput();}})
                 :item="item"
                 :section_id="localSection._id"
                 :menu="localMenu"/>
+        </div>
+        <div class="modalWrapper" v-if="modalFlag">
+            <ModalDelete class="modal delete" :item="localSection" itemType="Section" @close-modal="modalFlag=false" @delete-item="getDelete"/>
         </div>
     </div>
 </template>

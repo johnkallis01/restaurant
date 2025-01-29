@@ -18,6 +18,7 @@ const isNew = ref(false);
 const newAddOnFlag=ref(true);
 const newRemoveFlag=ref(true);
 const optionsModal=ref(false);
+const deleteModal=ref(false);
 
 const nameInputRef=ref(null);
 const descriptionInputRef=ref(null);
@@ -41,6 +42,11 @@ const OAR = ref([
     {name:'addOns', flag: addOnsFlag, callback: viewAddOns},
     {name:'removes', flag: removesFlag, callback: viewRemoves},
 ]);
+const getDelete=()=>{
+    console.log('get delete')
+    deleteModal.value=false;
+    deleteItem();
+}
 function deleteItem(){
     const itemIndex = localMenu.sections[sectionIndex].items.findIndex(it => it._id === item._id);
     localMenu.sections[sectionIndex].items.splice(itemIndex, 1);
@@ -110,7 +116,7 @@ onMounted(()=>{
             <div class="button-name">
                 <span class="btn-icons-group items">
                     <button class="btn" ref="buttonRef"
-                        @click="deleteItem()"
+                        @click="deleteModal=true"
                         @keydown="tabToName"
                         v-if="!isNew">
                         <i class="mdi mdi-close"/>
@@ -228,6 +234,9 @@ onMounted(()=>{
                 <ModalAddOptions :item="localItem" :section_id="section_id" 
                     :menu="localMenu" @close-modal="getCloseModal"/>               
             </div>
+        </div>
+        <div class="modalWrapper" v-if="deleteModal">
+            <ModalDelete class="modal delete" :item="localItem" itemType="Item" @close-modal="modalFlag=false" @delete-item="getDelete"/>
         </div>
     </div>
 </template>

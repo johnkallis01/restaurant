@@ -235,6 +235,7 @@ defineExpose({nameRef});
 .options-content-row{
     display: flex;
     justify-content: flex-start;
+    flex-wrap: wrap;
     margin: 5px;
 }
 .option-content{

@@ -257,6 +257,8 @@ containers
     margin: 5px;
 }
 .form-title{
+  display: flex;
+  align-items: center;
     padding: 10px;
     height: 8vh;
     font-size: large;
@@ -441,7 +443,12 @@ containers
   border: 2px solid black;
   box-sizing: border-box;
 }
-
+.modal.delete{
+  height: 30vh;
+  top: 35vh;
+  width: 30vw;
+  left: 35vw;
+}
 /*toggle button*/
 .toggle {
     display: flex;
@@ -564,6 +571,10 @@ containers
     .modal{
       width: 90vw;
       left: 5vw;
+    }
+    .modal.delete{
+      width: 70vw;
+      left: 15vw;
     }
     .cart{
       width: 80vw;

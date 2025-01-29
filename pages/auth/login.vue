@@ -1,4 +1,6 @@
 <script setup>
+import { onMounted } from 'vue';
+
 useHead({
   title: "John's Restaurant - Login"
 });
@@ -26,6 +28,11 @@ const inputs = ref([
         sendInput: getEmail, callback: ()=>null },
   { placeholder: 'password', req: true, password: true,
         sendInput: getPassword, callback: tabToButton}]);
+onMounted(() => {
+  const el = document.querySelector('input')
+  console.log(el)
+  el.focus();
+})
 </script>
 <template>
   <div class="container">

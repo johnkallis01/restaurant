@@ -61,6 +61,11 @@ const validateInput = (rule, value, inputVar) =>{
     if(validationStatus[inputVar]) user[inputVar] = value; //if good assign to user
   }
 }
+onMounted(() => {
+  const el = document.querySelector('input')
+  console.log(el)
+  el.focus();
+})
 </script>
 <template>
   <div class="container">
@@ -101,8 +106,6 @@ form{
 }
 .input-field{
   width: 20vw;
-}
-.input-field {
   transition: border-color 0.3s;
 }
 .input-field.invalid{

@@ -1,6 +1,5 @@
 <script setup>
 import { v4 as uuidv4 } from 'uuid';
-import { nextTick, onMounted } from 'vue';
 const emit = defineEmits(['close-modal']);
 const {item, section_id, menu} = defineProps({
     item: { type: Object, required: true },
