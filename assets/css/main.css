@@ -444,9 +444,9 @@ containers
   box-sizing: border-box;
 }
 .modal.delete{
-  height: 30vh;
+  height: 40vh;
   top: 35vh;
-  width: 30vw;
+  width: 40vw;
   left: 35vw;
 }
 /*toggle button*/

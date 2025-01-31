@@ -22,8 +22,8 @@ onMounted(() => {
              {{ "Delete "+itemType }}
         </div>
         <div class="form-body">
-            <div class="item-name"> {{'Are you sure you want to delete '+ item.name + ' and all of its contents?'}}</div>
-            <div class="item-name"> {{'type "' + item.name +'" to delete'}}</div>
+            <span class="item-name"> {{'Are you sure you want to delete '+ item.name + ' and all of its contents?'}}</span>
+            <span class="item-name"> {{'Type "' + item.name +'" to delete'}}</span>
             <div class="input-field">
                 <TextField
                     :placeHolder="'enter name to delete'"
@@ -57,6 +57,8 @@ onMounted(() => {
 }
 .item-name{
     margin: 10px;
+    width: 90%;
+    font-size: 14px;
     text-wrap: wrap;
 }
 .btn{

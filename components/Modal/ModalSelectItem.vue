@@ -150,9 +150,10 @@ onMounted(()=>{
                                                 :value="op" v-model="selectedItem[oar.name][j].choice"
                                                 @keydown.enter="selectedItem.options[j].choice.length>0 ? handleOpKeydownEnter(j,op) : selectedItem.options[j].choice.push(op)"
                                                 @change="selectedItem.options[j].choice.length>1 ? selectedItem.options[j].choice.splice(0,1) : selectedItem;"/>
-                                            <label class="item-name" :for="'checkbox-'+j+k">{{ op.name }}</label>
-                                            <label class="item-price" :for="'checkbox-'+j+k"
-                                                v-if="Number(op.price)>0">{{  formatPrice(op.price)}}</label>
+                                            <label class="item-name" :for="'checkbox-'+j+k">{{ op.name }}
+                                            <span class="item-price" :for="'checkbox-'+j+k"
+                                                v-if="Number(op.price)>0">{{ '-'+ formatPrice(op.price)}}</span>
+                                            </label>
                                         </div>
                                     </div> 
                                 </div>
@@ -161,8 +162,9 @@ onMounted(()=>{
                                         :value="val" v-model="selectedItem[oar.name]"
                                         @keydown.enter="selectedItem[oar.name].push(val)"
                                         />
-                                    <label class="item-name" :for="'checkbox-'+j">{{ val.name }}</label>
-                                    <label class="item-price" :for="'checkbox-'+j" v-if="Number(val.price)>0">{{  formatPrice(val.price)}}</label>
+                                    <label class="item-name" :for="'checkbox-'+j">{{ val.name }}
+                                    <span class="item-price" :for="'checkbox-'+j" v-if="Number(val.price)>0">{{ '-'+ formatPrice(val.price)}}</span>
+                                    </label>
                                 </span>
                             </div>
                         </div>
@@ -234,7 +236,10 @@ input[type="checkbox"]:focus {
 .item-title.bot-bor{
     border-bottom: 2px solid black;
 }
-
+.checkbox{
+    display: flex;
+    justify-content: flex-start;
+}
 .item-title{
     display: flex;
     justify-content: space-between;
