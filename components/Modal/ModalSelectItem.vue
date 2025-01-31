@@ -130,13 +130,13 @@ onMounted(()=>{
         <div class="form-body">
             <div class="item-addons-removes-options">
                 <div class="item-a-r-o-titles">
-                    <span v-for="oar in OAR" :key="oar.name">
+                    <template v-for="oar in OAR" :key="oar.name">
                         <button class="btn"
                             v-if="oar.hasValue"
                             @click="oar.callback" @keydown.enter="oar.callback">
                             <span :class="{'underline': oar.flag}" >{{ oar.name }}</span>
                         </button>
-                    </span>
+                    </template>
                 </div>
                 <div class="item-a-r-o-components">
                     <template v-for="(oar, i) in OAR" :key="i">
@@ -167,7 +167,7 @@ onMounted(()=>{
                             </div>
                         </div>
                     </template>
-                    <div v-show="commentsFlag" class="text-field">
+                    <div v-if="commentsFlag" class="text-field">
                         <textarea ref="commentsRef"
                             v-model="selectedItem.comments"></textarea>
                     </div>
