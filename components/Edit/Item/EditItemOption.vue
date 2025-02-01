@@ -185,7 +185,7 @@ defineExpose({nameRef});
                 </button>
                 <div class="tab-name">
                     {{ i===localOption.content.length-1 || localOption.content.length===1 ? 
-                ( Number(val.price) ? val.name+ "-"+ formatPrice(val.price) : val.name ) : ( Number(val.price) ? val.name + "-" + formatPrice(val.price) + "," : val.name+",")}}
+                ( Number(val.price) ? val.name+ " "+ formatPrice(val.price) : val.name ) : ( Number(val.price) ? val.name + " " + formatPrice(val.price) + "," : val.name+",")}}
                 </div>
             </div>
         </div>

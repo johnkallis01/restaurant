@@ -435,10 +435,10 @@ containers
   background-color: white;
   z-index: 1000;
   position: fixed;
-  top: 25vh;
-  left: 25vw;
-  width: 50vw;
-  height: 50vh;
+  top: 20vh;
+  left: 20vw;
+  width: 60vw;
+  height: 60vh;
   border-radius: 15px;
   border: 2px solid black;
   box-sizing: border-box;
