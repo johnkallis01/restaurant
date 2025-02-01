@@ -28,6 +28,7 @@ function postEditAddOn() {
 } 
 function postNewAddOn(){
     console.log(localAddOn.price)
+    delete localAddOn.isNew;
     if(localAddOn.name){
         localMenu.sections[sectionIndex].items[itemIndex].addOns.push({
             name: localAddOn.name,
@@ -47,7 +48,7 @@ const getAddOnPrice = (np) => {
     if(!isNew.value) postEditAddOn();
 } 
 onMounted(()=>{
-    if(!localAddOn.name){
+    if(localAddOn.isNew){
         isNew.value = true; editName.value=true;
         focusNameInput();
     }
@@ -90,6 +91,7 @@ onMounted(()=>{
                 v-if="editPrice"
                 :price="localAddOn.price"
                 @update-price="getAddOnPrice($event)"
+                @blur="isNew ? postNewAddOn() : postEditAddOn()"
                 @keydown.enter="isNew ? postNewAddOn() : postEditAddOn()"
                 />
             <span class="item-price"

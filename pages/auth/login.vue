@@ -5,6 +5,7 @@ useHead({
   title: "John's Restaurant - Login"
 });
 const authStore = useAuthStore();
+const loginRef=ref(null);
 const buttonRef=ref(null);
 const { tabToButton } = useTabToButton(buttonRef);
 const email = ref('');
@@ -29,13 +30,11 @@ const inputs = ref([
   { placeholder: 'password', req: true, password: true,
         sendInput: getPassword, callback: tabToButton}]);
 onMounted(() => {
-  const el = document.querySelector('input')
-  console.log(el)
-  el.focus();
+  loginRef.value.querySelector('input').focus()
 })
 </script>
 <template>
-  <div class="container">
+  <div class="container" ref="loginRef">
     <div class="form-title">Login</div>
     <form class="form-container" @submit.prevent="login">
       <div class="form-field">

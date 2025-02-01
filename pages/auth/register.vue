@@ -4,6 +4,7 @@ useHead({
 });
 import { rules } from '~/utils/rules';
 const authStore = useAuthStore();
+const registrationRef=ref(null);
 const buttonRef=ref(null);
 const { tabToButton } = useTabToButton(buttonRef);
 const inputs = ref([
@@ -62,13 +63,13 @@ const validateInput = (rule, value, inputVar) =>{
   }
 }
 onMounted(() => {
-  const el = document.querySelector('input')
+  const el = registrationRef.value.querySelector('input')
   console.log(el)
   el.focus();
 })
 </script>
 <template>
-  <div class="container">
+  <div class="container" ref="registrationRef">
     <div class="form-title">Registration</div>
       <div class="form-subtitle">password must contain at least one uppercase letter, one number and one symbol !@#$%^&*?</div>
         <form>

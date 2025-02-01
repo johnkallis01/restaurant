@@ -56,6 +56,9 @@ onBeforeUnmount(() => {if (logoutTimer.value) clearInterval(logoutTimer.value);}
         <ClientOnly>
           <template v-if="loggedIn">
             <template v-if="isAdmin.value">
+              <!-- <nuxt-link to="/orders">
+                <button class="btn-link">All Orders</button>
+              </nuxt-link> -->
               <nuxt-link ref="dropdownRef">
                 <button class="btn-link" @click="toggleDropdown()">Edit Menu</button>
               </nuxt-link>

@@ -5,19 +5,15 @@ const { item, itemType} = defineProps({item: {type: Object, required: true}, ite
 const emit = defineEmits(['close-modal','delete-item']);
 const input = ref('');
 const buttonRef=ref(null);
-const getInput = (v) => {
-    console.log(v)
-    input.value=v;
-}
 const { tabToButton } = useTabToButton(buttonRef);
 onMounted(() => {
-  const el = document.querySelector('input')
-  console.log(el)
-  el.focus();
+    const modal = document.getElementById('delete-modal');
+    const el = modal.querySelector('input');
+    el.focus();
 })
 </script>
 <template>
-    <div class="container">
+    <div class="container" id="delete-modal">
         <div class="form-title">
              {{ "Delete "+itemType }}
         </div>
@@ -26,16 +22,16 @@ onMounted(() => {
             <span class="item-name"> {{'Type "' + item.name +'" to delete'}}</span>
             <div class="input-field">
                 <TextField
-                    :placeHolder="'enter name to delete'"
+                    placeHolder="enter name to delete"
                     :req="true"
-                    @send-input="getInput"
+                    @send-input="(v)=>input=v"
                     @keydown.enter="tabToButton"
                 />
             </div>
              
         </div>
         <div class="form-actions">
-            <button class="btn" @click="(input===item.name) ? emit('delete-item') : null" ref="buttonRef">Submit</button>
+            <button class="btn" @click="(input.trim()===item.name.trim()) ? emit('delete-item') : null" ref="buttonRef">Submit</button>
             <button class="btn" @click="emit('close-modal')">Cancel</button>
         </div>
     </div>

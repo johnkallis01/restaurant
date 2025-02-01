@@ -35,7 +35,7 @@ const tabToDescription=useTabToInput(focusDescriptionInput);
 
 const {addOnsFlag, removesFlag, resetFlags, viewAddOns,viewRemoves } = useAROFlags();
 const sectionIndex=localMenu.sections.findIndex(sec => sec._id === section_id);
-const newAddOn = ref({ name: "", price: "000.00", _id: uuidv4(), });
+const newAddOn = ref({ name: "", price: "000.00", _id: uuidv4(), isNew: true });
 const newRemove = ref({ name: "", _id: uuidv4(), });
 const OAR = ref([
     {name:'options', flag: optionsModal, callback: ()=>{resetFlags();optionsModal.value=true;}},
@@ -86,7 +86,7 @@ const getItemPrice = (np) => {
     localItem.price = np;
     if(!isNew.value) postItemEdit('price');
 }
-const getResetAddOn = () => {newAddOn.value.name="";newAddOn.value.price="000.00";newAddOn.value._id=uuidv4();}
+const getResetAddOn = () => {newAddOn.value.isNew=true;newAddOn.value.name="";newAddOn.value.price="000.00";newAddOn.value._id=uuidv4();}
 const getResetRemove = () =>{ newRemove.value.name= ""; newRemove.value._id=uuidv4(); }
 const getCloseModal = ()=>{optionsModal.value=false;}
 const getDeleteAddOn = (index) => {
@@ -155,6 +155,7 @@ onMounted(()=>{
                 v-if="editPrice"
                 :price="localItem.price"
                 @keydown="tabToDescription"
+                @blur="isNew ? editPrice=false : postItemEdit('price')"
                 @keydown.enter="isNew ? postNewItem() : postItemEdit('price')"
                 @update-price="getItemPrice"/>
             <span class="item-price" @click="focusPriceInput" v-else>
@@ -166,7 +167,8 @@ onMounted(()=>{
                 <textarea type="text" placeholder="description" ref="descriptionInputRef"
                     v-model="localItem.description"
                     @click="console.log('ph')"
-                    @blur="isNew ? 
+                    @blur="isNew ? editDescription=false : postItemEdit('description')"
+                    @keydown.enter="isNew ? 
                     ( localItem.name ? postNewItem() : editDescription=false ) :
                      postItemEdit('description')"/>
             </div>

@@ -6,6 +6,7 @@ const { menu, isNew } = defineProps({menu: {type: Object, required: false},
 const localMenu = reactive({ ...menu, days: [...menu.days] });
 const menuStore = useMenuStore();
 const router = useRouter();
+const newMenuRef=ref(null);
 const hasError = computed(() => localMenu.days.some(day => day.error));
 const hasOpenDay = computed(() => localMenu.days.some(day => day.open));
 const isDisabled = computed(() => hasError.value && !hasOpenDay.value);
@@ -28,9 +29,12 @@ async function postMenu(){
 }
 const getName = (n) => { localMenu.name = n; };
 const getDay = (d) => {localMenu.days[d.position] = d;};
+onMounted(() => {
+  newMenuRef.value.querySelector('input').focus();
+});
 </script>
 <template>
-    <div class="new-menu-container">
+    <div class="new-menu-container" ref="newMenuRef">
       <div class="menu-container-body" v-if="localMenu"> 
         <TextField
           :is-valid="rules['name'].test(localMenu.name)"
