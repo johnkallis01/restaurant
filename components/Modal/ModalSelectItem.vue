@@ -56,12 +56,12 @@ function tabToFirst(event){
     }
 }
 function addItem(){
-    console.log('add item to cart')
+    // console.log('add item to cart')
     const detachedSelected=detachObject(selectedItem);
     detachedSelected.price=itemPrice(detachedSelected);
     // console.log(detachedSelected)
     detachedSelected.options=detachedSelected.options.filter(op=>op.choice.length);
-    console.log(detachedSelected)
+    // console.log(detachedSelected)
     cartStore.addItemToCart(detachedSelected);
     selectedItem.name=detachedItem.name; selectedItem.price=detachedItem.price; selectedItem.addOns=[];
     selectedItem.removes=[]; selectedItem.options=[]; selectedItem.comments= '';

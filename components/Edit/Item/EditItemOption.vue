@@ -225,12 +225,16 @@ defineExpose({nameRef});
 .tab-row{
     gap: 5px;
 }
+.tab-name{
+    align-content: center;
+}
 .btn{
     border-radius: 18px;
 }
 .btn.del{
     margin-right: 3px;
     font-size: 10px;
+    padding: 0 6px;
 }
 .options-content-row{
     display: flex;
