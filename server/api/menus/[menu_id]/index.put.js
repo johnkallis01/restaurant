@@ -27,19 +27,15 @@ export default defineEventHandler(async (event) => {
 	// console.log(isAdmin)
 	if(isAdmin){
 		// console.log('edit /api/menu/id')
-		const body = await readBody(event);
-			
+		const body = await readBody(event);	
 		const id = event.context.params?.menu_id;
 		// console.log('put', id)
 		try {
 			console.log("EDIT /api/menu/id")
 			const res = await Menu.findByIdAndUpdate(id, body);
-			if (!res) {
-				throw createError({ statusCode: 404, message: 'Menu not found' });
-			}
 			return { message: "Menu "+body._id+" has been updated", res: res };
 		} catch (e) {
-			console.log(e)
+			throw createError({ statusCode: 401, message: 'Error! update not recieved' });
 		}
 	}
 	

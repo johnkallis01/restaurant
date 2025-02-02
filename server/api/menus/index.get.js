@@ -6,10 +6,6 @@ export default defineEventHandler(async (event) => {
       const menus = await Menu.find();
       return menus;
     } catch (err) {
-      console.dir(err)
-      return {
-        code: "error",
-        message: 'something is wrong',
-      };
+      throw createError({ statusCode: 401, message: 'Error Retreiving data' });
     }
 });

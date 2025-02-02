@@ -4,6 +4,7 @@ export const useCartStore = defineStore('cart', {
     state: () => ({
         isCartOpen: false,
         items: [],
+        orders: [],
     }),
     getters:{
         getItems: (state) => state.items,
@@ -32,14 +33,36 @@ export const useCartStore = defineStore('cart', {
         },
         async submitOrder(order){
             const token=useCookie('token');
-            const response = await $fetch('/api/orders/', {
-                method: 'POST',
-                body: JSON.stringify(order),
-                headers: {authorization: `Bearer ${token.value}`},
-            });
-            console.log(response)
-            this.clearCart();
-            navigateTo('/');
+            if(token.value){
+                try{
+                    const response = await $fetch('/api/orders/', {
+                        method: 'POST',
+                        body: JSON.stringify(order),
+                        headers: {authorization: `Bearer ${token.value}`},
+                    });
+                    console.log('cartStore',response.res)
+                }catch{
+                    console.log('error')
+                }
+                this.clearCart();
+            }
+            
+            // navigateTo('/');
+        },
+        async fetchOrders(){
+            const token=useCookie('token');
+            if(token.value){
+                try{
+                    const response = await fetch('/api/orders',{
+                        method: 'GET',
+                        headers: {authorization: `Bearer ${token.value}`},
+                    })
+                    .then(response => response.json())
+                    .then(data => this.orders = data);
+                }catch{
+                    console.log('errorrrrrr')
+                }
+            }
         }
     }
 })

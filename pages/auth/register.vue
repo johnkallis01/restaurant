@@ -56,7 +56,7 @@ const validateInput = (rule, value, inputVar) =>{
     validationStatus['password']=validationStatus['confirmPassword'];
     if(!validationStatus['confirmPassword']) validationStatus['password']=false;
   }
-  if(rules[rule] && value.length){
+  if(rules[rule]){
     // console.log(rules[rule])
     validationStatus[inputVar] = rules[rule].test(value); //test input
     if(validationStatus[inputVar]) user[inputVar] = value; //if good assign to user

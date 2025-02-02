@@ -22,7 +22,7 @@ const capitalizeFirstLetter = (word)=>{
 }
 const onInput = (event) => {
     localName.value = event.target.value;
-  emit('send-input', localName.value);
+    emit('send-input', localName.value);
 };
 const focusInput = useFocusInput(inputRef)
 defineExpose({ focusInput });

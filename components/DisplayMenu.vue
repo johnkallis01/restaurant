@@ -37,7 +37,7 @@ function displayModal(item,ops){
             </div>
         </div>
         <div v-else>
-            {{ "no menu available at this time" }}
+            {{ "Loading..." }}
         </div>
         <div class="modalWrapper" v-if="modalFlag">
             <div class="modal" >

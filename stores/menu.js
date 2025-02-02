@@ -11,7 +11,7 @@ export const useMenuStore = defineStore('menu', {
   },
   actions: {
     async fetchMenus(){
-      await fetch('/api/menus')
+      await fetch('/api/menus',{method: 'GET'})
       .then(response => response.json())
       .then(data => this.menus = data);
     },
@@ -42,7 +42,7 @@ export const useMenuStore = defineStore('menu', {
             body: menu,
           })
           console.log(response)
-          return response;
+          return response.res._id;
         }catch{
           console.log('error')
           useAuthStore().logout();

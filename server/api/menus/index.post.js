@@ -31,7 +31,7 @@ export default defineEventHandler(async (event) => {
 			const response = await Menu.create(body);
 			return { message: "Menu created", res: response };
 		} catch (e) {
-			console.log(e)
+			throw createError({ statusCode: 401, message: 'Error Menu not created' });
 		}
 	}
    

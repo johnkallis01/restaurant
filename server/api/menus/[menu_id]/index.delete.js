@@ -28,7 +28,7 @@ export default defineEventHandler(async (event) => {
 			const res = await Menu.findByIdAndDelete(id);
 			return { message: "Menu "+id+" has been deleted", res: res };
 		} catch (e) {
-			console.log(e)
+			throw createError({ statusCode: 401, message: 'Error Menu not found' });
 		}
 	}
 });
