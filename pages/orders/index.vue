@@ -1,29 +1,33 @@
 <script setup>
+import { onBeforeMount } from 'vue';
+
 useHead({
   title: "John's Restaurant - All Orders"
 });
 definePageMeta({middleware: ['admin','auth']});
 const cartStore=useCartStore();
 const ordersRef=ref(null);
+
+const findWidth=computed(() => {
+    
+})
 onMounted(async () => {
   try {
     await cartStore.fetchOrders();
   } catch (error) {
     console.error("Failed to fetch orders:", error);
   }
-});
-onMounted(() => {
     let max=0;
+    const el=document.getElementById('orders');console.log(el)
     cartStore.orders.forEach(order=> order.items.length > max ? max=order.items.length : null)
+    el.style.width=String((max)*120 +370+max-1)+'px';
     console.log(max)
-    console.log(ordersRef.value)
-    ordersRef.value.style.width=String(max*120 +380)+'px';
-})
+});
 </script>
 <template>
    <div class="orders-page">
         <div class="orders-page-title">all orders</div>
-        <div class="orders-container" ref="ordersRef">
+        <div class="orders-container" ref="ordersRef" id="orders">
             <button class="orders" 
                 @click="viewOrder"
                 v-for="order in cartStore.orders" :key="order._id">
@@ -81,41 +85,49 @@ onMounted(() => {
 }
 .date{
     border-left: 1px solid black;
-    width: 80px;
+    width: 70px;
+    text-align: end;
+    padding: 0 2px;
 }
 .time{
     border-left: 1px solid black;
-    width: 60px;
+    width: 50px;
+    text-align: end;
+    padding: 0 2px;
+    position: absolute;
+    left: 70px;
 }
 .total{
-    margin-right: 5px;
     width: 50px;
     white-space: nowrap;
     position: absolute;
     left: 140px;
+    text-align: end;
+    padding: 0 2px;
     border-left: 1px solid black;
 }
 .name{
-    margin: 0 5px 0 3px;
     width: 90px;
     white-space: nowrap;
+    text-align: end;
+    padding: 0 2px;
     position: absolute;
     left: 190px;
     border-left: 1px solid black;
 }
-
 .phone{
     width: 90px;
     white-space: nowrap;
     position: absolute;
     left: 280px;
+    text-align: end;
+    padding: 0 2px;
     border-left: 1px solid black;
 }
 .order-items{
     position: absolute;
     left: 370px;
-    white-space: nowrap;
-    
+    white-space: nowrap; 
 }
 .order-item:hover .tooltip{
     opacity: 1;
@@ -124,7 +136,6 @@ onMounted(() => {
 .order-item{
     cursor: default;
     display: inline-flex;
-    margin-right: 2px;
     overflow: hidden;
     height: 20px;
     width: 120px;
