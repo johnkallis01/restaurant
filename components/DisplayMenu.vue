@@ -5,7 +5,14 @@ const {menu} = defineProps({
 const { formatPrice } = usePriceFormatter();
 const modalFlag=ref(false);
 const modalItem = ref();
-function displayModal(item){modalFlag.value=true;modalItem.value=item;}
+const { detachObject } = useDetachObject();
+function displayModal(item,ops){
+    // console.log(item.options)
+    const detachItem=detachObject(item);
+    modalItem.value={...detachItem, options: [...detachItem.options.map((op)=> ({...op, choice: []})).concat(ops.map((op)=>({...op, choice: []})))]};
+    // console.log(modalItem.value)
+    modalFlag.value=true;
+}
 </script>
 <template>
     <div class="sections">
@@ -13,13 +20,13 @@ function displayModal(item){modalFlag.value=true;modalItem.value=item;}
             <DisplaySchedule :menu="menu" />
         </div>
         <div v-if="menu" class="section-container">
-            <div v-for="(section, i) in menu['sections']" :key="i">
+            <div v-for="section in menu.sections" :key="section._id">
                 <div class="section-name">{{ section.name }}</div>
                 <div class="section-description">{{ section?.description }}</div>
                 <div class="section-items">
                     <button class="item-container" :disabled="!order"
                         v-for="(item) in section.items" :key="item._id"
-                        @click="displayModal(item)">
+                        @click="displayModal(item, section?.options)">
                         <div class="item-title" >
                             <span class="item-name">{{ item.name }}</span>
                             <span class="item-price">{{ formatPrice(item.price) }}</span>

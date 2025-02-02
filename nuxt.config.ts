@@ -7,11 +7,6 @@ export default defineNuxtConfig({
   plugins: [
     // '~/plugins/initAuth.js'
   ],
-  components: {
-    dirs: [
-      '~/components',
-    ]
-  },
   modules: [
     '@pinia/nuxt',
   ],

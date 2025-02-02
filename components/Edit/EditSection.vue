@@ -1,13 +1,16 @@
 <script setup>
+import { navigateTo } from 'nuxt/app';
 import { v4 as uuidv4 } from 'uuid';
-import { useFocusInput } from '../../composables/useFocusInput';
-import { useTabToButton } from '../../composables/useTabToButton';
 const emit = defineEmits(['send-new-section-flag']);
 const {section, menu} = defineProps({
     section: { type:Object, required: true},
     menu: { type:Object, required: true},
 });
-const modalFlag=ref(false);
+const deleteModalFlag=ref(false);
+const addOptionsModalFlag=ref(false);
+const { detachObject } = useDetachObject();
+const route = useRoute();
+const router = useRouter();
 const nameInputRef=ref(null);
 const descriptionInputRef = ref(null);
 const editName=ref(false);
@@ -48,7 +51,7 @@ function postSectionEdit(str){
 }
 const getDelete=()=>{
     console.log('get delete')
-    modalFlag.value=false;
+    deleteModalFlag.value=false;
     deleteSection();
 }
 function deleteSection(){
@@ -75,6 +78,10 @@ function addNewItem(){
         _id: uuidv4(),
     }
 }
+const closeOptionsModal=()=>{
+    addOptionsModalFlag.value=false;
+    navigateTo(router.currentRoute.value);
+}
 const getNewItemFlag = () => {addItem.value=false;}
 onMounted(()=>{if(!localSection.name){isNew.value = true;focusNameInput();}})
 </script>
@@ -82,36 +89,45 @@ onMounted(()=>{if(!localSection.name){isNew.value = true;focusNameInput();}})
     <div class="section-container">
         <div>
             <div class="section-name">
-                <button class="btn delete" @click="postNewSection()" v-if="isNew">
-                    <i class="mdi mdi-plus"/>
-                    <span class="tooltip">add section</span>
-                </button>
-                <button class="btn delete" @click="modalFlag=true" v-else>
-                    <i class="mdi mdi-close"/>
-                    <span class="tooltip">delete section</span>
-                </button>
-                <template v-if="editName">
-                    <div class="text-field name">
-                        <input
-                            type="text"
-                            ref="nameInputRef"
-                            v-model="localSection.name"
-                            @blur="isNew ? editName=false : postSectionEdit('name')"
-                            @keydown.enter="isNew ? postNewSection() : postSectionEdit('name')"
-                            @keydown="tabToDescription"
-                        />
-                        <!--  -->
-                    </div>
-                </template>
-                <template v-else>
-                    <span @click="focusNameInput" v-if="localSection.name">{{ localSection.name }}</span>
-                    <span class="placeholder-color" @click="focusNameInput" v-else>name</span>
-                </template>
-                <button class="btn add-item" @click="addNewItem()" v-if="!isNew">
-                    <span class="btn-text">item</span>
-                    <i class="mdi mdi-plus"/>
-                    <span class="tooltip">add item</span>
-                </button> 
+                <span class="left-side">
+                    <button class="btn delete" @click="postNewSection()" v-if="isNew">
+                        <i class="mdi mdi-plus"/>
+                        <span class="tooltip">add section</span>
+                    </button>
+                    <button class="btn delete" @click="deleteModalFlag=true" v-else>
+                        <i class="mdi mdi-close"/>
+                        <span class="tooltip">delete section</span>
+                    </button>
+                    <template v-if="editName">
+                        <div class="text-field name">
+                            <input
+                                type="text"
+                                ref="nameInputRef"
+                                v-model="localSection.name"
+                                @blur="isNew ? editName=false : postSectionEdit('name')"
+                                @keydown.enter="isNew ? postNewSection() : postSectionEdit('name')"
+                                @keydown="tabToDescription"
+                            />
+                            <!--  -->
+                        </div>
+                    </template>
+                    <template v-else>
+                        <span @click="focusNameInput" v-if="localSection.name">{{ localSection.name }}</span>
+                        <span class="placeholder-color" @click="focusNameInput" v-else>name</span>
+                    </template>
+                </span>
+                <div class="right-btns">
+                    <button class="btn" @click="addOptionsModalFlag=true" v-if="!isNew">
+                        <span class="btn-text">options</span>
+                        <i class="mdi mdi-plus"/>
+                        <span class="tooltip">add options to all items</span>
+                    </button> 
+                    <button class="btn" @click="addNewItem()" v-if="!isNew">
+                        <span class="btn-text">item</span>
+                        <i class="mdi mdi-plus"/>
+                        <span class="tooltip">add item</span>
+                    </button>
+                </div>
             </div>
             <div class="section-description">
                 <template v-if="editDescription">
@@ -147,18 +163,29 @@ onMounted(()=>{if(!localSection.name){isNew.value = true;focusNameInput();}})
                 :section_id="localSection._id"
                 :menu="localMenu"/>
         </div>
-        <div class="modalWrapper" v-if="modalFlag">
-            <ModalDelete class="modal delete" :item="localSection" itemType="Section" @close-modal="modalFlag=false" @delete-item="getDelete"/>
+        <div class="modalWrapper" v-if="addOptionsModalFlag">
+            <ModalAddOptions class="modal secOp" :menu="localMenu" :item="localSection" @close-modal="closeOptionsModal(menu)"/>
+        </div>
+        <div class="modalWrapper" v-if="deleteModalFlag">
+            <ModalDelete class="modal delete" :item="localSection" itemType="Section" @close-modal="deleteModalFlag=false" @delete-item="getDelete"/>
         </div>
     </div>
 </template>
 <style scoped>
-.btn.add-item{
-    position: absolute;
-    right: 0;
+.left-side{
+    display: flex;
+    justify-content: flex-start;
+}
+.modal.secOp{
+    width: 80vw;
+    height: 60vh;
+    left: 10vw;
+}
+.right-btns{
     font-size:20px;
     margin-right: 15px;
     padding: 5px;
+    gap: 10px;
 }
 .input-description{
     width: 40vw;

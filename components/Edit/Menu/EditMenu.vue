@@ -15,7 +15,8 @@ const newSection = ref({
     name: "",
     description: "",
     _id: uuidv4(),
-    items: []
+    items: [],
+    options: [],
 });
 const getDelete=()=>{
     console.log('get delete')
@@ -34,7 +35,8 @@ function addNewSection(){
     name: "",
     description: "",
     _id: uuidv4(),
-    items: []
+    items: [],
+    options: [],
   };
 }
 const getNewSectionFlag = () => {addSection.value=false;}

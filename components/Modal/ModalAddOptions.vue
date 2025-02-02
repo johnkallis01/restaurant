@@ -1,9 +1,10 @@
 <script setup>
 import { v4 as uuidv4 } from 'uuid';
 const emit = defineEmits(['close-modal']);
+//accepts sections as well
 const {item, section_id, menu} = defineProps({
     item: { type: Object, required: true },
-    section_id: { type:String, required: true},
+    section_id: { type: String, required: false},
     menu: { type:Object, required: true},
 });
 const localMenu=reactive(menu);
@@ -12,7 +13,7 @@ const menuStore=useMenuStore();
 const { detachObject } = useDetachObject();
 const detachedItem=reactive(detachObject(item));
 const openIndex = ref(-1);
-const newOption = reactive(detachObject({name: "",required: false,content: [],_id: uuidv4(),}));
+const newOption = reactive({name: "",req: false,content: [],_id: uuidv4(),});
 const addNew=ref(false);
 const childRef=ref(null);
 const newChildRef=ref(null);
@@ -30,10 +31,17 @@ function tabToAddOptionsBtn(event){
     }
 }
 function submitChanges(){
+    console.log('sci', newOption)
+    //when 'submit' is pressed but not 'submit option'
     if(newOption.name && newOption.content.length) getNew(newOption);
-    const sectionIndex = localMenu.sections.findIndex(sec => sec._id === section_id);
-    const itemIndex = localMenu.sections[sectionIndex].items.findIndex(it => it._id === localItem._id);
-    localMenu.sections[sectionIndex].items[itemIndex].options=detachedItem.options;
+    if(section_id){//if item
+        const sectionIndex = localMenu.sections.findIndex(sec => sec._id === section_id);
+        const itemIndex = localMenu.sections[sectionIndex].items.findIndex(it => it._id === localItem._id);
+        localMenu.sections[sectionIndex].items[itemIndex].options=detachedItem.options;
+    }else{//if section
+        const sectionIndex = localMenu.sections.findIndex(sec => sec._id === localItem._id);    
+        localMenu.sections[sectionIndex]=detachedItem;
+    }
     menuStore.updateMenu(localMenu);
     emit('close-modal');
 }
@@ -42,7 +50,7 @@ const getNew = (op) => {
     const newOp = detachObject(op);
     detachedItem.options.push(newOp);
     newOption.name="";
-    newOption.required=false;
+    newOption.req=false;
     newOption.content=[];
     newOption._id=uuidv4();
 }
@@ -54,7 +62,7 @@ onMounted(()=>{
     <div class="container">
         <div class="item-title">
             <div class="item-name">
-                {{ localItem.name }}
+                {{ section_id ? localItem.name : "Add options to all items in "+localItem.name}}
             </div>
             <div>
                 <button class="btn add" ref="addOptionBtnRef"
@@ -112,9 +120,6 @@ onMounted(()=>{
     padding: 5px;
     border-bottom: 2px solid black;
 }
-.item-title.aro{
-    border: none;
-}
 .form-actions{
     display: flex;
     justify-content: flex-end;
@@ -126,10 +131,5 @@ onMounted(()=>{
     height: 100%;
     width: 100%;
     border-radius: 15px;
-}
-.container.aro{
-    display: flex;
-    justify-content: center;
-    width: 80%;
 }
 </style>

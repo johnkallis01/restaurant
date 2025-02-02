@@ -4,22 +4,20 @@ import { nextTick } from 'vue';
 const emit = defineEmits(['close-modal']);
 const { item } = defineProps({item: {type: Object, required: true}});
 const cartStore = useCartStore(); 
-const { detachObject } = useDetachObject();
 const { formatPrice } = usePriceFormatter();
-const {addOnsFlag, removesFlag, optionsFlag, commentsFlag, viewAddOns, viewRemoves, viewOptions, resetFlags, viewComments } = useAROFlags();
+const {addOnsFlag, removesFlag, optionsFlag, commentsFlag, viewAddOns, viewRemoves, viewOptions, viewComments } = useAROFlags();
 const localItem=reactive(item);
-const detachedItem=detachObject(localItem);
 const selectedItem = reactive({
-    name: detachedItem.name,
-    price: detachedItem.price,
+    name: localItem.name,
+    price: localItem.price,
     addOns: [],
     removes: [],
-    options: detachedItem.options.map((op)=> ({_id: op._id, name: op.name,req: op.required, choice: []})),
+    options: localItem.options,
     comments: '',
 });
 function viewAndFocus(callback){
     callback();
-    focusInput('input[type="checkbox"]');
+    focusInput('input[type="checkbox"]')
 }
 function viewAndFocusComments(callback){
     callback();
@@ -34,7 +32,7 @@ const OAR = ref([
 const modalRef=ref(null);
 const commentsRef = ref(null);
 const focusComment = useFocusInput(commentsRef, commentsFlag);
-
+const { detachObject } = useDetachObject();
 function itemPrice(item){
     // console.log('item price')
     const total=Number(item.price);
@@ -44,10 +42,6 @@ function itemPrice(item){
     // console.log(total+addOnTotal+opTotal)
     return total+addOnTotal+opTotal;
 }
-
-// function tabToFirstButton(event){
-//     if(event.key==='Tab'){}
-// }
 function tabToFirst(event){
     if(event.key==='Tab'){
         const firstBtn = modalRef.value.querySelector('button');
@@ -63,7 +57,7 @@ function addItem(){
     detachedSelected.options=detachedSelected.options.filter(op=>op.choice.length);
     // console.log(detachedSelected)
     cartStore.addItemToCart(detachedSelected);
-    selectedItem.name=detachedItem.name; selectedItem.price=detachedItem.price; selectedItem.addOns=[];
+    selectedItem.name=localItem.name; selectedItem.price=localItem.price; selectedItem.addOns=[];
     selectedItem.removes=[]; selectedItem.options=[]; selectedItem.comments= '';
     emit('close-modal');
 }
@@ -78,7 +72,7 @@ const isDisabled=computed(() => {
 });  
 const addHasValue = computed(()=>{
     OAR.value.forEach((oar)=>{
-        detachedItem[oar.name]?.length || oar.hasValue ? oar.hasValue=true : oar.hasValue=false;
+        localItem[oar.name]?.length || oar.hasValue ? oar.hasValue=true : oar.hasValue=false;
     });
 })
 function focusInput(inputType){
@@ -95,7 +89,7 @@ const handleOpKeydownEnter = (index, op)=>{
     selectedItem.options[index].choice.splice(0,1);
 }
 const openFirstOAR = computed(()=>{
-    const first = OAR.value.find((el)=>detachedItem[el.name]?.length);
+    const first = OAR.value.find((el)=>localItem[el.name]?.length);
     if(first){
         first.flag=true;
         switch(first.name){
@@ -125,10 +119,10 @@ onMounted(()=>{
     <div class="container" ref="modalRef">
         <div class="item-title bot-bor">
             <div class="item-name">
-                {{ detachedItem.name }} 
+                {{ localItem.name }} 
             </div>
             <div class="item-price">
-                {{ formatPrice(detachedItem.price) }}
+                {{ formatPrice(localItem.price) }}
             </div>  
         </div>
         <div class="form-body">
@@ -145,9 +139,9 @@ onMounted(()=>{
                 <div class="item-a-r-o-components">
                     <template v-for="(oar, i) in OAR" :key="i">
                         <div class="container aro" v-if="oar.flag && oar.hasValue">
-                            <div class="options-cont" v-for="(val, j) in detachedItem[oar.name]" :key="j">
+                            <div class="options-cont" v-for="(val, j) in localItem[oar.name]" :key="j">
                                 <div class="option-cont" v-if="optionsFlag">
-                                    <div class="options-name">{{ val.name + ': ' }}</div> 
+                                    <div class="options-name">{{ val.name + ': '}}{{ val.req &&isDisabled ? '(required)':'' }}</div> 
                                     <div class="option-values">
                                         <div class="item-title" v-for="(op, k) in val.content" :key="k">
                                             <input  type="checkbox" :id="'checkbox-'+j+k" class="checkbox"

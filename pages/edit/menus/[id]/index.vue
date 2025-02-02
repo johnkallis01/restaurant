@@ -16,7 +16,9 @@ const menu = computed(()=>{
     <div class="container-title">
       <span class="title-text">Edit Menu</span>
     </div>
+   
     <div class="container-body">
+      <div class="reload">reload page after edit</div>
         <EditMenu :menu="menu" :menus="menus" v-if="menu"/>
         <div v-else>error</div>
     </div>
@@ -24,6 +26,9 @@ const menu = computed(()=>{
   </div>
 </template>
 <style scoped>
+.reload{
+  text-align: center;
+}
 .btn.new{
   background-color: green;
   color: white;

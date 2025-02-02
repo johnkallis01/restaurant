@@ -91,6 +91,7 @@ containers
 .page-container{    
     display: flex;
     justify-content: center;
+    flex-direction: column;
     align-items: center;
     position: absolute;
     height: 90vh;
@@ -149,7 +150,7 @@ containers
 *** sections 
 ****************/
 .section-container{
-   width: 80vw;
+  width: 80vw;
   display: flex;
   justify-content: flex-start;
   flex-direction: column;
@@ -159,6 +160,7 @@ containers
 }
 .section-name{
     display: flex;
+    justify-content: space-between;
     align-items: center;
     margin: 5px;
     font-size: 25px;
@@ -344,6 +346,7 @@ containers
     cursor: pointer;
     transition: all 0.3s ease;
     user-select: none;
+    position: relative
 }
 .btn:focus {
     outline: none;
@@ -533,6 +536,10 @@ containers
   }
 @media (max-width: 940px){
   .modal{
+    width: 80vw;
+    left: 10vw;
+  }
+  .modal.secOp{
     width: 80vw;
     left: 10vw;
   }

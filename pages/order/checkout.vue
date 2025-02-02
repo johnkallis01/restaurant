@@ -36,13 +36,29 @@ const inputs = ref([
   { name: 'email', placeholder: 'email', req: true, rule: 'email',},
 ]);
 const isDisabled = computed(()=>{
+  // console.log('triggered')
   for(const val in validationStatus){
-    if(!!validationStatus[val]);
-    else return false;
+    console.log(validationStatus[val], order[val])
+    if(!!validationStatus[val]){
+      console.log('g')
+      // if(order[val].length) return true;
+      // else return false;
+    }
+    else{ console.log('h')
+      return false;
+    } 
   }
+  console.log('j')
   return true;
 });
+watch(
+  order,
+  (o) => {
+   console.log(o);
+  }
+);
 const validateInput = (rule, value, inputVar) =>{
+  
   if(rules[rule] && value.length){
     // console.log(rules[rule])
     validationStatus[inputVar] = rules[rule].test(value); //test input
@@ -50,14 +66,17 @@ const validateInput = (rule, value, inputVar) =>{
   }
 }
 async function submitOrder(){
+  // const validate = order.find(val=>rules[])
+  console.log(order)
   try {
-      await cartStore.submitOrder({
+      const res = await cartStore.submitOrder({
         name: order.lastName+','+order.firstName,
         phone: order.phone,
         email: order.email,
         total: cartStore.getTotal,
         items: cartStore.getItems,
       })
+      console.log(res)
     } catch (error) {
       console.log('errrror: ', error['statusCode'])
       if(error.response.status === 409){

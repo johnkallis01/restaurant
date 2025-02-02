@@ -13,7 +13,6 @@ const focusNameInput = useFocusInput(nameInputRef,editName);
 const { priceInputRef, editPrice, focusPriceInput } = usePriceInput();
 const tabToPrice = useTabToInput(focusPriceInput);
 const focusContentInput = useFocusInput(contentInputRef);
-const tabToContent = useTabToInput(focusContentInput);
 const tabToName=useTabToInput(focusNameInput);
 
 const {option, item, isOpen } = defineProps({
@@ -26,10 +25,8 @@ const {option, item, isOpen } = defineProps({
  const localOption=reactive(option);
 const newContent = reactive({name: "", price: '000.00'});
 
-
 const optionsRef=ref(null);
 const isNew = ref(false);
-
 
 const deleteOption = () => {
     const optionIndex = localItem.options.findIndex((op)=> op._id === localOption._id);
@@ -61,7 +58,7 @@ const deleteOptionValue = (val) => {
     }
 }
 function addValue(){
-    console.log('av',newContent.price)
+    // console.log('av',newContent.price)
     if(newContent.name){
         focusContentInput();
         editPrice.value=false;
@@ -69,7 +66,7 @@ function addValue(){
         localOption.content.push(detachContent);
         newContent.name="";
         newContent.price='000.00';
-        console.log(newContent.price)
+        // console.log(newContent.price)
         const optionIndex = localItem.options.findIndex((op)=> {op._id === localOption._id});
         localItem.options[optionIndex]=localOption;
         emit('update-options', localItem.options);
@@ -79,11 +76,6 @@ function toggle(){
     editPrice.value=true;
     emit('toggle');
     focusContentInput();
-}
-const getPrice=(np)=>{
-    console.log('np', np)
-    newContent.price=np;
-    console.log(newContent.price)
 }
 const closeOpenContent = (event) => {
     if (optionsRef.value && !optionsRef.value.contains(event.target)) {
@@ -132,8 +124,8 @@ defineExpose({nameRef});
                         <span class="checkbox">
                             <label for="req">Required:</label>
                             <input type="checkbox" name="req"
-                                v-model="localOption.required"
-                                @keydown.enter="localOption.required=!localOption.required"
+                                v-model="localOption.req"
+                                @keydown.enter="localOption.req=!localOption.req"
                                 @change="isNew ? null : postEditOption">
                         </span>
                     </div>
@@ -165,7 +157,7 @@ defineExpose({nameRef});
                 v-if="editPrice"
                 :price="newContent.price"
                 @keydown.enter="tabToButton"
-                @update-price="getPrice" />
+                @update-price="(np)=>newContent.price=np" />
             <div v-else @click="editPrice=!editPrice">{{ formatPrice(newContent.price) }}</div>
              <!-- second button -->
              <button class="btn value"
