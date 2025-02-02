@@ -99,7 +99,6 @@ containers
     left: 5vh;
     right: 5vh; 
     overflow: scroll;
-    border: 2px solid blue;
     background-color: rgb(247, 249, 252);
 }
 .container-body{
