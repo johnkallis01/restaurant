@@ -11,11 +11,11 @@ export default defineEventHandler(async (event) => {
     try{
         const decoded = verifyToken(token);
         const {email} = decoded; 
-        console.log(email)
+        // console.log(email)
         const user = await User.findOne({  email });
-        console.log(user)
+        // console.log(user)
         isAdmin=user.isAdmin;  
-        console.log(isAdmin)
+        // console.log(isAdmin)
         // console.log('t', user)      
     }catch (error){
         throw createError({ statusCode: 402, message: 'Invalid or expired token' });

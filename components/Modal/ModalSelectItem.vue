@@ -119,7 +119,10 @@ onMounted(()=>{
     <div class="container" ref="modalRef">
         <div class="item-title bot-bor">
             <div class="item-name">
-                {{ localItem.name }} 
+               <span>{{ localItem.name }}</span>
+               <span class="qty">
+                qty
+               </span> 
             </div>
             <div class="item-price">
                 {{ formatPrice(localItem.price) }}
@@ -182,6 +185,9 @@ onMounted(()=>{
     </div>
 </template>
 <style scoped>
+.qty{
+    margin: 0 3px;
+}
 input[type="checkbox"]:focus {
     outline: none;
   box-shadow: 0 0 10px rgba(0, 0, 255, 0.5);
@@ -211,6 +217,9 @@ input[type="checkbox"]:focus {
     margin: 5px 20px;
     gap: 10px;
     width: 100%;
+}
+.options-name{
+    margin-left: 2px;
 }
 .option-values{
     display: flex;
@@ -258,6 +267,7 @@ input[type="checkbox"]:focus {
     padding: 5px;
 }
 .container{
+    border-radius: 15px;
     height: 100%;
     width: 100%;
 }

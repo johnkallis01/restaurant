@@ -37,6 +37,9 @@ onMounted(() => {
     </div>
 </template>
 <style scoped>
+.container{
+    border-radius: 15px;
+}
 .form-body{
     height: 100%;;
     overflow: hidden;

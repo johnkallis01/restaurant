@@ -49,7 +49,10 @@ onBeforeUnmount(() => {if (logoutTimer.value) clearInterval(logoutTimer.value);}
           <button class="btn-link">Menus</button>
         </nuxt-link>
         <nuxt-link to="/order">
-          <button class="btn-link" @click="focusLogin()">Order</button>
+          <button class="btn-link" @click="focusLogin()">
+            Order
+            <span class="tooltip" v-if="!loggedIn">must be loggedin to order</span>
+          </button>
         </nuxt-link>
       </div>
       <div class="right-btns">
@@ -83,9 +86,8 @@ onBeforeUnmount(() => {if (logoutTimer.value) clearInterval(logoutTimer.value);}
   padding: 2px 7px;
   border-radius: 15px;
 }
-.tooltip{
-  position: absolute;
-  left: 100px;
-  top: 35px;
+.btn-link:hover .tooltip{
+  opacity: 1;
+  visibility: visible;
 }
 </style>
