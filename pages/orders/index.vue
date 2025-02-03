@@ -4,19 +4,20 @@ useHead({
 });
 definePageMeta({middleware: ['admin','auth']});
 const cartStore=useCartStore();
+const orders = ref(cartStore.orders.reverse());
 const { formatPrice } = usePriceFormatter();
 const ordersRef=ref(null);
 function viewOrder(id){
     navigateTo('/orders/'+id)
 }
-onMounted(async()=>{
-      await nextTick(() => {
-        const orderEl=document.getElementById('orders');
-        let max = Math.max(...cartStore.orders.map(order => order.items.length));
-        orderEl.style.width=`${(max*120)+355}px`;
-        console.log(max)
-    });  
-});
+const  updateWidth=async()=>{
+    await nextTick();
+    if(!ordersRef.value) return;
+    if(!orders.value.length) return;
+    let max = Math.max(...orders.value.map(order => order.items.length));
+    ordersRef.value.style.width = `${(max * 120) + 355}px`;
+}
+onMounted(updateWidth)
 </script>
 <template>
    <div class="orders-page">
@@ -24,7 +25,7 @@ onMounted(async()=>{
         <div class="orders-container" ref="ordersRef" id="orders">
             <button class="orders" 
                 @click="viewOrder(order._id)"
-                v-for="order in cartStore.orders.reverse()" :key="order._id">
+                v-for="order in orders" :key="order._id">
                 <div class="date">{{ order.createdAt.slice(5,10)+'-'+order.createdAt.slice(0,4) }}</div>
                 <div class="time">{{ order.createdAt.slice(11,19) }}</div>
                 <div class="total">{{formatPrice(order.total) }}</div>
