@@ -1,6 +1,4 @@
 <script setup>
-import { navigateTo } from 'nuxt/app';
-
 useHead({
   title: "John's Restaurant - All Orders"
 });
@@ -12,15 +10,12 @@ function viewOrder(id){
     navigateTo('/orders/'+id)
 }
 onMounted(async()=>{
-    await requestAnimationFrame(() => {
-        let max=0;
+      await nextTick(() => {
         const orderEl=document.getElementById('orders');
-        cartStore.orders.forEach((order)=>{
-            order.items.length > max ? max=order.items.length : null
-        })
+        let max = Math.max(...cartStore.orders.map(order => order.items.length));
         orderEl.style.width=`${(max*120)+355}px`;
         console.log(max)
-    });
+    });  
 });
 </script>
 <template>
