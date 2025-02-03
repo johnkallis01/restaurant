@@ -1,11 +1,11 @@
 <script setup>
-import { nextTick } from 'vue';
-
 const emit = defineEmits(['close-modal']);
 const { item } = defineProps({item: {type: Object, required: true}});
 const cartStore = useCartStore(); 
 const { formatPrice } = usePriceFormatter();
-const {addOnsFlag, removesFlag, optionsFlag, commentsFlag, viewAddOns, viewRemoves, viewOptions, viewComments } = useAROFlags();
+const {addOnsFlag, removesFlag, optionsFlag,
+    commentsFlag, viewAddOns, viewRemoves, viewOptions,
+    viewComments } = useAROFlags();
 const localItem=reactive(item);
 const selectedItem = reactive({
     name: localItem.name,
@@ -14,6 +14,7 @@ const selectedItem = reactive({
     removes: [],
     options: localItem.options,
     comments: '',
+    qty: 1,
 });
 function viewAndFocus(callback){
     callback();
@@ -33,15 +34,15 @@ const modalRef=ref(null);
 const commentsRef = ref(null);
 const focusComment = useFocusInput(commentsRef, commentsFlag);
 const { detachObject } = useDetachObject();
-function itemPrice(item){
-    // console.log('item price')
-    const total=Number(item.price);
-    const addOnTotal = item.addOns.reduce((subTotal, ao)=> {return subTotal+Number(ao.price)},0);
-    // console.log(item.options)
-    const opTotal=item?.options.reduce((subTotal, op)=>{return subTotal+Number(op.choice[0]?.price)?Number(op.choice[0]?.price):0},0);
-    // console.log(total+addOnTotal+opTotal)
-    return total+addOnTotal+opTotal;
-}
+const getItemTotal = computed(() => {
+    let price = Number(localItem.price);
+    let addOnTotal=0; let opTotal=0; let total=0;
+    selectedItem.addOns.length ? addOnTotal = selectedItem?.addOns.reduce((subTotal, ao)=> {return subTotal+Number(ao.price)},0) : null;
+    selectedItem.options.length ? opTotal= selectedItem?.options.reduce((subTotal, op)=>{return subTotal+Number(op.choice[0]?.price)?Number(op.choice[0]?.price):0},0) : null;
+    total = opTotal + addOnTotal +price;
+    selectedItem.price=total*selectedItem.qty;
+    return selectedItem.price;
+})
 function tabToFirst(event){
     if(event.key==='Tab'){
         const firstBtn = modalRef.value.querySelector('button');
@@ -50,12 +51,8 @@ function tabToFirst(event){
     }
 }
 function addItem(){
-    // console.log('add item to cart')
     const detachedSelected=detachObject(selectedItem);
-    detachedSelected.price=itemPrice(detachedSelected);
-    // console.log(detachedSelected)
     detachedSelected.options=detachedSelected.options.filter(op=>op.choice.length);
-    // console.log(detachedSelected)
     cartStore.addItemToCart(detachedSelected);
     selectedItem.name=localItem.name; selectedItem.price=localItem.price; selectedItem.addOns=[];
     selectedItem.removes=[]; selectedItem.options=[]; selectedItem.comments= '';
@@ -119,13 +116,16 @@ onMounted(()=>{
     <div class="container" ref="modalRef">
         <div class="item-title bot-bor">
             <div class="item-name">
-               <span>{{ localItem.name }}</span>
-               <span class="qty">
-                qty
-               </span> 
+               <span>{{ localItem.name+':' }}</span>
+               <div class="qty">
+                    <span>qty:</span>
+                    <button @click="selectedItem.qty > 1 ? selectedItem.qty-=1 : null">-</button>
+                    <span class="qty-text"> {{ selectedItem.qty }}</span>
+                    <button @click="selectedItem.qty < 10 ? selectedItem.qty+=1 : null">+</button>
+               </div> 
             </div>
             <div class="item-price">
-                {{ formatPrice(localItem.price) }}
+                {{ formatPrice(getItemTotal) }}
             </div>  
         </div>
         <div class="form-body">
@@ -185,9 +185,6 @@ onMounted(()=>{
     </div>
 </template>
 <style scoped>
-.qty{
-    margin: 0 3px;
-}
 input[type="checkbox"]:focus {
     outline: none;
   box-shadow: 0 0 10px rgba(0, 0, 255, 0.5);

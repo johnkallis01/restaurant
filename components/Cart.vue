@@ -20,11 +20,16 @@ const deleteItem=(i)=>{cartStore.removeItem(i);}
                 <div class="cart-item">
                     <button class="btn" @click="deleteItem(i)">
                         <i class="mdi mdi-close"/>
-                        <span class="tooltip">delete</span>
+                        <span class="tooltip">remove</span>
                     </button>
                     <span class="cart-item-name">{{ item.name }}</span>
                     <span class="dotted-line"></span>
-                    <span class="cart-item-price">{{ formatPrice(item.price) }}</span>
+                    <span class="cart-item-price">
+                        {{ formatPrice(item.price)}}
+                        <button @click="item.qty > 1 ? item.qty-=1 : null">-</button>
+                        <span class="qty-text"> {{ item.qty }}</span>
+                        <button @click="item.qty < 10 ? item.qty+=1 : null">+</button>
+                    </span>
                 </div>
                 <div class="item-mods">
                     <div class="item-options" 
@@ -89,8 +94,8 @@ const deleteItem=(i)=>{cartStore.removeItem(i);}
     position: fixed;
     left: 4vw;
     top: 12vh;
-    height: 60%;
-    width: 30vw;
+    height: 75%;
+    width: 50vw;
     border: 2px solid black;
     border-radius: 5px;
     background-color: white;
@@ -98,7 +103,7 @@ const deleteItem=(i)=>{cartStore.removeItem(i);}
 }
 @media (max-width: 740px ){
     .cart-container{
-        width: 70vw;
+        width: 80vw;
     }
 }
 .cart-title{
@@ -116,7 +121,8 @@ const deleteItem=(i)=>{cartStore.removeItem(i);}
     justify-content: space-between;
     align-items: center;
     align-content: center;
-    padding: 10px;
+    margin: 2px;
+    border: 1px solid black;
 }
 .cart-item-container{
     overflow: auto;
@@ -126,8 +132,9 @@ const deleteItem=(i)=>{cartStore.removeItem(i);}
     flex: 0 1 auto;
 }
 .cart-item-price {
-  flex: 0 1 auto; /* Allow the price to take its natural width */
-  text-align: right; /* Aligns the text to the right */
+  flex: 0 1 auto;
+  text-align: right;
+  margin-right: 5px;
 }
 .dotted-line {
   flex: 1;

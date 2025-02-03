@@ -450,6 +450,22 @@ containers
   width: 40vw;
   left: 35vw;
 }
+.qty{
+  margin: 0 10px;
+}
+.qty button{
+  margin: 0 6px;
+  padding: 0px 8px;
+  border: 1px solid black;
+  border-radius: 19px;
+}
+.qty-text{
+  background-color: white;
+  border-radius: 18px;
+  margin: 0px 3px;
+  border: 1px solid black;
+  padding: 4px 8px;
+}
 /*toggle button*/
 .toggle {
     display: flex;
@@ -580,8 +596,5 @@ containers
     .modal.delete{
       width: 70vw;
       left: 15vw;
-    }
-    .cart{
-      width: 80vw;
     }
 } 
