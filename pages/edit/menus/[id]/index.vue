@@ -3,13 +3,10 @@ useHead({
   title: "John's Restaurant - Edit Menu"
 });
 definePageMeta({middleware: ['admin','auth']});
-
-const { data: menus } = await useFetch("/api/menus");
 const route = useRoute();
-const menu = computed(()=>{
-  const id = route.params.id;
-  return menus.value?.find((menu)=>menu._id === id) || null;
-});
+const menuStore=useMenuStore();
+const id = route.params.id;
+const menu=menuStore.menus.find((menu)=>menu._id === id) || null;
 </script>
 <template>
   <div class="page-container">

@@ -52,14 +52,13 @@ const validateInput = (rule, value, inputVar) =>{
 async function submitOrder(){
   console.log(order)
   try {
-      const res = await cartStore.submitOrder({
+      await cartStore.submitOrder({
         name: order.lastName+','+order.firstName,
         phone: order.phone,
         email: order.email,
         total: cartStore.getTotal,
         items: cartStore.getItems,
       })
-     
     } catch (error) {
       console.log('errrror: ', error['statusCode'])
       if(error.response.status === 409){

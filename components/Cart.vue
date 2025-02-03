@@ -26,9 +26,9 @@ const deleteItem=(i)=>{cartStore.removeItem(i);}
                     <span class="dotted-line"></span>
                     <span class="cart-item-price">
                         {{ formatPrice(item.price)}}
-                        <button @click="item.qty > 1 ? item.qty-=1 : null">-</button>
+                        <button @click="item.qty > 1 ? cartStore.removeQty(item) : null">-</button>
                         <span class="qty-text"> {{ item.qty }}</span>
-                        <button @click="item.qty < 10 ? item.qty+=1 : null">+</button>
+                        <button @click="item.qty < 10 ? cartStore.addQty(item) : null">+</button>
                     </span>
                 </div>
                 <div class="item-mods">
@@ -36,8 +36,8 @@ const deleteItem=(i)=>{cartStore.removeItem(i);}
                         v-if="item.options.length"
                         v-for="(op, j) in item.options" :key="op._id">
                         <!-- {{ op.choice }} -->
-                        {{ Number(op.choice[0].price)>0 ? formatPrice(op.choice[0].price) + " - " : null }}
-                        {{ op.name + ": " + op.choice[0].name }}
+                        {{ Number(op.choice.price)>0 ? formatPrice(op.choice.price) + " - " : null }}
+                        {{ op.name + ": " + op.choice.name }}
                     </div>
                     <div class="item-addons" v-if="item.addOns.length">
                         <span>{{ 'Add: '}}</span>
@@ -121,8 +121,8 @@ const deleteItem=(i)=>{cartStore.removeItem(i);}
     justify-content: space-between;
     align-items: center;
     align-content: center;
-    margin: 2px;
-    border: 1px solid black;
+    margin: 5px;
+
 }
 .cart-item-container{
     overflow: auto;

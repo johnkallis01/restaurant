@@ -19,6 +19,16 @@ export const useCartStore = defineStore('cart', {
         removeItem(index){
             this.items.splice(index, 1);
         },
+        addQty(item){
+            let price = item.price/item.qty;
+            item.price+=price;
+            item.qty+=1;
+        },
+        removeQty(item){
+            let price = item.price/item.qty;
+            item.price-=price;
+            item.qty-=1;
+        },
         clearCart(){
             this.items=[];
         },
@@ -49,20 +59,23 @@ export const useCartStore = defineStore('cart', {
             
             // navigateTo('/');
         },
-        async fetchOrders(){
+        async fetchOrders(){  
             const token=useCookie('token');
             if(token.value){
                 try{
+                    console.log('x')
                     const response = await fetch('/api/orders',{
                         method: 'GET',
                         headers: {authorization: `Bearer ${token.value}`},
                     })
-                    .then(response => response.json())
-                    .then(data => this.orders = data);
+                    if(!response.ok) throw new Error('error from api/orders');
+                    const data= await response.json();
+                    this.orders=data;
+                    // console.log(this.orders)
                 }catch{
                     console.log('errorrrrrr')
                 }
-            }
+            }else console.log('no token!')
         }
     }
 })

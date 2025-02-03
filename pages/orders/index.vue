@@ -1,29 +1,26 @@
 <script setup>
-import { onBeforeMount } from 'vue';
+import { navigateTo } from 'nuxt/app';
 
 useHead({
   title: "John's Restaurant - All Orders"
 });
 definePageMeta({middleware: ['admin','auth']});
 const cartStore=useCartStore();
+const { formatPrice } = usePriceFormatter();
 const ordersRef=ref(null);
-
-const findWidth=computed(() => {
-    
-})
-onMounted(async () => {
-    try {
-        await cartStore.fetchOrders();
-    } catch (error) {
-        console.error("Failed to fetch orders:", error);
-    }
-    let max=0;
-    const orderEl=document.getElementById('orders');
-    cartStore.orders.forEach((order)=>{
-        order.items.length > max ? max=order.items.length : null
-    })
-    orderEl.style.width=String((max)*120 +355)+'px';
-    console.log(max)
+function viewOrder(id){
+    navigateTo('/orders/'+id)
+}
+onMounted(async()=>{
+    await requestAnimationFrame(() => {
+        let max=0;
+        const orderEl=document.getElementById('orders');
+        cartStore.orders.forEach((order)=>{
+            order.items.length > max ? max=order.items.length : null
+        })
+        orderEl.style.width=`${(max*120)+355}px`;
+        console.log(max)
+    });
 });
 </script>
 <template>
@@ -31,12 +28,12 @@ onMounted(async () => {
         <div class="orders-page-title">All Orders</div>
         <div class="orders-container" ref="ordersRef" id="orders">
             <button class="orders" 
-                @click="viewOrder"
+                @click="viewOrder(order._id)"
                 v-for="order in cartStore.orders.reverse()" :key="order._id">
                 <div class="date">{{ order.createdAt.slice(5,10)+'-'+order.createdAt.slice(0,4) }}</div>
                 <div class="time">{{ order.createdAt.slice(11,19) }}</div>
-                <div class="total">{{'$'+ order.total }}</div>
-                <div class="name">{{ order.name }}
+                <div class="total">{{formatPrice(order.total) }}</div>
+                <div class="user-name123">{{ order.name }}
                     <span class="tooltip">{{ order.name }}</span>
                 </div>
                 <div class="phone">{{ '('+order.phone.slice(0,3)+') '+
@@ -111,10 +108,11 @@ onMounted(async () => {
     padding: 0 2px;
     border-right: 1px solid black;
 }
-.name{
+.user-name123{
     width: 90px;
     white-space: nowrap;
     text-align: start;
+    overflow: hidden;
     padding: 0 2px;
     position: absolute;
     left: 175px;
@@ -138,10 +136,15 @@ onMounted(async () => {
 .order-item:hover .tooltip{
     opacity: 1;
     visibility: visible;
+    right: 100px;
 }
-.name:hover .tooltip{
+.user-name123:hover .tooltip{
     opacity: 1;
     visibility: visible;
+    overflow: visible;
+    z-index: 1000;
+    top: 0;
+    left: 0px;
 }
 .order-item{
     display: inline-flex;

@@ -8,6 +8,7 @@ export const useMenuStore = defineStore('menu', {
   }),
   getters:{
     getMenu: (state) => state.menu,
+    getMenus: (state)=>state.menus,
   },
   actions: {
     async fetchMenus(){

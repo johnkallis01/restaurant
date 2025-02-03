@@ -52,7 +52,14 @@ function tabToFirst(event){
 }
 function addItem(){
     const detachedSelected=detachObject(selectedItem);
-    detachedSelected.options=detachedSelected.options.filter(op=>op.choice.length);
+    detachedSelected.options=detachedSelected.options.filter(op=>op.choice.length); //remove unselected options
+    // detachedSelected.options=detachedSelected.options.forEach(op=>{ delete op.content; delete op.req});
+    detachedSelected.options.forEach(op=>{
+        delete op.content;
+        delete op.req;
+        op.choice=op.choice[0]
+    }); //remove options data except for choice, name, _id
+    // console.log('choice', detachedSelected.options)
     cartStore.addItemToCart(detachedSelected);
     selectedItem.name=localItem.name; selectedItem.price=localItem.price; selectedItem.addOns=[];
     selectedItem.removes=[]; selectedItem.options=[]; selectedItem.comments= '';

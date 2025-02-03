@@ -9,6 +9,7 @@ const { detachObject } = useDetachObject();
 function displayModal(item,ops){
     // console.log(item.options)
     const detachItem=detachObject(item);
+    // modalItem.value={...detachItem, options: [...detachItem.options.map((op)=> ({...op, choice: {}})).concat(ops.map((op)=>({...op, choice: {}})))]};
     modalItem.value={...detachItem, options: [...detachItem.options.map((op)=> ({...op, choice: []})).concat(ops.map((op)=>({...op, choice: []})))]};
     // console.log(modalItem.value)
     modalFlag.value=true;
