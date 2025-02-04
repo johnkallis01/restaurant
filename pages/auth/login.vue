@@ -48,7 +48,7 @@ onMounted(() => {
       </div>
     </form>
     <div class="form-actions">
-      <button class="btn login" ref="buttonRef" @click="login()" @touch="login()">Login</button>
+      <button class="btn login" ref="buttonRef" @click="login()" @touchstart="login()">Login</button>
       <nuxt-link to="/auth/register/" >
         <button class="btn register" style="margin-right: 10px;">Register</button>
       </nuxt-link>
