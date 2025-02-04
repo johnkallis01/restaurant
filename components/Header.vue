@@ -2,7 +2,6 @@
 const authStore = useAuthStore();
 const cartStore = useCartStore();
 const router = useRouter();
-
 const cartButtonRef=ref(null);
 const dropdownRef=ref(null);
 const logoutTimer=ref(null);

@@ -98,7 +98,7 @@ containers
     top: 0;
     left: 5vh;
     right: 5vh; 
-    overflow: scroll;
+    overflow-y: scroll;
     background-color: rgb(247, 249, 252);
 }
 .container-body{

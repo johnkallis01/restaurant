@@ -1,8 +1,8 @@
-export function useEventListener(eventType, callback, target = document) {
+export function useEventListener(eventType, callback) {
     onMounted(()=>{
-        target.addEventListener(eventType, callback);
+        document.addEventListener(eventType, callback);
     });
     onBeforeUnmount(() => {
-        target.removeEventListener(eventType, callback);
+        document.removeEventListener(eventType, callback);
     });
 }

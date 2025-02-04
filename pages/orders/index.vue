@@ -1,4 +1,6 @@
 <script setup>
+import { reactive } from 'vue';
+
 useHead({
   title: "John's Restaurant - All Orders"
 });
@@ -7,6 +9,8 @@ const cartStore=useCartStore();
 const reverseOrders = [...cartStore.orders].reverse();
 const { formatPrice } = usePriceFormatter();
 const ordersRef=ref(null);
+
+
 function viewOrder(id){
     navigateTo('/orders/'+id)
 }
@@ -15,40 +19,93 @@ const updateWidth=async()=>{
     if(!ordersRef.value) return;
     if(!cartStore.orders.length) return;
     let max = Math.max(...cartStore.orders.map(order => order.items.length));
+    // ordersContainer.value.style.width = `${(max * 120) + 365}px`;
     ordersRef.value.style.width = `${(max * 120) + 355}px`;
 }
-onMounted(updateWidth)
+const dropdownRef=ref({});
+const displayDropDown=reactive({});
+onMounted(updateWidth);
+onMounted(() => {
+    for(let i=0; i<reverseOrders.length; i++){
+        for(let j=0;j<reverseOrders[i].items.length;j++){
+            displayDropDown[`displayDropDown${i}${j}`]=false;
+            dropdownRef.value[`displayDropDown${i}${j}`]=null;
+            // console.log(dropdownRef.value)
+        }
+        
+    }
+})
+var openItem='';
+var closeItem='';
+function displayDetails(i,j){
+    if(openItem.length){ closeItem=openItem;console.log('triged')}
+    console.log(closeItem)
+    console.log(openItem)
+    openItem='displayDropDown'+i+j;
+    displayDropDown['displayDropDown'+i+j]=true;
+    // console.log('o',openItem)
+    // console.log('c',closeItem)
+}
+const closeDropdown = (event) => {
+    console.log('o',openItem)
+    console.log('c',closeItem)
+    console.log(event.target)
+    if (dropdownRef.value[closeItem] && !dropdownRef.value[closeItem].$el?.contains(event.target)){ 
+        console.log('x')
+        displayDropDown[closeItem]=false;
+        closeItem===openItem ? openItem=closeItem='' : closeItem=openItem;
+        console.log(closeItem)
+    } else closeItem=openItem;
+}
+useEventListener('click',closeDropdown);
 </script>
 <template>
-   <div class="orders-page">
+   <div class="orders-page" ref="ordersContainer">
         <div class="orders-page-title">All Orders</div>
         <div class="orders-container" ref="ordersRef" id="orders">
-            <button class="orders" 
-                @click="viewOrder(order._id)"
-                v-for="order in reverseOrders" :key="order._id">
-                <div class="date">{{ order.createdAt.slice(5,10)+'-'+order.createdAt.slice(0,4) }}</div>
-                <div class="time">{{ order.createdAt.slice(11,19) }}</div>
-                <div class="total">{{formatPrice(order.total) }}</div>
-                <div class="user-name123">{{ order.name }}
-                    <span class="tooltip">{{ order.name }}</span>
+            <div class="orders" v-for="(order,i) in reverseOrders" :key="order._id">
+                <div class="info" @click="viewOrder(order._id)">
+                    <div class="date">{{ order.createdAt.slice(5,10)+'-'+order.createdAt.slice(0,4) }}</div>
+                    <div class="time">{{ order.createdAt.slice(11,19) }}</div>
+                    <div class="total">{{formatPrice(order.total) }}</div>
+                    <div class="user-name123">{{ order.name }}
+                        <span class="tooltip">{{ order.name }}</span>
+                    </div>
+                    <div class="phone">{{ '('+order.phone.slice(0,3)+') '+
+                        order.phone.slice(3,6)+'-'+order.phone.slice(6,10) }}</div>
                 </div>
-                <div class="phone">{{ '('+order.phone.slice(0,3)+') '+
-                    order.phone.slice(3,6)+'-'+order.phone.slice(6,10) }}</div>
                 <div class="order-items">
-                    <div class="order-item" v-for="(item, i) in order.items" :key="i" :id="'item'+i">
-                        {{ item.name }}
-                        <span class="tooltip">{{ item.name }}</span>
+                    <div class="order-item" :ref="(el) => dropdownRef['displayDropDown'+i+j] = el"
+                        @click="displayDetails(i, j)" 
+                        v-for="(item, j) in order.items" :key="j">
+                        <div>
+                            <DisplayItem class="dropdown" 
+                            v-if="displayDropDown['displayDropDown'+i+j]"
+                            :item="item"
+                            />
+                            {{ item.name }}
+                        </div>
                     </div>
                 </div>
-            </button>
+            </div>
         </div>
    </div>
 </template>
 <style scoped>
+.info{
+    
+}
+.dropdown{
+    position: absolute;
+    top: 100%;
+    opacity: 1;
+    z-index: 1000;
+}
 .orders-page{
     width: 96vw;
     font-size: 12px;
     height: 90vh;
+    cursor: default;
     overflow: auto;
     background-color: azure;
 }
@@ -81,11 +138,12 @@ onMounted(updateWidth)
     width: inherit;
 }
 .date{
-    border-left: 1px solid black;
-    border-right: 1px solid black;
+    position: absolute;
     width: 70px;
     text-align: start;
     padding: 0 2px;
+    border-left: 1px solid black;
+    border-right: 1px solid black;
 }
 .time{
     border-right: 1px solid black;

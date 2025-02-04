@@ -1,6 +1,6 @@
 <script setup>
 const emit = defineEmits(['close-modal']);
-const { item } = defineProps({item: {type: Object, required: true}});
+const { item,menu } = defineProps({item: {type: Object, required: true}, menu: {type: Object, required: true}});
 const cartStore = useCartStore(); 
 const { formatPrice } = usePriceFormatter();
 const {addOnsFlag, removesFlag, optionsFlag,
@@ -15,6 +15,10 @@ const selectedItem = reactive({
     options: localItem.options,
     comments: '',
     qty: 1,
+    menu: {
+        name: menu.name,
+        _id: menu._id
+    }
 });
 function viewAndFocus(callback){
     callback();

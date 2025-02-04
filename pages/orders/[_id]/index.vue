@@ -1,4 +1,6 @@
 <script setup>
+import DisplayItem from '../../../components/DisplayItem.vue';
+
 const route=useRoute();
 const cartStore=useCartStore();
 const { formatPrice } = usePriceFormatter();
@@ -14,15 +16,12 @@ const order = cartStore.orders.find((order)=>order._id===id) || null;
         <div class="row">{{ 'total: '+formatPrice(order.total) }}</div>
         <div class="row">{{'user: '+ order.user }}</div>
         <div class="row">{{'items: ' }}</div>
-        <div v-for="item in order.items" :key="item._id">
-            <div class="row">{{ item.name }}-{{ formatPrice(item.price) }}</div>
-            <div v-for="ao in item.addOns">addons: {{ ao }}</div>
-            <div v-for="r in item.removes">removes: {{ r }}</div>
-            <div v-for="op in item.options">options: {{ op.choice }}</div>
-            <div class="row">comments: {{ item.comments }}</div>
+        <div v-for="item in order.items" :key="item._id" class="items">
+            <div class="item">
+                <DisplayItem :item="item"/>
+            </div>
+            
         </div>
-        
-        {{ order }}
     </div>
 </template>
 <style scoped>
@@ -31,5 +30,13 @@ const order = cartStore.orders.find((order)=>order._id===id) || null;
 }
 .row{
     margin: 0 10px;
+}
+.items{
+    display: flex;
+    justify-content: center;
+}
+.item{
+    
+    width: 50%;
 }
 </style>

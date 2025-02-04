@@ -42,7 +42,7 @@ function displayModal(item,ops){
         </div>
         <div class="modalWrapper" v-if="modalFlag">
             <div class="modal" >
-                <ModalSelectItem :item="modalItem" @close-modal="()=>modalFlag=false"/> 
+                <ModalSelectItem :item="modalItem" :menu="menu" @close-modal="()=>modalFlag=false"/> 
             </div>
         </div>
     </div>

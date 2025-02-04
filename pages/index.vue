@@ -26,10 +26,14 @@ const info=ref(['Phone: 667-940-8868','johnkallis01@gmail.com'])
   height: 100%;
 }
 .rest-info {
+  position: relative;
+  top: 2vh;
   color: white;
   background-color: green; 
   padding: 50px;
   text-align: center;
-  border-radius: 8px; 
+  border-radius: 8px;  
+  width: 40vw;
+  height: 50vh;
 }
 </style>
