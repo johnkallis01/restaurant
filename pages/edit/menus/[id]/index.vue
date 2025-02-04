@@ -1,12 +1,16 @@
 <script setup>
+import { onMounted } from 'vue';
+
 useHead({
   title: "John's Restaurant - Edit Menu"
 });
 definePageMeta({middleware: ['admin','auth']});
 const route = useRoute();
 const menuStore=useMenuStore();
-const id = route.params.id;
-const menu=menuStore.menus.find((menu)=>menu._id === id) || null;
+const menu = computed(()=>{
+  const id = route.params.id;
+  return menuStore.menus.find((menu)=>menu._id === id) || null;
+});
 </script>
 <template>
   <div class="page-container">
@@ -16,7 +20,7 @@ const menu=menuStore.menus.find((menu)=>menu._id === id) || null;
    
     <div class="container-body">
       <div class="reload">reload page after edit</div>
-        <EditMenu :menu="menu" :menus="menus" v-if="menu"/>
+        <EditMenu :menu="menu" :menus="menuStore.menus" v-if="menu"/>
         <div v-else>error</div>
     </div>
 
