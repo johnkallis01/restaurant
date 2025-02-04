@@ -15,7 +15,7 @@ const password = ref('');
 async function login(){
   try {
     await authStore.login({
-      email: email.value,
+      email: email.value.toLowerCase(),
       password: password.value,
     });
   } catch (err) {

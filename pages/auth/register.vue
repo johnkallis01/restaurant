@@ -51,6 +51,7 @@ async function register(){
 
 const validateInput = (rule, value, inputVar) =>{
   // console.log('val input', rule)
+  if(inputVar==='email') value.toLowerCase();
   if(inputVar==='confirmPassword') {
     validationStatus['confirmPassword'] = user['password'] === value;
     validationStatus['password']=validationStatus['confirmPassword'];
