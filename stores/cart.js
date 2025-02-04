@@ -71,7 +71,6 @@ export const useCartStore = defineStore('cart', {
                     if(!response.ok) throw new Error('error from api/orders');
                     const data= await response.json();
                     this.orders=data;
-                    // console.log(this.orders)
                 }catch{
                     console.log('errorrrrrr')
                 }

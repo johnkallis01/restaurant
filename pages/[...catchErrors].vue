@@ -1,17 +1,23 @@
 <script setup>
 const router = useRouter();
 onMounted(() =>{router.push('/');});
+const pageNotFound=ref('Page Not Found. Sending You Home...');
 </script>
 <template>
-    <div class="container">
-      <p class="message">Page not found. Go Home...</p>
-      <div class="sun-rays1"></div>
-      <div class="sun-rays2"></div>
-      <div class="sun-rays3"></div>
-      <div class="sun-rays4"></div>
-      <div class="sun-rays5"></div>
-      <div class="sun-rays6"></div>
-        <div class="sun"></div>
+    <div class="container" ref="container">
+      <p class="message">{{pageNotFound}}</p>
+      
+        <div class="sun" id="sun">
+            <div class="sun-ray1"></div>
+            <div class="sun-ray2"></div>
+            <div class="sun-ray3"></div>
+            <div class="sun-ray4"></div> 
+            <div class="sun-ray5"></div>
+            <div class="sun-ray6"></div> 
+            <div class="sun-ray7"></div>
+            <div class="sun-ray8"></div> 
+        </div>
+        
       <div class="roof">
         <div class="chimney"></div>
       </div>
@@ -21,6 +27,15 @@ onMounted(() =>{router.push('/');});
             <div class="window-pane-2"></div>
         </div>
         <div class="window-2">
+            <div class="window-pane-1"></div>
+            <div class="window-pane-2"></div>
+        </div>
+        <div class="window-5"></div>
+        <div class="window-3">
+            <div class="window-pane-1"></div>
+            <div class="window-pane-2"></div>
+        </div>
+        <div class="window-4">
             <div class="window-pane-1"></div>
             <div class="window-pane-2"></div>
         </div>
@@ -34,11 +49,11 @@ onMounted(() =>{router.push('/');});
 <style scoped>
 .message{
   position: relative;
-  top: 5vh;
+  top: 50px;
 }
 .container{
-    width: 80vw;
-    height: 80vh;
+    width: 800px;
+    height: 400px;
     display: flex;
     justify-content: flex-start;
     align-items: center;
@@ -47,156 +62,201 @@ onMounted(() =>{router.push('/');});
 }
 .door-knob{
     position: relative;
-    top: 6vh;
-    left: 3.5vw;
+    top: 36px;
+    left: 28px;
     background-color: gold;
     height: 10px;
     width: 10px;
     border-radius: 5px;
 }
 .door{
-    height: 15vh;
-    width: 5vw;
     position: relative;
-    top: 10vh;
-    left: 12.5vw;
+    height: 80px;
+    width: 40px;
+    top: 70px;
+    left: 140px;
     background-color: rgb(181, 34, 8);
     z-index: 100;
 }
 .roof{
     position: absolute;
-    width: 0;
+    width: 380px;
     height: 0;
-    top: 19vh;
-    border-left: 35vh solid transparent;
-    border-right: 35vh solid transparent;
-    border-bottom: 20vh solid rgb(67, 21, 1);
-    margin: 2rem;
+    top: 100px;
+    border-left: 200px solid transparent;
+    border-right: 200px solid transparent;
+    border-bottom: 100px solid rgb(67, 21, 1);
     z-index: 5;
 }
 .chimney{
     position: relative;
-    left: 5vw;
-    top: 3vh;
-    background-color: rgb(202, 52, 2);
+    left: 40px;
+    top: 0;
     width: 28px;
-    height: 8vh;
+    height: 60px;
+    background-color: rgb(202, 52, 2);
 }
 .house{
-    background-color: burlywood;
-    height: 25vh;
-    width: 30vw;
-    top: 45vh;
     position: absolute;
+    top: 200px;
+    height: 150px;
+    width: 320px;
     z-index: 3;
+    background-color: burlywood;
 }
 .window-1{
     position: absolute;
-    top: 7vh;
-    left: 3vw;
+    top: 70px;
+    left: 28px;
     background-color: beige;
-    height: 7vh;
-    width: 6vw;
+    height: 32px;
+    width: 60px;
+    border: 1px solid black;
+    box-sizing: content-box;
+}
+.window-2{
+    position: absolute;
+    top: 70px;
+    right: 28px;
+    background-color: beige;
+    height: 32px;
+    width: 60px;
+    border: 1px solid black;
+    box-sizing: content-box;
+}
+.window-3{
+    position: absolute;
+    top: 20px;
+    left: 28px;
+    background-color: beige;
+    height: 32px;
+    width: 60px;
+    border: 1px solid black;
+    box-sizing: content-box;
+}
+.window-4{
+    position: absolute;
+    top: 20px;
+    right: 28px;
+    background-color: beige;
+    height: 32px;
+    width: 60px;
+    border: 1px solid black;
+    box-sizing: content-box;
+}
+.window-5{
+    position: absolute;
+    top: 45px;
+    right: 140px;
+    background-color: beige;
+    height: 18px;
+    width: 40px;
+    border-radius: 16px 16px 0 0 ;
     border: 1px solid black;
     box-sizing: content-box;
 }
 .window-pane-1{
     position: relative;
     background-color: black;
-    left: 2.75vw;
-    width: 5px;
-    height: 7vh;
+    left: 28px;
+    width: 4px;
+    height: 32px;
 }
 .window-pane-2{
     position: relative;
     background-color: black;
-    bottom: 3.5vh;
-    width: 6vw;
-    height: 5px;
+    bottom: 16px;
+    width: 60px;
+    height: 4px;
 }
-.window-2{
+.sun-ray1{
     position: absolute;
-    top: 7vh;
-    right: 3vw;
-    background-color: beige;
-    height: 7vh;
-    width: 6vw;
-    border: 1px solid black;
-    box-sizing: content-box;
+    left: 18px;
+    bottom: 54px;
+    border-left: 12px solid transparent;
+    border-right: 12px solid transparent;
+    border-bottom: 42px solid yellow;
 }
-.sun-rays1{
+.sun-ray2{
     position: absolute;
-    left: 10.5vw;
-    top: 12vh;
-    background-color: yellow;
-    border-left: 5vh solid transparent;
-    border-right: 5vh solid transparent;
-    border-bottom: 12vh solid rgb(83, 211, 247);
+    left: 18px;
+    top: 54px;
+    border-left: 12px solid transparent;
+    border-right: 12px solid transparent;
+    border-top: 42px solid yellow;
 }
-.sun-rays2{
+.sun-ray3{
     position: absolute;
-    left: 10.5vw;
-    top: 2vh;
-    background-color: yellow;
-    border-left: 5vh solid transparent;
-    border-right: 5vh solid transparent;
-    border-top: 12vh solid rgb(83, 211, 247);
+    top: 18px;
+    left: 54px;
+    border-bottom: 12px solid transparent;
+    border-top: 12px solid transparent;
+    border-left: 42px solid yellow;
 }
-.sun-rays3{
+.sun-ray4{
     position: absolute;
-    left: 6vw;
-    top: 9vh;
-    background-color: yellow;
-    border-top: 4vh solid transparent;
-    border-bottom: 4vh solid transparent;
-    border-left: 12vh solid rgb(83, 211, 247);
+    top: 18px;
+    right: 54px;
+    border-bottom: 12px solid transparent;
+    border-top: 12px solid transparent;
+    border-right: 42px solid yellow;
 }
-.sun-rays4{
+.sun-ray5{
     position: absolute;
-    top: 9vh;
-    left: 14vw;
-    background-color: yellow;
-    border-top: 4vh solid transparent;
-    border-bottom: 4vh solid transparent;
-    border-right: 12vh solid rgb(83, 211, 247);
+    top: -5px;
+    right: 30px;
+    border-right: 0px solid transparent;
+    border-left: 30px solid yellow;
+    border-top: 10px solid transparent;
+    border-bottom: 20px solid  transparent;   
 }
-.sun-rays5{
+.sun-ray6{
     position: absolute;
-    left: 12vw;
-    top: 0.5vh;
-    background-color: rgb(83, 211, 247);
-    border-left:  2vh solid transparent;
-    border-right: 2vh solid transparent;
-    border-bottom: 5vw solid yellow;
+    top: -5px;
+    left: 30px;
+    border-left: 0px solid transparent;
+    border-right: 30px solid yellow;
+    border-top: 10px solid transparent;
+    border-bottom: 20px solid  transparent;
 }
-.sun-rays6{
+.sun-ray7{
     position: absolute;
-    left: 12vw;
-    top: 15vh;
-    background-color: rgb(83, 211, 247);
-    border-left:  2vh solid transparent;
-    border-right: 2vh solid transparent;
-    border-top: 5vw solid yellow;
+    bottom: -5px;
+    right: 30px;
+    border-right: 0px solid transparent;
+    border-left: 30px solid yellow;
+    border-bottom: 10px solid transparent;
+    border-top: 20px solid  transparent;
+}
+.sun-ray8{
+    position: absolute;
+    bottom: -5px;
+    left: 30px;
+    border-left: 0px solid transparent;
+    border-right: 30px solid yellow;
+    border-bottom: 10px solid transparent;
+    border-top: 20px solid  transparent;
 }
 .sun{
     background-color: yellow;
     position: absolute;
-    left: 10vw;
-    top: 7vh;
-    height: 12vh;
-    width: 12vh;
-    border-radius: 6vh;
+    left: 10%;
+    top: 15%;
+    height: 60px;
+    width: 60px;
+    border-radius: 30px;
+    z-index: 10;
 }
 .ground{
+    position: absolute;
     background-color: rgb(30, 112, 5);
     background-image: linear-gradient(90deg, rgba(255,255,255,.07) 50%, transparent 50%),
     linear-gradient(90deg, rgba(255,255,255,.13) 50%, transparent 50%),
     linear-gradient(90deg, transparent 50%, rgba(255,255,255,.17) 50%),
     linear-gradient(90deg, transparent 50%, rgba(255,255,255,.19) 50%);
     background-size: 53%, 79%, 73%, 83%;
-    height: 15vh;
+    height: 80px;
     width: 100%;
-    position: relative;
-    top: 60vh;
+    top: 320px;
 }
 </style>

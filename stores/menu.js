@@ -1,48 +1,27 @@
 import { defineStore } from 'pinia';
-// import { useAuthStore } from './auth.js'
-
 export const useMenuStore = defineStore('menu', {
   state: () => ({
     menus: [],
-    menu: { _id: '', name: '', days: [], sections: [] },
   }),
   getters:{
-    getMenu: (state) => state.menu,
     getMenus: (state)=>state.menus,
   },
   actions: {
     async fetchMenus(){
-      await fetch('/api/menus',{method: 'GET'})
-      .then(response => response.json())
-      .then(data => this.menus = data);
-    },
-    setMenu(menu) {
-      this.menu = menu;
-    },
-    setName(name){
-      this.menu.name=name;
-    },
-    setSections(sections) {
-      this.menu.sections=sections;
-    },
-    setDays(days) {
-      this.menu.days = days;
-    },
-    resetMenu() {
-      this.menu = { _id: '', name: '', days: [], sections: [] };
+      const response = await fetch('/api/menus',{method: 'GET'})
+      if(!response.ok) throw new Error('error from api/orders');
+      const data= await response.json();
+      this.menus=data;
     },
     async postMenu(menu){
-      // const token = localStorage.getItem('authToken');
       const token=useCookie('token');
       if(token.value){
-        console.log('post menu')
         try{
           const response = await $fetch('/api/menus/',{
             method: 'POST',
             headers: {authorization: `Bearer ${token.value}`},
             body: menu,
           })
-          console.log(response)
           return response.res._id;
         }catch{
           console.log('error')
@@ -52,17 +31,14 @@ export const useMenuStore = defineStore('menu', {
       }
     },
     async updateMenu(menu){
-      // console.log('update')
-     // const token = localStorage.getItem('authToken');
      const token=useCookie('token');
       if(token.value){
         try{
-          const response = await $fetch('/api/menus/'+menu._id,{
+          await $fetch('/api/menus/'+menu._id,{
             method: 'PUT',
             headers: {authorization: `Bearer ${token.value}`},
             body: menu,
           });
-          console.log(response)
         }catch{
           console.log('error')
           useAuthStore().logout();
@@ -71,13 +47,10 @@ export const useMenuStore = defineStore('menu', {
       }
     },
     async deleteMenu(id){
-      // console.log('delete menu');
-      // const token = localStorage.getItem('authToken');
      const token=useCookie('token');
-
       if(token.value){
          try{
-          const response = await $fetch('/api/menus/'+id,{
+          await $fetch('/api/menus/'+id,{
             method: 'DELETE',
             headers: {authorization: `Bearer ${token.value}`},
           })
@@ -86,8 +59,6 @@ export const useMenuStore = defineStore('menu', {
           useAuthStore().logout();
         }
       }
-     
-      
     }
   },
 });
