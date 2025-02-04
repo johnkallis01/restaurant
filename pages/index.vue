@@ -27,13 +27,17 @@ const info=ref(['Phone: 667-940-8868','johnkallis01@gmail.com'])
 }
 .rest-info {
   position: relative;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-content: center;
+  text-align: center;
   top: 2vh;
   color: white;
   background-color: green; 
   padding: 50px;
-  text-align: center;
   border-radius: 8px;  
-  width: 40vw;
-  height: 50vh;
+  width: 600px;
+  height: 350px;
 }
 </style>
