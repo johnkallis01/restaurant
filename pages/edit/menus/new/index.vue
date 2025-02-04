@@ -4,7 +4,6 @@ useHead({
 });
 definePageMeta({middleware: ['admin','auth']});
 // definePageMeta({middleware: ['auth']});
-
 const newMenu = reactive({
   "name":"",
   "days":[

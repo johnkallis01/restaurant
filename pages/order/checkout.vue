@@ -1,28 +1,18 @@
 <script setup>
+import { rules } from '~/utils/rules';
 definePageMeta({middleware: ['auth', 'has-order']});
 useHead({
   title: "John's Restaurant - Checkout"
 });
-import { rules } from '~/utils/rules';
 const cartStore = useCartStore();
 const buttonRef=ref(null);
 const { tabToButton } = useTabToButton(buttonRef);
-// const config=useRunTimeConfig();
-// const Stripe = require('stripe');
-// const stripe = Stripe(config.stripPublic);
-// var charge = await stripe.charges.retrieve(
-//   'ch_3LiiC52eZvKYlo2C1da66ZSQ',
-//   {
-//     apiKey: config.stripPublic
-//   }
-// );
-
 const order= reactive({
   firstName: '',
   lastName: '',
   phone: '',
   email: '',
-})
+});
 const validationStatus= reactive({
   firstName: null,
   lastName: null,

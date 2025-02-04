@@ -1,35 +1,34 @@
 <script setup>
-import { onBeforeUnmount, onMounted } from 'vue';
+const activate=ref(false);
 
-const sun = ref(null);
 const router = useRouter();
-const rise=ref(false);
-// onMounted(() =>{router.push('/');});
-const pageNotFound=ref('Page Not Found. Sending You Home...');
+
 let interval;
 onMounted(() => {
-    rise.value=true;
-    interval = setInterval(()=>router.push('/'),2200);
-})
+    interval = setInterval(()=>router.push('/'),3000);
+});
 onBeforeUnmount(() => {
-    clearInterval(interval)
-})
+    clearInterval(interval);
+});
+const pageNotFound=ref('Page Not Found. Sending You Home...');
 </script>
 <template>
-    <div class="container" ref="container">
+    <div class="container" :class="{'day-color': activate}">
       <p class="message">{{pageNotFound}}</p>
-      <Transition name="sun-rise">
-        <div class="sun" id="sun" v-if="rise">
-            <div class="sun-ray1"></div>
-            <div class="sun-ray2"></div>
-            <div class="sun-ray3"></div>
-            <div class="sun-ray4"></div> 
-            <div class="sun-ray5"></div>
-            <div class="sun-ray6"></div> 
-            <div class="sun-ray7"></div>
-            <div class="sun-ray8"></div> 
-        </div>
-    </Transition>
+      <ClientOnly>
+        <Transition name="sun-rise" appear @appear="activate=true">
+          <div class="sun">
+              <div class="sun-ray1"></div>
+              <div class="sun-ray2"></div>
+              <div class="sun-ray3"></div>
+              <div class="sun-ray4"></div> 
+              <div class="sun-ray5"></div>
+              <div class="sun-ray6"></div> 
+              <div class="sun-ray7"></div>
+              <div class="sun-ray8"></div> 
+          </div>
+      </Transition>
+    </ClientOnly>
       <div class="roof">
         <div class="chimney"></div>
       </div>
@@ -68,22 +67,19 @@ onBeforeUnmount(() => {
     width: 60px;
     border-radius: 30px;
     z-index: 3;
+    transition: translate 1.8s ease;
 }
-.sun div.rise {
-    position: absolute;
-    top: 300px;
-  }
- .sun-rise-enter-active {
+.sun-rise-enter-active {
     animation: sun-rise 1.8s;
-  }
-  .sun-rise-enter-from{
-    top: 200px;
-    transform: translate(0, 300px);
-  }
-  .sun-rise-enter-to{
-    transform: translate(0, 60px);
-  }
-  @keyframes sun-rise {
+}
+.sun-rise-enter-from{
+  top: 200px;
+  transform: translate(0, 300px);
+}
+.sun-rise-enter-to{
+  transform: translate(0, 60px);
+}
+@keyframes sun-rise {
     0%{
         transform: translate(0, 300px);
     }
@@ -126,7 +122,7 @@ onBeforeUnmount(() => {
     100% {
       transform: translate(0, 60px);
     }
-  }
+}
 .message{
   position: relative;
   top: 50px;
@@ -136,10 +132,15 @@ onBeforeUnmount(() => {
     height: 400px;
     display: flex;
     justify-content: flex-start;
+    color: white;
     align-items: center;
-    background-color: rgb(83, 211, 247);
     position: relative;
     overflow: hidden;
+    background-color: rgb(12, 45, 56);
+    transition: background-color 2.8s ease-in-out;
+}
+.day-color{
+  background-color:rgb(60, 192, 232);
 }
 .door-knob{
     position: relative;
