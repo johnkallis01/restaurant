@@ -84,7 +84,7 @@ onMounted(() => {
         </form>
         <div class="form-actions">
           <button class="btn register" ref="buttonRef"
-            :disabled="!isDisabled" @click="register()">Register</button>
+            :disabled="!isDisabled" @click="register()" @touch="register()">Register</button>
         </div>
   </div>
 </template>
