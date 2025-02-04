@@ -1,15 +1,15 @@
 <script setup>
 const activate=ref(false);
 
-const router = useRouter();
+// const router = useRouter();
 
-let interval;
-onMounted(() => {
-    interval = setInterval(()=>router.push('/'),3000);
-});
-onBeforeUnmount(() => {
-    clearInterval(interval);
-});
+// let interval;
+// onMounted(() => {
+//     interval = setInterval(()=>router.push('/'),3000);
+// });
+// onBeforeUnmount(() => {
+//     clearInterval(interval);
+// });
 const pageNotFound=ref('Page Not Found. Sending You Home...');
 </script>
 <template>

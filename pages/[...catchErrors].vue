@@ -1,30 +1,34 @@
 <script setup>
 const activate=ref(false);
+
 const router = useRouter();
-const pageNotFound=ref('Page Not Found. Sending You Home...');
+
 let interval;
 onMounted(() => {
     interval = setInterval(()=>router.push('/'),3000);
-})
+});
 onBeforeUnmount(() => {
-    clearInterval(interval)
-})
+    clearInterval(interval);
+});
+const pageNotFound=ref('Page Not Found. Sending You Home...');
 </script>
 <template>
     <div class="container" :class="{'day-color': activate}">
       <p class="message">{{pageNotFound}}</p>
-      <Transition name="sun-rise" appear @appear="activate=true">
-        <div class="sun">
-            <div class="sun-ray1"></div>
-            <div class="sun-ray2"></div>
-            <div class="sun-ray3"></div>
-            <div class="sun-ray4"></div> 
-            <div class="sun-ray5"></div>
-            <div class="sun-ray6"></div> 
-            <div class="sun-ray7"></div>
-            <div class="sun-ray8"></div> 
-        </div>
-    </Transition>
+      <ClientOnly>
+        <Transition name="sun-rise" appear @appear="activate=true">
+          <div class="sun">
+              <div class="sun-ray1"></div>
+              <div class="sun-ray2"></div>
+              <div class="sun-ray3"></div>
+              <div class="sun-ray4"></div> 
+              <div class="sun-ray5"></div>
+              <div class="sun-ray6"></div> 
+              <div class="sun-ray7"></div>
+              <div class="sun-ray8"></div> 
+          </div>
+      </Transition>
+    </ClientOnly>
       <div class="roof">
         <div class="chimney"></div>
       </div>
