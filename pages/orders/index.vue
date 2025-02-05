@@ -1,6 +1,4 @@
 <script setup>
-import { onBeforeMount, reactive } from 'vue';
-
 useHead({
   title: "John's Restaurant - All Orders"
 });
@@ -63,13 +61,15 @@ async function fetchOrders(){
 onMounted(fetchOrders)
 </script>
 <template>
-   <div class="orders-page" ref="ordersContainer">
-        <div class="orders-page-title">All Orders
+    <div>
+        <div class="orders-page-title">
+            <span>All Orders</span>
             <nuxt-link to="/orders/dailySales">
                 <button>daily sales</button>
             </nuxt-link>
         </div>
-        <ClientOnly>
+   <div class="orders-page" ref="ordersContainer">
+        
         <div class="orders-container" ref="ordersRef" :style="{'width':getWidth}">
             <div class="orders" v-for="(order,i) in reverseOrders" :key="order._id">
                 <div class="info" @click="viewOrder(order._id)">
@@ -97,13 +97,9 @@ onMounted(fetchOrders)
                 </div>
             </div>
         </div>
-    </ClientOnly>
-   </div>
+   </div></div>
 </template>
 <style scoped>
-.info{
-    
-}
 .dropdown{
     position: absolute;
     top: 100%;
@@ -111,9 +107,11 @@ onMounted(fetchOrders)
     z-index: 1000;
 }
 .orders-page{
+    height: 82vh;
+    position: relative;
+    top: 4vh;
     width: 96vw;
     font-size: 12px;
-    height: 90vh;
     cursor: default;
     overflow: auto;
     background-color: azure;
@@ -127,14 +125,14 @@ onMounted(fetchOrders)
     font-size: 20px;
     background: green;
     color: white;
-    z-index: 9;
+    z-index: 1;
     height: 8vh;
 }
 .orders-container{
     display: flex;
     flex-direction: column;
     position: relative;
-    top: 8vh;
+    top: 0vh;
     left: 0;
     padding: 10px;
 }

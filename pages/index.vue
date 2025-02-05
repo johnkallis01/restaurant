@@ -134,14 +134,14 @@ const addOrders=()=>{
   }else console.log('no menus')
 };
 
-// onMounted(async()=>{
-//   await nextTick();
-//   console.log(dailyTotal)
-//   dailyTotal < 10000 ? setInterval(addOrders, 30000) : null;
-// });
-// onBeforeUnmount(() => {
-//   clearInterval(addOrders)
-// });
+onMounted(async()=>{
+  await nextTick();
+  console.log(dailyTotal)
+  dailyTotal < 10000 ? setInterval(addOrders, 30000) : null;
+});
+onBeforeUnmount(() => {
+  clearInterval(addOrders)
+});
 </script>
 <template>
   <div class="restaurant-container">
