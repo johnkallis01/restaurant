@@ -3,8 +3,8 @@ const config = useRuntimeConfig();
 const SECRET_KEY = config.jwtSecret;
 
 export const generateToken = (payload,
-        expiresIn = '1h') => {
-            // expiresIn = '10h') => {
+        // expiresIn = '1h') => {
+            expiresIn = '10h') => {
     return jwt.sign(payload, SECRET_KEY, {expiresIn});
 };
 export const verifyToken = (token) => {

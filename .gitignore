@@ -1,3 +1,7 @@
+#script
+/pages/index.vue
+/server/utils/jwt/js
+
 # Nuxt dev/build outputs
 .output
 .data

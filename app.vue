@@ -6,8 +6,6 @@
     </div>
 </template>
 <script setup>
-import { nextTick } from 'vue';
-
 const menuStore=useMenuStore();
 const cartStore=useCartStore();
 async function fetchOrders(){
@@ -17,6 +15,7 @@ async function fetchOrders(){
     console.log('error fetching orders')
   }
 }
+onBeforeMount(fetchOrders);
 async function fetchMenus(){
   try{
     await menuStore.fetchMenus();
@@ -25,5 +24,5 @@ async function fetchMenus(){
   }
 }
 onMounted(fetchMenus);
-onMounted(fetchOrders);
+
 </script>

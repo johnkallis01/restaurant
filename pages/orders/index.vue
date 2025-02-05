@@ -1,5 +1,5 @@
 <script setup>
-import { reactive } from 'vue';
+import { onBeforeMount, reactive } from 'vue';
 
 useHead({
   title: "John's Restaurant - All Orders"
@@ -9,13 +9,26 @@ const cartStore=useCartStore();
 const reverseOrders = [...cartStore.orders].reverse();
 const { formatPrice } = usePriceFormatter();
 const ordersRef=ref(null);
-
+const initalizeDropDown = ()=>{
+    for(let i=0; i<reverseOrders.length; i++){
+        for(let j=0;j<reverseOrders[i].items.length;j++){
+            displayDropDown[`displayDropDown${i}${j}`]=false;
+            dropdownRef.value[`displayDropDown${i}${j}`]=null;
+            // console.log(dropdownRef.value)
+        }
+    }
+}
+onMounted(initalizeDropDown);
 
 function viewOrder(id){
     navigateTo('/orders/'+id)
 }
+
 const updateWidth=async()=>{
+    setTimeout(2000);
     await nextTick();
+    // await cartStore.fetchOrders;
+    console.log(cartStore.orders)
     if(!ordersRef.value) return;
     if(!cartStore.orders.length) return;
     let max = Math.max(...cartStore.orders.map(order => order.items.length));
@@ -24,17 +37,10 @@ const updateWidth=async()=>{
 }
 const dropdownRef=ref({});
 const displayDropDown=reactive({});
-onMounted(updateWidth);
-onMounted(() => {
-    for(let i=0; i<reverseOrders.length; i++){
-        for(let j=0;j<reverseOrders[i].items.length;j++){
-            displayDropDown[`displayDropDown${i}${j}`]=false;
-            dropdownRef.value[`displayDropDown${i}${j}`]=null;
-            // console.log(dropdownRef.value)
-        }
-        
-    }
-})
+// onMounted(fetchOrders);
+// if(process.client) 
+if(process.client) onMounted(updateWidth);
+
 var openItem='';
 var closeItem='';
 function displayDetails(i,j){
@@ -61,7 +67,12 @@ useEventListener('click',closeDropdown);
 </script>
 <template>
    <div class="orders-page" ref="ordersContainer">
-        <div class="orders-page-title">All Orders</div>
+        <div class="orders-page-title">All Orders
+            <nuxt-link to="/orders/dailySales">
+                <button>daily sales</button>
+            </nuxt-link>
+        </div>
+        <ClientOnly>
         <div class="orders-container" ref="ordersRef" id="orders">
             <div class="orders" v-for="(order,i) in reverseOrders" :key="order._id">
                 <div class="info" @click="viewOrder(order._id)">
@@ -88,7 +99,7 @@ useEventListener('click',closeDropdown);
                     </div>
                 </div>
             </div>
-        </div>
+        </div></ClientOnly>
    </div>
 </template>
 <style scoped>

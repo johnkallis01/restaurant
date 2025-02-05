@@ -29,7 +29,7 @@ const closeDropdown = (event) => {
 useEventListener('click',closeDropdown);
 onBeforeMount( () => {userName.value=useCookie('user'); isAdmin.value=useCookie('isAdmin')});
 onMounted(()=>{logoutTimer.value = setInterval(authStore.verifyToken, 30000);});
-onBeforeUnmount(() => {logoutTime.value ? clearInterval(logoutTimer.value) : null;});
+onBeforeUnmount(() => {if (logoutTimer.value) clearInterval(logoutTimer.value);});
 </script>
 <template>
     <header class="header">
