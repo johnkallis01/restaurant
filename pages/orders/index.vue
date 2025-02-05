@@ -14,7 +14,6 @@ const initalizeDropDown = ()=>{
         for(let j=0;j<reverseOrders[i].items.length;j++){
             displayDropDown[`displayDropDown${i}${j}`]=false;
             dropdownRef.value[`displayDropDown${i}${j}`]=null;
-            // console.log(dropdownRef.value)
         }
     }
 }
@@ -23,18 +22,6 @@ onMounted(initalizeDropDown);
 function viewOrder(id){
     navigateTo('/orders/'+id)
 }
-
-const updateWidth=async()=>{
-    setTimeout(2000);
-    
-    // await cartStore.fetchOrders;
-    console.log(cartStore.orders)
-    if(!ordersRef.value) return;
-    
-    let max = Math.max(...cartStore.orders.map(order => order.items.length));
-    // ordersContainer.value.style.width = `${(max * 120) + 365}px`;
-    ordersRef.value.style.width = `${(max * 120) + 372}px`;
-}
 const getWidth = computed(() => {
     if(!cartStore.orders.length) return;
     let max = Math.max(...cartStore.orders.map(order => order.items.length));
@@ -42,10 +29,6 @@ const getWidth = computed(() => {
 })
 const dropdownRef=ref({});
 const displayDropDown=reactive({});
-// onMounted(fetchOrders);
-// if(process.client) 
-// if(process.client) onMounted(updateWidth);
-
 var openItem='';
 var closeItem='';
 function displayDetails(i,j){
