@@ -6,7 +6,7 @@ useHead({
 });
 definePageMeta({middleware: ['admin','auth']});
 const cartStore=useCartStore();
-const reverseOrders = [...cartStore.orders].reverse();
+const reverseOrders = computed(()=> [...cartStore.orders].reverse());
 const { formatPrice } = usePriceFormatter();
 const ordersRef=ref(null);
 const initalizeDropDown = ()=>{
@@ -26,20 +26,25 @@ function viewOrder(id){
 
 const updateWidth=async()=>{
     setTimeout(2000);
-    await nextTick();
+    
     // await cartStore.fetchOrders;
     console.log(cartStore.orders)
     if(!ordersRef.value) return;
-    if(!cartStore.orders.length) return;
+    
     let max = Math.max(...cartStore.orders.map(order => order.items.length));
     // ordersContainer.value.style.width = `${(max * 120) + 365}px`;
     ordersRef.value.style.width = `${(max * 120) + 372}px`;
 }
+const getWidth = computed(() => {
+    if(!cartStore.orders.length) return;
+    let max = Math.max(...cartStore.orders.map(order => order.items.length));
+    return `${(max * 120) + 372}px`;
+})
 const dropdownRef=ref({});
 const displayDropDown=reactive({});
 // onMounted(fetchOrders);
 // if(process.client) 
-if(process.client) onMounted(updateWidth);
+// if(process.client) onMounted(updateWidth);
 
 var openItem='';
 var closeItem='';
@@ -64,6 +69,15 @@ const closeDropdown = (event) => {
     } else closeItem=openItem;
 }
 useEventListener('click',closeDropdown);
+async function fetchOrders(){
+  try{
+    await cartStore.fetchOrders();
+  }catch(error){
+    console.log('error fetching orders')
+  }
+}
+// onBeforeMount(fetchOrders);
+onMounted(fetchOrders)
 </script>
 <template>
    <div class="orders-page" ref="ordersContainer">
@@ -73,7 +87,7 @@ useEventListener('click',closeDropdown);
             </nuxt-link>
         </div>
         <ClientOnly>
-        <div class="orders-container" ref="ordersRef" id="orders">
+        <div class="orders-container" ref="ordersRef" :style="{'width':getWidth}">
             <div class="orders" v-for="(order,i) in reverseOrders" :key="order._id">
                 <div class="info" @click="viewOrder(order._id)">
                     <div class="date">{{ order.createdAt.slice(5,10)+'-'+order.createdAt.slice(0,4) }}</div>
@@ -99,7 +113,8 @@ useEventListener('click',closeDropdown);
                     </div>
                 </div>
             </div>
-        </div></ClientOnly>
+        </div>
+    </ClientOnly>
    </div>
 </template>
 <style scoped>
