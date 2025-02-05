@@ -63,7 +63,7 @@ export const useCartStore = defineStore('cart', {
             const token=useCookie('token');
             if(token.value){
                 try{
-                    console.log('x')
+                    // console.log('x')
                     const response = await fetch('/api/orders',{
                         method: 'GET',
                         headers: {authorization: `Bearer ${token.value}`},

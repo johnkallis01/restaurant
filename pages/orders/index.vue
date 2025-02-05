@@ -20,7 +20,7 @@ const updateWidth=async()=>{
     if(!cartStore.orders.length) return;
     let max = Math.max(...cartStore.orders.map(order => order.items.length));
     // ordersContainer.value.style.width = `${(max * 120) + 365}px`;
-    ordersRef.value.style.width = `${(max * 120) + 355}px`;
+    ordersRef.value.style.width = `${(max * 120) + 372}px`;
 }
 const dropdownRef=ref({});
 const displayDropDown=reactive({});
@@ -38,23 +38,23 @@ onMounted(() => {
 var openItem='';
 var closeItem='';
 function displayDetails(i,j){
-    if(openItem.length){ closeItem=openItem;console.log('triged')}
-    console.log(closeItem)
-    console.log(openItem)
+    openItem.length ? closeItem=openItem : null;
+    // console.log(closeItem)
+    // console.log(openItem)
     openItem='displayDropDown'+i+j;
     displayDropDown['displayDropDown'+i+j]=true;
     // console.log('o',openItem)
     // console.log('c',closeItem)
 }
 const closeDropdown = (event) => {
-    console.log('o',openItem)
-    console.log('c',closeItem)
-    console.log(event.target)
+    // console.log('o',openItem)
+    // console.log('c',closeItem)
+    // console.log(event.target)
     if (dropdownRef.value[closeItem] && !dropdownRef.value[closeItem].$el?.contains(event.target)){ 
-        console.log('x')
+        // console.log('x')
         displayDropDown[closeItem]=false;
         closeItem===openItem ? openItem=closeItem='' : closeItem=openItem;
-        console.log(closeItem)
+        // console.log(closeItem)
     } else closeItem=openItem;
 }
 useEventListener('click',closeDropdown);
@@ -154,7 +154,7 @@ useEventListener('click',closeDropdown);
     left: 70px;
 }
 .total{
-    width: 50px;
+    width: 67px;
     white-space: nowrap;
     position: absolute;
     left: 125px;
@@ -169,7 +169,7 @@ useEventListener('click',closeDropdown);
     overflow: hidden;
     padding: 0 2px;
     position: absolute;
-    left: 175px;
+    left: 192px;
     border-right: 1px solid black;
     
 }
@@ -177,14 +177,14 @@ useEventListener('click',closeDropdown);
     width: 90px;
     white-space: nowrap;
     position: absolute;
-    left: 265px;
+    left: 282px;
     text-align: start;
     padding: 0 2px;
     border-right: 1px solid black;
 }
 .order-items{
     position: absolute;
-    left: 355px;
+    left: 372px;
     white-space: nowrap; 
 }
 .order-item:hover .tooltip{

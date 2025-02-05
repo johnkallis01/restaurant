@@ -39,7 +39,7 @@ const { formatPrice } = usePriceFormatter();
 }
 .container{
     border: 3px solid black;
-
+    width: 200px;
 }
 .item-title{
     padding: 5px;

@@ -515,7 +515,6 @@ containers
   }
   .slide-fade-leave-to {
     transform: translateX(50px);
-
   }
   @keyframes slide-in {
     25%{
