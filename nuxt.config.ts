@@ -1,8 +1,9 @@
 import { transformAssetUrls } from 'vite-plugin-vuetify';
 export default defineNuxtConfig({
   ssr: true,
-  build: {
-  },
+  buildModules: [
+    '@nuxtjs/date-fns',
+  ],
   css: ['@/assets/css/main.css',],
   plugins: [
     // '~/plugins/initAuth.js'

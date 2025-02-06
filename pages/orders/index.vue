@@ -1,10 +1,13 @@
 <script setup>
+import { onMounted } from 'vue';
+import { useLocalTime } from '../../composables/useLocalTime';
+
 useHead({
   title: "John's Restaurant - All Orders"
 });
 definePageMeta({middleware: ['admin','auth']});
 const cartStore=useCartStore();
-const reverseOrders = computed(()=> [...cartStore.orders].reverse());
+const reverseOrders = computed(() => [...cartStore.orders].reverse())
 const { formatPrice } = usePriceFormatter();
 const ordersRef=ref(null);
 const initalizeDropDown = ()=>{
@@ -23,7 +26,7 @@ function viewOrder(id){
 const getWidth = computed(() => {
     if(!cartStore.orders.length) return;
     let max = Math.max(...cartStore.orders.map(order => order.items.length));
-    return `${(max * 120) + 372}px`;
+    return `${(max * 120) + 365}px`;
 })
 const dropdownRef=ref({});
 const displayDropDown=reactive({});
@@ -57,8 +60,8 @@ async function fetchOrders(){
     console.log('error fetching orders')
   }
 }
-// onBeforeMount(fetchOrders);
-onMounted(fetchOrders)
+onMounted(fetchOrders);
+const {changeToLocal} = useLocalTime();
 </script>
 <template>
     <div>
@@ -67,14 +70,16 @@ onMounted(fetchOrders)
             <nuxt-link to="/orders/dailySales">
                 <button>daily sales</button>
             </nuxt-link>
+            <!-- {{ changeToLocal('2025-01-01T00:08:51') }} -->
         </div>
    <div class="orders-page" ref="ordersContainer">
-        
         <div class="orders-container" ref="ordersRef" :style="{'width':getWidth}">
-            <div class="orders" v-for="(order,i) in reverseOrders" :key="order._id">
+            <div class="orders" v-for="(order,i) in reverseOrders" :key="order._id" v-if="reverseOrders">
                 <div class="info" @click="viewOrder(order._id)">
-                    <div class="date">{{ order.createdAt.slice(5,10)+'-'+order.createdAt.slice(0,4) }}</div>
-                    <div class="time">{{ order.createdAt.slice(11,19) }}</div>
+                    
+                    <!-- <div class="time">{{ order.createdAt.slice(11,19) }}</div> -->
+                    <div class="date">{{ changeToLocal(order.createdAt.slice(0,19)) }}</div>
+                    <!-- <div class="date">{{ order.createdAt.slice(5,10)+'-'+order.createdAt.slice(0,4) }}</div> -->
                     <div class="total">{{formatPrice(order.total) }}</div>
                     <div class="user-name123">{{ order.name }}
                         <span class="tooltip">{{ order.name }}</span>
@@ -95,6 +100,9 @@ onMounted(fetchOrders)
                         </div>
                     </div>
                 </div>
+            </div>
+            <div v-else>
+                Loading...
             </div>
         </div>
    </div></div>
@@ -146,7 +154,8 @@ onMounted(fetchOrders)
 }
 .date{
     position: absolute;
-    width: 70px;
+    left: 0px;
+    width: 120px;
     text-align: start;
     padding: 0 2px;
     border-left: 1px solid black;
@@ -158,13 +167,12 @@ onMounted(fetchOrders)
     text-align: start;
     padding: 0 2px;
     position: absolute;
-    left: 70px;
 }
 .total{
-    width: 67px;
+    width: 65px;
     white-space: nowrap;
     position: absolute;
-    left: 125px;
+    left: 120px;
     text-align: start;
     padding: 0 2px;
     border-right: 1px solid black;
@@ -176,22 +184,21 @@ onMounted(fetchOrders)
     overflow: hidden;
     padding: 0 2px;
     position: absolute;
-    left: 192px;
+    left: 184px;
     border-right: 1px solid black;
-    
 }
 .phone{
-    width: 90px;
+    width: 88px;
     white-space: nowrap;
     position: absolute;
-    left: 282px;
+    left: 275px;
     text-align: start;
     padding: 0 2px;
     border-right: 1px solid black;
 }
 .order-items{
     position: absolute;
-    left: 372px;
+    left: 365px;
     white-space: nowrap; 
 }
 .order-item:hover .tooltip{

@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "@mdi/font": "^7.4.47",
+    "@nuxtjs/date-fns": "^1.5.0",
     "@pinia/nuxt": "^0.9.0",
     "@types/bcrypt": "^5.0.2",
     "@types/jsonwebtoken": "^9.0.7",
@@ -21,13 +22,17 @@
     "dotenv": "^16.4.7",
     "jsonwebtoken": "^9.0.2",
     "jwt-decode": "^4.0.0",
+    "moment-timezone": "^0.5.47",
     "mongodb": "^6.12.0",
-    "mongoose": "^8.9.0",
+    "mongoose": "^8.10.0",
     "nuxt": "^3.15.2",
     "pinia": "^2.3.0",
     "uuid": "^11.0.3",
     "vite-plugin-vuetify": "^2.0.4",
     "vue": "latest",
     "vue-router": "latest"
+  },
+  "devDependencies": {
+    "@nuxtjs/moment": "^1.6.1"
   }
 }

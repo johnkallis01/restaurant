@@ -48,7 +48,7 @@ export const useCartStore = defineStore('cart', {
                     const response = await $fetch('/api/orders/', {
                         method: 'POST',
                         body: JSON.stringify(order),
-                        headers: {authorization: `Bearer ${token.value}`},
+                        headers: {authorization: `Bearer ${token.value}`}
                     });
                     console.log('cartStore',response.res)
                 }catch{

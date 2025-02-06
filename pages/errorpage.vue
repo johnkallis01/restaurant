@@ -257,7 +257,7 @@ const pageNotFound=ref('Page Not Found. Sending You Home...');
     bottom: 54px;
     border-left: 12px solid transparent;
     border-right: 12px solid transparent;
-    border-bottom: 42px solid yellow;
+    border-bottom: 22px solid yellow;
 }
 .sun-ray2{
     position: absolute;
@@ -265,7 +265,7 @@ const pageNotFound=ref('Page Not Found. Sending You Home...');
     top: 54px;
     border-left: 12px solid transparent;
     border-right: 12px solid transparent;
-    border-top: 42px solid yellow;
+    border-top: 22px solid yellow;
 }
 .sun-ray3{
     position: absolute;
@@ -273,7 +273,7 @@ const pageNotFound=ref('Page Not Found. Sending You Home...');
     left: 54px;
     border-bottom: 12px solid transparent;
     border-top: 12px solid transparent;
-    border-left: 42px solid yellow;
+    border-left: 22px solid yellow;
 }
 .sun-ray4{
     position: absolute;
@@ -281,7 +281,7 @@ const pageNotFound=ref('Page Not Found. Sending You Home...');
     right: 54px;
     border-bottom: 12px solid transparent;
     border-top: 12px solid transparent;
-    border-right: 42px solid yellow;
+    border-right: 22px solid yellow;
 }
 .sun-ray5{
     position: absolute;

@@ -10,6 +10,7 @@ const order = cartStore.orders.find((order)=>order._id===id) || null;
 <template>
     <div class="container">
         <div class="row">{{'id: '+ order._id }}</div>
+        <div class="row">{{'createdAt: '+ order.createdAt }}</div>
         <div class="row">{{'name: '+ order.name }}</div>
         <div class="row">{{'phone: '+ order.phone }}</div>
         <div class="row">{{'email: '+ order.email }}</div>
