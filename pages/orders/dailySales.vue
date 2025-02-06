@@ -3,14 +3,20 @@ const cartStore=useCartStore();
 let now = new Date();
 const day=ref(now.getDate());
 const month = ref(now.getMonth()+1);
+const year = ref(now.getFullYear())
 const months=ref(['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']);
 const {changeToLocal} = useLocalTime();
+const salesTotal=ref(0);
 const todaySales = computed(() => {
+    salesTotal.value=0;
     return cartStore.orders.filter(order => {
         let localTime = changeToLocal(order.createdAt);
         String(month.value).length===1 ? month.value='0'+month.value : null;
         String(day.value).length===1 ? day.value='0'+day.value : null;
-        return localTime.substring(20,22) === month.value && localTime.substring(23,25) === day.value;
+        if(localTime.substring(20,22) === month.value && localTime.substring(23,25) === day.value){
+            salesTotal.value+=order.total;
+            return order;
+        }
     });
 });
 const itemsMap=computed(()=>{
@@ -22,17 +28,28 @@ const itemsMap=computed(()=>{
         })
     })
     return items;
-})
+});
+async function fetchOrders(){
+  try{
+    await cartStore.fetchOrders();
+  }catch(error){
+    console.log('error fetching orders')
+  }
+}
+onMounted(fetchOrders);
 </script>
 <template>
-    <div class="page-container">
-        <Graph :items="itemsMap"/>
+    <div class="graph-page">
+        <Graph :items="itemsMap" :title="'Sales for '+months[month-1]+' '+day+' ' +year+' Total: $'+salesTotal.toFixed(2)"/>
     </div>
 </template>
 <style scoped>
-.page-container{
-    width: 100%;
-    height: 100%;
-    align-content: end;
+.graph-page{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    position: absolute;
+    top: 0;
 }
 </style>

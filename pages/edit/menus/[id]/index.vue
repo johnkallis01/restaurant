@@ -9,6 +9,14 @@ const menu = computed(()=>{
   const id = route.params.id;
   return menuStore.menus.find((menu)=>menu._id === id) || null;
 });
+async function fetchMenus(){
+  try{
+    await menuStore.fetchMenus();
+  }catch (error){
+    console.log('error fetching menus')
+  }
+}
+onMounted(fetchMenus);
 </script>
 <template>
   <div class="page-container">

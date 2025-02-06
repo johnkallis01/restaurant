@@ -144,7 +144,7 @@ const pageNotFound=ref('Page Not Found. Sending You Home...');
 }
 .door-knob{
     position: relative;
-    top: 36px;
+    top: 26px;
     left: 28px;
     background-color: gold;
     height: 10px;
@@ -153,12 +153,11 @@ const pageNotFound=ref('Page Not Found. Sending You Home...');
 }
 .door{
     position: relative;
-    height: 80px;
+    height: 100px;
     width: 40px;
-    top: 70px;
+    top: 55px;
     left: 140px;
     background-color: rgb(181, 34, 8);
-    z-index: 100;
 }
 .roof{
     position: absolute;
@@ -228,7 +227,7 @@ const pageNotFound=ref('Page Not Found. Sending You Home...');
 }
 .window-5{
     position: absolute;
-    top: 45px;
+    top: 30px;
     right: 140px;
     background-color: beige;
     height: 18px;

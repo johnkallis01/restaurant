@@ -78,10 +78,6 @@ function addNewItem(){
         _id: uuidv4(),
     }
 }
-const closeOptionsModal=()=>{
-    addOptionsModalFlag.value=false;
-    navigateTo(router.currentRoute.value);
-}
 const getNewItemFlag = () => {addItem.value=false;}
 onMounted(()=>{if(!localSection.name){isNew.value = true;focusNameInput();}})
 </script>
@@ -164,7 +160,7 @@ onMounted(()=>{if(!localSection.name){isNew.value = true;focusNameInput();}})
                 :menu="localMenu"/>
         </div>
         <div class="modalWrapper" v-if="addOptionsModalFlag">
-            <ModalAddOptions class="modal secOp" :menu="localMenu" :item="localSection" @close-modal="closeOptionsModal(menu)"/>
+            <ModalAddOptions class="modal secOp" :menu="localMenu" :item="localSection" @close-modal="addOptionsModalFlag=false"/>
         </div>
         <div class="modalWrapper" v-if="deleteModalFlag">
             <ModalDelete class="modal delete" :item="localSection" itemType="Section" @close-modal="deleteModalFlag=false" @delete-item="getDelete"/>

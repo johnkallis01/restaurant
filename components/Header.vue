@@ -22,7 +22,6 @@ const loggedIn = computed(() => {
   isAdmin.value = useCookie('isAdmin');
   return !!token.value;
 });
-const focusLoginButton = ()=>{loginButton?.value.focus();}
 const closeDropdown = (event) => {
   if (dropdownRef.value && !dropdownRef.value.$el?.contains(event.target)) dropdown.value=false;
 }

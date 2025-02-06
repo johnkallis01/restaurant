@@ -40,7 +40,7 @@ function submitChanges(){
         localMenu.sections[sectionIndex].items[itemIndex].options=detachedItem.options;
     }else{//if section
         const sectionIndex = localMenu.sections.findIndex(sec => sec._id === localItem._id);    
-        localMenu.sections[sectionIndex]=detachedItem;
+        localMenu.sections[sectionIndex].options=detachedItem.options;
     }
     menuStore.updateMenu(localMenu);
     emit('close-modal');

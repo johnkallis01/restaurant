@@ -1,7 +1,4 @@
 <script setup>
-import { onMounted } from 'vue';
-import { useLocalTime } from '../../composables/useLocalTime';
-
 useHead({
   title: "John's Restaurant - All Orders"
 });
@@ -19,19 +16,16 @@ const initalizeDropDown = ()=>{
     }
 }
 onMounted(initalizeDropDown);
-
-function viewOrder(id){
-    navigateTo('/orders/'+id)
-}
+function viewOrder(id){navigateTo('/orders/'+id)}
+function viewTodaySales(){navigateTo('/orders/dailysales')}
+function viewWeekSales(){navigateTo('/orders/weeklySales')}
 const getWidth = computed(() => {
     if(!cartStore.orders.length) return;
     let max = Math.max(...cartStore.orders.map(order => order.items.length));
     return `${(max * 120) + 365}px`;
 })
-const dropdownRef=ref({});
-const displayDropDown=reactive({});
-var openItem='';
-var closeItem='';
+const dropdownRef=ref({}); const displayDropDown=reactive({});
+var openItem=''; var closeItem='';
 function displayDetails(i,j){
     openItem.length ? closeItem=openItem : null;
     // console.log(closeItem)
@@ -42,16 +36,12 @@ function displayDetails(i,j){
     // console.log('c',closeItem)
 }
 const closeDropdown = (event) => {
-    // console.log('o',openItem)
-    // console.log('c',closeItem)
-    // console.log(event.target)
     if (dropdownRef.value[closeItem] && !dropdownRef.value[closeItem].$el?.contains(event.target)){ 
-        // console.log('x')
         displayDropDown[closeItem]=false;
         closeItem===openItem ? openItem=closeItem='' : closeItem=openItem;
-        // console.log(closeItem)
     } else closeItem=openItem;
 }
+
 useEventListener('click',closeDropdown);
 async function fetchOrders(){
   try{
@@ -62,52 +52,61 @@ async function fetchOrders(){
 }
 onMounted(fetchOrders);
 const {changeToLocal} = useLocalTime();
+
 </script>
 <template>
     <div>
         <div class="orders-page-title">
             <span>All Orders</span>
-            <nuxt-link to="/orders/dailySales">
-                <button>daily sales</button>
-            </nuxt-link>
+                <button class="link" @click="viewTodaySales">daily graph</button>
+                <button class="link" @click="viewWeekSales">weekly graph</button>
             <!-- {{ changeToLocal('2025-01-01T00:08:51') }} -->
         </div>
-   <div class="orders-page" ref="ordersContainer">
-        <div class="orders-container" ref="ordersRef" :style="{'width':getWidth}">
-            <div class="orders" v-for="(order,i) in reverseOrders" :key="order._id" v-if="reverseOrders">
-                <div class="info" @click="viewOrder(order._id)">
-                    
-                    <!-- <div class="time">{{ order.createdAt.slice(11,19) }}</div> -->
-                    <div class="date">{{ changeToLocal(order.createdAt.slice(0,19)) }}</div>
-                    <!-- <div class="date">{{ order.createdAt.slice(5,10)+'-'+order.createdAt.slice(0,4) }}</div> -->
-                    <div class="total">{{formatPrice(order.total) }}</div>
-                    <div class="user-name123">{{ order.name }}
-                        <span class="tooltip">{{ order.name }}</span>
-                    </div>
-                    <div class="phone">{{ '('+order.phone.slice(0,3)+') '+
-                        order.phone.slice(3,6)+'-'+order.phone.slice(6,10) }}</div>
-                </div>
-                <div class="order-items">
-                    <div class="order-item" :ref="(el) => dropdownRef['displayDropDown'+i+j] = el"
-                        @click="displayDetails(i, j)" 
-                        v-for="(item, j) in order.items" :key="j">
-                        <div>
-                            <DisplayItem class="dropdown" 
-                            v-if="displayDropDown['displayDropDown'+i+j]"
-                            :item="item"
-                            />
-                            {{ item.name }}
+        <div class="orders-page" ref="ordersContainer">
+                <div class="orders-container" ref="ordersRef" :style="{'width':getWidth}">
+                    <div class="orders" v-for="(order,i) in reverseOrders" :key="order._id" v-if="reverseOrders">
+                        <div class="info" @click="viewOrder(order._id)">
+                            
+                            <!-- <div class="time">{{ order.createdAt.slice(11,19) }}</div> -->
+                            <div class="date">{{ changeToLocal(order.createdAt.slice(0,19)) }}</div>
+                            <!-- <div class="date">{{ order.createdAt.slice(5,10)+'-'+order.createdAt.slice(0,4) }}</div> -->
+                            <div class="total">{{formatPrice(order.total) }}</div>
+                            <div class="user-name123">{{ order.name }}
+                                <span class="tooltip">{{ order.name }}</span>
+                            </div>
+                            <div class="phone">{{ '('+order.phone.slice(0,3)+') '+
+                                order.phone.slice(3,6)+'-'+order.phone.slice(6,10) }}</div>
+                        </div>
+                        <div class="order-items">
+                            <div class="order-item" :ref="(el) => dropdownRef['displayDropDown'+i+j] = el"
+                                @click="displayDetails(i, j)" 
+                                v-for="(item, j) in order.items" :key="j">
+                                <div>
+                                    <DisplayItem class="dropdown" 
+                                    v-if="displayDropDown['displayDropDown'+i+j]"
+                                    :item="item"
+                                    />
+                                    {{ item.name }}
+                                </div>
+                            </div>
                         </div>
                     </div>
+                    <div v-else>
+                        Loading...
+                    </div>
                 </div>
-            </div>
-            <div v-else>
-                Loading...
-            </div>
         </div>
-   </div></div>
+    </div>
 </template>
 <style scoped>
+.link{
+    color: white;
+    border-bottom: 1px solid white;
+    margin: 0 8px;
+}
+.link:hover{
+    background-color: rgb(6, 100, 6);
+}
 .dropdown{
     position: absolute;
     top: 100%;

@@ -234,7 +234,7 @@ onMounted(()=>{
         <div class="modalWrapper" v-if="optionsModal">
             <div class="modal" ref="modalRef">
                 <ModalAddOptions :item="localItem" :section_id="section_id" 
-                    :menu="localMenu" @close-modal="getCloseModal"/>               
+                    :menu="localMenu" @close-modal="optionsModal=false"/>               
             </div>
         </div>
         <div class="modalWrapper" v-if="deleteModal">
