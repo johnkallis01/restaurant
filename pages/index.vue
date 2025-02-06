@@ -137,13 +137,13 @@ const addOrders=()=>{
   }else console.log('no menus')
 };
 
-onMounted(async()=>{
-  await nextTick();
-  setInterval(addOrders, 30000);
-});
-onBeforeUnmount(() => {
-  clearInterval(addOrders)
-});
+// onMounted(async()=>{
+//   await nextTick();
+//   //setInterval(addOrders, 30000);
+// });
+// onBeforeUnmount(() => {
+//   clearInterval(addOrders)
+// });
 </script>
 <template>
   <div class="restaurant-container">
