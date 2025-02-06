@@ -1,7 +1,6 @@
 <script setup>
 const { items, title, weekly } = defineProps({items: {type: Map, required: true},
     title: {type: String, required: true}, weekly:{type:Boolean, required: false, default: false}});
-
 const heightRatio=computed(() => {
     if(weekly) return 3.5;
     else return 1.2;
@@ -11,29 +10,16 @@ const beforeEnter=(el) => {
     el.style.height='0px';
     el.style.transition = "height 0.8s ease-in-out";
 }
-const enter =(el,done) => {
-    let index = Array.from(bars.value).indexOf(el)
-    // el.style.height=bars.value[index].firstChild.innerHTML/heightRatio.value+'px';
-    // el.style.transition="height 0.5s ease";
-    // console.log(el.style.transiton)
-    // console.log(el.style.height)
-    // el.style.transition = "height 0.5s ease-in-out";
-    // console.log(el.style.transition )
-
+const enter = async (el, done) => {
+    await nextTick();
+    let index = Array.from(bars.value).indexOf(el);
+    if(index===-1) return;
     let newHeight = Math.floor(bars.value[index].firstChild.innerHTML/heightRatio.value);
     requestAnimationFrame(() => {
         el.style.height=`${newHeight}px`; 
-        console.log(el.style.height)
-    })
-     
-    // el.style.height=newHeight+'px'; 
-    
-    console.log(el.style.transition )
-//   });
-  
-  
-  setTimeout(done, 500);
-
+    });
+    // el.style.height=`${newHeight}px`;
+    // done();
 }
 </script>
 <template>
@@ -45,11 +31,13 @@ const enter =(el,done) => {
             <div class="bottom-border"></div>
             <div v-for="([item, count], i) in items" :key="i" class="graphs">
                 <div>
-                    <Transition @before-enter="beforeEnter" @enter="enter" appear>
-                        <div class="bars" ref="bars">
-                            <div class="count">{{ count }}</div>
-                        </div>
-                    </Transition>
+                    <ClientOnly>
+                        <Transition @before-enter="beforeEnter" @enter="enter" appear>
+                            <div class="bars" ref="bars">
+                                <div class="count">{{ count }}</div>
+                            </div>
+                        </Transition>
+                    </ClientOnly>
                     <div class="item-name">
                         <span class="name-text">{{ item }}</span>
                         <span class="tooltip">{{ item }}</span>
