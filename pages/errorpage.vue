@@ -73,7 +73,6 @@ const pageNotFound=ref('Page Not Found. Sending You Home...');
     animation: sun-rise 1.8s;
 }
 .sun-rise-enter-from{
-  top: 200px;
   transform: translate(0, 300px);
 }
 .sun-rise-enter-to{

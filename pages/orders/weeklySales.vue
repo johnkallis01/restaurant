@@ -11,16 +11,15 @@ const thisWeekSales = computed(() => {
     salesTotal.value=0;
     return cartStore.orders.filter(order => {
         let dayofWeek=now.getDay();
-        
         let localTime = changeToLocal(order.createdAt);
         // let localTime='2025-01-01T00:08:51'
         String(month.value).length===1 ? month.value='0'+month.value : null;
         let index=0;
         while(6 >= index){
-            console.log('string',localTime.substring(23,25))
-            console.log('dow1',dayofWeek)
+            // console.log('string',localTime.substring(23,25))
+            // console.log('dow1',dayofWeek)
             let weekday = day.value-index;
-            console.log('wd',weekday)
+            // console.log('wd',weekday)
             String(weekday).length===1 ? weekday='0'+weekday : null;
             
             if(weekday>0){

@@ -44,7 +44,6 @@ const postNewOption = () => {
         emit('create-new-option', newOp);
         isNew.value=false;
     }
-    ;
 }
 const deleteOptionValue = (val) => {
     const index = localOption.content.findIndex(op=>op.name===val.name);
