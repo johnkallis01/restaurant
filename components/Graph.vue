@@ -2,20 +2,20 @@
 const { items, title, weekly } = defineProps({items: {type: Map, required: true},
     title: {type: String, required: true}, weekly:{type:Boolean, required: false, default: false}});
 const heightRatio=computed(() => {
-    if(weekly) return 3.5;
-    else return 1.2;
+    if(weekly) return 2;
+    else return 1;
 })
 const bars=ref([]);
-const beforeEnter=(el) => {
-    el.style.height='0px';
-    el.style.transition = "height 0.8s ease-in-out";
+const beforeEnter=(bar) => {
+    bar.style.height='0px';
+    bar.style.transition = "height 0.8s ease-in-out";
 }
-const enter = (el) => {
-    let index = Array.from(bars.value).indexOf(el);
+const enter=(bar) => {
+    let index = Array.from(bars.value).indexOf(bar);
     if(index===-1) return;
     let newHeight = Math.floor(bars.value[index].firstChild.innerHTML/heightRatio.value);
     requestAnimationFrame(() => {
-        el.style.height=`${newHeight}px`; 
+        bar.style.height=`${newHeight}px`; 
     });
 }
 </script>
@@ -73,8 +73,8 @@ const enter = (el) => {
     position: relative;
     left: 0;
     top: 0;
-    height: 430px;
-    width: 1000px;
+    height: 657px;
+    width: 1400px;
     font-size: 12px;
     background-color: rgb(247, 249, 252);
     overflow: auto;
@@ -83,8 +83,11 @@ const enter = (el) => {
     position: absolute;
     writing-mode: vertical-rl;
     transform: rotate(180deg);
-    right: 925px;
-    top: 100px;
+    left: 0;
+    top: 230px;
+    font-size: 16px;
+    width: 20px;
+    height: 170px;
 }
 .graph-container{
     width: 950px;
@@ -102,16 +105,16 @@ const enter = (el) => {
 .title{
     position: absolute;
     top: 0;
-    margin: 3px;
+    font-size: 16px;
 }
 .graph-body{
     display: flex;
     align-content: center;
     flex-direction: row;
     padding: 0 20px 0 0px;
-    height: 350px;
+    height: 600px;
     position: absolute;
-    bottom: 0;
+    top: 10px;
 }
 .graphs{
     display: flex;

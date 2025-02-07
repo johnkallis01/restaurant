@@ -46,13 +46,3 @@ onMounted(fetchOrders);
         </ClientOnly>
     </div>
 </template>
-<style scoped>
-.graph-page{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100vw;
-    position: absolute;
-    top: 0;
-}
-</style>
