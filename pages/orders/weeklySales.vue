@@ -1,5 +1,5 @@
 <script setup>
-import { onBeforeMount } from 'vue';
+import { onBeforeMount, onBeforeUnmount } from 'vue';
 
 const cartStore=useCartStore();
 let now = new Date();
@@ -50,9 +50,6 @@ const thisWeekSales = computed(() => {
         }
     });
 });
-const makeString=()=>{
-    months[firstMonth-1]+'/'+Number(firstDay)+'/'+firstYear
-}
 const itemsMap=computed(()=>{
     const items = new Map();
     thisWeekSales.value.forEach(order=>{
@@ -70,7 +67,9 @@ async function fetchOrders(){
     console.log('error fetching orders')
   }
 }
+onBeforeMount(cartStore.removeOrders)
 onMounted(fetchOrders);
+onBeforeUnmount(cartStore.removeOrders)
 </script>
 <template>
     <div class="graph-page">
