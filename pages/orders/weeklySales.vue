@@ -70,7 +70,6 @@ async function fetchOrders(){
     console.log('error fetching orders')
   }
 }
-onBeforeMount(cartStore.removeOrders)
 onMounted(fetchOrders);
 </script>
 <template>

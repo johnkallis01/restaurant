@@ -12,13 +12,14 @@ const beforeEnter=(bar) => {
     bar.style.height='0px';
     bar.style.transition = "height 0.8s ease-in-out";
 }
-const enter=(bar) => {
+const enter=(bar, done) => {
     let index = Array.from(bars.value).indexOf(bar);
     if(index===-1) return;
     let newHeight = Math.floor(bars.value[index].firstChild.innerHTML/heightRatio.value);
     requestAnimationFrame(() => {
         bar.style.height=`${newHeight}px`; 
     });
+    setTimeout(done, 800); // Ensure transition completes
 }
 </script>
 <template>
