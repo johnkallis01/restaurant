@@ -13,21 +13,21 @@ const { formatPrice } = usePriceFormatter();
             <div class="row" v-if="item.options.length">
                 <h4>{{ 'options: ' }}</h4>
                 <div v-for="op in item.options">
-                    <span>{{op.name + ": " }}</span>
+                    <span class="row-title">{{op.name + ": " }}</span>
                     <span>{{ op.choice.name }} {{ Number(op.choice.price) ? " "+formatPrice(op.choice.price): '' }}</span>
                 </div>
             </div>
             <div class="row" v-if="item.addOns.length">
                 <h4>{{ 'addOns: ' }}</h4>
                 <div v-for="ao in item.addOns">
-                    <span>{{ao.name}}</span>
+                    <span class="row-title">{{ao.name}}</span>
                     <span>{{ Number(ao.price) ? " "+formatPrice(ao.price): '' }}</span>
                 </div>
             </div>
             <div class="row" v-if="item.removes.length">
                 <h4>{{ 'removes: ' }}</h4>
                 <div v-for="r in item.removes">
-                    <span>{{r.name}}</span>
+                    <span class="row-title">{{r.name}}</span>
                 </div>
             </div>
        </div>
@@ -44,5 +44,8 @@ const { formatPrice } = usePriceFormatter();
 .item-title{
     padding: 5px;
     background-color: rgb(228, 234, 234);
+}
+.row-title{
+    border-bottom: 1px solid black;
 }
 </style>

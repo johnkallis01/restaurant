@@ -1,4 +1,6 @@
 <script setup>
+import { onMounted } from 'vue';
+
 const { items, title, weekly } = defineProps({items: {type: Map, required: true},
     title: {type: String, required: true}, weekly:{type:Boolean, required: false, default: false}});
 const heightRatio=computed(() => {
