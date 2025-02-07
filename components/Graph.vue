@@ -8,6 +8,7 @@ const heightRatio=computed(() => {
     else return 1;
 })
 const bars=ref([]);
+
 const beforeEnter=(bar) => {
     bar.style.height='0px';
     bar.style.transition = "height 0.8s ease-in-out";
@@ -20,6 +21,14 @@ const enter=(bar, done) => {
         bar.style.height=`${newHeight}px`; 
     });
 }
+onBeforeUnmount(() => {
+      bars.value.forEach((bar) => {
+        if (bar) {
+          bar.style.height = '0px';
+          bar.style.transition = '';
+        }
+      });
+    });
 </script>
 <template>
     <div class="outside-graph">
@@ -30,7 +39,7 @@ const enter=(bar, done) => {
             <div class="bottom-border"></div>
             <div v-for="([item, count], i) in items" :key="i" class="graphs">
                 <div>
-                    <Transition @before-enter="beforeEnter" @enter="enter" @leave="enter" appear>
+                    <Transition @before-enter="beforeEnter" @enter="enter" appear>
                         <div class="bars" ref="bars">
                             <div class="count">{{ count }}</div>
                         </div>
