@@ -15,7 +15,7 @@ const thisWeekSales = computed(() => {
         // let localTime='2025-01-01T00:08:51'
         String(month.value).length===1 ? month.value='0'+month.value : null;
         let index=0;
-        while(6 >= index){
+        while(dayofWeek >= index){
             // console.log('string',localTime.substring(23,25))
             // console.log('dow1',dayofWeek)
             let weekday = day.value-index;
@@ -63,7 +63,9 @@ onMounted(fetchOrders);
 </script>
 <template>
     <div class="graph-page">
-        <Graph :items="itemsMap" :title="'Sales for '+months[month-1]+' '+(day-now.getDay())+'-'+day+' ' +year+' Total: $'+salesTotal.toFixed(2)" :weekly="true"/>
+        <ClientOnly>
+            <Graph :items="itemsMap" :title="'Sales for '+months[month-1]+' '+(day-now.getDay())+'-'+day+' ' +year+' Total: $'+salesTotal.toFixed(2)" :weekly="true"/>
+        </ClientOnly>
     </div>
 </template>
 <style scoped>

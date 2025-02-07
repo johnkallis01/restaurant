@@ -40,7 +40,9 @@ onMounted(fetchOrders);
 </script>
 <template>
     <div class="graph-page">
-        <Graph :items="itemsMap" :title="'Sales for '+months[month-1]+' '+day+' ' +year+' Total: $'+salesTotal.toFixed(2)"/>
+        <ClientOnly>
+            <Graph :items="itemsMap" :title="'Sales for '+months[month-1]+' '+day+' ' +year+' Total: $'+salesTotal.toFixed(2)"/>
+        </ClientOnly>
     </div>
 </template>
 <style scoped>

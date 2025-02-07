@@ -31,13 +31,13 @@ const enter = async (el, done) => {
             <div class="bottom-border"></div>
             <div v-for="([item, count], i) in items" :key="i" class="graphs">
                 <div>
-                    <ClientOnly>
+            
                         <Transition @before-enter="beforeEnter" @enter="enter" appear>
                             <div class="bars" ref="bars">
                                 <div class="count">{{ count }}</div>
                             </div>
                         </Transition>
-                    </ClientOnly>
+              
                     <div class="item-name">
                         <span class="name-text">{{ item }}</span>
                         <span class="tooltip">{{ item }}</span>
