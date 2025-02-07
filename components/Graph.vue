@@ -19,7 +19,6 @@ const enter=(bar, done) => {
     requestAnimationFrame(() => {
         bar.style.height=`${newHeight}px`; 
     });
-    setTimeout(done, 800); // Ensure transition completes
 }
 </script>
 <template>
@@ -31,7 +30,7 @@ const enter=(bar, done) => {
             <div class="bottom-border"></div>
             <div v-for="([item, count], i) in items" :key="i" class="graphs">
                 <div>
-                    <Transition @before-enter="beforeEnter" @enter="enter" appear>
+                    <Transition @before-enter="beforeEnter" @enter="enter" @leave="enter" appear>
                         <div class="bars" ref="bars">
                             <div class="count">{{ count }}</div>
                         </div>
