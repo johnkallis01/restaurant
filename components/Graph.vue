@@ -10,16 +10,13 @@ const beforeEnter=(el) => {
     el.style.height='0px';
     el.style.transition = "height 0.8s ease-in-out";
 }
-const enter =  (el) => {
-   // await nextTick();
+const enter = (el) => {
     let index = Array.from(bars.value).indexOf(el);
     if(index===-1) return;
     let newHeight = Math.floor(bars.value[index].firstChild.innerHTML/heightRatio.value);
     requestAnimationFrame(() => {
         el.style.height=`${newHeight}px`; 
     });
-    // el.style.height=`${newHeight}px`;
-    // done();
 }
 </script>
 <template>
@@ -31,13 +28,11 @@ const enter =  (el) => {
             <div class="bottom-border"></div>
             <div v-for="([item, count], i) in items" :key="i" class="graphs">
                 <div>
-            
-                        <Transition @before-enter="beforeEnter" @enter="enter" appear>
-                            <div class="bars" ref="bars">
-                                <div class="count">{{ count }}</div>
-                            </div>
-                        </Transition>
-              
+                    <Transition @before-enter="beforeEnter" @enter="enter" appear>
+                        <div class="bars" ref="bars">
+                            <div class="count">{{ count }}</div>
+                        </div>
+                    </Transition>
                     <div class="item-name">
                         <span class="name-text">{{ item }}</span>
                         <span class="tooltip">{{ item }}</span>

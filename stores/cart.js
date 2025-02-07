@@ -41,6 +41,9 @@ export const useCartStore = defineStore('cart', {
         closeCart(){
             this.isCartOpen=false;
         },
+        removeOrders(){
+            this.orders=new Array();
+        },
         async submitOrder(order){
             const token=useCookie('token');
             if(token.value){
