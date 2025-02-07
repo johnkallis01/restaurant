@@ -1,6 +1,8 @@
 <script setup>
-import { onBeforeMount, onBeforeUnmount } from 'vue';
-
+definePageMeta({middleware: ['admin','auth']});
+useHead({
+  title: "John's Restaurant - Weekly Sales"
+});
 const cartStore=useCartStore();
 let now = new Date();
 const day=ref(now.getDate());
@@ -67,9 +69,9 @@ async function fetchOrders(){
     console.log('error fetching orders')
   }
 }
-onBeforeMount(cartStore.removeOrders)
+onBeforeMount(cartStore.removeOrders);
 onMounted(fetchOrders);
-onBeforeUnmount(cartStore.removeOrders)
+onBeforeUnmount(cartStore.removeOrders);
 </script>
 <template>
     <div class="graph-page">

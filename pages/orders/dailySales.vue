@@ -1,6 +1,8 @@
 <script setup>
-import { onBeforeMount } from 'vue';
-
+definePageMeta({middleware: ['admin','auth']});
+useHead({
+  title: "John's Restaurant - Daily Sales"
+});
 const cartStore=useCartStore();
 let now = new Date();
 const day=ref(now.getDate());

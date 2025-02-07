@@ -1,5 +1,5 @@
 <script setup>
-import DisplayItem from '../../../components/DisplayItem.vue';
+definePageMeta({middleware: ['admin','auth']});
 const {changeToLocal} = useLocalTime();
 const route=useRoute();
 const cartStore=useCartStore();
