@@ -10,8 +10,8 @@ const beforeEnter=(el) => {
     el.style.height='0px';
     el.style.transition = "height 0.8s ease-in-out";
 }
-const enter = async (el, done) => {
-    await nextTick();
+const enter =  (el) => {
+   // await nextTick();
     let index = Array.from(bars.value).indexOf(el);
     if(index===-1) return;
     let newHeight = Math.floor(bars.value[index].firstChild.innerHTML/heightRatio.value);
