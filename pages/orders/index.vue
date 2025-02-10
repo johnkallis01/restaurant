@@ -22,7 +22,7 @@ function viewWeekSales(){navigateTo('/orders/weeklySales')}
 const getWidth = computed(() => {
     if(!cartStore.orders.length) return;
     let max = Math.max(...cartStore.orders.map(order => order?.items?.length));
-    return `${(max * 125) + 354}px`;
+    return `${(max * 125) + 355}px`;
 })
 const dropdownRef=ref({});
 const displayDropDown=reactive({});
