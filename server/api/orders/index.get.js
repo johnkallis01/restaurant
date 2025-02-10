@@ -1,8 +1,11 @@
 import Order from "~~/server/models/Order.model";
 import User from "~/server/models/User.model";
 export default defineEventHandler(async (event) => {
-    console.log('GET /api/orders/');
+    console.log('GET /api/orders/ by date');
     const authHeader = event.req.headers.authorization;
+
+
+
     if (!authHeader) {
         throw createError({ statusCode: 401, message: 'Unauthorized: No token provided' });
     }
@@ -11,18 +14,19 @@ export default defineEventHandler(async (event) => {
     try{
         const decoded = verifyToken(token);
         const {email} = decoded; 
-        // console.log(email)
         const user = await User.findOne({  email });
-        // console.log(user)
-        isAdmin=user.isAdmin;  
-        // console.log(isAdmin)
-        // console.log('t', user)      
+        isAdmin=user.isAdmin;        
     }catch (error){
         throw createError({ statusCode: 402, message: 'Invalid or expired token' });
     }
     if(isAdmin){
       try{
-        const orders = await Order.find();
+        const start = event.req.originalUrl.slice(18,41);
+        const end = event.req.originalUrl.slice(47,event.req.originalUrl.length-1)
+        const orders = await Order.find({
+          createdAt: { $gte: start, $lte: end }
+        })
+            .sort({createdAt: -1})
         // console.log(orders)
         return orders;
       } catch (err) {

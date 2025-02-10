@@ -1,18 +1,18 @@
 <script setup>
-const {menu}=defineProps({menu:{type: Object, required: false}});
+const {menuDays}=defineProps({menuDays:{type: Array, required: false}});
 function printTimes(start, end){
     return (start.hour%12 ? start.hour%12 : '12') + ':' + (start.min ? start.min : '00') + 
         (start.pm ? ' PM ' : ' AM ') + '-' + (end.hour%12 ? end.hour%12 : '12') + ':' +
-         (end.min ? end.min : '00') + (end.pm ? ' PM' : ' AM')
+         (end.min ? end.min : '00') + (end.pm ? ' PM' : ' AM');
 }
-const openDays=computed(()=>menu.days.filter(day => day.open)); //filter out closed days
+const openDays=computed(()=>menuDays.filter(day => day.open)); //filter out closed days
 const sameTimes = computed(() => {
     const outerArr=[];
     const stringArr=[];
     const daysTimes=ref({
         names:'',
         time:{}
-    })
+    });
     if(!openDays.value.length) return []; //no days
     let innerArr = [openDays.value[0]];
     stringArr.push({
@@ -62,24 +62,32 @@ const sameTimes = computed(() => {
 </script>
 <template>
     <div class="schedule">
-        <span>
-            <div v-for="(days, i) in sameTimes" :key="i" class="days">
-                <div>{{days.names + ": " + days.times}}</div>
-            </div>
-        </span>
-      
+        <div v-for="(days, i) in sameTimes" :key="i" class="days">
+            <span class="name">{{ days.names + ": " }}</span>
+            <span class="time">{{days.times}}</span>
+        </div>
     </div>
-  </template>
+</template>
 <style scoped>
-.days{
-    font-size: 14px;
+.name{
+    font-weight: 600;
+}
+.time{
+    text-wrap: nowrap;
 }
 .schedule{
     display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    
-    gap: 5px;
+    flex-direction: row;
+    gap: 10px;
+    margin-left: 10px;
+}
+.days{
+    font-size: 14px;
+}
+@media(max-width: 600px){
+    .schedule{
+        flex-wrap: wrap;
+        justify-content: center;
+    }
 }
 </style>

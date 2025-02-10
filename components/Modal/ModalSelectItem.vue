@@ -125,14 +125,20 @@ onMounted(()=>{
 </script>
 <template>
     <div class="container" ref="modalRef">
-        <div class="item-title bot-bor">
+        <div class="item-title">
             <div class="item-name">
                <span>{{ localItem.name+':' }}</span>
                <div class="qty">
                     <span>qty:</span>
-                    <button @click="selectedItem.qty > 1 ? selectedItem.qty-=1 : null">-</button>
-                    <span class="qty-text"> {{ selectedItem.qty }}</span>
-                    <button @click="selectedItem.qty < 10 ? selectedItem.qty+=1 : null">+</button>
+                    <button @click="selectedItem.qty > 1 ? selectedItem.qty-=1 : null">
+                        <i class="mdi mdi-minus"/>
+                    </button>
+                    <div class="qty-text"> 
+                        <i :class="`mdi mdi-numeric-${selectedItem.qty}`"/>
+                    </div>
+                    <button @click="selectedItem.qty < 10 ? selectedItem.qty+=1 : null">
+                        <i class="mdi mdi-plus"/>
+                    </button>
                </div> 
             </div>
             <div class="item-price">
@@ -196,16 +202,20 @@ onMounted(()=>{
     </div>
 </template>
 <style scoped>
+.qty{
+    margin: 0 10px;
+}
+.qty button{
+    margin: 0 6px;
+}
 input[type="checkbox"]:focus {
     outline: none;
-  box-shadow: 0 0 10px rgba(0, 0, 255, 0.5);
+    box-shadow: 0 0 10px rgba(0, 0, 255, 0.5);
 }
-.text-field{
+.text-field textarea{  
     position: absolute;
     left: 10px;
     top: 80px;
-}
-.text-field textarea{  
     margin: 5px;
     width: 250px;
     height: 80px;
@@ -224,7 +234,6 @@ input[type="checkbox"]:focus {
     justify-content: space-between;
     margin: 5px 20px;
     gap: 10px;
-    width: 100%;
 }
 .options-name{
     margin-left: 2px;
@@ -244,11 +253,11 @@ input[type="checkbox"]:focus {
 }
 .form-body{
     height: 100%;
-    width: 100%;
     padding: 5px;
     overflow-y: auto;
 }
-.item-title.bot-bor{
+.item-title{
+    height: 60px;
     border-bottom: 2px solid black;
 }
 .checkbox{

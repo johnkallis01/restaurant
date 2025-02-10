@@ -52,31 +52,27 @@ onMounted(()=>{
     <div class="tab-container" @click.stop>
         <div class="item-title">
             <div class="button-name">
-                <span class="btn-icons-group items">
-                    <button class="btn" @click="emit('delete-remove')" v-if="!isNew">
-                        <i class="mdi mdi-close"/>
-                        <span class="tooltip">delete</span>
-                    </button>                    
-                    <button class="btn" @click="postNewRemove(localRemove)" v-else>
-                        <i class="mdi mdi-plus"/>
-                        <span class="tooltip">add new remove</span>
-                    </button>     
-                </span>
-            
-                    <div class="text-field" v-if="editName">
-                        <input
-                            type="text" placeholder="name"
-                            class="name-input" ref="nameInputRef"
-                            v-model="localRemove.name"
-                            @blur="isNew ? postNewRemove() : postEditRemove()"
-                            @keydown.enter="isNew ? postNewRemove() : postEditRemove()"
-                        />
-                    </div>
-        
-                    <div v-else>
-                        <span @click="focusNameInput" v-if="localRemove.name">{{ localRemove.name }}</span>
-                        <span class="placeholder-color" @click="editRemoveName(localRemove)" v-else>name</span>
-                    </div>
+                <button class="btn" @click="emit('delete-remove')" v-if="!isNew">
+                    <i class="mdi mdi-close"/>
+                    <span class="tooltip">delete</span>
+                </button>                    
+                <button class="btn" @click="postNewRemove(localRemove)" v-else>
+                    <i class="mdi mdi-plus"/>
+                    <span class="tooltip">add new remove</span>
+                </button>     
+                <div class="text-field" v-if="editName">
+                    <input
+                        type="text" placeholder="name"
+                        class="name-input" ref="nameInputRef"
+                        v-model="localRemove.name"
+                        @blur="isNew ? postNewRemove() : postEditRemove()"
+                        @keydown.enter="isNew ? postNewRemove() : postEditRemove()"
+                    />
+                </div>
+                <div v-else>
+                    <span @click="focusNameInput" v-if="localRemove.name">{{ localRemove.name }}</span>
+                    <span class="placeholder-color" @click="editRemoveName(localRemove)" v-else>name</span>
+                </div>
             </div>
         </div>
     </div>

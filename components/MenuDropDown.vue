@@ -1,40 +1,44 @@
 <script setup>
 const { data: menus } = await useFetch("/api/menus");
+const dropdownListRef = ref([]);
 const router = useRouter();
+const fixLastBorderRadius=() => {
+    Array.from(dropdownListRef.value)[Array.from(dropdownListRef.value).length-1].style.borderRadius='0 0 4px 4px'
+};
+onMounted(fixLastBorderRadius)
 </script>
 <template>
-    <ul class="dropdown-menu">
-        <li class="dropdown-item" @click="router.push('/edit/menus/new')">New Menu</li>
-        <li 
+    <div class="dropdown-menu">
+        <span class="dropdown-item" @click="router.push('/edit/menus/new')">New Menu</span>
+        <span class="dropdown-item" ref="dropdownListRef"
             v-for="(menu, index) in menus" 
             :key="index" 
             @click="router.push('/edit/menus/'+menu._id)"
-            class="dropdown-item"
-        >{{ menu.name }}</li>
-    </ul>
+        >{{ menu.name }}</span>
+    </div>
 </template>  
 <style scoped>
 .dropdown-menu {
     position: absolute;
-    background-color: white;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    margin: 0;
-    padding: 0;
-    top: 10vh;
-    right: 15vw;
-    list-style-type: none;
+    top:  6vh;
+    right: 30px;
+    text-wrap: nowrap;
+    width: fit-content;
+    height: fit-content;
     z-index: 10;
-    border-radius: 4px;
+    border-radius: 0 0 4px 4px;
+    display: flex;
+    flex-direction: column;
+    background-color: white;
 }
 .dropdown-item {
-    padding: 10px;
+    padding: 7px;
     cursor: pointer;
     color: black;
-    transition: background-color 0.2s ease;
+    width: 100px;
 }
 .dropdown-item:hover {
     background-color: #b3caec;
-    border-radius: 4px;
 }
 </style>
   

@@ -1,6 +1,4 @@
 <script setup>
-import { onMounted } from 'vue';
-
 const { items, title, weekly } = defineProps({items: {type: Map, required: true},
     title: {type: String, required: true}, weekly:{type:Boolean, required: false, default: false}});
 const heightRatio=computed(() => {
@@ -11,23 +9,16 @@ const bars=ref([]);
 
 const beforeEnter=(bar) => {
     bar.style.height='0px';
-    bar.style.transition = "height 0.8s ease-in-out";
 }
 const enter=(bar) => {
     let index =bars.value.indexOf(bar);
     if(index===-1) return;
-    let newHeight = Math.floor(bars.value[index].firstChild.innerHTML/heightRatio.value);
+    let height = Math.floor(bars.value[index].firstChild.innerHTML/heightRatio.value);
     requestAnimationFrame(() => {
-        bar.style.height=`${newHeight}px`; 
+        bar.style.transition = `height ${Math.sqrt(height)/7}s ease-in-out`;
+        bar.style.height=`${height}px`; 
     });
 }
-onBeforeUnmount(() => {
-    bars.value.forEach((bar) => {
-        if (bar) {
-          bar.style.height = '0px';
-        }
-      });
-});
 </script>
 <template>
     <div class="outside-graph">
@@ -37,7 +28,7 @@ onBeforeUnmount(() => {
         <div class="graph-body">
             <div class="bottom-border"></div>
             <div v-for="([item, count], i) in items" :key="i" class="graphs">
-                <div>
+            
                     <Transition @before-enter="beforeEnter" @enter="enter" appear>
                         <div class="bars" ref="bars">
                             <div class="count">{{ count }}</div>
@@ -45,9 +36,8 @@ onBeforeUnmount(() => {
                     </Transition>
                     <div class="item-name">
                         <span class="name-text">{{ item }}</span>
-                        <span class="tooltip">{{ item }}</span>
                     </div> 
-                </div>
+          
             </div>
         </div>
     </div>
@@ -58,7 +48,7 @@ onBeforeUnmount(() => {
 .bars{
     background-color: blue;
     margin: 5px;
-    width: 20px;
+    width: 15px;
     position: absolute;
     bottom: 76px;
     text-align: center;
@@ -83,8 +73,8 @@ onBeforeUnmount(() => {
     position: relative;
     left: 0;
     top: 0;
-    height: 657px;
-    width: 1400px;
+    height: 94vh;
+    width: 100vw;
     font-size: 12px;
     background-color: rgb(247, 249, 252);
     overflow: auto;
@@ -93,18 +83,18 @@ onBeforeUnmount(() => {
     position: absolute;
     writing-mode: vertical-rl;
     transform: rotate(180deg);
-    left: 0;
-    top: 230px;
+    left: 16x;
+    top: 100px;
     font-size: 16px;
     width: 20px;
     height: 170px;
 }
 .graph-container{
-    width: 950px;
-    height: 390px;
+    width: 98%;
+    height: 400px;
     padding: 20px;
     border-radius: 0;
-    position: absolute;
+    position: relative;
     left: 0;
     top:0;
 }
@@ -122,14 +112,16 @@ onBeforeUnmount(() => {
     align-content: center;
     flex-direction: row;
     padding: 0 20px 0 0px;
-    height: 600px;
+    height: 80vh;
+    width: 90vw;
     position: absolute;
-    top: 10px;
+    top: 15px;
+    left: 40px;
 }
 .graphs{
     display: flex;
-    align-items: center;
-    width: 30px;
+    justify-content: center;
+    width: 20px;
 }
 .name-text{
     display: flex;
@@ -150,5 +142,30 @@ onBeforeUnmount(() => {
     position: absolute;
     bottom: 0;
     cursor: default;
+}
+@media(max-width: 600px){
+    .item-name{
+        bottom: 30px;
+    }
+    .graphs{
+        width:10px;
+    }
+    .bars{
+        bottom: 107px;
+        width: 5px;
+    }
+    .bottom-border{
+        bottom: 110px;
+    }
+    .count{
+       opacity: 0;
+    }
+    .title{
+        text-wrap: wrap;
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        width: 200px;
+    }
 }
 </style>

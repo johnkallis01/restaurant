@@ -65,16 +65,16 @@ const validateInput = (rule, value, inputVar) =>{
 }
 onMounted(() => {
   const el = registrationRef.value.querySelector('input')
-  console.log(el)
+  // console.log(el)
   el.focus();
 })
 </script>
 <template>
-  <div class="container" ref="registrationRef">
+  <div class="form-container" ref="registrationRef">
     <div class="form-title">Registration</div>
       <div class="form-subtitle">password must contain at least one uppercase letter, one number and one symbol !@#$%^&*?</div>
-        <form>
-          <TextField class="input-field"
+        <form class="form-field">
+          <TextField 
             v-for="input in inputs" :key="input.name"
             :place-holder="input.placeholder" :req="input.req" 
             :is-valid="validationStatus[input.name]"
@@ -98,23 +98,14 @@ onMounted(() => {
   min-width: 50vw;
 }
 form{
-  display: flex;
+  display: grid;
+  grid-template-columns:250px 250px;
   justify-content: center;
   flex-direction: row;
   flex-wrap: wrap;
-  align-items: center;
-  padding: 0 20px;
-  gap: 10px;
-}
-.input-field{
-  width: 20vw;
-  transition: border-color 0.3s;
-}
-.input-field.invalid{
-  border: 2px solid red;
-  background-color: red;
-  color: red;
-  border-color: red;
+  align-items: center; 
+  /* width: 700px;  */
+  width: 600px;
 }
 </style>
   

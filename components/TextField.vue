@@ -32,15 +32,15 @@ defineExpose({ focusInput });
         <input ref="inputRef"
             :type="password && !isOpen ? 'password' : 'text'"
             :name="placeHolder"
-            :class="{ invalid: isValid===false }"
+            :class="{'invalid': isValid===false }"
             placeholder=" "
             :required="req"
             v-model="localName"
             :aria-label="'Enter '+ placeHolder"
             @input="onInput($event)"
-            /> <!-- :style="password && isOpen ? { fontFamily: 'Segoe UI' } : {}" -->
+            > <!-- :style="password && isOpen ? { fontFamily: 'Segoe UI' } : {}" -->
         <label :for="placeHolder" :style="{'--label-bg-color': bgColor}">{{capitalizeFirstLetter(placeHolder)}}</label>
-        <button class="eye-button" type="button" @click="isOpen=!isOpen" v-if="password">
+        <button type="button" @click="isOpen=!isOpen" v-if="password">
             <i class="mdi mdi-eye-outline" v-if="isOpen"/>
             <i class="mdi mdi-eye-off-outline" v-else/>
         </button>
@@ -49,37 +49,33 @@ defineExpose({ focusInput });
 <style scoped>
 .floating-text-field{
     position: relative;
-    margin: 3px 0; 
+    margin-top: 8px;
+    width: 230px;
+    box-sizing: border-box;
 }
 .floating-text-field label{ /*no focus */
     position: absolute;
     transition: 0.2s ease;
     pointer-events: none;
-    border-radius: 3px 3px 0 0;
     overflow: hidden;
 }
 .floating-text-field input{
-    padding: 10px 10px 10px 15px;
-    display: block;
-    width: 100%;
-    height: 40px;
+    position: relative;
+    padding: 6px 24px 6px 6px;
+    width: 230px;
     font-size: 16px;
-    line-height: 20px;
     background-color: white;
     border: 2px solid rgb(96, 97, 97);
     border-radius: 5px;
-    transition: border-color 0.3s;
-    
+    box-sizing: border-box;
 }
 .floating-text-field input:placeholder-shown + label{
     position: absolute;
-    top: 10px;
-    left: 10px;
+    top: 6px;
+    left: 8px;
     font-size: 14px;
     color: #aaaa;
     transition: 0.3s ease;
-    text-wrap: wrap;
-    overflow: hidden;
 }
 .floating-text-field input:hover + label{
     cursor: text;
@@ -92,19 +88,25 @@ defineExpose({ focusInput });
     color: #5264ae;
     background-color: white;
     background: linear-gradient(var(--label-bg-color) 55%, white 55%);
-
 }
+/* 
+    stackover flow to remove injected color 
+    from browser form autofill
+*/
 .floating-text-field input:-webkit-autofill,
 .floating-text-field input:-webkit-autofill:hover,
 .floating-text-field input:-webkit-autofill:focus,
 .floating-text-field input:-webkit-autofill:active {
     transition: background-color 5000s ease-in-out 0s;
 }
-.eye-button{
+.floating-text-field button{
     position: absolute;
-    top: 7px;
-    right: 7px;
+    top: 6px;
+    right: 2px;
+    font-size: 16px;
     color: #6362628d;
+    background-color: transparent;
+    z-index: 100;
 }
 input.invalid {
   border-color: red;

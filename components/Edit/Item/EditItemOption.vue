@@ -95,30 +95,33 @@ defineExpose({nameRef});
     <div ref="optionsRef" :class="{'underline': isNew}">
         <div class="tab-container" >
             <div class="tab-row">
-                <div class="btn-icons-group items">
-                    <button class="btn" @click="deleteOption" v-if="!isNew">
-                        <i class="mdi mdi-close"/>
-                        <span class="tooltip">delete</span>
-                    </button>
-                </div>
+           
+                    
+           
                 <div class="tab-name">
                     <div class="name-checkbox">
-                        <div class="text-field item-title option"
-                            v-if="isNew || editName">
-                            <input type="text" class="name-input" placeholder="option title"
-                                ref="nameInputRef"
-                                @blur="editName=false"
-                                v-model="localOption.name"/>
-                        </div>
-                        <div v-else>
-                            <span v-if="localOption.name" class="item-title option">
-                                <span ref="nameRef" @click="focusNameInput" :class="{'underline': !editName}" tabindex="0">{{ localOption.name }}</span> 
-                            </span>
-                            <span class="placeholder-color"
-                                v-else 
-                                @click="focusNameInput">
-                                name
-                            </span>
+                        <div class="button-name">
+                            <button class="btn delete" @click="deleteOption" v-if="!isNew">
+                                <i class="mdi mdi-close"/>
+                                <span class="tooltip">delete</span>
+                            </button>
+                            <div class="text-field item-title option"
+                                v-if="isNew || editName">
+                                <input type="text" class="name-input" placeholder="option title"
+                                    ref="nameInputRef"
+                                    @blur="editName=false"
+                                    v-model="localOption.name"/>
+                            </div>
+                            <div v-else>
+                                <span v-if="localOption.name" class="item-title option">
+                                    <span ref="nameRef" @click="focusNameInput" :class="{'underline': !editName}" tabindex="0">{{ localOption.name }}</span> 
+                                </span>
+                                <span class="placeholder-color"
+                                    v-else 
+                                    @click="focusNameInput">
+                                    name
+                                </span>
+                            </div>
                         </div>
                         <span class="checkbox">
                             <label for="req">Required:</label>
@@ -170,7 +173,7 @@ defineExpose({nameRef});
         </div>
         <div class="options-content-row">
             <div class="option-content" v-for="(val,i) in localOption.content" :key="val.name">
-                <button class="btn del" @click="deleteOptionValue(val)" >
+                <button class="btn delete" @click="deleteOptionValue(val)" >
                     <i class="mdi mdi-close"/>
                     <span class="tooltip">delete</span>
                 </button>
@@ -219,13 +222,9 @@ defineExpose({nameRef});
 .tab-name{
     align-content: center;
 }
-.btn{
-    border-radius: 18px;
-}
-.btn.del{
-    margin-right: 3px;
-    font-size: 10px;
-    padding: 0 6px;
+
+.btn.delete{
+    margin: 7px 3px 0 0;
 }
 .options-content-row{
     display: flex;

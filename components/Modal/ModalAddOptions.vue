@@ -1,14 +1,14 @@
 <script setup>
 import { v4 as uuidv4 } from 'uuid';
 const emit = defineEmits(['close-modal']);
-//accepts sections as well
+//accepts section or item
 const {item, section_id, menu} = defineProps({
     item: { type: Object, required: true },
     section_id: { type: String, required: false},
     menu: { type:Object, required: true},
 });
 const localMenu=reactive(menu);
-const localItem=reactive(item);
+const localItem=reactive(item);//could be section or item
 const menuStore=useMenuStore();
 const { detachObject } = useDetachObject();
 const detachedItem=reactive(detachObject(item));
@@ -59,18 +59,16 @@ onMounted(()=>{
 })
 </script>
 <template>
-    <div class="container">
-        <div class="item-title">
+    <div class="modal-container">
+        <div class="modal-title">
             <div class="item-name">
                 {{ section_id ? localItem.name : "Add options to all items in "+localItem.name}}
             </div>
-            <div>
-                <button class="btn add" ref="addOptionBtnRef"
-                    v-if="detachedItem.options.length"
-                    @click="addNew=!addNew">add option</button>
-            </div>
+            <button class="btn add" ref="addOptionBtnRef"
+                v-if="detachedItem.options.length"
+                @click="addNew=!addNew">add option</button>
         </div>
-        <div class="form-body" >
+        <div class="modal-content" >
             <EditItemOption ref="newChildRef"
                 v-if="detachedItem.options?.length ? addNew : true"
                 @create-new-option="getNew"
@@ -97,6 +95,7 @@ onMounted(()=>{
 <style scoped>
 .btn.add{
     white-space: nowrap;
+    border: 2px solid black;
 }
 .btn{
     box-sizing: border-box;
@@ -127,9 +126,8 @@ onMounted(()=>{
     align-content: end;
     margin-right: 10px;
 }
-.container{
+.modal-container{
     height: 100%;
     width: 100%;
-    border-radius: 15px;
 }
 </style>

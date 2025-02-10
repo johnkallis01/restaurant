@@ -58,16 +58,14 @@ onMounted(()=>{
     <div class="tab-container" @click.stop>
         <div class="item-title">
             <div class="button-name">
-                <span class="btn-icons-group items">
-                    <button class="btn" @click="emit('delete-add-on')" v-if="!isNew">
-                        <i class="mdi mdi-close"/>
-                        <span class="tooltip">delete</span>
-                    </button>
-                    <button class="btn" @click="postNewAddOn(localAddOn)" v-else>
-                        <i class="mdi mdi-plus"/>
-                        <span class="tooltip">add new add-on</span>
-                    </button>
-                </span>
+                <button class="btn delete" @click="emit('delete-add-on')" v-if="!isNew">
+                    <i class="mdi mdi-close"/>
+                    <span class="tooltip">delete</span>
+                </button>
+                <button class="btn delete" @click="postNewAddOn(localAddOn)" v-else>
+                    <i class="mdi mdi-plus"/>
+                    <span class="tooltip">add new add-on</span>
+                </button>
                 <div class="text-field item-name" v-if="editName">
                     <input 
                         type="text" placeholder="name" ref="nameInputRef"
@@ -102,3 +100,11 @@ onMounted(()=>{
         </div>
     </div>
 </template>
+<style scoped>
+/* .button-name{
+    left: 0;
+} */
+.item-price{
+    right: 0;
+}
+</style>

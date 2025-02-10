@@ -1,17 +1,24 @@
 <script setup>
 const {item}=defineProps({item: {type: Object, required: true}});
 const { formatPrice } = usePriceFormatter();
+const containerRef=ref(null);
+const titleRef=ref(null);
+const getHeight=() => {
+    if(containerRef.value?.offsetHeight<30) {
+        if(titleRef.value) titleRef.value.style.borderRadius='10px';
+    }
+}
+onMounted(getHeight)
 </script>
 <template>
-    <div class="container">
-       <div class="item-title">
-        <h4>{{item.name}}</h4>
-        <div class="price">{{formatPrice(item.price)}}</div>
+    <div class="item-container" ref="containerRef">
+       <div class="item-title" ref="titleRef">
+            <div class="item-name">{{item.name+' x '+item.qty}}</div>
+            <div class="item-price">{{formatPrice(item.price)}}</div>
        </div>
        <div class="content">
-            <div class="row">{{'quantity: ' +item.qty }}</div>
             <div class="row" v-if="item.options.length">
-                <h4>{{ 'options: ' }}</h4>
+                <div>{{ 'options: ' }}</div>
                 <div v-for="op in item.options">
                     <span class="row-title">{{op.name + ": " }}</span>
                     <span>{{ op.choice.name }} {{ Number(op.choice.price) ? " "+formatPrice(op.choice.price): '' }}</span>
@@ -37,13 +44,21 @@ const { formatPrice } = usePriceFormatter();
 .content{
     margin-left: 10px;
 }
-.container{
-    border: 3px solid black;
-    width: 200px;
+.item-container{
+    width: 250px;
+    height: fit-content;
+    background-color: azure;
 }
 .item-title{
-    padding: 5px;
-    background-color: rgb(228, 234, 234);
+    padding: 0;
+    border-radius: 13px 13px 0 0;
+    background-color: rgb(202, 205, 205);
+}
+.item-name{
+    margin: 0 0 0 8px;
+    width: 200px;
+    overflow: scroll;
+    scrollbar-width: none;
 }
 .row-title{
     border-bottom: 1px solid black;

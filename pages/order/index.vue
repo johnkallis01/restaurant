@@ -1,7 +1,5 @@
 <script setup>
-useHead({
-  title: "John's Restaurant - Order"
-});
+useHead({title: "John's Restaurant - Order"});
 definePageMeta({middleware: 'auth'});
 const menuStore = useMenuStore();
 let now = new Date();
@@ -29,20 +27,25 @@ const nowMenus = computed(() => {
 <template>
     <div class="page-container">
       <div class="container-title">
-        <div class="title-text"
-          v-for="(menu, i) in nowMenus" :key="i">
-          <button @click="index=i" :class="{'active': index === i }">{{ menu.name }}</button>
+        <div class="title-buttons">
+          <button 
+            v-for="(menu, i) in nowMenus" :key="i"
+            :class="{'active': index === i }"
+            @click="index=i" >{{ menu.name }}
+          </button>
         </div>
+          
       </div>
-      <DisplayMenu :menu="visibleMenu()" :order="true"/>
+      <div class="container-body">
+        <DisplayMenu :menu="visibleMenu()" :order="true"/>
+      </div>
     </div>
 </template>
 <style scoped>
-button.active{
-  padding: 0 10px;
-  border-bottom: 2px solid yellow;
+button{
+  cursor: pointer;
 }
-button:focus{
-  outline: none;
+.title-buttons{
+  width: 60%;
 }
 </style>

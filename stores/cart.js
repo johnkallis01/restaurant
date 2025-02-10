@@ -3,8 +3,8 @@ import {defineStore} from 'pinia';
 export const useCartStore = defineStore('cart', {
     state: () => ({
         isCartOpen: false,
-        items: [],
-        orders: [],
+        items: [], //cart items
+        orders: [], //orders
     }),
     getters:{
         getItems: (state) => state.items,
@@ -13,6 +13,12 @@ export const useCartStore = defineStore('cart', {
         isOpen: (state)=> state.isCartOpen,
     },
     actions: {
+        addOrders(ords){
+            this.orders.length ? this.orders=this.orders.concat(ords) : this.orders=ords;
+        },
+        addDateOrders(ords){
+            this.dayOrders=ords;
+        },
         addItemToCart(item){
             this.items.push(item);
         },
@@ -62,22 +68,50 @@ export const useCartStore = defineStore('cart', {
             
             // navigateTo('/');
         },
-        async fetchOrders(){  
+        async fetchOrdersByDate(start, end){            
             const token=useCookie('token');
             if(token.value){
                 try{
-                    // console.log('x')
-                    const response = await fetch('/api/orders',{
+                    const response = await fetch(`/api/orders?start=${start}?end=${end}`,{
                         method: 'GET',
-                        headers: {authorization: `Bearer ${token.value}`},
-                    })
+                        headers: {authorization: `Bearer ${token.value}`},        
+                    });
                     if(!response.ok) throw new Error('error from api/orders');
                     const data= await response.json();
-                    this.orders=data;
+                    console.log('date')
+                    return data;
+                    
                 }catch{
                     console.log('errorrrrrr')
                 }
-            }else console.log('no token!')
+            }else console.log('no token!')                
+            // }
+        },
+        async fetchOrders(){  
+            const token=useCookie('token');
+            if(!this.orders.length){
+             if(token.value){
+              try{
+                  let skipDocs=0;
+                  let hasMore=true;
+                  do{
+                    const response = await fetch(`/api/orders/${skipDocs}`,{
+                    method: 'GET',
+                    headers: {authorization: `Bearer ${token.value}`},
+                    });
+                    if(!response.ok) throw new Error('error from api/orders');
+                    const data= await response.json();
+                    let length = data.length;
+                    this.addOrders(data);
+                    length===100 ? null : hasMore=false;
+                    skipDocs+=1;
+                  }while(hasMore);
+                  console.log('x')
+              }catch{
+                  console.log('errorrrrrr')
+              }
+             }else console.log('no token!')                
+            }
         }
     }
 })

@@ -47,35 +47,38 @@ const getCloseTimes = (name) => {
 </script>
 <template>
     <div class="menu-container">
-        <div class="container-title menu">
-            <button class="btn" @click="modalFlag=true">
-                <i class="mdi mdi-close"/>
-                <span class="tooltip">delete</span>
-            </button>
-            <div class="title-text">{{ localMenu.name }}</div>
-            <div class="btn-icons-group">
+        <div class="container-title">
+            <span class="left-btns">
+                <button class="btn delete" @click="modalFlag=true">
+                    <i class="mdi mdi-close"/>
+                    <span class="tooltip">delete</span>
+                </button>
+            </span>
+            <span class="title-text">{{ localMenu.name }}</span>
+            <span class="right-btns">
                 <button class="btn" @click="addNewSection">
                     <i class="mdi mdi-plus"/>
                     <span>section</span>
                     <span class="tooltip">add section</span>
                 </button>
-                <span class="spacer"></span>
                 <button class="btn times" @click="showTimes=!showTimes">
                     <i class="mdi mdi-calendar-edit"/>
                     <span>edit</span>
                     <span class="tooltip">edit menu times</span>
                 </button>
-            </div>
-        </div>
-        <div class="sections">
-            <span class="menu-schedule" v-if="showTimes">
-               <EditMenuTimes :menu="localMenu" @close-window="getCloseTimes"/>
             </span>
-            <div class="section-container" v-if="addSection">
-                <EditSection :section="newSection" :menu="localMenu" @send-new-section-flag="getNewSectionFlag"/>
-            </div>
-            <div class="section-container" v-for="(sec, i) in localMenu.sections" :key="sec._id">
-                <EditSection :section="sec" :menu="localMenu" />              
+        </div>
+        <div class="section-container-holder">
+            <div class="section-container">
+                <span class="menu-schedule" v-if="showTimes">
+                    <EditMenuTimes :menu="localMenu" @close-window="getCloseTimes"/>
+                </span>
+                <div class="section-container" v-if="addSection">
+                    <EditSection :section="newSection" :menu="localMenu" @send-new-section-flag="getNewSectionFlag"/>
+                </div>
+                <div class="section-container" v-for="sec in localMenu.sections" :key="sec._id">
+                    <EditSection :section="sec" :menu="localMenu" />              
+                </div>
             </div>
         </div>
         <div class="modalWrapper" v-if="modalFlag">
@@ -84,6 +87,14 @@ const getCloseTimes = (name) => {
     </div>
 </template>
 <style scoped>
+.section-container-holder{
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    top: 30px;
+    /* border: 1px solid blue; */
+    margin-bottom: 70px;
+}
 .menu-schedule{
     display: flex;
     flex-direction: row;
@@ -91,14 +102,26 @@ const getCloseTimes = (name) => {
     justify-content: center;
     gap: 5px;
 }
-.spacer{
-    display: inline-block;
-    width: 15px;
+.menu-container{
+    overflow: hidden;
+    top: 30px;
 }
-.container-title.menu{
-    height: 8vh;
+.menu-container button{
+    margin: 0 3px;
+}
+.container-title{
+    justify-content: space-between;
+    height: 30px;
     color: black;
     border-bottom: 2px solid #333;
     background-color: rgb(184, 175, 175);
+}
+.container-title button{
+    color: black;
+}
+.title-text{
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
 }
 </style>

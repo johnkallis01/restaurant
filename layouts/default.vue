@@ -1,4 +1,5 @@
 <script setup>
+import '@mdi/font/css/materialdesignicons.css';
 useHead({
   title: "John's Restaurant"
 });
@@ -15,10 +16,15 @@ const closeCart = (event) => {
   }
 }
 useEventListener('click',closeCart);
+const getScreenHeight=() => {
+  let height = window.innerHeight;
+  let main = document.querySelector('main');
+  main.style.height=`${height-40}px`;
+}
 </script>
 <template>
   <div class="app">
-    <Header ref="childRef"/>
+    <Header ref="childRef" />
     <main class="main">
       <div class="modalWrapper" v-if="cartStore.isCartOpen">
         <Cart ref="cartRef" />

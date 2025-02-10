@@ -46,7 +46,7 @@ onMounted(()=>{
 });
 </script>
 <template>
-    <span class="text-field price">
+    <span class="text-field">
         <span class="prefix">$</span>
         <input
             type="text"
@@ -60,16 +60,18 @@ onMounted(()=>{
     </span>
 </template>
 <style scoped>
-.text-field.price input{
+.text-field input{
     position: inherit;
     background-color: white;
     padding: 0 2px;
     text-align: right;
     width: 65px;
+    font-size: 16px;
     box-sizing: border-box;
 }
-.text-field.price .prefix{
+.text-field .prefix{
     position: relative;
+    top: -2px;
     left: 24px;
 }
 </style>

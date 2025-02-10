@@ -13,7 +13,6 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
-    "@mdi/font": "^7.4.47",
     "@nuxtjs/date-fns": "^1.5.0",
     "@pinia/nuxt": "^0.9.0",
     "@types/bcrypt": "^5.0.2",
@@ -33,6 +32,7 @@
     "vue-router": "latest"
   },
   "devDependencies": {
+    "@mdi/font": "^7.4.47",
     "@nuxtjs/moment": "^1.6.1"
   }
 }

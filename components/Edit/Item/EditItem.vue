@@ -24,15 +24,13 @@ const nameInputRef=ref(null);
 const descriptionInputRef=ref(null);
 const editName = ref(false);
 const editDescription = ref(false);
-
+const containerRef=ref(null);
 const focusNameInput = useFocusInput(nameInputRef,editName);
 const focusDescriptionInput = useFocusInput(descriptionInputRef,editDescription);
 const { priceInputRef, editPrice, focusPriceInput } = usePriceInput();
-
 const tabToPrice = useTabToInput(focusPriceInput);
 const tabToName=useTabToInput(focusNameInput);
 const tabToDescription=useTabToInput(focusDescriptionInput);
-
 const {addOnsFlag, removesFlag, resetFlags, viewAddOns,viewRemoves } = useAROFlags();
 const sectionIndex=localMenu.sections.findIndex(sec => sec._id === section_id);
 const newAddOn = ref({ name: "", price: "000.00", _id: uuidv4(), isNew: true });
@@ -53,12 +51,7 @@ function deleteItem(){
     menuStore.updateMenu(localMenu);
 }
 function postItemEdit(str){
-    console.log('post edit')
-    if(!isNew.value){
-        const itemIndex = localMenu.sections[sectionIndex].items.findIndex(it => it._id === item._id);
-        localMenu.sections[sectionIndex].items[itemIndex]=localItem;
-        menuStore.updateMenu(localMenu);
-    }
+    // console.log('post edit')
     switch(str){
         case 'name':
             editName.value=false;
@@ -70,9 +63,14 @@ function postItemEdit(str){
             editDescription.value=false;
             break;
     }
+    if(!isNew.value){
+        const itemIndex = localMenu.sections[sectionIndex].items.findIndex(it => it._id === item._id);
+        localMenu.sections[sectionIndex].items[itemIndex]=localItem;
+        menuStore.updateMenu(localMenu);
+    }
 }
 function postNewItem(){
-    console.log('post new')
+    // console.log('post new')
     if(localItem.name){
         isNew.value=false;
         localMenu.sections[sectionIndex].items.push(localItem);
@@ -88,7 +86,6 @@ const getItemPrice = (np) => {
 }
 const getResetAddOn = () => {newAddOn.value.isNew=true;newAddOn.value.name="";newAddOn.value.price="000.00";newAddOn.value._id=uuidv4();}
 const getResetRemove = () =>{ newRemove.value.name= ""; newRemove.value._id=uuidv4(); }
-const getCloseModal = ()=>{optionsModal.value=false;}
 const getDeleteAddOn = (index) => {
     localItem.addOns.splice(index, 1);
     const itemIndex = localMenu.sections[sectionIndex].items.findIndex(it => it._id === item._id);
@@ -101,66 +98,61 @@ const getDeleteRemove = (index) => {
     localMenu.sections[sectionIndex].items[itemIndex]=localItem;
     menuStore.updateMenu(localMenu);
 }
-const clickOutsideOARtab = (event) => {
-    if (clickInsideOK.value && !clickInsideOK.value.contains(event.target)) resetFlags();
-}
+watch(() => [addOnsFlag.value,removesFlag.value],
+    ()=>{
+        addOnsFlag.value||removesFlag.value ? containerRef.value.style.height='100%' : containerRef.value.style.height='110px';
+    }
+)
+const clickOutsideOARtab = (event) => {clickInsideOK.value && !clickInsideOK.value.contains(event.target) ? resetFlags() : null;}
 useEventListener('click', clickOutsideOARtab);
-onMounted(()=>{
-    
-    if(!localItem.name){ isNew.value = true; focusNameInput();}
-});
+onMounted(()=>{ if(!localItem.name){ isNew.value = true; focusNameInput();}});
 </script>
 <template>
-    <div class="item-container">
+    <div class="item-container" ref="containerRef">
         <div class="item-title">
             <div class="button-name">
-                <span class="btn-icons-group items">
-                    <button class="btn" ref="buttonRef"
-                        @click="deleteModal=true"
-                        @keydown="tabToName"
-                        v-if="!isNew">
-                        <i class="mdi mdi-close"/>
-                        <span class="tooltip">delete</span>
-                    </button>
-                    <button class="btn" ref="buttonRef"
-                        @click="postNewItem()"
-                        @keydown="tabToName" 
-                        v-else>
-                        <i class="mdi mdi-plus"/>
-                        <span class="tooltip">add new item</span>
-                    </button>
-                </span>
-                <div class="text-field item-name" v-if="editName">
+                <button class="btn delete" ref="buttonRef"
+                    @click="deleteModal=true"
+                    @keydown="tabToName"
+                    v-if="!isNew">
+                    <i class="mdi mdi-close"/>
+                    <span class="tooltip">delete</span>
+                </button>
+                <button class="btn delete" ref="buttonRef"
+                    @click="postNewItem()"
+                    @keydown="tabToName" 
+                    v-else>
+                    <i class="mdi mdi-plus"/>
+                    <span class="tooltip">add new item</span>
+                </button>
+                <div class="text-field" v-if="editName">
                     <input type="text" placeholder="name"
                         ref="nameInputRef"
                         v-model="localItem.name"
                         @blur="isNew ? editName=false : postItemEdit('name')"
                         @keydown.enter="isNew ? postNewItem() : postItemEdit('name')"
-                        @keydown="tabToPrice" 
-                        />
+                        @keydown="tabToPrice"/>
                 </div>
                 <div v-else>
                     <span class="item-name"
                         v-if="localItem.name"
                         @click="focusNameInput"
                         >{{ localItem.name }}</span>
-                        <span class="placeholder-color"
-                            @click="focusNameInput"
-                            v-else
-                        >{{ 'name' }}</span>
+                    <span class="placeholder-color"
+                        @click="focusNameInput"
+                        v-else>{{ 'name' }}</span>
                 </div>
             </div>
-            
-            <PriceInput class="item-price" ref="priceInputRef"
+            <PriceInput class="item-price component" ref="priceInputRef"
                 v-if="editPrice"
                 :price="localItem.price"
                 @keydown="tabToDescription"
                 @blur="isNew ? editPrice=false : postItemEdit('price')"
                 @keydown.enter="isNew ? postNewItem() : postItemEdit('price')"
                 @update-price="getItemPrice"/>
-            <span class="item-price" @click="focusPriceInput" v-else>
+            <div class="item-price" @click="focusPriceInput" v-else>
                 {{ formatPrice(localItem.price)}}
-            </span>
+            </div>
         </div>
         <div class="item-description">
             <div class="text-field description" v-if="editDescription">
@@ -189,9 +181,9 @@ onMounted(()=>{
                     <span :class="{'underline': el.flag}" >{{ el.name }}</span>
                 </button>
             </div>
-            <div class="item-a-r-o-titles mods" v-else>{{ "Add Mods after item creation" }}</div>
+            <div class="item-a-r-o-titles" v-else><span class="title-text">{{ "Add Mods after item creation" }}</span></div>
             <div class="item-a-r-o-components">
-                <div v-if="addOnsFlag">
+                <span v-if="addOnsFlag">
                     <EditItemAddOn
                         v-if="newAddOnFlag"
                         :addOn="newAddOn"
@@ -209,8 +201,8 @@ onMounted(()=>{
                         :menu="localMenu"
                         
                     />   
-                </div>
-                <div v-if="removesFlag">
+                </span>
+                <span v-if="removesFlag">
                     <EditItemRemove 
                         v-if="newRemoveFlag"
                         :remove="newRemove"
@@ -227,7 +219,7 @@ onMounted(()=>{
                         :section_id="section_id"
                         :menu="localMenu"
                     /> 
-                </div>
+                </span>
                
             </div>
         </div>
@@ -243,10 +235,28 @@ onMounted(()=>{
     </div>
 </template>
 <style scoped>
-.item-a-r-o-titles.mods{
-    font-size: 12px;
+.btn.delete{
+    margin: 1px 1px 0 1px;
 }
-.tooltip{
-    left: 80%;
+.title-text{
+    font-size: 13px;
+    padding-bottom: 3px;
+}
+@media(max-width: 600px){
+    .item-description textarea{
+        width: 300px;
+    }
+    .item-title{
+        width: 360px;
+    }
+    .item-a-r-o-titles{
+        width: 340px;
+    }
+    .item-a-r-o-components{
+        width: 340px;
+        padding: 0;
+        margin: 0;
+    }
+
 }
 </style>

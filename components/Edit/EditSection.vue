@@ -1,28 +1,17 @@
 <script setup>
-import { navigateTo } from 'nuxt/app';
 import { v4 as uuidv4 } from 'uuid';
 const emit = defineEmits(['send-new-section-flag']);
 const {section, menu} = defineProps({
     section: { type:Object, required: true},
     menu: { type:Object, required: true},
 });
-const deleteModalFlag=ref(false);
-const addOptionsModalFlag=ref(false);
-const { detachObject } = useDetachObject();
-const route = useRoute();
-const router = useRouter();
-const nameInputRef=ref(null);
-const descriptionInputRef = ref(null);
-const editName=ref(false);
-const editDescription = ref(false);
-const focusDescriptionInput = useFocusInput(descriptionInputRef,editDescription);
-const focusNameInput = useFocusInput(nameInputRef, editName);
-const tabToDescription = useTabToInput(focusDescriptionInput);
 const menuStore = useMenuStore();
 const localMenu = reactive(menu);
 const localSection = reactive(section);
-const isNew = ref(false);
-const addItem = ref(false);
+const deleteModalFlag=ref(false); const addOptionsModalFlag=ref(false);
+const nameInputRef=ref(null); const descriptionInputRef = ref(null);
+const editName=ref(false); const editDescription = ref(false);
+const isNew = ref(false); const addItem = ref(false);
 const newItem = ref({
         new: true,
         name: "",
@@ -32,14 +21,8 @@ const newItem = ref({
         removes: [],
         options: [],
         _id: uuidv4(),
-    })
-
+});
 function postSectionEdit(str){
-    if(!isNew.value){
-        const sectionIndex = menu.sections.findIndex(sec => sec._id === section._id);
-        localMenu.sections[sectionIndex]=localSection;
-        menuStore.updateMenu(localMenu);
-    }
     switch(str){
         case 'name':
             editName.value=false;
@@ -48,9 +31,14 @@ function postSectionEdit(str){
             editDescription.value=false;
             break;
     }
+    if(!isNew.value){
+        const sectionIndex = menu.sections.findIndex(sec => sec._id === section._id);
+        localMenu.sections[sectionIndex]=localSection;
+        menuStore.updateMenu(localMenu);
+    }
+    
 }
 const getDelete=()=>{
-    console.log('get delete')
     deleteModalFlag.value=false;
     deleteSection();
 }
@@ -78,71 +66,69 @@ function addNewItem(){
         _id: uuidv4(),
     }
 }
-const getNewItemFlag = () => {addItem.value=false;}
+const focusDescriptionInput = useFocusInput(descriptionInputRef,editDescription);
+const focusNameInput = useFocusInput(nameInputRef, editName);
+const tabToDescription = useTabToInput(focusDescriptionInput);
 onMounted(()=>{if(!localSection.name){isNew.value = true;focusNameInput();}})
 </script>
 <template>
     <div class="section-container">
-        <div>
-            <div class="section-name">
-                <span class="left-side">
-                    <button class="btn delete" @click="postNewSection()" v-if="isNew">
-                        <i class="mdi mdi-plus"/>
-                        <span class="tooltip">add section</span>
-                    </button>
-                    <button class="btn delete" @click="deleteModalFlag=true" v-else>
-                        <i class="mdi mdi-close"/>
-                        <span class="tooltip">delete section</span>
-                    </button>
-                    <template v-if="editName">
-                        <div class="text-field name">
-                            <input
-                                type="text"
-                                ref="nameInputRef"
-                                v-model="localSection.name"
-                                @blur="isNew ? editName=false : postSectionEdit('name')"
-                                @keydown.enter="isNew ? postNewSection() : postSectionEdit('name')"
-                                @keydown="tabToDescription"
-                            />
-                            <!--  -->
-                        </div>
-                    </template>
-                    <template v-else>
-                        <span @click="focusNameInput" v-if="localSection.name">{{ localSection.name }}</span>
-                        <span class="placeholder-color" @click="focusNameInput" v-else>name</span>
-                    </template>
-                </span>
-                <div class="right-btns">
-                    <button class="btn" @click="addOptionsModalFlag=true" v-if="!isNew">
-                        <span class="btn-text">options</span>
-                        <i class="mdi mdi-plus"/>
-                        <span class="tooltip">add options to all items</span>
-                    </button> 
-                    <button class="btn" @click="addNewItem()" v-if="!isNew">
-                        <span class="btn-text">item</span>
-                        <i class="mdi mdi-plus"/>
-                        <span class="tooltip">add item</span>
-                    </button>
-                </div>
-            </div>
-            <div class="section-description">
-                <template v-if="editDescription">
-                    <div class="text-field description">
+        <div class="section-name">
+            <span class="left-btns">
+                <button class="btn delete" @click="postNewSection()" v-if="isNew">
+                    <i class="mdi mdi-plus"/>
+                    <span class="tooltip">add section</span>
+                </button>
+                <button class="btn delete" @click="deleteModalFlag=true" v-else>
+                    <i class="mdi mdi-close"/>
+                    <span class="tooltip">delete section</span>
+                </button>
+                <template v-if="editName">
+                    <div class="text-field name">
                         <input
                             type="text"
-                            class="input-description"
-                            ref="descriptionInputRef"
-                            v-model="localSection.description"
-                            @blur="isNew ?  editDesciption=false : postSectionEdit('description')"
-                            @keydown.enter="isNew ? (localSection.name ? postNewSection() : editDesciption=false) : postSectionEdit('description')"
+                            ref="nameInputRef"
+                            v-model="localSection.name"
+                            @blur="isNew ? editName=false : postSectionEdit('name')"
+                            @keydown.enter="isNew ? postNewSection() : postSectionEdit('name')"
+                            @keydown="tabToDescription"
                         />
                     </div>
                 </template>
                 <template v-else>
-                    <span @click="focusDescriptionInput" v-if="localSection.description">{{ localSection.description }}</span>
-                    <span  class="placeholder-color" @click="focusDescriptionInput" v-else>description</span>
+                    <span @click="focusNameInput" v-if="localSection.name">{{ localSection.name }}</span>
+                    <span class="placeholder-color" @click="focusNameInput" v-else>name</span>
                 </template>
+            </span>
+            <div class="right-btns">
+                <button class="btn" @click="addOptionsModalFlag=true" v-if="!isNew">
+                    <span>options</span>
+                    <i class="mdi mdi-plus"/>
+                    <span class="tooltip">add options to all items</span>
+                </button> 
+                <button class="btn" @click="addNewItem()" v-if="!isNew">
+                    <span>item</span>
+                    <i class="mdi mdi-plus"/>
+                    <span class="tooltip">add item</span>
+                </button>
             </div>
+        </div>
+        <div class="section-description">
+            <template v-if="editDescription">
+                <div class="text-field description">
+                    <input
+                        type="text"
+                        ref="descriptionInputRef"
+                        v-model="localSection.description"
+                        @blur="isNew ?  editDesciption=false : postSectionEdit('description')"
+                        @keydown.enter="isNew ? (localSection.name ? postNewSection() : editDesciption=false) : postSectionEdit('description')"
+                    />
+                </div>
+            </template>
+            <template v-else>
+                <span @click="focusDescriptionInput" v-if="localSection.description">{{ localSection.description }}</span>
+                <span  class="placeholder-color" @click="focusDescriptionInput" v-else>description</span>
+            </template>
         </div>
         <div class="section-items">
             <EditItem
@@ -150,7 +136,7 @@ onMounted(()=>{if(!localSection.name){isNew.value = true;focusNameInput();}})
                 :item="newItem"
                 :section_id="localSection._id"
                 :menu="localMenu"
-                @send-new-item-flag="getNewItemFlag"/>
+                @send-new-item-flag="addItem=false"/>
             <EditItem 
                 v-for="(item, i) in localSection.items"
                 :key="item._id"
@@ -160,7 +146,7 @@ onMounted(()=>{if(!localSection.name){isNew.value = true;focusNameInput();}})
                 :menu="localMenu"/>
         </div>
         <div class="modalWrapper" v-if="addOptionsModalFlag">
-            <ModalAddOptions class="modal secOp" :menu="localMenu" :item="localSection" @close-modal="addOptionsModalFlag=false"/>
+            <ModalAddOptions class="modal" :menu="localMenu" :item="localSection" @close-modal="addOptionsModalFlag=false"/>
         </div>
         <div class="modalWrapper" v-if="deleteModalFlag">
             <ModalDelete class="modal delete" :item="localSection" itemType="Section" @close-modal="deleteModalFlag=false" @delete-item="getDelete"/>
@@ -168,14 +154,15 @@ onMounted(()=>{if(!localSection.name){isNew.value = true;focusNameInput();}})
     </div>
 </template>
 <style scoped>
-.left-side{
-    display: flex;
-    justify-content: flex-start;
+.btn.delete{
+    padding: 3px;
+    margin: 0px 4px;
 }
-.modal.secOp{
-    width: 80vw;
-    height: 60vh;
-    left: 10vw;
+.modal{
+    position: relative;
+    width: 70%;
+    height: 300px;
+    left: 15%;
 }
 .right-btns{
     font-size:20px;
@@ -183,7 +170,23 @@ onMounted(()=>{if(!localSection.name){isNew.value = true;focusNameInput();}})
     padding: 5px;
     gap: 10px;
 }
-.input-description{
-    width: 40vw;
+.right-btns button{
+    padding: 7px 3px;
+}
+.text-field.name{
+    position: absolute;
+    left: 25px;
+    top: 7px;    
+    height: 35px;
+    width: 200px;
+}
+.text-field.name input{
+    height: 30px;
+    font-size: 25px;
+    width: inherit;
+}
+.text-field.description input{
+    width: 500px;
+    font-size: 12px;
 }
 </style>

@@ -1,5 +1,5 @@
 <script setup>
-const activate=ref(false);
+const background=ref(false);
 
 // const router = useRouter();
 
@@ -13,10 +13,10 @@ const activate=ref(false);
 const pageNotFound=ref('Page Not Found. Sending You Home...');
 </script>
 <template>
-    <div class="container" :class="{'day-color': activate}">
+    <div class="container" :class="{'day-color': background}">
       <p class="message">{{pageNotFound}}</p>
       <ClientOnly>
-        <Transition name="sun-rise" appear @appear="activate=true">
+        <Transition name="sun-rise" appear @appear="background=true">
           <div class="sun">
               <div class="sun-ray1"></div>
               <div class="sun-ray2"></div>
@@ -27,12 +27,12 @@ const pageNotFound=ref('Page Not Found. Sending You Home...');
               <div class="sun-ray7"></div>
               <div class="sun-ray8"></div> 
           </div>
-      </Transition>
-    </ClientOnly>
-      <div class="roof">
-        <div class="chimney"></div>
-      </div>
+        </Transition>
+      </ClientOnly>
       <div class="house">
+        <div class="roof">
+          <div class="chimney"></div>
+        </div>
         <div class="window-1">
             <div class="window-pane-1"></div>
             <div class="window-pane-2"></div>
@@ -151,18 +151,20 @@ const pageNotFound=ref('Page Not Found. Sending You Home...');
     border-radius: 5px;
 }
 .door{
-    position: relative;
-    height: 100px;
+    position: absolute;
+    height: 60px;
     width: 40px;
-    top: 55px;
+    top: 60px;
     left: 140px;
     background-color: rgb(181, 34, 8);
+    z-index: 10000;
 }
 .roof{
-    position: absolute;
-    width: 380px;
+    position: relative;
+    width: 0px;
     height: 0;
-    top: 100px;
+    top: -100px;
+    left: -50px;
     border-left: 200px solid transparent;
     border-right: 200px solid transparent;
     border-bottom: 100px solid rgb(67, 21, 1);
@@ -317,7 +319,6 @@ const pageNotFound=ref('Page Not Found. Sending You Home...');
     border-bottom: 10px solid transparent;
     border-top: 20px solid  transparent;
 }
-
 .ground{
     position: absolute;
     background-color: rgb(30, 112, 5);

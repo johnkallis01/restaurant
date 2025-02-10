@@ -1,17 +1,10 @@
 <script setup>
-import { onMounted } from 'vue';
-
-useHead({
-  title: "John's Restaurant - Login"
-});
+useHead({ title: "John's Restaurant - Login"});
 const authStore = useAuthStore();
 const loginRef=ref(null);
 const buttonRef=ref(null);
 const { tabToButton } = useTabToButton(buttonRef);
-const email = ref('');
-const password = ref('');
-
-
+const email = ref(''); const password = ref('');
 async function login(){
   try {
     await authStore.login({
@@ -34,9 +27,9 @@ onMounted(() => {
 })
 </script>
 <template>
-  <div class="container" ref="loginRef">
+  <div class="form-container" ref="loginRef">
     <div class="form-title">Login</div>
-    <form class="form-container" @submit.prevent="login">
+    <form @submit.prevent="login">
       <div class="form-field">
         <TextField class="input-field login" 
           v-for="input in inputs" :key="input.name"
@@ -56,11 +49,12 @@ onMounted(() => {
   </div>
 </template>
 <style scoped>
-.input-field{
-  width: 80%;
+.form-container{
+  width: 300px;
 }
-.input-field.login{
-  margin-bottom: 10px;
+.form-body{
+  display: grid;
+  grid-template-columns: 300px 300px;
 }
 .btn.login{
   padding: 0px 10px;

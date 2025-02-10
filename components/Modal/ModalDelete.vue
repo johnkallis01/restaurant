@@ -7,42 +7,43 @@ const input = ref('');
 const buttonRef=ref(null);
 const { tabToButton } = useTabToButton(buttonRef);
 onMounted(() => {
-    const modal = document.getElementById('delete-modal');
-    const el = modal.querySelector('input');
+    const el = document.querySelector('input');
     el.focus();
 })
 </script>
 <template>
-    <div class="container" id="delete-modal">
-        <div class="form-title">
+    <div class="modal-container">
+        <div class="modal-title">
              {{ "Delete "+itemType }}
         </div>
         <div class="form-body">
-            <span class="item-name"> {{'Are you sure you want to delete '+ item.name + ' and all of its contents?'}}</span>
-            <span class="item-name"> {{'Type "' + item.name +'" to delete'}}</span>
+            <span class="modal-subtitle"> {{'Are you sure you want to delete '+ item.name + ' and all of its contents?'}}</span>
+            <span class="modal-subtitle"> {{'Type "' + item.name +'" to delete'}}</span>
             <div class="input-field">
                 <TextField
                     placeHolder="enter name to delete"
                     :req="true"
+                    bgColor="azure"
                     @send-input="(v)=>input=v"
                     @keydown.enter="tabToButton"
                 />
             </div>
-             
         </div>
         <div class="form-actions">
-            <button class="btn" @click="(input.trim()===item.name.trim()) ? emit('delete-item') : null" ref="buttonRef">Submit</button>
+            <button class="btn"
+                :disabled="input.trim()!==item.name.trim()"
+                @click="emit('delete-item')" ref="buttonRef">Submit</button>
             <button class="btn" @click="emit('close-modal')">Cancel</button>
         </div>
     </div>
 </template>
 <style scoped>
-.container{
-    border-radius: 15px;
-}
 .form-body{
     height: 100%;;
     overflow: hidden;
+}
+.form-title{
+    border-radius: 8px 8px 0 0;
 }
 .title-text{
     justify-content: flex-start;

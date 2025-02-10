@@ -24,12 +24,20 @@ const deleteItem=(i)=>{cartStore.removeItem(i);}
                     </button>
                     <span class="cart-item-name">{{ item.name }}</span>
                     <span class="dotted-line"></span>
-                    <span class="cart-item-price">
-                        {{ formatPrice(item.price)}}
-                        <button @click="item.qty > 1 ? cartStore.removeQty(item) : null">-</button>
-                        <span class="qty-text"> {{ item.qty }}</span>
-                        <button @click="item.qty < 10 ? cartStore.addQty(item) : null">+</button>
-                    </span>
+                    <div class="cart-item-price">
+                        <div class="price">{{ formatPrice(item.price)}}</div>
+                        <div class="qty">
+                            <button @click="item.qty > 1 ? cartStore.removeQty(item) : null">
+                                <i class="mdi mdi-minus"/>
+                            </button>
+                            <div class="qty-text"> 
+                                <i :class="`mdi mdi-numeric-${item.qty}`"/>
+                            </div>
+                            <button @click="item.qty < 10 ? cartStore.addQty(item) : null">
+                                <i class="mdi mdi-plus"/>
+                            </button>
+                        </div> 
+                    </div>
                 </div>
                 <div class="item-mods">
                     <div class="item-options" 
@@ -106,6 +114,9 @@ const deleteItem=(i)=>{cartStore.removeItem(i);}
         width: 80vw;
     }
 }
+.price{
+    margin-right: 5px;
+}
 .cart-title{
     display: flex;
     justify-content: space-between;
@@ -132,9 +143,11 @@ const deleteItem=(i)=>{cartStore.removeItem(i);}
     flex: 0 1 auto;
 }
 .cart-item-price {
-  flex: 0 1 auto;
-  text-align: right;
-  margin-right: 5px;
+    display: flex;
+    flex-direction: row;
+    flex: 0 1 auto;
+    text-align: right;
+    margin-right: 5px;
 }
 .dotted-line {
   flex: 1;
