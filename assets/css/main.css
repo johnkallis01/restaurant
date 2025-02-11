@@ -40,12 +40,9 @@ main {
   background-repeat: no-repeat;
   background-image: url("https://i.pinimg.com/736x/e6/7d/af/e67daf68a6e8f6d4a9283cb7d64b098c.jpg");
 }
-@media(max-width: 721px){
+@media(max-width: 920px){
   main{
     width: 102vw;
-  }
-  .btn:focus{
-    padding: 0 15px;
   }
 }
 @media(max-width: 415px){
@@ -104,7 +101,7 @@ page container
   position: absolute;   
   height: 92%;
   width: 100%;
-  top: 8%;
+  top: 9%;
   left: 0;
   box-sizing: border-box;
   border-radius: 10px 10px 0 0;
@@ -120,6 +117,14 @@ page container
   height: 8%;
   color: white;
   background-color: green;
+}
+@media(max-width: 600px){
+  .container-title{
+    height: 4%;
+  }
+  .container-body{
+    top: 5%;
+  }
 }
 .title-buttons{
   width: 80%;
@@ -307,10 +312,10 @@ page container
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
+    height: 100%;
+    width: 300px;
 }
-.form-actions{
-    margin: 10px 0 5px 20px;
-}
+
 /********
     item 
         addon-removes-options classes 
@@ -669,7 +674,7 @@ b:disabled{
   }
   .modal.select{
     width: 80vw;
-    height: 60vh;
+    height: 40vh;
     left: 10vw;
     top: 20vh;
   }
@@ -709,13 +714,20 @@ b:disabled{
     left: 2vw;
   }
   .modal.delete{
+    height: 20vh;
+    top: 40vh;
     width: 70vw;
     left: 15vw;
   }
   .modal.options{
-    left: 0;
-    right: 0;
-    width: 100vw;
+    left: 4vw;
+    right: 4vw;
+    width: 92vw;
+  }
+  .modal.select{
+    left: 4vw;
+    right: 4vw;
+    width: 92vw;
   }
 }
 @media(max-width: 600px){
