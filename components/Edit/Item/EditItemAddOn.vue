@@ -46,12 +46,17 @@ const getAddOnPrice = (np) => {
     editPrice.value = false;
     localAddOn.price = np;
     if(!isNew.value) postEditAddOn();
-} 
+}
+watch(()=>editName.value,() => {
+    editName.value ? focusNameInput():null;
+})
 onMounted(()=>{
     if(localAddOn.isNew){
         isNew.value = true; editName.value=true;
-        focusNameInput();
+        
     }
+    if(editName.value) focusNameInput();
+    
 });
 </script>
 <template>

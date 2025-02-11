@@ -92,58 +92,55 @@ const nameRef=ref(null);
 defineExpose({nameRef});
 </script>
 <template>
-    <div ref="optionsRef" :class="{'underline': isNew}">
-        <div class="tab-container" >
-            <div class="tab-row">
-           
-                    
-           
-                <div class="tab-name">
-                    <div class="name-checkbox">
-                        <div class="button-name">
-                            <button class="btn delete" @click="deleteOption" v-if="!isNew">
-                                <i class="mdi mdi-close"/>
-                                <span class="tooltip">delete</span>
-                            </button>
-                            <div class="text-field item-title option"
-                                v-if="isNew || editName">
-                                <input type="text" class="name-input" placeholder="option title"
-                                    ref="nameInputRef"
-                                    @blur="editName=false"
-                                    v-model="localOption.name"/>
-                            </div>
-                            <div v-else>
-                                <span v-if="localOption.name" class="item-title option">
-                                    <span ref="nameRef" @click="focusNameInput" :class="{'underline': !editName}" tabindex="0">{{ localOption.name }}</span> 
-                                </span>
-                                <span class="placeholder-color"
-                                    v-else 
-                                    @click="focusNameInput">
-                                    name
-                                </span>
-                            </div>
-                        </div>
-                        <span class="checkbox">
-                            <label for="req">Required:</label>
-                            <input type="checkbox" name="req"
-                                v-model="localOption.req"
-                                @keydown.enter="localOption.req=!localOption.req"
-                                @change="isNew ? null : postEditOption">
+    <div  class="tab-container" ref="optionsRef" :class="{'underline': isNew}">
+        <div class="tab-name">
+            <div class="name-checkbox">
+                <div class="button-name">
+                    <button class="btn delete" @click="deleteOption" v-if="!isNew">
+                        <i class="mdi mdi-close"/>
+                        <span class="tooltip">delete</span>
+                    </button>
+                    <div class="text-field"
+                        v-if="isNew || editName">
+                        <input type="text" class="name-input" placeholder="option title"
+                            ref="nameInputRef"
+                            @blur="editName=false"
+                            v-model="localOption.name"/>
+                    </div>
+                    <div v-else>
+                        <span v-if="localOption.name" class="item-title option">
+                            <span ref="nameRef" @click="focusNameInput" :class="{'underline': !editName}" tabindex="0">{{ localOption.name }}</span> 
+                        </span>
+                        <span class="placeholder-color"
+                            v-else 
+                            @click="focusNameInput">
+                            name
                         </span>
                     </div>
-                    <button class="btn value"  @click="postNewOption"
-                        @keydown.enter="postNewOption"
-                        v-if="isNew"> 
-                       <span>submit option</span> 
-                    </button>
-                        <!-- first button  -->
-                    <button class="btn value" @click="toggle"
-                        v-show="!isNew" :disabled="disableValBtn">{{!isOpen ? 'new value' : 'close'}}</button>
+                </div>
+                <div class="checkbox">
+                    <label for="req">Required:</label>
+                    <input type="checkbox" name="req"
+                        v-model="localOption.req"
+                        @keydown.enter="localOption.req=!localOption.req"
+                        @change="isNew ? null : postEditOption">
                 </div>
             </div>
+            <div>            
+                <button class="btn value"  @click="postNewOption"
+                    @keydown.enter="postNewOption"
+                    v-if="isNew"> 
+                    <span>submit option</span> 
+                </button>
+                    <!-- first button  -->
+                <button class="btn value" @click="toggle"
+                    v-else :disabled="disableValBtn">
+                    <span>{{!isOpen ? 'new value' : 'close'}}</span>
+                </button>
+            </div>
         </div>
-        <div v-if="(isNew || isOpen)" class="item-title">
-            <div class="text-field intem-name">
+        <div v-if="(isNew || isOpen)" class="item-title value">
+            <div class="text-field item-name">
                 <label>Value:</label>
                 <input
                     type="text"
@@ -160,7 +157,7 @@ defineExpose({nameRef});
                 :price="newContent.price"
                 @keydown.enter="tabToButton"
                 @update-price="(np)=>newContent.price=np" />
-            <div v-else @click="editPrice=!editPrice">{{ formatPrice(newContent.price) }}</div>
+            <div v-else @click="editPrice=!editPrice" class="item-price">{{ formatPrice(newContent.price) }}</div>
              <!-- second button -->
              <button class="btn value"
                 ref="addValBtnRef"
@@ -190,16 +187,22 @@ defineExpose({nameRef});
     display: flex;
     justify-content: flex-start;
     align-content: center;
-    margin: 0px 30px;
-    white-space: nowarp;
+    width: 100px;
 }
 .name-checkbox{
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    width: 100%;
+    width: 80%;
+}
+.item-price{
+    padding-right: 7px;
 }
 .item-title.option{
     width: 300px;
+}
+.item-title.value{
+    padding-top: 5px;
 }
 .checkbox input:focus{
     box-sizing: border-box;
@@ -208,21 +211,19 @@ defineExpose({nameRef});
     box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
 }
 .checkbox label{
-    margin-right: 5px;
+    padding-right: 5px;
 }
 .btn.value{
+    width: 90px;
+    position: relative;
+    right: 8px;
     white-space: nowrap;
+    box-sizing: border-box;
+    border: 1px solid black;
 }
 .tab-container{
     width: 100%;
 }
-.tab-row{
-    gap: 5px;
-}
-.tab-name{
-    align-content: center;
-}
-
 .btn.delete{
     margin: 7px 3px 0 0;
 }
@@ -230,15 +231,18 @@ defineExpose({nameRef});
     display: flex;
     justify-content: flex-start;
     flex-wrap: wrap;
-    margin: 5px;
+    padding: 5px;
+}
+.text-feild input{
+    font-size: 18px;
 }
 .option-content{
     display: flex;
     justify-content: flex-start;
     flex-direction: row;
-    margin-right: 5px;
+    padding-right: 5px;
 }
 .option{
-    font-size: 18px;
+    font-size: 16px;
 }
 </style>

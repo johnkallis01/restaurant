@@ -61,14 +61,14 @@ onMounted(()=>{
 <template>
     <div class="modal-container">
         <div class="modal-title">
-            <div class="item-name">
+            <span class="item-name">
                 {{ section_id ? localItem.name : "Add options to all items in "+localItem.name}}
-            </div>
+            </span>
             <button class="btn add" ref="addOptionBtnRef"
                 v-if="detachedItem.options.length"
                 @click="addNew=!addNew">add option</button>
         </div>
-        <div class="modal-content" >
+        <div class="modal-content">
             <EditItemOption ref="newChildRef"
                 v-if="detachedItem.options?.length ? addNew : true"
                 @create-new-option="getNew"
@@ -83,7 +83,6 @@ onMounted(()=>{
                 @update-options="(getOptions) => detachedItem.options=getOptions"
                 @toggle="openIndex===i ? openIndex=-1 : openIndex=i"
                 @close="openIndex===i ? openIndex=-1 : openIndex=openIndex"/>
-           
         </div>
         <div class="form-actions">
             <button class="btn close" @click="submitChanges()">Submit</button>
@@ -112,19 +111,18 @@ onMounted(()=>{
     padding: 5px;
     overflow-y: auto;
 }
-.item-title{
-    display: flex;
-    justify-content: space-between;
-    flex-direction: row;
-    padding: 5px;
-    border-bottom: 2px solid black;
-}
 .form-actions{
     display: flex;
     justify-content: flex-end;
     align-items: end;
     align-content: end;
     margin-right: 10px;
+}
+.item-name{
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 .modal-container{
     height: 100%;

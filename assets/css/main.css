@@ -173,12 +173,14 @@ page container
   height: 20px;
   font-size: 12px;
   overflow: hidden;
+
   /* border: 1px solid pink; */
 }
 @media(max-width:700px){
   .section-description{
     height: 30px;
     overflow: scroll;
+    scrollbar-width: none;
   }
 }
 .section-items{   
@@ -200,8 +202,7 @@ page container
   border-radius: 7px;
   color: black;
   width: 280px;
-  height: 80px;
-
+  height: 80px; /*change editItem watcher*/
   border: 2px solid black;
   overflow: visible;
   background-color: transparent;
@@ -212,6 +213,7 @@ page container
   align-items: center;
   align-content: center;  
   flex-direction: row;
+  font-size: 14px;
   width: 100%;
   height: 20px;
 }
@@ -239,8 +241,7 @@ page container
   display: flex;  
   justify-content: flex-start; 
   align-items: center;
-  position: relative;
-  width: 290px;
+  
 }
 .btn.delete{
   padding: 2px 3px;
@@ -252,17 +253,7 @@ page container
   flex-direction: column;
   align-content: center;
 }
-.tab-container{
-    display: flex;
-    justify-content: space-between;
-    flex-direction: row;
-    align-content: center;
-    position: relative;
-    width: 275px;
-}
-/* .item-title .addon{
-  border: 2px;
-} */
+
 /* forms */
 .form-container{
   display: flex;
@@ -299,7 +290,10 @@ page container
   display: flex;
   justify-content: space-between;
   align-content: center;
-  margin: 0px 15px; 
+  padding: 0px 15px; 
+}
+.item-a-r-o-titles button{
+  background-color: transparent;
 }
 .item-a-r-o-components{
   position: relative;
@@ -329,7 +323,6 @@ page container
   border: 1px solid #ccc;
   border-radius: 4px;
   box-sizing: border-box;
-  font-size: 16px;
   background-color: white;
 }
 .text-field textarea{
@@ -430,17 +423,21 @@ b:disabled{
 /***************
     addon/remove/options
 ***************/
-
-.tab-row{
-    display: flex;
-    align-items: center;
-    width: 100%;
+.tab-container{
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  align-content: center;
+  padding-top: 8px;
+  /* box-sizing: border-box;
+  border: 1px solid yellow; */
 }
 .tab-name{
     display: flex;
     justify-content: space-between;
     align-items: center;
     width: 100%;
+    /* border: 1px solid purple; */
 }
 .tab-price{
     flex: 1;
@@ -481,14 +478,17 @@ b:disabled{
   flex-direction: column;
   justify-content: center;
   background-color: azure;
+  position: relative;
   border-radius: 8px;
+  height: 100%;
+  width: 100%;
 }
 .modal-title{
   display: flex;
   justify-content: flex-start;
   align-items: center;
   padding: 5px;
-  font-size: large;
+  font-size: 16px;
   border-radius: 6px 6px 0px 0px;
   border-bottom: 2px solid black;
   background-color: rgb(180, 175, 175);
@@ -502,8 +502,12 @@ b:disabled{
   display: flex;
   flex-direction: column;
   height: 100%;
+  width: 100%;
   padding: 5px;
   overflow-y: auto;
+  scrollbar-width: none;
+  border: 1px solid red;
+  box-sizing: border-box;
 }
 .modal.delete{
   height: 40vh;
@@ -621,14 +625,13 @@ b:disabled{
   .item-container{
     width: 300px;
   }
-  .items{
+  .button-name{
+    width: 20px;
+  }
+  .section-items{
     grid-template-columns: 300px 300px;
   }
   .modal{
-    width: 80vw;
-    left: 10vw;
-  }
-  .modal.secOp{
     width: 80vw;
     left: 10vw;
   }
@@ -663,15 +666,21 @@ b:disabled{
     .items{
       grid-template-columns: 300px 300px;
     }
-    .tab-container{
-        width: 340px;
-    }
     .modal{
-      width: 90vw;
-      left: 5vw;
+      width: 96vw;
+      left: 2vw;
     }
     .modal.delete{
       width: 70vw;
       left: 15vw;
+    }
+    @media(max-width: 500px){
+    .item-container{
+        width: 350px;
+    }
+    .item-title{
+      width: 350px;
+    }
+
     }
 } 

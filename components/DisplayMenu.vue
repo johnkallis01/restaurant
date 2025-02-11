@@ -27,7 +27,7 @@ const fixItemHeights=() => {
     //item max-height: 80px;
     //item name height: 20px;
     //item desc lin height: ~15px
-    let screenWidth=window.innerWidth;
+    let screenWidth=window?.innerWidth;
     newHeight.value=[];
     if(order && screenWidth>740){
         //full width -> 3x 280px
@@ -56,11 +56,7 @@ const fixItemHeights=() => {
                     itemIndex+=1;
                 }
                 for(let k=0;k<rowLength; k++){ 
-                    // if (tallest === 0) { //no lines
-                    //     // console.log("push 20");
-                    //     newHeight.value.push(20);
-                    // } else 
-                    if (tallest < 20) { //1 line
+                    if (tallest < 20) { //0-1 lines
                         // console.log("push 38");
                         newHeight.value.push(40);
                     } else if (tallest < 28) { //2 lines
@@ -116,7 +112,7 @@ onActivated(async() => {
     await nextTick();
     fixItemHeights();
 })
-const windowWidth = ref(window.innerWidth);
+const windowWidth = ref(window?.innerWidth);
 const updateWidth = () => { windowWidth.value = window?.innerWidth;};
 onMounted(() => { 
     window.addEventListener("resize", updateWidth);

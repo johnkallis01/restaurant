@@ -26,6 +26,7 @@ function postEditRemove(){
 }
 
 function postNewRemove(){
+    editName.value=false;
     if(localRemove.name){    
         const contains = localMenu.sections[sectionIndex].items[itemIndex].removes.some(r => r.name === localRemove.name);
         console.log(contains)
@@ -41,6 +42,9 @@ function postNewRemove(){
         focusNameInput();
     }
 }
+watch(()=>editName.value,() => {
+    editName.value ? focusNameInput():null;
+})
 onMounted(()=>{
     if(!localRemove?.name){
         isNew.value = true; editName.value=true;
@@ -70,8 +74,8 @@ onMounted(()=>{
                     />
                 </div>
                 <div v-else>
-                    <span @click="focusNameInput" v-if="localRemove.name">{{ localRemove.name }}</span>
-                    <span class="placeholder-color" @click="editRemoveName(localRemove)" v-else>name</span>
+                    <span @click="focusNameInput()" v-if="localRemove.name">{{ localRemove.name }}</span>
+                    <span class="placeholder-color" @click="focusNameInput()" v-else>name</span>
                 </div>
             </div>
         </div>

@@ -100,7 +100,7 @@ const getDeleteRemove = (index) => {
 }
 watch(() => [addOnsFlag.value,removesFlag.value],
     ()=>{
-        addOnsFlag.value||removesFlag.value ? containerRef.value.style.height='100%' : containerRef.value.style.height='110px';
+        addOnsFlag.value||removesFlag.value ? containerRef.value.style.height='100%' : containerRef.value.style.height='80px';
     }
 )
 const clickOutsideOARtab = (event) => {clickInsideOK.value && !clickInsideOK.value.contains(event.target) ? resetFlags() : null;}
@@ -133,7 +133,7 @@ onMounted(()=>{ if(!localItem.name){ isNew.value = true; focusNameInput();}});
                         @keydown.enter="isNew ? postNewItem() : postItemEdit('name')"
                         @keydown="tabToPrice"/>
                 </div>
-                <div v-else>
+                <template v-else>
                     <span class="item-name"
                         v-if="localItem.name"
                         @click="focusNameInput"
@@ -141,9 +141,9 @@ onMounted(()=>{ if(!localItem.name){ isNew.value = true; focusNameInput();}});
                     <span class="placeholder-color"
                         @click="focusNameInput"
                         v-else>{{ 'name' }}</span>
-                </div>
+                </template>
             </div>
-            <PriceInput class="item-price component" ref="priceInputRef"
+            <PriceInput class="item-price" ref="priceInputRef"
                 v-if="editPrice"
                 :price="localItem.price"
                 @keydown="tabToDescription"
@@ -224,7 +224,7 @@ onMounted(()=>{ if(!localItem.name){ isNew.value = true; focusNameInput();}});
             </div>
         </div>
         <div class="modalWrapper" v-if="optionsModal">
-            <div class="modal" ref="modalRef">
+            <div class="modal options" ref="modalRef">
                 <ModalAddOptions :item="localItem" :section_id="section_id" 
                     :menu="localMenu" @close-modal="optionsModal=false"/>               
             </div>
@@ -245,12 +245,23 @@ onMounted(()=>{ if(!localItem.name){ isNew.value = true; focusNameInput();}});
 .item-description{
     height: 38px;
 }
+.item-description textarea{
+    height: 32px;
+    scrollbar-width: none;
+}
+.item-title{
+    padding-top: 3px;
+}
 @media(max-width: 600px){
+    .modal.options{
+        width: 100vw;
+        left: 0;
+    }
     .item-description textarea{
         width: 300px;
     }
     .item-title{
-        width: 360px;
+        width: 400px;
     }
     .item-a-r-o-titles{
         width: 340px;
@@ -261,5 +272,13 @@ onMounted(()=>{ if(!localItem.name){ isNew.value = true; focusNameInput();}});
         margin: 0;
     }
 
+}
+@media(max-width: 500px){
+    .item-container{
+        width: 350px;
+    }
+    .item-title{
+      width: 350px;
+    }
 }
 </style>

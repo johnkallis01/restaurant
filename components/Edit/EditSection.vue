@@ -146,7 +146,7 @@ onMounted(()=>{if(!localSection.name){isNew.value = true;focusNameInput();}})
                 :menu="localMenu"/>
         </div>
         <div class="modalWrapper" v-if="addOptionsModalFlag">
-            <ModalAddOptions class="modal" :menu="localMenu" :item="localSection" @close-modal="addOptionsModalFlag=false"/>
+            <ModalAddOptions class="modal options" :menu="localMenu" :item="localSection" @close-modal="addOptionsModalFlag=false"/>
         </div>
         <div class="modalWrapper" v-if="deleteModalFlag">
             <ModalDelete class="modal delete" :item="localSection" itemType="Section" @close-modal="deleteModalFlag=false" @delete-item="getDelete"/>
@@ -188,5 +188,17 @@ onMounted(()=>{if(!localSection.name){isNew.value = true;focusNameInput();}})
 .text-field.description input{
     width: 500px;
     font-size: 12px;
+}
+.modal.delete{
+    height: 35vh;
+    width: 40vw;
+    left: 30vw;
+    top: 40vh;
+}
+@media(max-width: 600px){
+    .modal.options{
+        width: 100vw;
+        left: 0;
+    }
 }
 </style>
