@@ -242,6 +242,9 @@ onMounted(()=>{ if(!localItem.name){ isNew.value = true; focusNameInput();}});
     font-size: 13px;
     padding-bottom: 3px;
 }
+.item-description{
+    height: 38px;
+}
 @media(max-width: 600px){
     .item-description textarea{
         width: 300px;

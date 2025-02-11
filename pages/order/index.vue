@@ -33,10 +33,9 @@ const nowMenus = computed(() => {
             @click="index=i" >{{ menu.name }}
           </button>
         </div>
-          
       </div>
-      <div class="container-body" v-for="(menu,i) in nowMenus" :key="i" v-if="nowMenus.length">
-        <DisplayMenu :menu="menu" :order="true" v-if="i===index"/>
+      <div class="container-body" v-if="nowMenus.length">
+        <DisplayMenu :menu="nowMenus[index]" :order="true" :key="index"/>
       </div>
       <div v-else>Restaurant is Closed</div>
     </div>

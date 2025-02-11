@@ -16,7 +16,7 @@ function visibleMenu(){ return menuStore.menus[index.value];}
         
       </div>
       <div class="container-body">
-        <DisplayMenu :menu="visibleMenu()" :order="false"/>
+        <DisplayMenu :menu="menuStore.menus[index]" :order="false" :key="index"/>
       </div>
     </div>
 </template>

@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted } from 'vue';
+import { onActivated, onBeforeMount, onMounted } from 'vue';
 
 const {menu,order} = defineProps({
     menu: {type: Object, required: true},
@@ -11,12 +11,11 @@ const { formatPrice } = usePriceFormatter();
 const modalFlag=ref(false);
 const modalItem = ref();
 const sectionItemsRef=ref([]);
-const itemRef=ref([]);
 const itemDescRef=ref([]);
 const newHeight=ref([])
 const { detachObject } = useDetachObject();
 const displayModal=(item,ops)=>{
-    // console.log(item.options)
+    console.log(item.options)
     const detachItem=detachObject(item);
     modalItem.value={...detachItem, options: [...detachItem.options.map((op)=> ({...op, choice: []})).concat(ops.map((op)=>({...op, choice: []})))]};
     // console.log(modalItem.value)
@@ -24,19 +23,17 @@ const displayModal=(item,ops)=>{
 }
 
 const fixItemHeights=() => { 
+    console.log(itemDescRef.value)
     //item max-height: 80px;
     //item name height: 20px;
     //item desc lin height: ~15px
-    // if(!itemDescRef.value || itemDescRef.value.length===0) return;
     let screenWidth=window.innerWidth;
     newHeight.value=[];
     if(order && screenWidth>740){
-        
         //full width -> 3x 280px
         //  840px -> 2x 300px
         // 740px -> 1x 400px
         let rowLength;
-        
         let itemIndex=0;
         for(let i=0; i<menu.sections.length;i++){//sections i
             // console.log(itemDescRef.value[0])
@@ -98,7 +95,7 @@ const fixItemHeights=() => {
                 newHeight.value.push(67);
             } else {
                 // console.log("push 80");
-                newHeight.value.push(80);
+                newHeight.value.push(76);
             }
         })                
     } 
@@ -109,32 +106,20 @@ const findIndex=(secIn,itIn) => { //find length of all sections before item inde
 }
 onMounted(async () => {
     await nextTick();
-    requestAnimationFrame(() => {
-        fixItemHeights();
-    });
-});
-
-const windowWidth = ref(window.innerWidth);
-
-const updateWidth = () => {
-  windowWidth.value = window.innerWidth;
-};
-
-onMounted(() => {
-  window.addEventListener("resize", updateWidth);
-});
-
-onUnmounted(() => {
-  window.removeEventListener("resize", updateWidth);
-});
-
-// Watch for changes in windowWidth
-watch(windowWidth, (newWidth, oldWidth) => {
-  console.log(`Window width changed from ${oldWidth} to ${newWidth}`);
-  requestAnimationFrame(() => {
     fixItemHeights();
-  })
 });
+onBeforeMount(() => {
+    itemDescRef.value.length=0;
+})
+onActivated(async() => {
+    await nextTick();
+    fixItemHeights();
+})
+const windowWidth = ref(window.innerWidth);
+const updateWidth = () => { windowWidth.value = window?.innerWidth;};
+onMounted(() => { window.addEventListener("resize", updateWidth);});
+onUnmounted(() => {window.removeEventListener("resize", updateWidth);});
+watch(windowWidth, () => {fixItemHeights();});
 </script>
 <template>
     <div class="menu-container">
@@ -147,14 +132,14 @@ watch(windowWidth, (newWidth, oldWidth) => {
             <div class="section-name">{{ section.name }}</div>
             <div class="section-description">{{ section?.description }}</div>
             <div class="section-items" :class="{'disabled': !order}" ref="sectionItemsRef">
-                <button  class="item-container" :disabled="!order" ref="itemRef"
+                <button  class="item-container" :disabled="!order"
                     v-for="(item,j) in section.items" :key="item._id"
-                    :style="{ height: newHeight[findIndex(i,j)] + 'px' }"
-                    @click="displayModal(item, section?.options)"
+                    @click="displayModal(item, section.options)"
+                    :style="{ height: `${newHeight[findIndex(i,j)]}px` }"
                     >
-                    <div class="item-title" :class="{'disabled': !order}">
+                    <div class="item-title">
                         <span class="item-name" :class="{'disabled': !order}">{{ item.name }}</span>
-                        <span class="item-price" :class="{'disabled': !order}">{{ formatPrice(item.price) }}</span>
+                        <span class="item-price">{{ formatPrice(item.price) }}</span>
                     </div>
                     <div class="item-description" ref="itemDescRef">{{ item.description }}</div>
                 </button>

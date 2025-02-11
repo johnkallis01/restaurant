@@ -25,7 +25,7 @@ function closeModal(){
 }
 function tabToAddOptionsBtn(event){
     if(event.key==='Tab') {
-        requestAnimationFrame(()=>{
+        nextTick(()=>{
             childRef.value[0].nameRef.click(); 
         });
     }
