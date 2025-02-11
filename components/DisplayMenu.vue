@@ -192,8 +192,8 @@ watch(windowWidth, () => {fixItemHeights();});
 @media (max-width: 800px){}
 @media (max-width: 600px){
     .modal.select{
-        width: 105vw;
-        left: 0;
+        width: 98vw;
+        left: 3vw;
         right: 0;
     }
 }
