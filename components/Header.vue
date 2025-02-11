@@ -30,23 +30,23 @@ onBeforeUnmount(() => logoutTimer.value ? clearInterval(logoutTimer.value):null)
           </button>
           <button class="welcome" v-if="loggedIn">{{"Welcome, " + userName.value}}</button>
         </ClientOnly>
-        <button class="btn-link"><nuxt-link to="/">Home</nuxt-link></button>
-        <button class="btn-link"><nuxt-link to="/menus"> Menus</nuxt-link></button>
-        <button class="btn-link" @click="!loggedIn ? loginButton.focus() : null"><nuxt-link to="/order">Order</nuxt-link></button>        
+        <nuxt-link to="/"><button class="btn-link">Home</button></nuxt-link>
+        <nuxt-link to="/menus"><button class="btn-link">Menus</button> </nuxt-link>
+        <nuxt-link to="/order"><button class="btn-link" @click="!loggedIn ? loginButton.focus() : null">Order</button> </nuxt-link>      
       </span>
       <span class="right-btns">
         <ClientOnly>
           <template v-if="loggedIn">
             <template v-if="isAdmin.value">
-              <button class="btn-link"><nuxt-link to="/orders">All Orders</nuxt-link></button>
-              <button class="btn-link" @click="dropdown=!dropdown"><nuxt-link ref="dropdownRef">Edit Menu</nuxt-link></button>
+              <nuxt-link to="/orders"><button class="btn-link">All Orders</button></nuxt-link>
+              <nuxt-link ref="dropdownRef"><button class="btn-link" @click="dropdown=!dropdown">Edit Menu</button></nuxt-link>
             </template>
             <Teleport to="body">
               <MenuDropDown v-if="dropdown"/>
             </Teleport>
-            <button class="btn-link" @click="logout()"><nuxt-link>Logout</nuxt-link></button>
+            <nuxt-link><button class="btn-link" @click="logout()">Logout</button></nuxt-link>
           </template>
-          <button class="btn-link" ref="loginButton" v-else><nuxt-link to="/auth/login">Login</nuxt-link></button>
+          <nuxt-link to="/auth/login" v-else><button class="btn-link" ref="loginButton">Login</button></nuxt-link>
         </ClientOnly>
       </span>
     </header>

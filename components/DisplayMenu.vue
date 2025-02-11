@@ -135,12 +135,12 @@ onMounted(async () => {
         fixItemHeights();
     });
 });
-// onActivated(() => {
-//     console.log('trigg')
-//     requestAnimationFrame(() => {
-//         fixItemHeights();
-//     })
-// })
+onActivated(() => {
+    console.log('trigg')
+    requestAnimationFrame(() => {
+        fixItemHeights();
+    })
+})
 </script>
 <template>
     <div class="menu-container">

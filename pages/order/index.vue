@@ -35,9 +35,10 @@ const nowMenus = computed(() => {
         </div>
           
       </div>
-      <div class="container-body" v-for="(menu,i) in nowMenus" :key="i">
+      <div class="container-body" v-for="(menu,i) in nowMenus" :key="i" v-if="nowMenus.length">
         <DisplayMenu :menu="menu" :order="true" v-if="i===index"/>
       </div>
+      <div v-else>Restaurant is Closed</div>
     </div>
 </template>
 <style scoped>
