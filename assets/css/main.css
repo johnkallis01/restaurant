@@ -21,6 +21,14 @@ body {
   font-family:'Segoe UI';
   background-color: rgb(22, 158, 165);
 }
+@media(max-height: 400px){
+  html{
+    width: 150vw;
+  }
+  .page-container{
+    width: 100vw;
+  }
+}
 a { text-decoration: none; color: black; }
 button{ border: none; font-size: 13px;}
 .main {
@@ -173,11 +181,10 @@ page container
   overflow: hidden;
   /* border: 1px solid pink; */
 }
-@media(max-width:500px){
+@media(max-width:700px){
   .section-description{
-    height: fit-content;
+    height: 30px;
     overflow: scroll;
-
   }
 }
 .section-items{   
@@ -196,7 +203,7 @@ page container
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  border-radius: 15px;
+  border-radius: 7px;
   color: black;
   width: 280px;
   height: 80px;
@@ -612,12 +619,11 @@ b:disabled{
   .section-items{
     grid-template-columns: 300px 300px;
   }
+  .section-description{
+    height: 30px;
+  }
 }
 @media (max-width: 840px){
-  .section-items{
-    
-    grid-template-columns: 300px 300px;
-  }
   .item-container{
     width: 300px;
   }

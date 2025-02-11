@@ -9,7 +9,6 @@ const today = ref({
   min: now.getMinutes(),
 });
 const index = ref(0);
-function visibleMenu(){return nowMenus.value[index.value];}
 const todayMenus = computed(()=>{
   return menuStore.menus.filter((menu)=>{
     return menu.days.some((day)=> day.day.position === today.value.day && day.open)
@@ -36,8 +35,8 @@ const nowMenus = computed(() => {
         </div>
           
       </div>
-      <div class="container-body">
-        <DisplayMenu :menu="visibleMenu()" :order="true"/>
+      <div class="container-body" v-for="(menu,i) in nowMenus" :key="i">
+        <DisplayMenu :menu="menu" :order="true" v-if="i===index"/>
       </div>
     </div>
 </template>

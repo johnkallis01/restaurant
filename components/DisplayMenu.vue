@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted } from 'vue';
+import { onActivated, onBeforeUnmount, onMounted } from 'vue';
 
 const {menu,order} = defineProps({
     menu: {type: Object, required: true},
@@ -23,102 +23,106 @@ const displayModal=(item,ops)=>{
     modalFlag.value=true;
 }
 const fixItemHeights=() => { 
+    console.log('triigered')
     //item max-height: 80px;
     //item name height: 20px;
     //item desc lin height: ~15px
-
-
     // if(!itemDescRef.value || itemDescRef.value.length===0) return;
+    let screenWidth=window.innerWidth;
     newHeight.value=[];
-        if(order){
-            // let screenWidth=window.innerWidth;
-            // //full width -> 3x 280px
-            // //  840px -> 2x 300px
-            // // 740px -> 1x 400px
-            // let rowLength;
-            // if(screenWidth<741) rowLength=1;
-            // else if(screenWidth<841) rowLength=2;
-            // else rowLength=3;
-            // let itemIndex=0;
-            // for(let i=0; i<menu.sections.length;i++){//sections i
-            //     for(let j=0; j< Math.ceil(menu.sections[i].items.length/rowLength); j++){ //j number of rows
-            //         let tallest=0;
-            //         let remainder=menu.sections[i].items.length%rowLength;
-            //         if(Math.ceil(menu.sections[i].items.length/rowLength)-1===j && remainder!==0){
-            //             for(let k=0;k<remainder;k++){
-            //                 console.log(itemDescRef.value[itemIndex].offsetHeight)
-            //                 itemIndex+=1;
-            //             }
-            //         }else{
-            //             for(let k=0;k<rowLength; k++){ //row 0,1,2
-            //                 console.log(itemDescRef.value[itemIndex].offsetHeight)
-            //                 // if(tallest < itemDescRef[itemIndex].offsetHeight){
-            //                 //      tallest=itemDescRef[itemIndex].offsetHeight;
-            //                 // }
-            //                 itemIndex+=1;
-            //             }
-            //         }
-            //         //set all heights to tallest
-            //         if (tallest === 0) {
-            //             // console.log("push 20");
-            //             for(let k=0;k<rowLength;k++){
-            //                 newHeight.value.push(20);
-            //             } 
-            //         } else if (tallest < 20) {
-            //             // console.log("push 38");
-            //             for(let k=0;k<rowLength;k++){
-            //                 newHeight.value.push(40);
-            //             } 
-            //         } else if (tallest < 28) {
-            //             // console.log("push 50");
-            //             for(let k=0;k<rowLength;k++){
-            //                 newHeight.value.push(52);
-            //             } 
-            //         } else if (tallest < 42) {
-            //             // console.log("push 65");
-            //             for(let k=0;k<rowLength;k++){
-            //                 newHeight.value.push(67);
-            //             } 
-            //         } else {
-            //             // console.log("push 80");
-            //             for(let k=0;k<rowLength;k++){
-            //                 newHeight.value.push(80);
-            //             } 
-            //         }
-            //     } 
-            // };
-        }else{
-            // menu.sections.forEach(section=>{
-            //     section.items.forEach(item=>{
-            itemDescRef.value.forEach(item=>{
+    if(order && screenWidth>740){
+        
+        //full width -> 3x 280px
+        //  840px -> 2x 300px
+        // 740px -> 1x 400px
+        let rowLength;
+        
+        let itemIndex=0;
+        for(let i=0; i<menu.sections.length;i++){//sections i
+            // console.log(itemDescRef.value[0])
+            if(screenWidth<971) rowLength=2;
+            else rowLength=3;
+            // console.log('num of rows',rowLength)
+            let numberOfRows=Math.ceil(menu.sections[i].items.length/rowLength);
+            for(let j=0; j< numberOfRows; j++){ //j number of rows
+                let tallest=0;
+                let remainder=menu.sections[i].items.length%rowLength;
+                if(Math.ceil(menu.sections[i].items.length/rowLength)-1===j && remainder!==0){
+                    rowLength=remainder;
+                    // console.log('rl=%', rowLength)
+                }
+                // console.log('rl',rowLength)
+                for(let k=0;k<rowLength; k++){ //row 0,1,2
+                    // console.log(itemDescRef.value[itemIndex],itemDescRef.value[itemIndex].offsetHeight)
+                    if(tallest < itemDescRef.value[itemIndex].offsetHeight) tallest=itemDescRef.value[itemIndex].offsetHeight;
+                    // console.log('itIndex',tallest)
+                    itemIndex+=1;
+                }
+                for(let k=0;k<rowLength; k++){ 
+                    if (tallest === 0) { //no lines
+                            // console.log("push 20");
+            
+                            newHeight.value.push(20);
+                    
+                        } else if (tallest < 20) { //1 line
+                            // console.log("push 38");
+                
+                            newHeight.value.push(40);
+                    
+                        } else if (tallest < 28) { //2 lines
+                            // console.log("push 50");
+                
+                            newHeight.value.push(52);
+                            
+                        } else if (tallest < 42) { //3 lines
+                            // console.log("push 65");
+                        
+                            newHeight.value.push(67);
+                    
+                        } else { //4+ lines
+                            // console.log("push 80");
+                    
+                            newHeight.value.push(80);
+                    
+                        }
+                }
+                
+                //set all heights to tallest
 
-            // })
-                    let height = item.offsetHeight;
-                    console.log(height)
-                    //set all heights to tallest
-                    if (height === 0) {
-                        // console.log("push 20");
-                        newHeight.value.push(20);
-                    } else if (height < 20) {
-                        // console.log("push 38");
-                        newHeight.value.push(40);
-                    } else if (height < 28) {
-                        // console.log("push 50");
-                        newHeight.value.push(52);
-                    } else if (height < 42) {
-                        // console.log("push 65");
-                        newHeight.value.push(67);
-                    } else {
-                        // console.log("push 80");
-                        newHeight.value.push(80);
-                    }
-            //     })
-            })
-            
-            
-                 
-        } 
-        // console.log(newHeight.value)
+            } 
+        };
+    }else{
+        // menu.sections.forEach(section=>{
+        //     section.items.forEach(item=>{
+        itemDescRef.value.forEach(item=>{
+
+        // })
+        let height = item.offsetHeight;
+        // console.log(height)
+        //set all heights to tallest
+        if (height === 0) {
+            // console.log("push 20");
+            newHeight.value.push(20);
+        } else if (height < 20) {
+            // console.log("push 38");
+            newHeight.value.push(40);
+        } else if (height < 28) {
+            // console.log("push 50");
+            newHeight.value.push(52);
+        } else if (height < 42) {
+            // console.log("push 65");
+            newHeight.value.push(67);
+        } else {
+            // console.log("push 80");
+            newHeight.value.push(80);
+        }
+        //     })
+        })
+        
+        
+                
+    } 
+    // console.log(newHeight.value)
 }
     
     
@@ -131,6 +135,12 @@ onMounted(async () => {
         fixItemHeights();
     });
 });
+// onActivated(() => {
+//     console.log('trigg')
+//     requestAnimationFrame(() => {
+//         fixItemHeights();
+//     })
+// })
 </script>
 <template>
     <div class="menu-container">
@@ -188,14 +198,14 @@ onMounted(async () => {
     justify-content: center;
     width: 100%;
 }
-@media (max-width: 600px){
+/* @media (max-width: 600px){
     .item-container{
         height: 60px;
         /* overflow: hidden; */
-    }
+  /*   }
     .item-description{
         height: 30px;
         overflow: scroll;
     }
-}
+} */
 </style>
