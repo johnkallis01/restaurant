@@ -673,10 +673,14 @@ b:disabled{
     left: 10vw;
   }
   .modal.select{
-    width: 80vw;
+    width: 90vw;
     height: 40vh;
-    left: 10vw;
+    left: 5vw;
     top: 20vh;
+  }
+  .modal.delete{
+    height: 20vh;
+    top: 30vh;
   }
 }
 @media (max-width: 740px) {
