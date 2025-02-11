@@ -254,7 +254,7 @@ onMounted(()=>{ if(!localItem.name){ isNew.value = true; focusNameInput();}});
 }
 @media(max-width: 400px){
     .modal.options{
-        width: 110vw;
+        width: 105vw;
     }
 }
 </style>

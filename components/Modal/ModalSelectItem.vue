@@ -205,6 +205,9 @@ onMounted(()=>{
     </div>
 </template>
 <style scoped>
+.tab-container{
+    height: 100%;
+}
 .option-cont{
     display: flex;
     flex-direction: column;
@@ -215,6 +218,7 @@ onMounted(()=>{
 .qty button{
     margin: 0 6px;
 }
+
 input[type="checkbox"]:focus {
     outline: none;
     box-shadow: 0 0 10px rgba(0, 0, 255, 0.5);
