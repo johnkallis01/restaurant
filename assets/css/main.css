@@ -31,18 +31,13 @@ main {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: inherit;
+  width: 110%;
   height: 94vh;
   overflow: auto;
   background-size: cover;
   background-position: top left;
   background-repeat: no-repeat;
   background-image: url("https://i.pinimg.com/736x/e6/7d/af/e67daf68a6e8f6d4a9283cb7d64b098c.jpg");
-}
-@media only screen and (max-width: 700px ){
-  main{
-    width: 100vw;
-  }
 }
 header {
   position: fixed;
@@ -68,7 +63,7 @@ header {
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  margin-right: 20px;
+  padding-right: 20px;
 }
 /**************
 page container
