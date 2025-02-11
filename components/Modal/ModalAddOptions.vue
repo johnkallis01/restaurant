@@ -105,12 +105,6 @@ onMounted(()=>{
     border: 1px solid black;
     box-sizing: border-box;
 }
-.form-body{
-    height: 100%;
-    width: 100%;
-    padding: 5px;
-    overflow-y: auto;
-}
 .form-actions{
     display: flex;
     justify-content: flex-end;
@@ -123,9 +117,5 @@ onMounted(()=>{
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-}
-.modal-container{
-    height: 100%;
-    width: 100%;
 }
 </style>

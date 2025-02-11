@@ -252,33 +252,9 @@ onMounted(()=>{ if(!localItem.name){ isNew.value = true; focusNameInput();}});
 .item-title{
     padding-top: 3px;
 }
-@media(max-width: 600px){
+@media(max-width: 400px){
     .modal.options{
-        width: 100vw;
-        left: 0;
-    }
-    .item-description textarea{
-        width: 300px;
-    }
-    .item-title{
-        width: 400px;
-    }
-    .item-a-r-o-titles{
-        width: 340px;
-    }
-    .item-a-r-o-components{
-        width: 340px;
-        padding: 0;
-        margin: 0;
-    }
-
-}
-@media(max-width: 500px){
-    .item-container{
-        width: 350px;
-    }
-    .item-title{
-      width: 350px;
+        width: 110vw;
     }
 }
 </style>

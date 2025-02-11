@@ -146,7 +146,6 @@ onMounted(()=>{
             </div>  
         </div>
         <div class="modal-content">
-  
             <div class="item-a-r-o-titles">
                 <template v-for="oar in OAR" :key="oar.name">
                     <button class="btn"
@@ -157,34 +156,39 @@ onMounted(()=>{
                 </template>
             </div>
             <div class="tab-container">
-                <template v-for="(oar, i) in OAR" :key="i">
-                    <div class="container aro" v-if="oar.flag && oar.hasValue">
-                        <div class="options-cont" v-for="(val, j) in localItem[oar.name]" :key="j">
-                            <div class="option-cont" v-if="optionsFlag">
-                                <div class="tab-name">{{ val.name + ': '}}{{ val.req &&isDisabled ? '(required)':'' }}</div> 
-                                <div class="option-values">
-                                    <div class="item-title" v-for="(op, k) in val.content" :key="k">
+                <template v-for="(oar, i) in OAR" :key="i"> <!--option remove addon comment-->
+                    <div class="container" v-if="oar.flag && oar.hasValue">
+                        <div class="options-row" v-if="optionsFlag">
+                            <div v-for="(val, j) in localItem[oar.name]" :key="j"><!--content within-->
+                                <div class="checkbox-column">
+                                    <div class="tab-name">{{ val.name + ': '}}{{ val.req &&isDisabled ? '(required)':'' }}</div> 
+                                    <div class="item-title select" v-for="(op, k) in val.content" :key="k">
                                         <input  type="checkbox" :id="'checkbox-'+j+k" class="checkbox"
                                             :value="op" v-model="selectedItem[oar.name][j].choice"
                                             @keydown.enter="selectedItem.options[j].choice.length>0 ? handleOpKeydownEnter(j,op) : selectedItem.options[j].choice.push(op)"
                                             @change="selectedItem.options[j].choice.length>1 ? selectedItem.options[j].choice.splice(0,1) : selectedItem;"/>
-                                        <label class="item-name" :for="'checkbox-'+j+k">{{ op.name }}
-                                        <span class="item-price" :for="'checkbox-'+j+k"
-                                            v-if="Number(op.price)>0">{{ '-'+ formatPrice(op.price)}}</span>
+                                        <label class="item-name" :for="'checkbox-'+j+k">
+                                            <span>{{ op.name }}</span>
+                                            <span class="item-price" :for="'checkbox-'+j+k"
+                                                v-if="Number(op.price)>0">{{ '-'+ formatPrice(op.price)}}
+                                            </span>
                                         </label>
                                     </div>
-                                </div> 
+                                </div>
                             </div>
-                            <span v-if="addOnsFlag || removesFlag" class="item-title half">
+                        </div>
+                        <div v-for="(val, j) in localItem[oar.name]" :key="j">
+                            <div class="item-title addrem" v-if="addOnsFlag || removesFlag">
                                 <input class="checkbox" type="checkbox" :id="'checkbox-'+j" 
                                     :value="val" v-model="selectedItem[oar.name]"
                                     @keydown.enter="selectedItem[oar.name].push(val)"
                                     />
                                 <label class="item-name" :for="'checkbox-'+j">{{ val.name }}
-                                <span class="item-price" :for="'checkbox-'+j" v-if="Number(val.price)>0">{{ '-'+ formatPrice(val.price)}}</span>
+                                    <span class="item-price" :for="'checkbox-'+j" v-if="Number(val.price)>0">{{ '-'+ formatPrice(val.price)}}</span>
                                 </label>
-                            </span>
+                            </div>  
                         </div>
+                        
                     </div>
                 </template>
                 <div v-if="commentsFlag" class="text-field">
@@ -192,7 +196,6 @@ onMounted(()=>{
                         v-model="selectedItem.comments"></textarea>
                 </div>
             </div>
-
         </div>
         <div class="form-actions">
             <span class="warning">{{ isDisabled ? "required option not selected!" : null }}</span>
@@ -202,7 +205,10 @@ onMounted(()=>{
     </div>
 </template>
 <style scoped>
-
+.option-cont{
+    display: flex;
+    flex-direction: column;
+}
 .qty{
     margin: 0 10px;
 }
@@ -222,7 +228,7 @@ input[type="checkbox"]:focus {
     height: 80px;
 }
 .warning{
-    margin-right: 15px;
+    padding-right: 15px;
     color: red;
     font-size: 14px;
 }
@@ -233,7 +239,7 @@ input[type="checkbox"]:focus {
 .options{
     display: flex;
     justify-content: space-between;
-    margin: 5px 20px;
+    padding: 5px 20px;
     gap: 10px;
 }
 .options-name{
@@ -243,37 +249,50 @@ input[type="checkbox"]:focus {
     display: flex;
     flex-direction: row;
     margin-left: 10px;
+    width: inherit;
+    /* border: 1px solid green; */
+}
+.checkbox-column{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    /* box-sizing: border-box;
+    border: 1px solid red; */
+}
+.options-row{
+    display: grid;
+    grid-template-columns: 210px 210px;
+    justify-content: flex-start;
+    flex-direction: row;
+    padding-left: 10px;
+    /* border: 1px solid green; */
+}
+.options-container{
+    display: flex;
+    justify-content: center;
 }
 .options-value{
     margin-left: 5px;
 }
 .btn.close{
     margin: 5px;
-    border: 1px solid black;
-    box-sizing: border-box;
+    /* border: 1px solid black;
+    box-sizing: border-box; */
 }
-.form-body{
-    height: 100%;
-    padding: 5px;
-    overflow-y: auto;
-}
-.item-title{
-    height: 60px;
-    border-bottom: 2px solid black;
-}
+/* .item-tiitle */
 .checkbox{
     display: flex;
     justify-content: flex-start;
 }
-.item-title{
+.item-title select{
     display: flex;
     justify-content: space-between;
     flex-direction: row;
     padding: 5px;
-    margin: 0;
 }
-.item-title.half{
-    width: 50%;
+.item-title.addrem{
+    width: fit-content;
 }
 .item-title label{
     margin-left: 5px;
@@ -283,15 +302,16 @@ input[type="checkbox"]:focus {
     justify-content: flex-end;
     align-items: center;
     padding: 5px;
-    border: 1px solid green;
+    /* border: 1px solid green; */
+}
+.form-actions button{
+    background-color: transparent;
 }
 .container{
-    border-radius: 15px;
-    height: 100%;
-    width: 100%;
-}
-.container.aro{
     display: flex;
     justify-content: flex-start;
+    width: 95%;
+    height: 100%;
+    scrollbar-width: none;
 }
 </style>

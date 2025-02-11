@@ -225,13 +225,14 @@ defineExpose({nameRef});
     width: 100%;
 }
 .btn.delete{
-    margin: 7px 3px 0 0;
+    /* margin: 7px 3px 0 0; */
 }
 .options-content-row{
     display: flex;
     justify-content: flex-start;
     flex-wrap: wrap;
     padding: 5px;
+    /* border: 1px solid green; */
 }
 .text-feild input{
     font-size: 18px;
@@ -244,5 +245,10 @@ defineExpose({nameRef});
 }
 .option{
     font-size: 16px;
+}
+@media(max-width: 500px){
+    .tab-container{
+        height: 20%;
+    }
 }
 </style>

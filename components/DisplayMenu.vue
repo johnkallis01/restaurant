@@ -151,7 +151,7 @@ watch(windowWidth, () => {fixItemHeights();});
         </div>
         <div v-else>{{ "Loading..." }}</div>
         <div class="modalWrapper" v-if="modalFlag">
-            <div class="modal" >
+            <div class="modal select">
                 <ModalSelectItem :item="modalItem" :menu="menu" @close-modal="()=>modalFlag=false"/> 
             </div>
         </div>
