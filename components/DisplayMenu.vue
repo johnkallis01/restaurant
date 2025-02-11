@@ -117,11 +117,13 @@ const updateWidth = () => { windowWidth.value = window?.innerWidth;};
 onMounted(() => { 
     window.addEventListener("resize", updateWidth);
     window.addEventListener("orientationchange", updateWidth);
+    window.addEventListener("change", updateWidth);
 
 });
 onUnmounted(() => {
     window.removeEventListener("resize", updateWidth);
     window.removeEventListener("orientationchange", updateWidth);
+    window.removeEventListener("change", updateWidth);
 });
 watch(windowWidth, () => {fixItemHeights();});
 </script>
@@ -181,14 +183,18 @@ watch(windowWidth, () => {fixItemHeights();});
     justify-content: center;
     width: 100%;
 }
-/* @media (max-width: 600px){
-    .item-container{
-        height: 60px;
-        /* overflow: hidden; */
-  /*   }
-    .item-description{
-        height: 30px;
-        overflow: scroll;
+@media (max-width: 920px){
+    .modal.select{
+        width: 90vw;
+        left: 5vw;
     }
-} */
+}
+@media (max-width: 800px){}
+@media (max-width: 600px){
+    .modal.select{
+        width: 105vw;
+        left: 0;
+        right: 0;
+    }
+}
 </style>
