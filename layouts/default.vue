@@ -25,7 +25,7 @@ const getScreenHeight=() => {
 <template>
   <div class="app">
     <Header ref="childRef" />
-    <main class="main">
+    <main>
       <div class="modalWrapper" v-if="cartStore.isCartOpen">
         <Cart ref="cartRef" />
       </div>

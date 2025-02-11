@@ -3,9 +3,6 @@ import User from "~/server/models/User.model";
 export default defineEventHandler(async (event) => {
     console.log('GET /api/orders/ by date');
     const authHeader = event.req.headers.authorization;
-
-
-
     if (!authHeader) {
         throw createError({ statusCode: 401, message: 'Unauthorized: No token provided' });
     }
@@ -21,8 +18,13 @@ export default defineEventHandler(async (event) => {
     }
     if(isAdmin){
       try{
-        const start = event.req.originalUrl.slice(18,41);
-        const end = event.req.originalUrl.slice(47,event.req.originalUrl.length-1)
+        const url = event.req.originalUrl;
+        // const start = event.req.originalUrl.slice(18,41);
+        let start = url.split('?')[1];
+        console.log(start)
+        // const end = event.req.originalUrl.slice(47,event.req.originalUrl.length-1)
+        let end = url.split('?')[2];
+        console.log(end)
         const orders = await Order.find({
           createdAt: { $gte: start, $lte: end }
         })
