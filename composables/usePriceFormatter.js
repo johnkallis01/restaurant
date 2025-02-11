@@ -9,7 +9,7 @@ export function usePriceFormatter(){
         const index = price.indexOf('.');
         // console.log(index)
         // console.log(price)
-        if(index > 0){
+        if(index >= 0){
             if(price[index]===price[price.length-3]) return "$" + price;
             else if(index===0)  return "$0"+price; 
             else if (price[index]===price[price.length-2]) return "$" + price+"0";
