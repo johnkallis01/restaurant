@@ -56,10 +56,11 @@ const fixItemHeights=() => {
                     itemIndex+=1;
                 }
                 for(let k=0;k<rowLength; k++){ 
-                    if (tallest === 0) { //no lines
-                        // console.log("push 20");
-                        newHeight.value.push(20);
-                    } else if (tallest < 20) { //1 line
+                    // if (tallest === 0) { //no lines
+                    //     // console.log("push 20");
+                    //     newHeight.value.push(20);
+                    // } else 
+                    if (tallest < 20) { //1 line
                         // console.log("push 38");
                         newHeight.value.push(40);
                     } else if (tallest < 28) { //2 lines
@@ -83,7 +84,7 @@ const fixItemHeights=() => {
             //set all heights to tallest
             if (height === 0) {
                 // console.log("push 20");
-                newHeight.value.push(20);
+                newHeight.value.push(30);
             } else if (height < 20) {
                 // console.log("push 38");
                 newHeight.value.push(40);
