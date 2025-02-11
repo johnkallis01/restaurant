@@ -117,8 +117,15 @@ onActivated(async() => {
 })
 const windowWidth = ref(window.innerWidth);
 const updateWidth = () => { windowWidth.value = window?.innerWidth;};
-onMounted(() => { window.addEventListener("resize", updateWidth);});
-onUnmounted(() => {window.removeEventListener("resize", updateWidth);});
+onMounted(() => { 
+    window.addEventListener("resize", updateWidth);
+    window.addEventListener("orientationchange", updateWidth);
+
+});
+onUnmounted(() => {
+    window.removeEventListener("resize", updateWidth);
+    window.removeEventListener("orientationchange", updateWidth);
+});
 watch(windowWidth, () => {fixItemHeights();});
 </script>
 <template>
