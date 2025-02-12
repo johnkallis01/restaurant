@@ -22,26 +22,26 @@ const enter=(bar) => {
 </script>
 <template>
     <div class="outside-graph">
-    <div class="title">{{title}}</div>
-    <div class="graph-container">
-        <div class="left-axis-title">Number of Items Sold</div>
-        <div class="graph-body">
-            <div class="bottom-border"></div>
-            <div v-for="([item, count], i) in items" :key="i" class="graphs">
+        <div class="title">{{title}}</div>
+        <div class="graph-container">
+            <div class="left-axis-title">Number of Items Sold</div>
+            <div class="graph-body">
+                <div class="bottom-border"></div>
+                <div v-for="([item, count], i) in items" :key="i" class="graphs">
+                
+                        <Transition @before-enter="beforeEnter" @enter="enter" appear>
+                            <div class="bars" ref="bars">
+                                <div class="count">{{ count }}</div>
+                            </div>
+                        </Transition>
+                        <div class="item-name">
+                            <span class="name-text">{{ item }}</span>
+                        </div> 
             
-                    <Transition @before-enter="beforeEnter" @enter="enter" appear>
-                        <div class="bars" ref="bars">
-                            <div class="count">{{ count }}</div>
-                        </div>
-                    </Transition>
-                    <div class="item-name">
-                        <span class="name-text">{{ item }}</span>
-                    </div> 
-          
+                </div>
             </div>
         </div>
-    </div>
-    <div class="bottom-axis-title">Item Names</div>
+        <div class="bottom-axis-title">Item Names</div>
     </div>
 </template>
 <style scoped>
@@ -74,7 +74,7 @@ const enter=(bar) => {
     left: 0;
     top: 0;
     height: 94vh;
-    width: 100vw;
+    width: 100%;
     font-size: 12px;
     background-color: rgb(247, 249, 252);
     overflow: auto;
@@ -90,13 +90,14 @@ const enter=(bar) => {
     height: 170px;
 }
 .graph-container{
-    width: 98%;
+    width: 98vw;
     height: 400px;
     padding: 20px;
     border-radius: 0;
     position: relative;
-    left: 0;
+    left: 20px;
     top:0;
+    overflow: auto;
 }
 .count{
     position: relative;

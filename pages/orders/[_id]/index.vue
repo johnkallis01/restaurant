@@ -27,15 +27,18 @@ const order = cartStore.orders.find((order)=>order._id===id) || null;
     </div>
 </template>
 <style scoped>
+.container-body{
+    padding-bottom: 20px;
+}
 .container-title{
     justify-content: flex-start;
     background-color: grey;
 }
 .title-text{
-    margin: 0 10px;
+    padding: 0 10px;
 }
 .row{
-    margin: 0 20px;
+    padding: 0 20px;
 }
 .items{
     display: grid;

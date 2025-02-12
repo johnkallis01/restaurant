@@ -5,7 +5,7 @@ const containerRef=ref(null);
 const titleRef=ref(null);
 const getHeight=() => {
     if(containerRef.value?.offsetHeight<30) {
-        if(titleRef.value) titleRef.value.style.borderRadius='10px';
+        if(titleRef.value) titleRef.value.style.borderRadius='5px';
     }
 }
 onMounted(getHeight)
@@ -51,8 +51,9 @@ onMounted(getHeight)
 }
 .item-title{
     padding: 0;
-    border-radius: 13px 13px 0 0;
+    border-radius: 5px 5px 0 0;
     background-color: rgb(202, 205, 205);
+    width: 100%;
 }
 .item-name{
     margin: 0 0 0 8px;
