@@ -24,6 +24,11 @@ const newItem = ref({
         position: 0,
         _id: uuidv4(),
 });
+function updateMenu(){
+    const sectionIndex = menu.sections.findIndex(sec => sec._id === section._id);
+    localMenu.sections[sectionIndex]=localSection;
+    menuStore.updateMenu(localMenu);
+}
 function postSectionEdit(str){
     switch(str){
         case 'name':
@@ -34,9 +39,7 @@ function postSectionEdit(str){
             break;
     }
     if(!isNew.value){
-        const sectionIndex = menu.sections.findIndex(sec => sec._id === section._id);
-        localMenu.sections[sectionIndex]=localSection;
-        menuStore.updateMenu(localMenu);
+        updateMenu();
     }
     
 }
@@ -68,14 +71,26 @@ function addNewItem(){
         _id: uuidv4(),
     }
 }
-
+const onDragStart=(index) => {
+    draggedItemIndex.value=index;
+}
+const onDragOver=(event) => {
+    event.preventDefault();
+}
+const onDrop=(newIndex)=>{
+    if(!draggedItemIndex.value) return;
+    const draggedItem = section.items[draggedItemIndex.value];
+    localSection.items.splice(draggedItemIndex.value, 1);
+    
+    localSection.items.splice(newIndex,0,draggedItem);
+    localSection.items.forEach((item, i)=> item.position=i)
+    updateMenu();
+    draggedItemIndex.value=null;
+}
 const focusDescriptionInput = useFocusInput(descriptionInputRef,editDescription);
 const focusNameInput = useFocusInput(nameInputRef, editName);
 const tabToDescription = useTabToInput(focusDescriptionInput);
 onMounted(()=>{if(!localSection.name){isNew.value = true;focusNameInput();}})
-function sortItems(items) {
-    return items.sort((a,b)=>a.position - b.position)
-}
 </script>
 <template>
     <div class="section-container">
@@ -144,8 +159,7 @@ function sortItems(items) {
                 :menu="localMenu"
                 @send-new-item-flag="addItem=false"/> <!--v-for="(item,i) in "sortItems(localSection.items) -->
             <EditItem 
-                v-for="(item,i) in sortItems(localSection.items)"
-                 
+                v-for="(item,i) in localSection.items"
                 :key="item._id"
                 ref="it"
                 :item="item"

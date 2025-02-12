@@ -138,7 +138,7 @@ onMounted(()=>{ if(!localItem.name){ isNew.value = true; focusNameInput();}});
                     <span class="item-name"
                         v-if="localItem.name"
                         @click="focusNameInput"
-                        >{{ localItem.name + ' ' + localItem.position}}</span>
+                        >{{ localItem.name}}</span>
                     <span class="placeholder-color"
                         @click="focusNameInput"
                         v-else>{{ 'name' }}</span>
