@@ -707,14 +707,6 @@ b:disabled{
       border-radius: 0px;
       overflow: auto;
   }
-  .section-items{   
-      display: flex;
-      align-content: center;
-      align-items: center;
-      justify-content: center;
-      margin: 0;
-      padding: 0;
-  }
   .text-field.description textarea{
     width: 55vw;
   }
@@ -745,26 +737,15 @@ b:disabled{
     width: 92vw;
   }
 }
-@media(max-width: 600px){
-  .item-description textarea{
-      width: 300px;
-  }
-  .item-title{
-      width: 400px;
-  }
-  .item-a-r-o-titles{
-      width: 80%;
-  }
-}
-@media(max-width: 500px){
-  .item-container{
-      width: 350px;
-  }
-  .item-title{
-    width: 340px;
-  }
-  .item-a-r-o-titles button{
-    width: 90%;
+@media(max-width: 700px){
+  .section-items{   
+    display: flex;
+    align-content: center;
+    align-items: center;
+    justify-content: center;
     margin: 0;
-  }
+    padding: 0;
 }
+}
+
+

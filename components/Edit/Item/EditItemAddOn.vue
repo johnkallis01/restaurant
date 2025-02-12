@@ -117,17 +117,8 @@ onMounted(()=>{
 }
 @media (max-width: 840px){
     .item-title{
-        width: 300px;
-    }
-}
-@media (max-width: 740px) {
-    .item-title{
-        width: 400px;
-    }
-}
-@media(max-width: 500px){
-    .item-title{
-        width: 350px;
+        width: 280px;
+
     }
 }
 </style>

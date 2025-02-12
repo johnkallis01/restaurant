@@ -8,7 +8,6 @@ const {section, menu} = defineProps({
 const menuStore = useMenuStore();
 const localMenu = reactive(menu);
 const localSection = reactive(section);
-const draggedItemIndex=ref(null);
 const deleteModalFlag=ref(false); const addOptionsModalFlag=ref(false);
 const nameInputRef=ref(null); const descriptionInputRef = ref(null);
 const editName=ref(false); const editDescription = ref(false);
@@ -71,12 +70,7 @@ function addNewItem(){
         _id: uuidv4(),
     }
 }
-const onDragStart=(index) => {
-    draggedItemIndex.value=index;
-}
-const onDragOver=(event) => {
-    event.preventDefault();
-}
+const draggedItemIndex=ref(null);
 const onDrop=(newIndex)=>{
     if(!draggedItemIndex.value) return;
     const draggedItem = section.items[draggedItemIndex.value];
@@ -161,12 +155,11 @@ onMounted(()=>{if(!localSection.name){isNew.value = true;focusNameInput();}})
             <EditItem 
                 v-for="(item,i) in localSection.items"
                 :key="item._id"
-                ref="it"
                 :item="item"
                 :section_id="localSection._id"
                 :menu="localMenu"
-                @dragstart="onDragStart(i)"
-                @dragover="onDragOver"
+                @dragstart="draggedItemIndex=i"
+                @dragover.prevent
                 @drop="onDrop(i)"
                 draggable="true"/>
         </div>

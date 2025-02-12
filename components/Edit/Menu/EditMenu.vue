@@ -44,6 +44,16 @@ const getCloseTimes = (name) => {
     localMenu.name=name;
     showTimes.value=false;
 }
+const draggedSectionIndex=ref(null);
+const onDrop=(newIndex)=>{
+    if(!draggedSectionIndex.value) return;
+    const draggedSection = localMenu.sections[draggedSectionIndex.value];
+    localMenu.sections.splice(draggedSectionIndex.value, 1);
+    localMenu.sections.splice(newIndex,0,draggedSection);
+    localMenu.sections.forEach((sec, i)=> sec.position=i)
+    menuStore.updateMenu(localMenu);
+    draggedSectionIndex.value=null;
+}
 </script>
 <template>
     <div class="menu-container">
@@ -76,8 +86,14 @@ const getCloseTimes = (name) => {
                 <div class="section-container" v-if="addSection">
                     <EditSection :section="newSection" :menu="localMenu" @send-new-section-flag="getNewSectionFlag"/>
                 </div>
-                <div class="section-container" v-for="sec in localMenu.sections" :key="sec._id">
-                    <EditSection :section="sec" :menu="localMenu" />              
+                <div class="section-container" v-for="(sec,i) in localMenu.sections" :key="sec._id">
+                    <EditSection 
+                        :section="sec" 
+                        :menu="localMenu"
+                        @dragstart="draggedSectionIndex=i"
+                        @dragover.prevent
+                        @drop="onDrop(i)"
+                        draggable="true"/>              
                 </div>
             </div>
         </div>

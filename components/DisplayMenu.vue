@@ -107,11 +107,11 @@ onMounted(async () => {
 });
 onBeforeMount(() => {
     itemDescRef.value.length=0;
-})
-onActivated(async() => {
-    await nextTick();
-    fixItemHeights();
-})
+});
+// onActivated(async() => {
+//     await nextTick();
+//     fixItemHeights();
+// });
 const windowWidth = ref(window?.innerWidth);
 const updateWidth = () => { windowWidth.value = window?.innerWidth;};
 onMounted(() => { 
@@ -186,14 +186,43 @@ function sortItems(items) {
     justify-content: center;
     width: 100%;
 }
-@media (max-width: 520px){
+@media(max-width: 520px){
     .modal.select{
         width: 100vw;
         left: 1vw;
         height: 30vh;
     }
-    
+  .item-container{
+      width: 350px;
+  }
+  .item-title{
+    width: 340px;
+  }
+  .item-a-r-o-titles button{
+    width: 90%;
+    margin: 0;
+  }
 }
-@media (max-width: 840px){}
-
+@media(max-width: 600px){
+  .item-description textarea{
+      width: 300px;
+  }
+  .item-title{
+      width: 290px;
+  }
+  .item-a-r-o-titles{
+      width: 80%;
+  }
+}
+@media (max-width: 840px){
+  .item-container{
+    width: 300px;
+  }
+  .button-name{
+    width: 20px;
+  }
+  .section-items{
+    grid-template-columns: 300px 300px;
+  }
+}
 </style>
