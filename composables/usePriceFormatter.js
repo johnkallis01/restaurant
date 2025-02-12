@@ -10,8 +10,11 @@ export function usePriceFormatter(){
         // console.log(index)
         // console.log(price)
         if(index >= 0){
-            if(price[index]===price[price.length-3]) return "$" + price;
-            else if(index===0)  return "$0"+price; 
+            if(price[index]===price[price.length-3] && price.length >= "0.00".length) return "$" + price;
+            if(index===0){
+                if(price[index]===price[price.length-3]) return "$0"+price;
+                else return "$0"+price+"0";
+            }  
             else if (price[index]===price[price.length-2]) return "$" + price+"0";
             else return "$" + Number(price).toFixed(2);
         }else{

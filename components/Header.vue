@@ -68,9 +68,8 @@ onBeforeUnmount(() => logoutTimer.value ? clearInterval(logoutTimer.value):null)
   }
 }
 .cart-btn{
-  padding: 2px 4px;
+  padding: 5px 3vw;
   border-radius: 15px;
-  margin: 0px 8px;
   background-color: transparent;
 }
 .cart-btn:hover{
@@ -82,7 +81,6 @@ onBeforeUnmount(() => logoutTimer.value ? clearInterval(logoutTimer.value):null)
   align-items: center;
   color: black;
   background-color: transparent;
-  margin: 0 5px;
   padding: 2px 5px;
   border: none;
   text-overflow: visible;

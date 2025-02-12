@@ -76,6 +76,9 @@ const deleteItem=(i)=>{cartStore.removeItem(i);}
     </div>
 </template>
 <style scoped>
+button{
+    background-color: transparent;
+}
 .item-mods{
     font-size: 14px;
     margin-left: 45px;
@@ -93,6 +96,7 @@ const deleteItem=(i)=>{cartStore.removeItem(i);}
 .btn.submit{
     border: 2px solid black;
     box-sizing: border-box;
+    margin: 0 8px;
 }
 .item-price{
     align-items: center;
@@ -100,19 +104,14 @@ const deleteItem=(i)=>{cartStore.removeItem(i);}
 }
 .cart-container{
     position: fixed;
-    left: 4vw;
-    top: 12vh;
+    left: 2vw;
+    top: 7vh;
     height: 75%;
     width: 50vw;
     border: 2px solid black;
     border-radius: 5px;
     background-color: white;
     z-index: 100;
-}
-@media (max-width: 740px ){
-    .cart-container{
-        width: 80vw;
-    }
 }
 .price{
     margin-right: 5px;
@@ -122,7 +121,8 @@ const deleteItem=(i)=>{cartStore.removeItem(i);}
     justify-content: space-between;
     align-items: center;
     font-size: 20px;
-    height: 15%;
+    height: 5vh;
+    min-height: 22px;
     padding: 5px;
     border-bottom: 2px solid black;
     overflow: hidden;
@@ -160,10 +160,28 @@ const deleteItem=(i)=>{cartStore.removeItem(i);}
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    padding: 4px;
-    width: 100%;
-    height: 10%;
+    height: 5vh;
     border-top: 2px solid black;
+    /* border: 1px solid red; */
     overflow: hidden;
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+}
+@media (max-width: 740px ){
+    .cart-container{
+        width: 80vw;
+    }
+    .cart-title{
+        height: 4vh;
+    }
+}
+@media (max-width: 540px ){
+    .cart-container{
+        width: 95vw;
+    }
+    .cart-title{
+        height: 4vh;
+    }
 }
 </style>

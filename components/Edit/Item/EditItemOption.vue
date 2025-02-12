@@ -222,10 +222,9 @@ defineExpose({nameRef});
     border: 1px solid black;
 }
 .tab-container{
-    width: 100%;
-}
-.btn.delete{
-    /* margin: 7px 3px 0 0; */
+    box-sizing: content-box;
+    width: 98%;
+
 }
 .options-content-row{
     display: flex;
@@ -248,7 +247,9 @@ defineExpose({nameRef});
 }
 @media(max-width: 500px){
     .tab-container{
-        height: 20%;
+       
+        padding-bottom: 10px;
+        /* border: 1px solid red; */
     }
 }
 </style>

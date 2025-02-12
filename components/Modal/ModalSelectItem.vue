@@ -127,7 +127,7 @@ onMounted(()=>{
     <div class="modal-container" ref="modalRef">
         <div class="modal-title">
             <div class="item-name">
-               <span>{{ localItem.name+':' }}</span>
+               <span class="name-text">{{ localItem.name+':' }}</span>
                <div class="qty">
                     <span>qty:</span>
                     <button @click="selectedItem.qty > 1 ? selectedItem.qty-=1 : null">
@@ -145,16 +145,16 @@ onMounted(()=>{
                 {{ formatPrice(getItemTotal) }}
             </div>  
         </div>
+        <div class="item-a-r-o-titles">
+            <template v-for="oar in OAR" :key="oar.name">
+                <button class="btn"
+                    v-if="oar.hasValue"
+                    @click="oar.callback" @keydown.enter="oar.callback">
+                    <span :class="{'underline': oar.flag}" >{{ oar.name }}</span>
+                </button>
+            </template>
+        </div>
         <div class="modal-content">
-            <div class="item-a-r-o-titles">
-                <template v-for="oar in OAR" :key="oar.name">
-                    <button class="btn"
-                        v-if="oar.hasValue"
-                        @click="oar.callback" @keydown.enter="oar.callback">
-                        <span :class="{'underline': oar.flag}" >{{ oar.name }}</span>
-                    </button>
-                </template>
-            </div>
             <div class="tab-container">
                 <template v-for="(oar, i) in OAR" :key="i"> <!--option remove addon comment-->
                     <div class="container" v-if="oar.flag && oar.hasValue">
@@ -208,6 +208,10 @@ onMounted(()=>{
 .tab-container{
     height: 100%;
 }
+.name-text{
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
 .option-cont{
     display: flex;
     flex-direction: column;
@@ -217,6 +221,10 @@ onMounted(()=>{
 }
 .qty button{
     margin: 0 6px;
+}
+.item-name{
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
 input[type="checkbox"]:focus {
@@ -317,5 +325,13 @@ input[type="checkbox"]:focus {
     width: 95%;
     height: 100%;
     scrollbar-width: none;
+}
+@media(max-width: 400px){
+    .name-text {
+        width: 30%;
+    }
+    .item-name{
+        width: 85%;
+    }
 }
 </style>

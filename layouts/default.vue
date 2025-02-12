@@ -16,11 +16,6 @@ const closeCart = (event) => {
   }
 }
 useEventListener('click',closeCart);
-const getScreenHeight=() => {
-  let height = window.innerHeight;
-  let main = document.querySelector('main');
-  main.style.height=`${height-40}px`;
-}
 </script>
 <template>
   <div class="app">

@@ -40,7 +40,7 @@ const validateInput = (rule, value, inputVar) =>{
   }
 }
 async function submitOrder(){
-  console.log(order)
+  // console.log(order)
   try {
       await cartStore.submitOrder({
         name: order.lastName+','+order.firstName,

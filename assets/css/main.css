@@ -66,7 +66,7 @@ header {
   align-content: center;  
   flex-direction: row;
   height: 6vh;
-  width: 100vw;
+  width: 105vw;
   background-color: rgb(208, 236, 243);
   overflow-x: scroll;
   scrollbar-width: none;
@@ -80,7 +80,7 @@ header {
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  padding-right: 20px;
+  padding-right: 5vw;
 }
 /**************
 page container
@@ -212,7 +212,7 @@ page container
 .section-items{   
   display: grid;
   flex-wrap: wrap;
-  margin-left: 60px;
+  padding-left: 80px;
   grid-template-columns: 280px 280px 280px;
   align-content: center;
   flex-direction: row;
@@ -326,7 +326,7 @@ page container
   display: flex;
   justify-content: space-between;
   align-content: center;
-  padding: 0px 15px; 
+  padding: 3px 15px; 
 }
 .item-a-r-o-titles button{
   background-color: transparent;
@@ -336,10 +336,8 @@ page container
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 4px;
-  /* border: 1px solid red;
-  box-sizing: border-box; */
-  width: inherit;
+  padding-bottom: 4px;
+  width: 280px;
 }
 
 /***************
@@ -382,6 +380,8 @@ page container
   color: red;
 }
 .underline{
+
+
   border-bottom: 2px solid black;
 }
   /****************
@@ -507,7 +507,7 @@ b:disabled{
 }
 .modal.select{
   width: 50vw;
-  height: 60vh;
+  height: 55vh;
   left: 25vw;
   top: 20vh;
 }
@@ -651,6 +651,12 @@ b:disabled{
   transform: translateX(60px);
 }
 }
+@media(min-width: 1400px){
+  .section-items{
+    grid-template-columns: 300px 300px 300px 300px;
+    padding-left: 120px;
+  }
+}
 @media (max-width: 970px){
   .section-items{
     grid-template-columns: 300px 300px;
@@ -675,9 +681,9 @@ b:disabled{
   }
   .modal.select{
     width: 60vw;
-    height: 50vh;
-    left: 5vw;
-    top: 20vh;
+    left: 20vw;
+    top: 23vh;
+    height: 30vh;
   }
   .item-a-r-o-titles{
     width: 80%;
@@ -707,6 +713,7 @@ b:disabled{
       align-items: center;
       justify-content: center;
       margin: 0;
+      padding: 0;
   }
   .text-field.description textarea{
     width: 55vw;
@@ -748,13 +755,6 @@ b:disabled{
   .item-a-r-o-titles{
       width: 80%;
   }
-  .item-a-r-o-components{
-      width: 340px;
-      padding: 0;
-      margin: 0;
-      gap: 0;
-  }
-
 }
 @media(max-width: 500px){
   .item-container{

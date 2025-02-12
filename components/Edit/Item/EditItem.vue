@@ -73,6 +73,7 @@ function postNewItem(){
     // console.log('post new')
     if(localItem.name){
         isNew.value=false;
+        localItem.position=localMenu.sections[sectionIndex].items.length;
         localMenu.sections[sectionIndex].items.push(localItem);
         menuStore.updateMenu(localMenu);
         emit('send-new-item-flag', false);
@@ -137,7 +138,7 @@ onMounted(()=>{ if(!localItem.name){ isNew.value = true; focusNameInput();}});
                     <span class="item-name"
                         v-if="localItem.name"
                         @click="focusNameInput"
-                        >{{ localItem.name }}</span>
+                        >{{ localItem.name + ' ' + localItem.position}}</span>
                     <span class="placeholder-color"
                         @click="focusNameInput"
                         v-else>{{ 'name' }}</span>
@@ -255,6 +256,7 @@ onMounted(()=>{ if(!localItem.name){ isNew.value = true; focusNameInput();}});
 @media(max-width: 400px){
     .modal.options{
         width: 105vw;
+        left: 0;
     }
 }
 </style>

@@ -126,6 +126,9 @@ onUnmounted(() => {
     window.removeEventListener("change", updateWidth);
 });
 watch(windowWidth, () => {fixItemHeights();});
+function sortItems(items) {
+    return items.sort((a,b)=>a.position - b.position)
+}
 </script>
 <template>
     <div class="menu-container">
@@ -139,12 +142,12 @@ watch(windowWidth, () => {fixItemHeights();});
             <div class="section-description">{{ section?.description }}</div>
             <div class="section-items" :class="{'disabled': !order}" ref="sectionItemsRef">
                 <button  class="item-container" :disabled="!order"
-                    v-for="(item,j) in section.items" :key="item._id"
+                    v-for="(item,j) in sortItems(section.items)" :key="item._id"
                     @click="displayModal(item, section.options)"
                     :style="{ height: `${newHeight[findIndex(i,j)]}px` }"
                     >
                     <div class="item-title">
-                        <span class="item-name" :class="{'disabled': !order}">{{ item.name }}</span>
+                        <span class="item-name" :class="{'disabled': !order}">{{ item.name}}</span>
                         <span class="item-price">{{ formatPrice(item.price) }}</span>
                     </div>
                     <div class="item-description" ref="itemDescRef">{{ item.description }}</div>
@@ -183,22 +186,14 @@ watch(windowWidth, () => {fixItemHeights();});
     justify-content: center;
     width: 100%;
 }
-@media (max-width: 920px){
+@media (max-width: 520px){
     .modal.select{
-        width: 80vw;
-        left: 10vw;
+        width: 100vw;
+        left: 1vw;
+        height: 30vh;
     }
-    .item-a-r-o-titles{
-        width: 20%;
-        border: 1px solid red;
-    }
+    
 }
-@media (max-width: 800px){}
-@media (max-width: 600px){
-    .modal.select{
-        width: 98vw;
-        left: 3vw;
-        right: 0;
-    }
-}
+@media (max-width: 840px){}
+
 </style>

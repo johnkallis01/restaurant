@@ -8,6 +8,7 @@ const {section, menu} = defineProps({
 const menuStore = useMenuStore();
 const localMenu = reactive(menu);
 const localSection = reactive(section);
+const draggedItemIndex=ref(null);
 const deleteModalFlag=ref(false); const addOptionsModalFlag=ref(false);
 const nameInputRef=ref(null); const descriptionInputRef = ref(null);
 const editName=ref(false); const editDescription = ref(false);
@@ -20,6 +21,7 @@ const newItem = ref({
         addOns: [],
         removes: [],
         options: [],
+        position: 0,
         _id: uuidv4(),
 });
 function postSectionEdit(str){
@@ -66,10 +68,14 @@ function addNewItem(){
         _id: uuidv4(),
     }
 }
+
 const focusDescriptionInput = useFocusInput(descriptionInputRef,editDescription);
 const focusNameInput = useFocusInput(nameInputRef, editName);
 const tabToDescription = useTabToInput(focusDescriptionInput);
 onMounted(()=>{if(!localSection.name){isNew.value = true;focusNameInput();}})
+function sortItems(items) {
+    return items.sort((a,b)=>a.position - b.position)
+}
 </script>
 <template>
     <div class="section-container">
@@ -136,14 +142,19 @@ onMounted(()=>{if(!localSection.name){isNew.value = true;focusNameInput();}})
                 :item="newItem"
                 :section_id="localSection._id"
                 :menu="localMenu"
-                @send-new-item-flag="addItem=false"/>
+                @send-new-item-flag="addItem=false"/> <!--v-for="(item,i) in "sortItems(localSection.items) -->
             <EditItem 
-                v-for="(item, i) in localSection.items"
+                v-for="(item,i) in sortItems(localSection.items)"
+                 
                 :key="item._id"
                 ref="it"
                 :item="item"
                 :section_id="localSection._id"
-                :menu="localMenu"/>
+                :menu="localMenu"
+                @dragstart="onDragStart(i)"
+                @dragover="onDragOver"
+                @drop="onDrop(i)"
+                draggable="true"/>
         </div>
         <div class="modalWrapper" v-if="addOptionsModalFlag">
             <ModalAddOptions class="modal options" :menu="localMenu" :item="localSection" @close-modal="addOptionsModalFlag=false"/>
