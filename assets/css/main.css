@@ -674,10 +674,13 @@ b:disabled{
     left: 10vw;
   }
   .modal.select{
-    width: 90vw;
-    height: 40vh;
+    width: 60vw;
+    height: 50vh;
     left: 5vw;
     top: 20vh;
+  }
+  .item-a-r-o-titles{
+    width: 80%;
   }
   .modal.delete{
     height: 20vh;

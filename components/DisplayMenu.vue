@@ -185,8 +185,12 @@ watch(windowWidth, () => {fixItemHeights();});
 }
 @media (max-width: 920px){
     .modal.select{
-        width: 90vw;
-        left: 5vw;
+        width: 80vw;
+        left: 10vw;
+    }
+    .item-a-r-o-titles{
+        width: 20%;
+        border: 1px solid red;
     }
 }
 @media (max-width: 800px){}
