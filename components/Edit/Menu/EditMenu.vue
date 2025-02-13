@@ -46,6 +46,7 @@ const getCloseTimes = (name) => {
 }
 const draggedSectionIndex=ref(null);
 const onDrop=(newIndex)=>{
+    console.log('drop section')
     if(!draggedSectionIndex.value) return;
     const draggedSection = localMenu.sections[draggedSectionIndex.value];
     localMenu.sections.splice(draggedSectionIndex.value, 1);
@@ -90,11 +91,12 @@ const onDrop=(newIndex)=>{
                     <EditSection 
                         :section="sec" 
                         :menu="localMenu"
-                        />  
-                                    <!-- @dragstart="draggedSectionIndex=i"
+                        @dragstart="draggedSectionIndex=i"
                         @dragover.prevent
                         @drop="onDrop(i)"
-                        draggable="true" -->
+                        draggable="true"
+                        />  
+                                    <!-- -->
                 </div>
             </div>
         </div>

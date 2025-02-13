@@ -3,7 +3,6 @@ useHead({
   title: "John's Restaurant - Edit Menu"
 });
 definePageMeta({middleware: ['admin','auth']});
-// definePageMeta({middleware: ['auth']});
 const newMenu = reactive({
   "name":"",
   "days":[
@@ -18,16 +17,19 @@ const newMenu = reactive({
 });
 </script>
 <template>
-  <div class="new-menu-container">
+  <div class="new-menu-page">
     <div class="title"> Create Menu </div>
     <EditMenuTimes :menu="newMenu" :isNew="true"/>
   </div>
 </template>
 <style scoped>
-.new-menu-container{
-  background-color: azure;
+.new-menu-page{
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: column;
   border-radius: 10px;
   width: 60vw;
+  background-color: azure;
 }
 .title{
   display: flex;
@@ -36,5 +38,23 @@ const newMenu = reactive({
   align-items: center;
   padding: 10px;
   border-bottom: 2px solid black;
+}
+@media(max-width: 800px) {
+  .new-menu-page{
+    width: 90vw;
+    left: 5vw;
+    border-radius: 0px;
+    overflow: auto;
+    /* border: 1px solid red; */
+  }
+}
+
+@media(max-width: 600px) {
+  .new-menu-page{
+    width: 100vw;
+    border-radius: 0px;
+    overflow: auto;
+    /* border: 1px solid red; */
+  }
 }
 </style>

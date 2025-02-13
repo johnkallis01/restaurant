@@ -191,10 +191,13 @@ onMounted(()=>{
                         
                     </div>
                 </template>
-                <div v-if="commentsFlag" class="text-field">
+                <div class="comments">
+                  <div v-if="commentsFlag" class="text-field">
                     <textarea ref="commentsRef"
                         v-model="selectedItem.comments"></textarea>
+                </div>  
                 </div>
+                
             </div>
         </div>
         <div class="form-actions">
@@ -234,7 +237,7 @@ input[type="checkbox"]:focus {
 .text-field textarea{  
     position: absolute;
     left: 10px;
-    top: 80px;
+    top: 0;
     margin: 5px;
     width: 250px;
     height: 80px;

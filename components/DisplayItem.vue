@@ -1,22 +1,41 @@
 <script setup>
-const {item}=defineProps({item: {type: Object, required: true}});
+const {item,height}=defineProps({item: {type: Object, required: true}, height: {type: Number, required:false}});
 const { formatPrice } = usePriceFormatter();
 const containerRef=ref(null);
 const titleRef=ref(null);
+const contentRef=ref(null);
 const getHeight=() => {
-    if(containerRef.value?.offsetHeight<30) {
+    if(containerRef.value?.offsetHeight<23) {
         if(titleRef.value) titleRef.value.style.borderRadius='5px';
+        // console.log(height)
+        // console.log(containerRef.value?.offsetHeight)
+        // containerRef.value?.offsetHeight=height;
+        // 
     }
 }
+// watch(()=>height,() => {
+//     containerRef.value.offsetHeight=height;
+// })
+// watch(() => height, (newHeight) => {
+//   if (contentRef.value) {
+//     contentRef.value.style.height = `${newHeight}px`;
+//   }
+// });
+// onMounted(() => {
+//   if (contentRef.value && height) {
+//     contentRef.value.style.height = `${height - 20}px`;
+//   }
+// });
 onMounted(getHeight)
+defineExpose({containerRef});
 </script>
 <template>
-    <div class="item-container" ref="containerRef">
-       <div class="item-title" ref="titleRef">
+    <div class="item-container" ref="containerRef" :style="{height: height ? height + 'px' : 'auto'}">
+       <div class="item-title" ref="titleRef">{{ height }}
             <div class="item-name">{{item.name+' x '+item.qty}}</div>
             <div class="item-price">{{formatPrice(item.price)}}</div>
        </div>
-       <div class="content">
+       <div class="content" ref="contentRef" >
             <div class="row" v-if="item.options.length">
                 <div>{{ 'options: ' }}</div>
                 <div v-for="op in item.options">
@@ -24,7 +43,7 @@ onMounted(getHeight)
                     <span>{{ op.choice.name }} {{ Number(op.choice.price) ? " "+formatPrice(op.choice.price): '' }}</span>
                 </div>
             </div>
-            <div class="row" v-if="item.addOns.length">
+            <div class="row" v-if="item.addOns.length" >
                 <h4>{{ 'addOns: ' }}</h4>
                 <div v-for="ao in item.addOns">
                     <span class="row-title">{{ao.name}}</span>
@@ -64,4 +83,5 @@ onMounted(getHeight)
 .row-title{
     border-bottom: 1px solid black;
 }
+
 </style>

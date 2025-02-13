@@ -70,55 +70,61 @@ function addNewItem(){
         _id: uuidv4(),
     }
 }
-const draggedItemIndex=ref(null);
-const onDrop=(newIndex)=>{
+const draggedItemData=ref(null);
+const onDrop=(newIndex, sectionId)=>{
     console.log('onDrop')
-    if(!draggedItemIndex.value) return;
-    const draggedItem = section.items[draggedItemIndex.value];
-    localSection.items.splice(draggedItemIndex.value, 1);
-    localSection.items.splice(newIndex,0,draggedItem);
-    localSection.items.forEach((item, i)=> item.position=i)
-    // updateMenu();
-    draggedItemIndex.value=null;
-}
-
-const droppedOnIndex=ref(null);
-const onTouchStart=(event, index)=>{
-    draggedItemIndex.value=index;
-    console.log(draggedItemIndex.value)
-}
-const onTouchMove = (event) => {
-    event.preventDefault(); // Prevent scrolling while dragging
-    const touch = event.touches[0];
-    let target = document.elementFromPoint(touch.clientX, touch.clientY);
-    droppedOnIndex.value=target;
-};
-const onTouchEnd=()=>{
-    if(droppedOnIndex.value?.className){
-        while(droppedOnIndex.value?.className!=='item-container'){
-            droppedOnIndex.value=droppedOnIndex.value.parentElement;
-            console.log(droppedOnIndex.value)
-        }
-        droppedOnIndex.value=Number(droppedOnIndex.value.dataset.index);
-        console.log(droppedOnIndex.value,draggedItemIndex.value)
-        // if(!draggedItemIndex.value) return;
-        const draggedItem = section.items[draggedItemIndex.value];
-        localSection.items.splice(draggedItemIndex.value, 1);
-        localSection.items.splice(droppedOnIndex.value,0,draggedItem);
-        localSection.items.forEach((item, i)=> item.position=i);
-        // updateMenu();
-        draggedItemIndex.value=null;
-        droppedOnIndex.value=null;
-
+    if(!draggedItemData.value?.index && draggedItemData.value?.sectionId) return;
+    if(draggedItemData.value?.section_id===sectionId){
+        const draggedItem = section.items[draggedItemData.value.index];
+        localSection.items.splice(draggedItemData.value.index, 1);
+        localSection.items.splice(newIndex,0,draggedItem);
+        localSection.items.forEach((item, i)=> item.position=i)
     }
-    // console.log(draggedItemIndex.value,event)
+    // updateMenu();
+    draggedItemData.value=null;
 }
+// const droppedOnIndex=ref(null);
+// const onTouchStart=(event, index)=>{
+//     draggedItemIndex.value=index;
+//     console.log(draggedItemIndex.value)
+// }
+// const onTouchMove = (event) => {
+//     event.preventDefault(); // Prevent scrolling while dragging
+//     const touch = event.touches[0];
+//     let target = document.elementFromPoint(touch.clientX, touch.clientY);
+//     droppedOnIndex.value=target;
+// };
+// const onTouchEnd=()=>{
+//     if(droppedOnIndex.value?.className){
+//         while(droppedOnIndex.value?.className!=='item-container'){
+//             droppedOnIndex.value=droppedOnIndex.value.parentElement;
+//             console.log(droppedOnIndex.value)
+//         }
+//         droppedOnIndex.value=Number(droppedOnIndex.value.dataset.index);
+//         console.log(droppedOnIndex.value,draggedItemIndex.value)
+//         // if(!draggedItemIndex.value) return;
+//         const draggedItem = section.items[draggedItemIndex.value];
+//         localSection.items.splice(draggedItemIndex.value, 1);
+//         localSection.items.splice(droppedOnIndex.value,0,draggedItem);
+//         localSection.items.forEach((item, i)=> item.position=i);
+//         updateMenu();
+//         draggedItemIndex.value=null;
+//         droppedOnIndex.value=null;
 
-
+//     }
+//     // console.log(draggedItemIndex.value,event)
+// }
 const focusDescriptionInput = useFocusInput(descriptionInputRef,editDescription);
 const focusNameInput = useFocusInput(nameInputRef, editName);
 const tabToDescription = useTabToInput(focusDescriptionInput);
 onMounted(()=>{if(!localSection.name){isNew.value = true;focusNameInput();}})
+watch(addOptionsModalFlag, (open) => {
+     if(open) document.addEventListener('dragstart', stopDrag, true);
+     else document.removeEventListener('dragstart', stopDrag, true);
+ })
+const stopDrag=(event)=>{
+     event.preventDefault();
+}
 </script>
 <template>
     <div class="section-container">
@@ -193,15 +199,18 @@ onMounted(()=>{if(!localSection.name){isNew.value = true;focusNameInput();}})
                 :item="item"
                 :section_id="localSection._id"
                 :menu="localMenu"
-/>
-<!--                 :data-index="i"
-                @dragstart="draggedItemIndex=i"
+                :data-index="i"
+                :data-id="localSection._id"
+                @drop="onDrop(i, localSection._id)"
+                draggable="true"
+                @dragstart="draggedItemData={ index:i, section_id: localSection._id}"
                 @dragover.prevent
-                @drop="onDrop(i)"
+            />
+<!--                 
                 @touchstart="onTouchStart($event, i)"
                 @touchmove="onTouchMove($event)"
                 @touchend="onTouchEnd($event)"
-                draggable="true" -->
+                 -->
         </div>
         <div class="modalWrapper" v-if="addOptionsModalFlag">
             <ModalAddOptions class="modal options" :menu="localMenu" :item="localSection" @close-modal="addOptionsModalFlag=false"/>

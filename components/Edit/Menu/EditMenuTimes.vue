@@ -11,16 +11,11 @@ const hasError = computed(() => localMenu.days.some(day => day.error));
 const hasOpenDay = computed(() => localMenu.days.some(day => day.open));
 const isDisabled = computed(() => hasError.value && !hasOpenDay.value);
 async function postMenu(){
-  if(!isNew){
-    // console.log('update M', localMenu )
-    await menuStore.updateMenu(localMenu)
-    emit('close-window', localMenu.name);
-  }
+  if(!isNew) await menuStore.updateMenu(localMenu)
   else{
     if(localMenu.name){
       try{
         const menu_id = await menuStore.postMenu(localMenu);
-        // console.log(res.res._id)
         router.push('/edit/menus/'+ menu_id);
       }catch(error){console.log("menu didn't post:", error)}
     }
@@ -29,28 +24,28 @@ async function postMenu(){
 }
 const getName = (n) => { localMenu.name = n; };
 const getDay = (d) => {localMenu.days[d.position] = d;};
-onMounted(() => {
-  newMenuRef.value.querySelector('input').focus();
-});
+onMounted(() => { newMenuRef.value.querySelector('input').focus();});
 </script>
 <template>
     <div class="new-menu-container" ref="newMenuRef">
-      <div class="menu-container-body" v-if="localMenu"> 
-        <TextField
-          :is-valid="rules['name'].test(localMenu.name)"
-          :name="localMenu.name||''"
-          place-holder="menu name"
-          bg-color="rgb(247, 249, 252)"
-          :req="true" @send-input="getName"/>
-        <NewDay class="day-row"
-            :day="day" v-for="(day, i) in localMenu.days" :key="i" 
-            @send-day="getDay"/>
-      </div>
-      <button class="btn"
-        @click="postMenu()"
-        :disabled="isDisabled || !hasOpenDay">
-        submit
-      </button>
+		<TextField class="menu-name"
+			:is-valid="rules['name'].test(localMenu.name)"
+			:name="localMenu.name||''"
+			place-holder="menu name"
+			bg-color="rgb(247, 249, 252)"
+			:req="true" @send-input="getName"/>
+		<div class="menu-container-body" v-if="localMenu">
+			<NewDay class="day-row"
+				:day="day" v-for="(day, i) in localMenu.days" :key="i" 
+				@send-day="getDay"/>
+		</div>
+		<div class="new-menu-actions">
+			<button class="btn"
+				@click="postMenu()"
+				:disabled="isDisabled || !hasOpenDay">
+				submit
+			</button>
+		</div>
     </div>
 </template>
 <style scoped>
@@ -59,8 +54,9 @@ onMounted(() => {
   flex-direction: column;
   justify-content: space-between;
   align-content: center;
-  padding: 5px;
-  border-bottom: 2px solid black;
+  /* border: 1px solid red;
+  box-sizing: border-box; */
+  width: 98%;
 }
 .day-row{
   margin: 2px;
@@ -70,5 +66,14 @@ onMounted(() => {
   justify-content: flex-start;
   position: relative;
   top: 0;
+}
+.new-menu-actions{
+  display: flex;
+  border-top: 2px solid black;
+  width: 100%;
+  height: 35px;
+}
+.new-menu-actions button{
+  margin: 0 20px;
 }
 </style>

@@ -68,7 +68,8 @@ onBeforeUnmount(() => logoutTimer.value ? clearInterval(logoutTimer.value):null)
   }
 }
 .cart-btn{
-  padding: 5px 3vw;
+  padding: 5px 5px;
+  margin: 5px 3vw;
   border-radius: 15px;
   background-color: transparent;
 }

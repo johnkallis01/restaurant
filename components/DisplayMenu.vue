@@ -2,17 +2,12 @@
 const {menu,order} = defineProps({
     menu: {type: Object, required: true},
     order: {type: Boolean, required: true}});
-
-const localMenu=reactive(menu);
-
 const { formatPrice } = usePriceFormatter();
 const modalFlag=ref(false);
 const modalItem = ref();
 const sectionItemsRef=ref([]);
 const itemDescRef=ref([]);
-
 const itemHeight=ref([]);
-
 const { detachObject } = useDetachObject();
 const displayModal=(item,ops)=>{
     // console.log(item.options)
@@ -22,6 +17,7 @@ const displayModal=(item,ops)=>{
     modalFlag.value=true;
 }
 const setItemHeights=() => { 
+    if(!itemDescRef.value.length) return;
     // console.log(itemDescRef.value)
     //item max-height: 80px;
     //item name height: 20px;
@@ -35,81 +31,53 @@ const setItemHeights=() => {
         let rowLength;
         let itemIndex=0;
         for(let i=0; i<menu.sections.length;i++){//sections i
-            // console.log(itemDescRef.value[0])
             if(screenWidth<800) rowLength=2;
-            else rowLength=3;
-            // console.log('num of rows',rowLength)
+            else if(screenWidth<1100) rowLength=3;
+            else rowLength=4;
+            console.log(itemDescRef.value)
             let numberOfRows=Math.ceil(menu.sections[i].items.length/rowLength);
             for(let j=0; j< numberOfRows; j++){ //j number of rows
                 let tallest=0;
                 let remainder=menu.sections[i].items.length%rowLength;
-                if(Math.ceil(menu.sections[i].items.length/rowLength)-1===j && remainder!==0){
-                    rowLength=remainder;
-                    // console.log('rl=%', rowLength)
-                }
-                // console.log('rl',rowLength)
+                // console.log(remainder)
+                console.log(menu.sections[i].name)
+                console.log(menu.sections[i].items.length/rowLength,j,remainder)
+                Math.ceil(menu.sections[i].items.length/rowLength)-1===j && remainder!==0 ? rowLength=remainder : null;
                 for(let k=0;k<rowLength; k++){ //row 0,1,2
-                    // console.log(itemDescRef.value[itemIndex],itemDescRef.value[itemIndex].offsetHeight)
-                    if(tallest < itemDescRef.value[itemIndex].offsetHeight) tallest=itemDescRef.value[itemIndex].offsetHeight;
-                    // console.log('itIndex',tallest)
+                    (tallest < itemDescRef.value[itemIndex].offsetHeight)?  tallest=itemDescRef.value[itemIndex].offsetHeight : null;
                     itemIndex+=1;
                 }
                 for(let k=0;k<rowLength; k++){ 
-                    if (tallest < 20) { //0-1 lines
-                        // console.log("push 38");
-                        itemHeight.value.push(40);
-                    } else if (tallest < 28) { //2 lines
-                        // console.log("push 50");
-                        itemHeight.value.push(52);
-                    } else if (tallest < 42) { //3 lines
-                        // console.log("push 65");
-                        itemHeight.value.push(67);
-                    } else { //4+ lines
-                        // console.log("push 80");
-                        itemHeight.value.push(80);
-                    }
+                    if (tallest < 20) itemHeight.value.push(40); //0-1 lines
+                    else if (tallest < 28) itemHeight.value.push(52); //2lines
+                    else if (tallest < 42) itemHeight.value.push(67);//3 lines
+                    else itemHeight.value.push(80);//4+ lines
                 }
-                //set all heights to tallest
             } 
-        };
+        }
     }else{
         itemDescRef.value.forEach(item=>{
             let height = item.offsetHeight;
             // console.log(height)
             //set all heights to tallest
-            if (height === 0) {
-                // console.log("push 20");
-                itemHeight.value.push(30);
-            } else if (height < 20) {
-                // console.log("push 38");
-                itemHeight.value.push(40);
-            } else if (height < 28) {
-                // console.log("push 50");
-                itemHeight.value.push(52);
-            } else if (height < 42) {
-                // console.log("push 65");
-                itemHeight.value.push(67);
-            } else {
-                // console.log("push 80");
-                itemHeight.value.push(76);
-            }
+            if (height === 0)itemHeight.value.push(30);
+            else if (height < 20) itemHeight.value.push(40);
+            else if (height < 28) itemHeight.value.push(52);
+            else if (height < 42) itemHeight.value.push(67);
+            else itemHeight.value.push(76);
         })                
     } 
-    // console.log(itemHeight.value)
 }    
 const findIndex=(secIn,itIn) => { //find length of all sections before item index;add item index to sections;
     return menu.sections.slice(0,secIn).reduce((index, section)=>index + section.items.length,0)+itIn;
 }
-onMounted(async () => {
-    await nextTick();
-    setItemHeights();
-});
 onBeforeMount(() => {
     itemDescRef.value.length=0;
 });
 const windowWidth = ref(window?.innerWidth);
 const updateWidth = () => { windowWidth.value = window?.innerWidth;};
 onMounted(() => { 
+    nextTick(setItemHeights);
     window.addEventListener("resize", updateWidth);
     window.addEventListener("orientationchange", updateWidth);
     window.addEventListener("change", updateWidth);
@@ -121,7 +89,7 @@ onUnmounted(() => {
     window.removeEventListener("change", updateWidth);
 });
 watch(windowWidth, () => {
-    setItemHeights();
+    nextTick(setItemHeights);
 });
 function sortItems(items) {
     return items.sort((a,b)=>a.position - b.position)
@@ -133,7 +101,7 @@ function sortItems(items) {
             <DisplaySchedule :menuDays="menu.days" v-if="!order && menu"/>
         </div>
         <div class="section-container"
-            v-for="(section,i) in menu.sections" :key="section._id"
+            v-for="(section,i) in sortItems(menu.sections)" :key="section._id"
             v-if="menu">
             <div class="section-name">{{ section.name }}</div>
             <div class="section-description">{{ section?.description}}</div>

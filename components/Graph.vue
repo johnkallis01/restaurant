@@ -70,14 +70,17 @@ const enter=(bar) => {
     justify-content: center;
     flex-direction: column;
     align-items: center;
-    position: relative;
+    position: absolute;
     left: 0;
     top: 0;
     height: 94vh;
     width: 100%;
+    padding: 5px;
     font-size: 12px;
     background-color: rgb(247, 249, 252);
     overflow: auto;
+    /* border: 2px solid red;
+    box-sizing: border-box; */
 }
 .left-axis-title{
     position: absolute;
@@ -91,13 +94,15 @@ const enter=(bar) => {
 }
 .graph-container{
     width: 98vw;
-    height: 400px;
+    height: 95vh;
     padding: 20px;
     border-radius: 0;
     position: relative;
-    left: 20px;
+    left: 30px;
     top:0;
     overflow: auto;
+    /* border: 1px solid green;
+    box-sizing: border-box; */
 }
 .count{
     position: relative;
@@ -144,7 +149,7 @@ const enter=(bar) => {
     bottom: 0;
     cursor: default;
 }
-@media(max-width: 600px){
+@media(max-width: 700px){
     .item-name{
         bottom: 30px;
     }

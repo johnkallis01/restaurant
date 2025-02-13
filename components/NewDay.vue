@@ -22,7 +22,7 @@ const getEnd = (d)=>{
 </script>
 <template>
   <div class="day-card">
-    <div>{{ localDay.day.name + ":"}}</div>
+    <div class="day">{{ localDay.day.name + ":"}}</div>
     <div class="times">
       <div @click="localDay.open=!localDay.open" class="toggle">
         <Transition name="slide-fade">
@@ -30,11 +30,11 @@ const getEnd = (d)=>{
           <span v-else>closed</span>
         </Transition>
       </div>
-      <TimeInput :error="errorTime"
+      <TimeInput :error="errorTime" class="time-input"
           :time="localDay.start" :disabled="!localDay.open" 
           @update:time="getStart"/>
       <span :class="{'placeholder-color': !localDay.open,'error-text': errorTime && localDay.open}">-</span>
-      <TimeInput :error="errorTime"
+      <TimeInput :error="errorTime" class="time-input"
         :time="localDay.end" :disabled="!localDay.open" @update:time="getEnd"/>
     </div>
   </div>
@@ -46,17 +46,34 @@ const getEnd = (d)=>{
   justify-content: space-between;
   flex-direction: row;
   align-items: center;
+  /* border: 1px solid blue;
+  box-sizing: border-box; */
 }
-.toggle{
-  margin-right: 40px;
+.day{
+  width: 100px;
+  min-width: 15px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  /* border: 1px solid purple;
+  box-sizing: border-box; */
 }
-@media (max-width: 755px){
+@media(max-width: 755px){
+  .day-card{
+    justify-content: center;
+  }
   .times{
     gap:0;
   }
   .toggle{
     margin: 0;
+  }  
+}
+@media(max-width: 600px){
+  .day{
+    width: 40px;
   }
+  
 }
 .times{
   display: flex;

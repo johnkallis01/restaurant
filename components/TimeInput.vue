@@ -62,6 +62,8 @@ const updateMinute = (min) => {
   justify-content: center;
   gap: 5px;
   text-align: right;
+  /* border: 1px solid green;
+  box-sizing: border-box; */
 }
 .options{
   font-size: 12px;
@@ -71,6 +73,7 @@ const updateMinute = (min) => {
 }
 select{
   padding: 5px;
+  border-radius: 5px;
 }
 select:hover{
   background-color: rgb(248, 238, 238);
@@ -79,7 +82,7 @@ select:hover{
 select:focus{
   outline: none;
 }
-@media (max-width: 740px){
+@media(max-width: 740px){
   .time-group{
     gap: 0px;
   }
