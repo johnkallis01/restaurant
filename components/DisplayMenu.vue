@@ -1,6 +1,4 @@
 <script setup>
-import { onActivated, onBeforeMount, onMounted } from 'vue';
-
 const {menu,order} = defineProps({
     menu: {type: Object, required: true},
     order: {type: Boolean, required: true}});
@@ -12,9 +10,9 @@ const modalFlag=ref(false);
 const modalItem = ref();
 const sectionItemsRef=ref([]);
 const itemDescRef=ref([]);
-const sectionDescRef=ref([]);
+
 const itemHeight=ref([]);
-const sectionHeight=ref([]);
+
 const { detachObject } = useDetachObject();
 const displayModal=(item,ops)=>{
     // console.log(item.options)
@@ -23,14 +21,6 @@ const displayModal=(item,ops)=>{
     // console.log(modalItem.value)
     modalFlag.value=true;
 }
-const setSectionDescHeight=() => {
-    if(sectionDescRef.value.length){
-        sectionDescRef.value.forEach(section=>{
-            sectionHeight.value.push(section.offsetHeight)
-            console.log(section.offsetHeight)
-        })
-    }
-}
 const setItemHeights=() => { 
     // console.log(itemDescRef.value)
     //item max-height: 80px;
@@ -38,15 +28,15 @@ const setItemHeights=() => {
     //item desc lin height: ~15px
     let screenWidth=window?.innerWidth;
     itemHeight.value=[];
-    if(order && screenWidth>740){
-        //full width -> 3x 280px
-        //  840px -> 2x 300px
-        // 740px -> 1x 400px
+    if(order && screenWidth>=600){
+        //full width -> 3x >800px
+        //  840px -> 2x <800px
+        // 740px -> 1x <600px
         let rowLength;
         let itemIndex=0;
         for(let i=0; i<menu.sections.length;i++){//sections i
             // console.log(itemDescRef.value[0])
-            if(screenWidth<971) rowLength=2;
+            if(screenWidth<800) rowLength=2;
             else rowLength=3;
             // console.log('num of rows',rowLength)
             let numberOfRows=Math.ceil(menu.sections[i].items.length/rowLength);
@@ -113,11 +103,9 @@ const findIndex=(secIn,itIn) => { //find length of all sections before item inde
 onMounted(async () => {
     await nextTick();
     setItemHeights();
-    setSectionDescHeight();
 });
 onBeforeMount(() => {
     itemDescRef.value.length=0;
-    sectionDescRef.value.length=0;
 });
 const windowWidth = ref(window?.innerWidth);
 const updateWidth = () => { windowWidth.value = window?.innerWidth;};
@@ -132,7 +120,9 @@ onUnmounted(() => {
     window.removeEventListener("orientationchange", updateWidth);
     window.removeEventListener("change", updateWidth);
 });
-watch(windowWidth, () => {setItemHeights();setSectionDescHeight();});
+watch(windowWidth, () => {
+    setItemHeights();
+});
 function sortItems(items) {
     return items.sort((a,b)=>a.position - b.position)
 }
@@ -146,9 +136,7 @@ function sortItems(items) {
             v-for="(section,i) in menu.sections" :key="section._id"
             v-if="menu">
             <div class="section-name">{{ section.name }}</div>
-            <div class="section-description" ref="sectionDescRef"
-                :style="{height: `${sectionHeight[i]}px`}"
-            >{{ section?.description}}</div>
+            <div class="section-description">{{ section?.description}}</div>
             <div class="section-items" :class="{'disabled': !order}" ref="sectionItemsRef">
                 <button  class="item-container" :disabled="!order"
                     v-for="(item,j) in sortItems(section.items)" :key="item._id"
@@ -195,5 +183,4 @@ function sortItems(items) {
     justify-content: center;
     width: 100%;
 }
-
 </style>
