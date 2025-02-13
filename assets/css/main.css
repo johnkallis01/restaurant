@@ -50,11 +50,6 @@ main {
     width: 105vw;
     height: 100vh;
   }
-  .section-description{
-    height: fit-content;
-    padding: 3px 10px;
-    overflow: scroll;
-  }
 }
 header {
   position: fixed;
@@ -189,25 +184,17 @@ page container
   color:black;
   border-bottom: 2px solid black;
   width: 100%;
+  text-wrap: nowrap;
+  text-overflow: ellipsis;
   /* border: 1px solid green; */
 }
 .section-description{
   display: flex;
   align-items: center;
   width: 100%;
-  height: 20px;
   font-size: 12px;
-  overflow: scroll;
-  scrollbar-width: none;
-
   /* border: 1px solid pink; */
-}
-@media(max-width:700px){
-  .section-description{
-    height: 30px;
-    overflow: scroll;
-    scrollbar-width: none;
-  }
+  padding-left: 20px;
 }
 .section-items{   
   display: grid;
@@ -380,8 +367,6 @@ page container
   color: red;
 }
 .underline{
-
-
   border-bottom: 2px solid black;
 }
   /****************
@@ -465,6 +450,7 @@ b:disabled{
   flex-direction: column;
   align-content: center;
   padding-top: 8px;
+  position: relative;
   /* box-sizing: border-box;
   border: 1px solid yellow; */
 }
@@ -651,30 +637,9 @@ b:disabled{
   transform: translateX(60px);
 }
 }
-@media(min-width: 1400px){
-  .section-items{
-    grid-template-columns: 300px 300px 300px 300px;
-    padding-left: 120px;
-  }
-}
-@media (max-width: 970px){
-  .section-items{
-    grid-template-columns: 300px 300px;
-  }
-  .section-description{
-    height: 40px;
-  }
-}
+
+
 @media (max-width: 840px){
-  .item-container{
-    width: 300px;
-  }
-  .button-name{
-    width: 20px;
-  }
-  .section-items{
-    grid-template-columns: 300px 300px;
-  }
   .modal{
     width: 80vw;
     left: 10vw;
@@ -684,9 +649,6 @@ b:disabled{
     left: 20vw;
     top: 23vh;
     height: 30vh;
-  }
-  .item-a-r-o-titles{
-    width: 80%;
   }
   .modal.delete{
     height: 20vh;
@@ -709,9 +671,6 @@ b:disabled{
   }
   .text-field.description textarea{
     width: 55vw;
-  }
-  .item-container{
-      width: 400px;
   }
   .items{
     grid-template-columns: 300px 300px;
@@ -737,15 +696,121 @@ b:disabled{
     width: 92vw;
   }
 }
-@media(max-width: 700px){
+/**item container break points***/
+@media(min-width: 1420px){
+  .section-items{
+      grid-template-columns: 300px 300px 300px 300px;
+      padding-left: 120px;
+  }
+}
+@media(max-width: 1420px){
+  .section-items{
+    grid-template-columns: 300px 300px 300px 300px;
+    padding: 0;
+  }
+}
+@media(max-width: 1370px){
+  .section-items{
+    grid-template-columns: 300px 300px 300px;
+    padding-left: 100px;
+  }
+}
+@media(max-width: 1100px){
+  .section-items{
+    padding: 0;
+  }
+}
+@media (max-width: 990px){
+  .item-container{
+      width: 280px;
+  }
+  .item-a-r-o-components{
+    width: 280px;
+  }
+  .section-items{
+      grid-template-columns: 280px 280px;
+      padding-left: 100px;
+  }
+}
+@media (max-width: 700px){
+  .item-container{
+      width: 250px;
+  }
+  .item-title{
+    width: 245px;
+  }
+  .item-a-r-o-components{
+    width: 250px;
+  }
+  .section-items{
+      grid-template-columns: 250px 250px;
+      padding-left: 50px;
+  }
+}
+@media(max-width: 600px){
   .section-items{   
     display: flex;
     align-content: center;
     align-items: center;
     justify-content: center;
-    margin: 0;
     padding: 0;
+  }
+  .item-container{
+    width: 400px;
+  }
+  .item-title{
+    width: 395px;
+  }
+  .item-a-r-o-components{
+    width: 400px;
+  }
+  .item-description textarea{
+    width: 300px;
+  }
 }
+@media(max-width: 520px){
+  .modal.select{
+    width: 100vw;
+    left: 1vw;
+    height: 30vh;
+  }
+  .section-items{
+    display: flex;
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+  }
+  .item-container{
+    width: 350px;
+  }
+  .item-a-r-o-components{
+    width: 350px;
+  }
+  .item-title{
+    width: 340px;
+  }
+  .item-a-r-o-titles button{
+    width: 90%;
+    margin: 0;
+  }
 }
+@media(max-width: 430px){
+  .modal.options{
+    width: 100vw;
+    left: 0;
+  }
+}
+@media(max-width: 400px){
+  .item-container{
+    width: 300px;
+  }
+  .item-a-r-o-components{
+    width: 300px;
+  }
+  .item-title{
+    width: 290px;
+  }
 
+}
 

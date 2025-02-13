@@ -78,14 +78,13 @@ const onDrop=(newIndex)=>{
     localSection.items.splice(draggedItemIndex.value, 1);
     localSection.items.splice(newIndex,0,draggedItem);
     localSection.items.forEach((item, i)=> item.position=i)
-    updateMenu();
+    // updateMenu();
     draggedItemIndex.value=null;
 }
 
 const droppedOnIndex=ref(null);
 const onTouchStart=(event, index)=>{
     draggedItemIndex.value=index;
-    // event.dataTransfer.dataset('index', index)
     console.log(draggedItemIndex.value)
 }
 const onTouchMove = (event) => {
@@ -95,22 +94,23 @@ const onTouchMove = (event) => {
     droppedOnIndex.value=target;
 };
 const onTouchEnd=()=>{
-    // console.log(lastElement)
+    if(droppedOnIndex.value?.className){
+        while(droppedOnIndex.value?.className!=='item-container'){
+            droppedOnIndex.value=droppedOnIndex.value.parentElement;
+            console.log(droppedOnIndex.value)
+        }
+        droppedOnIndex.value=Number(droppedOnIndex.value.dataset.index);
+        console.log(droppedOnIndex.value,draggedItemIndex.value)
+        // if(!draggedItemIndex.value) return;
+        const draggedItem = section.items[draggedItemIndex.value];
+        localSection.items.splice(draggedItemIndex.value, 1);
+        localSection.items.splice(droppedOnIndex.value,0,draggedItem);
+        localSection.items.forEach((item, i)=> item.position=i);
+        // updateMenu();
+        draggedItemIndex.value=null;
+        droppedOnIndex.value=null;
 
-    while(droppedOnIndex.value.className!=='item-container'){
-        droppedOnIndex.value=droppedOnIndex.value.parentElement;
-        console.log(droppedOnIndex.value)
     }
-    droppedOnIndex.value=Number(droppedOnIndex.value.dataset.index);
-    console.log(droppedOnIndex.value,draggedItemIndex.value)
-    // if(!draggedItemIndex.value) return;
-    const draggedItem = section.items[draggedItemIndex.value];
-    localSection.items.splice(draggedItemIndex.value, 1);
-    localSection.items.splice(droppedOnIndex.value,0,draggedItem);
-    localSection.items.forEach((item, i)=> item.position=i);
-    updateMenu();
-    draggedItemIndex.value=null;
-    droppedOnIndex.value=null;
     // console.log(draggedItemIndex.value,event)
 }
 
@@ -185,7 +185,7 @@ onMounted(()=>{if(!localSection.name){isNew.value = true;focusNameInput();}})
                 :item="newItem"
                 :section_id="localSection._id"
                 :menu="localMenu"
-                @send-new-item-flag="addItem=false"/> <!--v-for="(item,i) in "sortItems(localSection.items) -->
+                @send-new-item-flag="addItem=false"/>
             <EditItem
                 ref="item"
                 v-for="(item,i) in localSection.items"
@@ -193,14 +193,15 @@ onMounted(()=>{if(!localSection.name){isNew.value = true;focusNameInput();}})
                 :item="item"
                 :section_id="localSection._id"
                 :menu="localMenu"
-                :data-index="i"
+/>
+<!--                 :data-index="i"
                 @dragstart="draggedItemIndex=i"
                 @dragover.prevent
                 @drop="onDrop(i)"
                 @touchstart="onTouchStart($event, i)"
                 @touchmove="onTouchMove($event)"
                 @touchend="onTouchEnd($event)"
-                draggable="true"/>
+                draggable="true" -->
         </div>
         <div class="modalWrapper" v-if="addOptionsModalFlag">
             <ModalAddOptions class="modal options" :menu="localMenu" :item="localSection" @close-modal="addOptionsModalFlag=false"/>

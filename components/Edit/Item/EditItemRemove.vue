@@ -88,20 +88,24 @@ onMounted(()=>{
 .item-title{
     width: 280px;
 }
-
-@media (max-width: 840px){
-    .item-title{
-        width: 300px;
-    }
+@media (max-width: 700px){
+  .item-title{
+    width: 240px;
+  }
 }
-@media (max-width: 740px) {
-    .item-title{
-        width: 400px;
-    }
+@media(max-width: 600px){
+  .item-title{
+    width: 395px;
+  }
 }
-@media(max-width: 500px){
-    .item-title{
-        width: 350px;
-    }
+@media(max-width: 520px){
+  .item-title{
+    width: 340px;
+  }
+}
+@media(max-width: 400px){
+  .item-title{
+    width: 290px;
+  }
 }
 </style>

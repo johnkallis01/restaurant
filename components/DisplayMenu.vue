@@ -12,23 +12,32 @@ const modalFlag=ref(false);
 const modalItem = ref();
 const sectionItemsRef=ref([]);
 const itemDescRef=ref([]);
-const newHeight=ref([])
+const sectionDescRef=ref([]);
+const itemHeight=ref([]);
+const sectionHeight=ref([]);
 const { detachObject } = useDetachObject();
 const displayModal=(item,ops)=>{
-    console.log(item.options)
+    // console.log(item.options)
     const detachItem=detachObject(item);
     modalItem.value={...detachItem, options: [...detachItem.options.map((op)=> ({...op, choice: []})).concat(ops.map((op)=>({...op, choice: []})))]};
     // console.log(modalItem.value)
     modalFlag.value=true;
 }
-
-const fixItemHeights=() => { 
-    console.log(itemDescRef.value)
+const setSectionDescHeight=() => {
+    if(sectionDescRef.value.length){
+        sectionDescRef.value.forEach(section=>{
+            sectionHeight.value.push(section.offsetHeight)
+            console.log(section.offsetHeight)
+        })
+    }
+}
+const setItemHeights=() => { 
+    // console.log(itemDescRef.value)
     //item max-height: 80px;
     //item name height: 20px;
     //item desc lin height: ~15px
     let screenWidth=window?.innerWidth;
-    newHeight.value=[];
+    itemHeight.value=[];
     if(order && screenWidth>740){
         //full width -> 3x 280px
         //  840px -> 2x 300px
@@ -58,16 +67,16 @@ const fixItemHeights=() => {
                 for(let k=0;k<rowLength; k++){ 
                     if (tallest < 20) { //0-1 lines
                         // console.log("push 38");
-                        newHeight.value.push(40);
+                        itemHeight.value.push(40);
                     } else if (tallest < 28) { //2 lines
                         // console.log("push 50");
-                        newHeight.value.push(52);
+                        itemHeight.value.push(52);
                     } else if (tallest < 42) { //3 lines
                         // console.log("push 65");
-                        newHeight.value.push(67);
+                        itemHeight.value.push(67);
                     } else { //4+ lines
                         // console.log("push 80");
-                        newHeight.value.push(80);
+                        itemHeight.value.push(80);
                     }
                 }
                 //set all heights to tallest
@@ -80,38 +89,36 @@ const fixItemHeights=() => {
             //set all heights to tallest
             if (height === 0) {
                 // console.log("push 20");
-                newHeight.value.push(30);
+                itemHeight.value.push(30);
             } else if (height < 20) {
                 // console.log("push 38");
-                newHeight.value.push(40);
+                itemHeight.value.push(40);
             } else if (height < 28) {
                 // console.log("push 50");
-                newHeight.value.push(52);
+                itemHeight.value.push(52);
             } else if (height < 42) {
                 // console.log("push 65");
-                newHeight.value.push(67);
+                itemHeight.value.push(67);
             } else {
                 // console.log("push 80");
-                newHeight.value.push(76);
+                itemHeight.value.push(76);
             }
         })                
     } 
-    // console.log(newHeight.value)
+    // console.log(itemHeight.value)
 }    
 const findIndex=(secIn,itIn) => { //find length of all sections before item index;add item index to sections;
     return menu.sections.slice(0,secIn).reduce((index, section)=>index + section.items.length,0)+itIn;
 }
 onMounted(async () => {
     await nextTick();
-    fixItemHeights();
+    setItemHeights();
+    setSectionDescHeight();
 });
 onBeforeMount(() => {
     itemDescRef.value.length=0;
+    sectionDescRef.value.length=0;
 });
-// onActivated(async() => {
-//     await nextTick();
-//     fixItemHeights();
-// });
 const windowWidth = ref(window?.innerWidth);
 const updateWidth = () => { windowWidth.value = window?.innerWidth;};
 onMounted(() => { 
@@ -125,7 +132,7 @@ onUnmounted(() => {
     window.removeEventListener("orientationchange", updateWidth);
     window.removeEventListener("change", updateWidth);
 });
-watch(windowWidth, () => {fixItemHeights();});
+watch(windowWidth, () => {setItemHeights();setSectionDescHeight();});
 function sortItems(items) {
     return items.sort((a,b)=>a.position - b.position)
 }
@@ -139,12 +146,14 @@ function sortItems(items) {
             v-for="(section,i) in menu.sections" :key="section._id"
             v-if="menu">
             <div class="section-name">{{ section.name }}</div>
-            <div class="section-description">{{ section?.description }}</div>
+            <div class="section-description" ref="sectionDescRef"
+                :style="{height: `${sectionHeight[i]}px`}"
+            >{{ section?.description}}</div>
             <div class="section-items" :class="{'disabled': !order}" ref="sectionItemsRef">
                 <button  class="item-container" :disabled="!order"
                     v-for="(item,j) in sortItems(section.items)" :key="item._id"
                     @click="displayModal(item, section.options)"
-                    :style="{ height: `${newHeight[findIndex(i,j)]}px` }"
+                    :style="{ height: `${itemHeight[findIndex(i,j)]}px` }"
                     >
                     <div class="item-title">
                         <span class="item-name" :class="{'disabled': !order}">{{ item.name}}</span>
@@ -186,43 +195,5 @@ function sortItems(items) {
     justify-content: center;
     width: 100%;
 }
-@media(max-width: 520px){
-    .modal.select{
-        width: 100vw;
-        left: 1vw;
-        height: 30vh;
-    }
-  .item-container{
-      width: 350px;
-  }
-  .item-title{
-    width: 340px;
-  }
-  .item-a-r-o-titles button{
-    width: 90%;
-    margin: 0;
-  }
-}
-@media(max-width: 600px){
-  .item-description textarea{
-      width: 300px;
-  }
-  .item-title{
-      width: 290px;
-  }
-  .item-a-r-o-titles{
-      width: 80%;
-  }
-}
-@media (max-width: 840px){
-  .item-container{
-    width: 300px;
-  }
-  .button-name{
-    width: 20px;
-  }
-  .section-items{
-    grid-template-columns: 300px 300px;
-  }
-}
+
 </style>

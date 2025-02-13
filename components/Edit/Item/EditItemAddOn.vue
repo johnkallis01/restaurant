@@ -106,19 +106,91 @@ onMounted(()=>{
     </div>
 </template>
 <style scoped>
-/* .button-name{
-    left: 0;
-} */
 .item-price{
     right: 0;
 }
 .item-title{
     width: 280px;
 }
-@media (max-width: 840px){
-    .item-title{
-        width: 280px;
-
-    }
+/* @media(min-width: 1400px){
+  .section-items{
+      grid-template-columns: 300px 300px 300px 300px;
+      padding-left: 120px;
+  }
+}
+@media (max-width: 990px){
+  .item-container{
+      width: 280px;
+  }
+  .section-items{
+      grid-template-columns: 280px 280px;
+  }
+}
+@media (max-width: 700px){
+  .item-container{
+      width: 250px;
+  }
+  .item-title{
+    width: 230px;
+  }
+  .section-items{
+      grid-template-columns: 250px 250px;
+  }
+}
+@media(max-width: 600px){
+  .section-items{   
+    display: flex;
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+  }
+  .item-container{
+    width: 400px;
+  }
+  .item-a-r-o-titles{
+    width: 80%;
+  }
+}
+@media(max-width: 520px){
+  .item-container{
+    width: 350px;
+  }
+  .item-title{
+    width: 330px;
+    border: 1px solid green;
+  }
+  .button-name{
+    border: 1px solid red;
+  }
+  .item-a-r-o-titles button{
+    width: 90%;
+    margin: 0;
+  }
+}
+@media(max-width: 400px){
+  .item-title{
+    width: 280px;
+  }
+} */
+@media (max-width: 700px){
+  .item-title{
+    width: 240px;
+  }
+}
+@media(max-width: 600px){
+  .item-title{
+    width: 395px;
+  }
+}
+@media(max-width: 520px){
+  .item-title{
+    width: 340px;
+  }
+}
+@media(max-width: 400px){
+  .item-title{
+    width: 290px;
+  }
 }
 </style>

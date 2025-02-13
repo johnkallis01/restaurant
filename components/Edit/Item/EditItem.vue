@@ -107,6 +107,13 @@ watch(() => [addOnsFlag.value,removesFlag.value],
 const clickOutsideOARtab = (event) => {clickInsideOK.value && !clickInsideOK.value.contains(event.target) ? resetFlags() : null;}
 useEventListener('click', clickOutsideOARtab);
 onMounted(()=>{ if(!localItem.name){ isNew.value = true; focusNameInput();}});
+// watch(optionsModal, (d) => {
+//     if(d) document.addEventListener('dragstart', stopDrag, true);
+//     else document.removeEventListener('dragstart', stopDrag, true);
+// })
+// const stopDrag=(event)=>{
+//     event.preventDefault();
+// }
 </script>
 <template>
     <div class="item-container" ref="containerRef">
@@ -224,7 +231,10 @@ onMounted(()=>{ if(!localItem.name){ isNew.value = true; focusNameInput();}});
                
             </div>
         </div>
-        <div class="modalWrapper" v-if="optionsModal">
+        <!--         @dragstart.stop
+    @dragover.stop
+    @drop.stop -->
+        <div class="modalWrapper" v-if="optionsModal"        >
             <div class="modal options" ref="modalRef">
                 <ModalAddOptions :item="localItem" :section_id="section_id" 
                     :menu="localMenu" @close-modal="optionsModal=false"/>               
@@ -253,18 +263,13 @@ onMounted(()=>{ if(!localItem.name){ isNew.value = true; focusNameInput();}});
 .item-title{
     padding-top: 3px;
 }
-@media(max-width: 400px){
-    .modal.options{
-        width: 105vw;
-        left: 0;
-    }
-}
-@media(max-width: 600px){
+
+/* @media(max-width: 600px){
   .item-description textarea{
       width: 280px;
   }
   .item-a-r-o-titles{
       width: 80%;
   }
-}
+} */
 </style>

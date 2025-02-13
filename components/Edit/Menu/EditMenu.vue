@@ -90,10 +90,11 @@ const onDrop=(newIndex)=>{
                     <EditSection 
                         :section="sec" 
                         :menu="localMenu"
-                        @dragstart="draggedSectionIndex=i"
+                        />  
+                                    <!-- @dragstart="draggedSectionIndex=i"
                         @dragover.prevent
                         @drop="onDrop(i)"
-                        draggable="true"/>              
+                        draggable="true" -->
                 </div>
             </div>
         </div>

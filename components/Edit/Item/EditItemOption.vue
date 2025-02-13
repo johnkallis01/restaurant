@@ -107,7 +107,7 @@ defineExpose({nameRef});
                             @blur="editName=false"
                             v-model="localOption.name"/>
                     </div>
-                    <div v-else>
+                    <div v-else class="name">
                         <span v-if="localOption.name" class="item-title option">
                             <span ref="nameRef" @click="focusNameInput" :class="{'underline': !editName}" tabindex="0">{{ localOption.name }}</span> 
                         </span>
@@ -202,6 +202,7 @@ defineExpose({nameRef});
     width: 300px;
 }
 .item-title.value{
+    width: 100%;
     padding-top: 5px;
 }
 .checkbox input:focus{
@@ -224,7 +225,6 @@ defineExpose({nameRef});
 .tab-container{
     box-sizing: content-box;
     width: 98%;
-
 }
 .options-content-row{
     display: flex;
@@ -245,11 +245,29 @@ defineExpose({nameRef});
 .option{
     font-size: 16px;
 }
+.name{
+    /* border: 1px solid red;
+    box-sizing: border-box; */
+    width: 160px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
 @media(max-width: 500px){
     .tab-container{
-       
         padding-bottom: 10px;
-        /* border: 1px solid red; */
+    }
+    .name{
+        width: 140px;
     }
 }
+@media(max-width: 400px){
+    .item-price{
+        padding: 0px;
+    }
+}
+/* @media(min-width: 400px){
+    .item-title.value{
+        width: 100%;
+    }
+} */
 </style>
