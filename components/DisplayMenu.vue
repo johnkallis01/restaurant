@@ -23,6 +23,8 @@ const setItemHeights=() => {
     //item name height: 20px;
     //item desc lin height: ~15px
     let screenWidth=window?.innerWidth;
+    
+    
     itemHeight.value=[];
     if(order && screenWidth>=600){
         //full width -> 3x >800px
@@ -31,17 +33,26 @@ const setItemHeights=() => {
         let rowLength;
         let itemIndex=0;
         for(let i=0; i<menu.sections.length;i++){//sections i
-            if(screenWidth<800) rowLength=2;
-            else if(screenWidth<1100) rowLength=3;
-            else rowLength=4;
-            console.log(itemDescRef.value)
+            if(sectionItemsRef.value){
+                let sectionElStyle=window.getComputedStyle(sectionItemsRef.value[i]);
+                let gridTemplate = sectionElStyle.getPropertyValue('grid-template-columns')
+                // console.log(gridTemplate)
+                gridTemplate=gridTemplate.split(' ');
+                console.log(gridTemplate.length)
+                rowLength=gridTemplate.length;
+            }
+            
+            // if(screenWidth<800) rowLength=2;
+            // else if(screenWidth<1100) rowLength=3;
+            // else rowLength=4;
+            // console.log(itemDescRef.value)
             let numberOfRows=Math.ceil(menu.sections[i].items.length/rowLength);
             for(let j=0; j< numberOfRows; j++){ //j number of rows
                 let tallest=0;
                 let remainder=menu.sections[i].items.length%rowLength;
                 // console.log(remainder)
-                console.log(menu.sections[i].name)
-                console.log(menu.sections[i].items.length/rowLength,j,remainder)
+                // console.log(menu.sections[i].name)
+                // console.log(menu.sections[i].items.length/rowLength,j,remainder)
                 Math.ceil(menu.sections[i].items.length/rowLength)-1===j && remainder!==0 ? rowLength=remainder : null;
                 for(let k=0;k<rowLength; k++){ //row 0,1,2
                     (tallest < itemDescRef.value[itemIndex].offsetHeight)?  tallest=itemDescRef.value[itemIndex].offsetHeight : null;
