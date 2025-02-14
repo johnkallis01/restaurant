@@ -379,16 +379,24 @@ outline: none;
 box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
 }
 .btn:hover {    
-background-color: #d3dce3;
+  background-color: #d3dce3;
 }
-.btn-text:hover .tooltip{
-opacity: 1;
-visibility: visible;
+.btn-text:hover.tooltip{
+  opacity: 1;
+  visibility: visible;
 }
-.btn:hover .tooltip{
-opacity: 1;
-visibility: visible;
-z-index: 1000;
+.btn:hover.tooltip{
+  opacity: 1;
+  visibility: visible;
+  z-index: 1000;
+}
+@media (hover: none) {
+  .btn:hover.tooltip{
+    opacity: 0;
+  }
+  .btn-text:hover.tooltip{
+    opacity: 0;
+  }
 }
 .btn-icons-group{
 position: absolute;

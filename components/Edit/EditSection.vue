@@ -70,57 +70,70 @@ function addNewItem(){
         _id: uuidv4(),
     }
 }
-const draggedItemData=ref(null);
+const draggedEl=ref(null);
 const onDrop=(newIndex, sectionId)=>{
     console.log('onDrop')
-    if(!draggedItemData.value?.index && draggedItemData.value?.sectionId) return;
-    if(draggedItemData.value?.section_id===sectionId){
-        const draggedItem = section.items[draggedItemData.value.index];
-        localSection.items.splice(draggedItemData.value.index, 1);
+    if(!draggedEl.value?.index && draggedEl.value?.sectionId) return;
+    if(draggedEl.value?.section_id===sectionId){
+        const draggedItem = section.items[draggedEl.value.index];
+        localSection.items.splice(draggedEl.value.index, 1);
         localSection.items.splice(newIndex,0,draggedItem);
         localSection.items.forEach((item, i)=> item.position=i)
     }
     // updateMenu();
-    draggedItemData.value=null;
+    draggedEl.value=null;
 }
-// const droppedOnIndex=ref(null);
-// const onTouchStart=(event, index)=>{
-//     draggedItemIndex.value=index;
-//     console.log(draggedItemIndex.value)
-// }
-// const onTouchMove = (event) => {
-//     event.preventDefault(); // Prevent scrolling while dragging
-//     const touch = event.touches[0];
-//     let target = document.elementFromPoint(touch.clientX, touch.clientY);
-//     droppedOnIndex.value=target;
-// };
-// const onTouchEnd=()=>{
-//     if(droppedOnIndex.value?.className){
-//         while(droppedOnIndex.value?.className!=='item-container'){
-//             droppedOnIndex.value=droppedOnIndex.value.parentElement;
-//             console.log(droppedOnIndex.value)
-//         }
-//         droppedOnIndex.value=Number(droppedOnIndex.value.dataset.index);
-//         console.log(droppedOnIndex.value,draggedItemIndex.value)
-//         // if(!draggedItemIndex.value) return;
-//         const draggedItem = section.items[draggedItemIndex.value];
-//         localSection.items.splice(draggedItemIndex.value, 1);
-//         localSection.items.splice(droppedOnIndex.value,0,draggedItem);
-//         localSection.items.forEach((item, i)=> item.position=i);
-//         updateMenu();
-//         draggedItemIndex.value=null;
-//         droppedOnIndex.value=null;
 
-//     }
-//     // console.log(draggedItemIndex.value,event)
-// }
+const onTouchStart=(index, section_id)=>{
+    draggedEl.value={index,section_id };
+    // console.log(draggedEl.value)
+}
+const droppedOnEl=ref(null);
+const onTouchMove = (event) => {
+    event.preventDefault(); // Prevent scrolling while dragging
+    const touch = event.touches[0];
+    let target = document.elementFromPoint(touch.clientX, touch.clientY);
+    // console.log('move',target)
+    droppedOnEl.value=target;
+};
+const onTouchEnd=()=>{
+    // console.log(droppedOnEl)
+    if(droppedOnEl.value?.className){
+        let stop=0;
+        while(droppedOnEl.value?.className!=='item-container' && stop<6){
+            droppedOnEl.value=droppedOnEl.value.parentElement;
+            // console.log(droppedOnEl.value)
+            stop++;
+        }
+        let droppedOnIndex=Number(droppedOnEl.value.dataset.index);
+        let droppedOnSection=droppedOnEl.value.dataset.id;
+        // console.log(droppedOnSection, droppedOnIndex)
+        if(droppedOnSection===draggedEl.value.section_id){
+            const draggedItem = section.items[draggedEl.value.index];
+            localSection.items.splice(draggedEl.value.index, 1);
+            localSection.items.splice(droppedOnIndex,0,draggedItem);
+            localSection.items.forEach((item, i)=> item.position=i);
+        }      
+        // updateMenu();
+        draggedEl.value=null;
+        droppedOnEl.value=null;
+    }
+}
 const focusDescriptionInput = useFocusInput(descriptionInputRef,editDescription);
 const focusNameInput = useFocusInput(nameInputRef, editName);
 const tabToDescription = useTabToInput(focusDescriptionInput);
 onMounted(()=>{if(!localSection.name){isNew.value = true;focusNameInput();}})
-watch(addOptionsModalFlag, (open) => {
-     if(open) document.addEventListener('dragstart', stopDrag, true);
-     else document.removeEventListener('dragstart', stopDrag, true);
+watch([addOptionsModalFlag,deleteModalFlag], (open) => {
+     if(open) {
+        document.addEventListener('dragstart', stopDrag, true);
+        document.addEventListener('touchstart', stopDrag, true);
+        document.addEventListener('touchmove', stopDrag, true);
+     }
+     else{ 
+        document.removeEventListener('dragstart', stopDrag, true);
+        document.removeEventListener('touchstart', stopDrag, true);
+        document.removeEventListener('touchmove', stopDrag, true);
+    }
  })
 const stopDrag=(event)=>{
      event.preventDefault();
@@ -201,15 +214,16 @@ const stopDrag=(event)=>{
                 :menu="localMenu"
                 :data-index="i"
                 :data-id="localSection._id"
+                @touchstart="onTouchStart(i, localSection._id)"
+                @touchmove="onTouchMove($event)"
+                @touchend="onTouchEnd($event)"
                 @drop="onDrop(i, localSection._id)"
                 draggable="true"
                 @dragstart="draggedItemData={ index:i, section_id: localSection._id}"
                 @dragover.prevent
             />
 <!--                 
-                @touchstart="onTouchStart($event, i)"
-                @touchmove="onTouchMove($event)"
-                @touchend="onTouchEnd($event)"
+                
                  -->
         </div>
         <div class="modalWrapper" v-if="addOptionsModalFlag">

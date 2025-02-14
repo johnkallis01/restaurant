@@ -45,6 +45,9 @@ onMounted(() => {
 .form-title{
     border-radius: 8px 8px 0 0;
 }
+.form-actions{
+    margin: 5px;
+}
 .title-text{
     justify-content: flex-start;
     margin: 5px;
