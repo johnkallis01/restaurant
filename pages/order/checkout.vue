@@ -58,54 +58,63 @@ async function submitOrder(){
 }
 </script>
 <template>
-  <div class="container">
-    <div class="form-title checkout">
-      <span class="text">{{'Checkout Total:  $'+cartStore.getTotal}}</span>
-    </div>
+  <div class="page-container">
+    <div class="form-container">
+      <div class="form-title checkout">
+        <span class="text">{{'Checkout Total:  $'+cartStore.getTotal}}</span>
+      </div>
       <div class="form-subtitle checkout">Please enter your contact information to complete the order</div>
-        <form class="checkout-form">
-          <div class="form-inputs">
-            <TextField class="input-field"
+      <form class="checkout-form">
+        <div class="form-inputs">
+          <TextField class="input-field"
             v-for="input in inputs" :key="input.placeholder"
             :place-holder="input.placeholder" :req="input.req" 
             :is-valid="validationStatus[input.name]" bgColor="azure"
             @send-input="(value) => validateInput(input.rule, value, input.name)"
             @keydown.enter="tabToButton" 
-           />
-          </div>
-          <div class="checkout-actions">
-            <button class="btn submit" ref="buttonRef"
-              :disabled="!isDisabled" @click="submitOrder()">Order</button>
-          </div>
-        </form>
-        
+          />
+        </div>
+        <div class="checkout-actions">
+          <button class="btn submit" ref="buttonRef"
+            :disabled="!isDisabled" @click="submitOrder()">Order</button>
+        </div>
+      </form>
+    </div>        
   </div>
 </template>
 <style scoped>
-.container{
-  height: 100%;
-  width: 100%;
-  border-radius: 0;
-  align-items: center;
+.page-container{
+  background-color: transparent;
+}
+.form-container{
+  width: 300px;
+  min-width: 300px;
+  border: 3px solid black;
+}
+form{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 .form-title.checkout{
   width: 100%;
-  border-radius: 0px;
+  border-radius: 2px 2px 0px 0px;
+  padding: 0;
+  height: 40px;
+}
+.form-subtitle{
+  padding: 6px;
+  font-size: 14px;
 }
 .text{
   margin-left: 20px;
+  padding: 4px;
   text-wrap: nowrap;
 }
 .form-inputs{
-
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 10px;
-  margin-top: 40px;
-}
-.checkout-form{
-  width: 60vw;
-
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 .checkout-actions{
   width: 100%;
