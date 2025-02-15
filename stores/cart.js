@@ -86,7 +86,9 @@ export const useCartStore = defineStore('cart', {
                 console.log(1)
                 try{
                     console.log(2)
-                    const response = await fetch(`/api/orders?${start}?${end}`,{
+                    let times= {start, end}
+                    console.log(times)
+                    const response = await fetch('/api/orders/'+times,{
                         method: 'GET',
                         headers: {authorization: `Bearer ${token.value}`},        
                     });
