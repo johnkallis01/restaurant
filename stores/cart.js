@@ -92,9 +92,10 @@ export const useCartStore = defineStore('cart', {
                     });
                     console.log(3)
                     if(!response.ok) throw new Error('error from api/orders');
-                    const data= await response.json();
-                    console.log('date')
-                    return data;
+                    // console.log('response')
+                    return await response.json();
+                    // console.log('date')
+                    // return data;
                     
                 }catch{
                     console.log('errorrrrrr')
