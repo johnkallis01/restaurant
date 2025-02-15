@@ -47,7 +47,10 @@ export const useAuthStore = defineStore('auth', {
             const token = useCookie('token');
             if(token.value){
                 if(isTokenExpired(token.value)) this.logout();
-            }else this.logout();
+            }else{
+                 this.logout();
+                 navigateTo('/auth/login');
+                }
         },
     },
 });
