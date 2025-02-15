@@ -74,4 +74,9 @@ onMounted(() => {
     justify-content: center;
     width: 100%;
 }
+@media(max-width: 500px){
+    .modal-subtitle{
+        font-size: 12px;
+    }
+}
 </style>

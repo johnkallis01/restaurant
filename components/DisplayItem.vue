@@ -5,7 +5,19 @@ const containerRef=ref(null);
 const titleRef=ref(null);
 const contentRef=ref(null);
 const getHeight=() => {
-    if(containerRef.value?.offsetHeight<23) {
+    // console.log('get height', containerRef.value)
+    // console.log(height)
+    if(containerRef.value?.scrollHeight<23) {
+        // console.log(containerRef.value)
+        if(titleRef.value) titleRef.value.style.borderRadius='5px'; 
+    }
+}
+const getHeight2=() => {
+    // console.log('get height2', containerRef.value.offsetHeight)
+    // console.log('get height2', containerRef.value.scrollHeight)
+    console.log(height)
+    if(containerRef.value?.scrollHeight<23) {
+        // console.log(containerRef.value)
         if(titleRef.value) titleRef.value.style.borderRadius='5px';
         // console.log(height)
         // console.log(containerRef.value?.offsetHeight)
@@ -13,29 +25,32 @@ const getHeight=() => {
         // 
     }
 }
-// watch(()=>height,() => {
-//     containerRef.value.offsetHeight=height;
-// })
-// watch(() => height, (newHeight) => {
-//   if (contentRef.value) {
-//     contentRef.value.style.height = `${newHeight}px`;
-//   }
-// });
-// onMounted(() => {
-//   if (contentRef.value && height) {
-//     contentRef.value.style.height = `${height - 20}px`;
-//   }
-// });
 onMounted(getHeight)
+const windowWidth = ref(window?.innerWidth);
+const updateWidth = () => { windowWidth.value = window?.innerWidth;};
+onMounted(async () => { 
+    nextTick(getHeight);
+    window.addEventListener("resize", updateWidth);
+    window.addEventListener("orientationchange", updateWidth);
+    window.addEventListener("change", updateWidth);
+});
+onUnmounted(() => {
+    window.removeEventListener("resize", updateWidth);
+    window.removeEventListener("orientationchange", updateWidth);
+    window.removeEventListener("change", updateWidth);
+});
+watch(windowWidth, () => {
+    nextTick(getHeight2);
+});
 defineExpose({containerRef});
 </script>
 <template>
-    <div class="item-container" ref="containerRef" :style="{height: height ? height + 'px' : 'auto'}">
-       <div class="item-title" ref="titleRef">{{ height }}
+    <div class="item-container" ref="containerRef" :style="{height: height ? height-2 + 'px' : 'auto'}">
+       <div class="item-title" ref="titleRef">
             <div class="item-name">{{item.name+' x '+item.qty}}</div>
             <div class="item-price">{{formatPrice(item.price)}}</div>
        </div>
-       <div class="content" ref="contentRef" >
+       <div class="content" ref="contentRef">
             <div class="row" v-if="item.options.length">
                 <div>{{ 'options: ' }}</div>
                 <div v-for="op in item.options">

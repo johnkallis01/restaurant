@@ -70,23 +70,69 @@ function addNewItem(){
         _id: uuidv4(),
     }
 }
+// const draggedEl=ref(null);
+// const onItemDrag=(event, index, section_id,flag)=>{
+//     event.stopPropagation();
+//     console.log(flag)
+//     event.dataTransfer.setData('itemData',JSON.stringify({index: index, sec_id: section_id}))
+//     draggedEl.value={index:index, section_id:section_id};
+    
+//     // document.addEventListener('drop', onItemDrop, true)
+    
+//     // event.dataTransfer.dropEffect='move';
+//     // event.dataTransfer.setData('index',index)
+    
+//     console.log('item ev',event)
+//     console.log('oidrag',event,draggedEl.value)
+// }
 const draggedEl=ref(null);
-const onDrop=(newIndex, sectionId)=>{
-    console.log('onDrop')
-    if(!draggedEl.value?.index && draggedEl.value?.sectionId) return;
-    if(draggedEl.value?.section_id===sectionId){
-        const draggedItem = section.items[draggedEl.value.index];
-        localSection.items.splice(draggedEl.value.index, 1);
-        localSection.items.splice(newIndex,0,draggedItem);
-        localSection.items.forEach((item, i)=> item.position=i)
-    }
+const onDrop=(event, newIndex)=>{
+    event.stopPropagation();
+    
+    console.log('onDrop',draggedEl.value)
+    // if(!draggedEl.value?.index && draggedEl.value?.sectionId) return;
+    // if(!draggedEl.value?.index) return;
+    // if(draggedEl.value?.section_id===sectionId){
+    const draggedItem = section.items[draggedEl.value];
+    localSection.items.splice(draggedEl.value, 1);
+    localSection.items.splice(newIndex,0,draggedItem);
+    localSection.items.forEach((item, i)=> item.position=i)
+    // }
     // updateMenu();
     draggedEl.value=null;
 }
+// const onItemDrop=(event, newIndex, sectionId, flag)=>{
+//     event.stopPropagation();
+//     console.log(flag)
+//     console.log('onDrop' ,draggedEl.value, newIndex, sectionId)
+//     const data=event.dataTransfer.getData('itemData');
+//     console.log(event)
+//     const parsedData=JSON.parse(data);
+//     const index = parsedData.index;
+//     console.log(parsedData.index, newIndex)
+//     console.log(parsedData.sec_id, sectionId)
+//     console.log(event)
+//     if(!parsedData?.index && parsedData?.sectionId) return;
+//     console.log('3')
+//     if(String(parsedData?.sec_id)==sectionId){
+//         console.log('1')
+//         const draggedItem = section.items[parsedData.index];
+//         console.log('5')
+//         localSection.items.splice(parsedData?.index, 1);
+//         console.log('8')
+//         localSection.items.splice(newIndex,0,draggedItem);
+//         console.log('9')
+//         localSection.items.forEach((item, i)=> item.position=i)
+//         console.log('done')
+//     }
+//     // updateMenu();
+//     // document.removeEventListener('drop', onItemDrop, true)
+//     draggedEl.value=null;
+// }
 
 const onTouchStart=(index, section_id)=>{
     draggedEl.value={index,section_id };
-    // console.log(draggedEl.value)
+    console.log(draggedEl.value)
 }
 const droppedOnEl=ref(null);
 const onTouchMove = (event) => {
@@ -97,18 +143,19 @@ const onTouchMove = (event) => {
     droppedOnEl.value=target;
 };
 const onTouchEnd=()=>{
-    // console.log(droppedOnEl)
+    console.log(droppedOnEl)
     if(droppedOnEl.value?.className){
         let stop=0;
-        while(droppedOnEl.value?.className!=='item-container' && stop<6){
+        while(droppedOnEl.value?.className!=='item-container'){
             droppedOnEl.value=droppedOnEl.value.parentElement;
-            // console.log(droppedOnEl.value)
+            console.log(droppedOnEl.value)
             stop++;
         }
         let droppedOnIndex=Number(droppedOnEl.value.dataset.index);
         let droppedOnSection=droppedOnEl.value.dataset.id;
-        // console.log(droppedOnSection, droppedOnIndex)
+        console.log(droppedOnSection, droppedOnIndex)
         if(droppedOnSection===draggedEl.value.section_id){
+            console.log(true)
             const draggedItem = section.items[draggedEl.value.index];
             localSection.items.splice(draggedEl.value.index, 1);
             localSection.items.splice(droppedOnIndex,0,draggedItem);
@@ -123,8 +170,32 @@ const focusDescriptionInput = useFocusInput(descriptionInputRef,editDescription)
 const focusNameInput = useFocusInput(nameInputRef, editName);
 const tabToDescription = useTabToInput(focusDescriptionInput);
 onMounted(()=>{if(!localSection.name){isNew.value = true;focusNameInput();}})
-watch([addOptionsModalFlag,deleteModalFlag], (open) => {
-     if(open) {
+// watch(addOptionsModalFlag, (open) => {
+//      if(open) {
+//         document.addEventListener('dragstart', stopDrag, true);
+//         document.addEventListener('touchstart', stopDrag, true);
+//         document.addEventListener('touchmove', stopDrag, true);
+//      }
+//      else{ 
+//         document.removeEventListener('dragstart', stopDrag, true);
+//         document.removeEventListener('touchstart', stopDrag, true);
+//         document.removeEventListener('touchmove', stopDrag, true);
+//     }
+// })
+// watch(deleteModalFlag, (open) => {
+//      if(open) {
+//         document.addEventListener('dragstart', stopDrag, true);
+//         document.addEventListener('touchstart', stopDrag, true);
+//         document.addEventListener('touchmove', stopDrag, true);
+//      }
+//      else{ 
+//         document.removeEventListener('dragstart', stopDrag, true);
+//         document.removeEventListener('touchstart', stopDrag, true);
+//         document.removeEventListener('touchmove', stopDrag, true);
+//     }
+// })
+watch([addOptionsModalFlag,deleteModalFlag], (o) => {
+     if(o) {
         document.addEventListener('dragstart', stopDrag, true);
         document.addEventListener('touchstart', stopDrag, true);
         document.addEventListener('touchmove', stopDrag, true);
@@ -217,13 +288,13 @@ const stopDrag=(event)=>{
                 @touchstart="onTouchStart(i, localSection._id)"
                 @touchmove="onTouchMove($event)"
                 @touchend="onTouchEnd($event)"
-                @drop="onDrop(i, localSection._id)"
                 draggable="true"
-                @dragstart="draggedItemData={ index:i, section_id: localSection._id}"
-                @dragover.prevent
-            />
-<!--                 
                 
+            />
+<!--    @dragstart="draggedEl=i"
+                @dragover.prevent
+                @drop="onDrop($event, i)"             
+            onItemDrag($event, i, localSection._id)    
                  -->
         </div>
         <div class="modalWrapper" v-if="addOptionsModalFlag">
@@ -269,6 +340,24 @@ const stopDrag=(event)=>{
 .text-field.description input{
     width: 500px;
     font-size: 12px;
+}
+@media(max-width: 550px){
+    .text-field.description input{
+        width: 400px;
+        font-size: 12px;
+    }
+}
+@media(max-width: 420px){
+    .text-field.description input{
+        width: 380px;
+        font-size: 12px;
+    }
+}
+@media(max-width: 370px){
+    .text-field.description input{
+        width: 300px;
+        font-size: 12px;
+    }
 }
 .modal.delete{
     height: 35vh;

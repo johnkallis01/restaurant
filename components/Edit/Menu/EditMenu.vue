@@ -44,16 +44,42 @@ const getCloseTimes = (name) => {
     localMenu.name=name;
     showTimes.value=false;
 }
+// const draggedSectionIndex=ref(null);
+// const onSectionDrag=(event,index) => {
+//     console.log('section ev',event)
+//     if(event.target.classList.contains('item-container')){
+//          event.dataTransfer.isTrusted=false;
+//          return;
+//         }
+//     console.log('p')
+    
+//     draggedSectionIndex.value=index;
+// }
 const draggedSectionIndex=ref(null);
 const onDrop=(newIndex)=>{
     console.log('drop section')
-    if(!draggedSectionIndex.value) return;
+    // if(!draggedSectionIndex.value) return;
     const draggedSection = localMenu.sections[draggedSectionIndex.value];
     localMenu.sections.splice(draggedSectionIndex.value, 1);
     localMenu.sections.splice(newIndex,0,draggedSection);
-    localMenu.sections.forEach((sec, i)=> sec.position=i)
-    menuStore.updateMenu(localMenu);
+    localMenu.sections.forEach((sec, i)=> sec.position=i);
+    // menuStore.updateMenu(localMenu);
     draggedSectionIndex.value=null;
+}
+watch(modalFlag, (open) => {
+     if(open) {
+        document.addEventListener('dragstart', stopDrag, true);
+        document.addEventListener('touchstart', stopDrag, true);
+        document.addEventListener('touchmove', stopDrag, true);
+     }
+     else{ 
+        document.removeEventListener('dragstart', stopDrag, true);
+        document.removeEventListener('touchstart', stopDrag, true);
+        document.removeEventListener('touchmove', stopDrag, true);
+    }
+ })
+const stopDrag=(event)=>{
+     event.preventDefault();
 }
 </script>
 <template>
@@ -95,8 +121,7 @@ const onDrop=(newIndex)=>{
                         @dragover.prevent
                         @drop="onDrop(i)"
                         draggable="true"
-                        />  
-                                    <!-- -->
+                    />    <!-- -->
                 </div>
             </div>
         </div>

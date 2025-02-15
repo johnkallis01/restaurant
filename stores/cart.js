@@ -5,6 +5,7 @@ export const useCartStore = defineStore('cart', {
         isCartOpen: false,
         items: [], //cart items
         orders: [], //orders
+        order: null,
     }),
     getters:{
         getItems: (state) => state.items,
@@ -67,6 +68,16 @@ export const useCartStore = defineStore('cart', {
             }
             
             // navigateTo('/');
+        },
+        async fetchOrderById(id){
+            try{
+                const response=await fetch('/api/order/'+id,{method: 'GET'});
+                if(!response.ok) throw new Error('error from api/orders');
+                const data= await response.json();
+                this.order=data;
+            }catch{
+                console.log('error')
+            }
         },
         async fetchOrdersByDate(start, end){            
             const token=useCookie('token');

@@ -201,16 +201,16 @@ gap: 5px;
 /* border: 1px solid red;   */
 }
 .item-container{
-display: flex;
-flex-direction: column;
-justify-content: flex-start;
-border-radius: 7px;
-color: black;
-width: 280px;
-/*height: 80px; /*change editItem watcher*/
-border: 2px solid black;
-overflow: visible;
-background-color: transparent;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  border-radius: 7px;
+  color: black;
+  width: 280px;
+  /*height: 80px; /*change editItem watcher*/
+  border: 2px solid black;
+  overflow: visible;
+  background-color: transparent;
 }
 .item-title{
 display: flex;
@@ -259,34 +259,34 @@ align-items: center;
 
 }
 .btn.delete{
-padding: 2px 3px;
-border-radius: 10px;
+  padding: 2px 3px;
+  border-radius: 10px;
 }
 .new-menu-container{
-display: flex;
-justify-content: flex-start;
-flex-direction: column;
-align-content: center;
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: column;
+  align-content: center;
 }
 
 /* forms */
 .form-container{
-display: flex;
-flex-direction: column;
-justify-content: center;
-background-color: azure;
-border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-color: azure;
+  border-radius: 5px;
 }
 .form-title{
-display: flex;
-justify-content: flex-start;
-align-items: center;
-padding: 10px;
-height: 20px;
-font-size: large;
-border-radius: 5px 5px 0px 0px;
-border-bottom: 2px solid black;
-background-color: rgb(180, 175, 175);
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 10px;
+  height: 20px;
+  font-size: large;
+  border-radius: 5px 5px 0px 0px;
+  border-bottom: 2px solid black;
+  background-color: rgb(180, 175, 175);
 }
 .form-field{
   display: flex;
@@ -359,7 +359,7 @@ color: #999;
 color: red;
 }
 .underline{
-border-bottom: 2px solid black;
+  border-bottom: 2px solid black;
 }
 /****************
   Buttons
@@ -701,12 +701,6 @@ border: 1px solid yellow; */
       padding-left: 120px;
   }
 }
-@media(max-width: 1420px){
-  .section-items{
-    grid-template-columns: 300px 300px 300px 300px;
-    padding: 0;
-  }
-}
 @media(max-width: 1370px){
   .section-items{
     grid-template-columns: 300px 300px 300px;
@@ -808,5 +802,8 @@ border: 1px solid yellow; */
   }
   .item-title{
     width: 290px;
+  }
+  .modal.delete{
+    height: 25vh;
   }
 }
