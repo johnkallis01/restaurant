@@ -11,16 +11,11 @@ const order = ref(null);
 const loading = ref(true);
 const id =route.params._id;
 const fetchOrder = async() => {
-    if (!id) {
-        error.value = "No order ID found.";
-        
-        return;
-    }
-    loading.value = false;
-    console.log(id)
+    if (!id) return;
     const response = await fetch('/api/order/'+id,{method: 'GET'});
     if(!response.ok) throw new Error('error from api/orders');
     order.value = await response.json();
+    loading.value = false;
     
     
 }
