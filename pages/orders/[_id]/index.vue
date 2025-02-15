@@ -61,10 +61,8 @@ onMounted(async () => {
     router.push('/orders'); // Redirect if no ID is found
     return;
   }
+  loading.value=true;
   await fetchOrder();
-});
-onBeforeUnmount(() => {
-    localStorage.setItem('order_id', route.params._id)
 });
 onUnmounted(() => {
     window.removeEventListener("resize", updateWidth);
