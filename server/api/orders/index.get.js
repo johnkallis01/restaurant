@@ -18,19 +18,18 @@ export default defineEventHandler(async (event) => {
     }
     if(isAdmin){
       try{
-        const url = event.req.originalUrl;
+        const url = event?.req.originalUrl;
         // const start = event.req.originalUrl.slice(18,41);
         let start = url.split('?')[1];
         console.log(start)
         // const end = event.req.originalUrl.slice(47,event.req.originalUrl.length-1)
         let end = url.split('?')[2];
         console.log(end)
-        const orders = await Order.find({
+        return await Order.find({
           createdAt: { $gte: start, $lte: end }
-        })
-            .sort({createdAt: -1})
+        }).sort({createdAt: -1})
         // console.log(orders)
-        return orders;
+         
       } catch (err) {
         throw createError({ statusCode: 403, message: 'error retrieving data' });
       }
