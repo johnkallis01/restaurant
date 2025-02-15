@@ -81,12 +81,16 @@ export const useCartStore = defineStore('cart', {
         },
         async fetchOrdersByDate(start, end){            
             const token=useCookie('token');
+            console.log(0)
             if(token.value){
+                console.log(1)
                 try{
+                    console.log(2)
                     const response = await fetch(`/api/orders?${start}?${end}`,{
                         method: 'GET',
                         headers: {authorization: `Bearer ${token.value}`},        
                     });
+                    console.log(3)
                     if(!response.ok) throw new Error('error from api/orders');
                     const data= await response.json();
                     console.log('date')

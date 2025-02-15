@@ -107,6 +107,7 @@ const enter=(bar) => {
 .count{
     position: relative;
     top: -18px;
+    font-size: 8px;
 }
 .title{
     position: absolute;
