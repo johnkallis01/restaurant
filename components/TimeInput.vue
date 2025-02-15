@@ -43,7 +43,7 @@ const updateMinute = (min) => {
           {{ m<15 ? m+'0':m }}
         </option>
       </select>
-      <button class="toggle" :class="{'error-text': error && !disabled}"
+      <button class="toggle ampm" :class="{'error-text': error && !disabled}"
         @click="time.pm=!time.pm; updatePM(time.pm)"
         :disabled="disabled" >
         <Transition name="slide-fade">
@@ -65,11 +65,22 @@ const updateMinute = (min) => {
   /* border: 1px solid green;
   box-sizing: border-box; */
 }
+button{
+  outline: none;
+  border: none;
+}
 .options{
   font-size: 12px;
 }
 .toggle{
   width: 30px;
+}
+.toggle.ampm{
+  padding: 0;
+  align-items: center;
+  top: 0;
+  margin-bottom: 1px;
+
 }
 select{
   padding: 5px;

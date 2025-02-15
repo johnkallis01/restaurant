@@ -28,12 +28,15 @@ onMounted(() => { newMenuRef.value.querySelector('input').focus();});
 </script>
 <template>
     <div class="new-menu-container" ref="newMenuRef">
-		<TextField class="menu-name"
-			:is-valid="rules['name'].test(localMenu.name)"
-			:name="localMenu.name||''"
-			place-holder="menu name"
-			bg-color="rgb(247, 249, 252)"
-			:req="true" @send-input="getName"/>
+      <div class="new-menu-input">
+        <TextField class="menu-name"
+        :is-valid="rules['name'].test(localMenu.name)"
+        :name="localMenu.name||''"
+        place-holder="menu name"
+        bg-color="rgb(247, 249, 252)"
+        :req="true" @send-input="getName"/>
+      </div>
+      
 		<div class="menu-container-body" v-if="localMenu">
 			<NewDay class="day-row"
 				:day="day" v-for="(day, i) in localMenu.days" :key="i" 
@@ -52,11 +55,15 @@ onMounted(() => { newMenuRef.value.querySelector('input').focus();});
 .menu-container-body{
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: center;
   align-content: center;
   /* border: 1px solid red;
   box-sizing: border-box; */
-  width: 98%;
+  /* width: 98%; */
+}
+.new-menu-input{
+  display: flex;
+  justify-content: center;
 }
 .day-row{
   margin: 2px;

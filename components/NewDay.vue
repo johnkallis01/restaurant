@@ -43,7 +43,7 @@ const getEnd = (d)=>{
 <style scoped>
 .day-card {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   flex-direction: row;
   align-items: center;
   /* border: 1px solid blue;
@@ -75,6 +75,7 @@ const getEnd = (d)=>{
   }
   
 }
+
 .times{
   display: flex;
   justify-content: space-evenly;

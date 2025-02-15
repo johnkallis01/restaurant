@@ -32,7 +32,7 @@ onMounted(() => {
         <div class="form-actions">
             <button class="btn"
                 :disabled="input.trim()!==item.name.trim()"
-                @click="emit('delete-item')" ref="buttonRef">Submit</button>
+                @click="emit('delete-item', item)" ref="buttonRef">Submit</button>
             <button class="btn" @click="emit('close-modal')">Cancel</button>
         </div>
     </div>
