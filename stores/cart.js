@@ -90,7 +90,7 @@ export const useCartStore = defineStore('cart', {
                         method: 'GET',
                         headers: {authorization: `Bearer ${token.value}`},        
                     });
-                    console.log(3)
+                    console.log(3, response)
                     if(!response.ok) throw new Error('error from api/orders');
                     // console.log('response')
                     return await response.json();
