@@ -8,6 +8,7 @@ const router=useRouter();
 const menuStore = useMenuStore();
 const localMenu = reactive(menu);
 const localMenus = reactive(menus);
+const { detachObject } = useDetachObject();
 const modalFlag=ref(false);
 const showTimes = ref(false);
 const addSection = ref(false);
@@ -42,15 +43,7 @@ const getCloseTimes = (name) => {
     showTimes.value=false;
 }
 const draggedSectionIndex=ref(null);
-const onSectionDrop=(newIndex)=>{
-    console.log(draggedSectionIndex.value)
-    const draggedSection = localMenu.sections[draggedSectionIndex.value];
-    localMenu.sections.splice(draggedSectionIndex.value, 1);
-    localMenu.sections.splice(newIndex,0,draggedSection);
-    localMenu.sections.forEach((sec, i)=> sec.position=i);
-    menuStore.updateMenu(localMenu);
-    draggedSectionIndex.value=null;
-}
+
 /*section data*/
 const deleteModalFlag=ref([]); const addOptionsModalFlag=ref([]);
 const nameInputRef=ref(null); const descriptionInputRef = ref(null);
@@ -69,7 +62,7 @@ const newItem = ref({
 });
 function updateMenu(section){
     console.log('update')
-    const sectionIndex = menu.sections.findIndex(sec => sec._id === section._id);
+    const sectionIndex = localMenu.sections.findIndex(sec => sec._id === section._id);
     localMenu.sections[sectionIndex]=section;
     menuStore.updateMenu(localMenu);
 }
@@ -102,28 +95,49 @@ function addNewItem(index){
         _id: uuidv4(),
     }
 }
+const onSectionDrop=(newIndex, sec_id)=>{
+    console.log('section drop')
+    console.log(draggedSectionIndex.value, newIndex, sec_id);
+    if(sec_id!==draggedSectionIndex.value.section){
+        const draggedSection = localMenu.sections[draggedSectionIndex.value.index];
+        let newMenu=detachObject(menu);
+        localMenu.sections.splice(draggedSectionIndex.value.index, 1);
+        localMenu.sections.splice(newIndex,0,draggedSection);
+        localMenu.sections.forEach((sec, i)=> sec.position=i);
+        menuStore.updateMenu(localMenu);
+    }
+    
+    draggedSectionIndex.value=null;
+}
 const draggedEl=ref(null);
 const onDragItemStart=(event, index, section)=>{
+    console.log('item pick up')
     event.stopPropagation();
     console.log(index, section)
     draggedEl.value={index, section}
 }
 const onDragItemOver = (event) => {
+    console.log('item drag')
     event.stopPropagation();
     event.preventDefault();
 }
 const onItemDrop=(event, newIndex, section)=>{
     event.stopPropagation(); 
-    console.log('onDrop',draggedEl.value, section)
+    console.log('item onDrop',draggedEl.value, section)
     console.log(newIndex, section)
     if(draggedEl.value.section === section._id){
         const draggedItem = section.items[draggedEl.value.index];
         section.items.splice(draggedEl.value.index, 1);
         section.items.splice(newIndex,0,draggedItem);
         section.items.forEach((item, i)=> item.position=i);
-        updateMenu(section);
+        const sortedSections=localMenu.sections.sort((a,b)=>a.position - b.position);
+        let newMenu=detachObject(localMenu);
+        newMenu.sections=sortedSections;
+        const sectionIndex=sortedSections.findIndex(sec => sec._id === section._id);
+        newMenu.sections[sectionIndex]=section;
+        menuStore.updateMenu(newMenu);
+        // updateMenu(section);
     }
-    ;
     draggedEl.value=null;
 }
 const onTouchStart=(index, section_id)=>{
@@ -221,11 +235,12 @@ onMounted(() => {
                 <div class="section-container" v-if="addSection">
                     <EditSection :section="newSection" :menu="localMenu" @send-new-section-flag="getNewSectionFlag"/>
                 </div>
-                <div class="section-container" v-for="(sec,i) in localMenu.sections" :key="sec._id">
+                <div class="section-container"
+                    v-for="(sec,i) in localMenu.sections" :key="sec._id">
                     <div class="section-container"
-                        @dragstart="draggedSectionIndex=i"
+                        @dragstart="draggedSectionIndex={index: i, section: sec._id}"
                         @dragover.prevent
-                        @drop="onSectionDrop(i)"
+                        @drop="onSectionDrop(i, sec._id)"
                         draggable="true">
                         <div class="section-name">
                             <span class="left-btns">
