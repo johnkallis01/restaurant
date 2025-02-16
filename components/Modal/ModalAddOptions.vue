@@ -31,7 +31,7 @@ function tabToAddOptionsBtn(event){
     }
 }
 function submitChanges(){
-    console.log('sci', newOption)
+    // console.log('sci', newOption)
     //when 'submit' is pressed but not 'submit option'
     if(newOption.name && newOption.content.length) getNew(newOption);
     if(section_id){//if item

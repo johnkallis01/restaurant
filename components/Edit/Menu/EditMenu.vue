@@ -19,7 +19,7 @@ const newSection = ref({
     options: [],
 });
 const getDeleteMenu=()=>{
-    console.log('get delete')
+    // console.log('get delete')
     modalFlag.value=false;
     const menuIndex = localMenus.findIndex(m => localMenu._id === m._id);
     localMenus.slice(menuIndex, 1);
@@ -51,7 +51,7 @@ const onSectionDrop=(newIndex)=>{
     draggedSectionIndex.value=null;
 }
 /*section data*/
-const deleteModalFlag=ref(false); const addOptionsModalFlag=ref(false);
+const deleteModalFlag=ref([]); const addOptionsModalFlag=ref([]);
 const nameInputRef=ref(null); const descriptionInputRef = ref(null);
 const editName=ref(false); const editDescription = ref(false);
 const addItem = ref(false);
@@ -66,12 +66,12 @@ const newItem = ref({
         position: 0,
         _id: uuidv4(),
 });
-function updateMenu(){
+function updateMenu(section){
     const sectionIndex = menu.sections.findIndex(sec => sec._id === section._id);
-    localMenu.sections[sectionIndex]=sec;
+    localMenu.sections[sectionIndex]=section;
     menuStore.updateMenu(localMenu);
 }
-function postSectionEdit(str){
+function postSectionEdit(section,str){
     switch(str){
         case 'name':
             editName.value=false;
@@ -80,11 +80,11 @@ function postSectionEdit(str){
             editDescription.value=false;
             break;
     }
-    updateMenu();
+    updateMenu(section);
 }
 const getDeleteSection=(section)=>{
-    deleteModalFlag.value=false;
     const sectionIndex = menu.sections.findIndex(sec => sec._id === section._id);
+    deleteModalFlag.value[sectionIndex]=false;
     localMenu.sections.splice(sectionIndex, 1);
     menuStore.updateMenu(localMenu);
 }
@@ -108,12 +108,12 @@ const onItemDrop=(event, newIndex, section)=>{
     section.items.splice(draggedEl.value, 1);
     section.items.splice(newIndex,0,draggedItem);
     section.items.forEach((item, i)=> item.position=i)
-    updateMenu();
+    updateMenu(section);
     draggedEl.value=null;
 }
 const onTouchStart=(index, section_id)=>{
     draggedEl.value={index,section_id };
-    console.log(draggedEl.value)
+    // console.log(draggedEl.value)
 }
 const droppedOnEl=ref(null);
 const onTouchMove = (event) => {
@@ -124,25 +124,25 @@ const onTouchMove = (event) => {
     droppedOnEl.value=target;
 };
 const onTouchEnd=(section)=>{
-    console.log(droppedOnEl)
+    // console.log(droppedOnEl)
     if(droppedOnEl.value?.className){
         // let stop=0;
         while(droppedOnEl.value?.className!=='item-container'){
             droppedOnEl.value=droppedOnEl.value.parentElement;
-            console.log(droppedOnEl.value)
+            // console.log(droppedOnEl.value)
             // stop++;
         }
         let droppedOnIndex=Number(droppedOnEl.value.dataset.index);
         let droppedOnSection=droppedOnEl.value.dataset.id;
-        console.log(droppedOnSection, droppedOnIndex)
+        // console.log(droppedOnSection, droppedOnIndex)
         if(droppedOnSection===draggedEl.value.section_id){
-            console.log(true)
+            // console.log(true)
             const draggedItem = section.items[draggedEl.value.index];
             section.items.splice(draggedEl.value.index, 1);
             section.items.splice(droppedOnIndex,0,draggedItem);
             section.items.forEach((item, i)=> item.position=i);
         }      
-        updateMenu();
+        updateMenu(section);
         draggedEl.value=null;
         droppedOnEl.value=null;
     }
@@ -153,18 +153,26 @@ const tabToDescription = useTabToInput(focusDescriptionInput);
 watch([addOptionsModalFlag,deleteModalFlag,modalFlag], (open) => {
      if(open) {
         document.addEventListener('dragstart', stopDrag, true);
-        document.addEventListener('touchstart', stopDrag, true);
+        // document.addEventListener('touchstart', stopDrag, true);
         document.addEventListener('touchmove', stopDrag, true);
      }
      else{ 
         document.removeEventListener('dragstart', stopDrag, true);
-        document.removeEventListener('touchstart', stopDrag, true);
+        // document.removeEventListener('touchstart', stopDrag, true);
         document.removeEventListener('touchmove', stopDrag, true);
     }
  })
 const stopDrag=(event)=>{
      event.preventDefault();
 }
+onMounted(() => {
+    localMenu.sections.forEach(()=>{
+        addOptionsModalFlag.value.push(false);
+        deleteModalFlag.value.push(false)
+    }) 
+    console.log(deleteModalFlag.value)
+    console.log(addOptionsModalFlag.value)
+})
 </script>
 <template>
     <div class="menu-container">
@@ -198,97 +206,97 @@ const stopDrag=(event)=>{
                     <EditSection :section="newSection" :menu="localMenu" @send-new-section-flag="getNewSectionFlag"/>
                 </div>
                 <div class="section-container" v-for="(sec,i) in localMenu.sections" :key="sec._id">
-                        <div class="section-container"
+                    <div class="section-container"
                         @dragstart="draggedSectionIndex=i"
                         @dragover.prevent
                         @drop="onSectionDrop(i)"
                         draggable="true">
-                            <div class="section-name">
-                                <span class="left-btns">
-                                    <button class="btn delete" @click="deleteModalFlag=true">
-                                        <i class="mdi mdi-close"/>
-                                        <span class="tooltip">delete section</span>
-                                    </button>
-                                    <template v-if="editName">
-                                        <div class="text-field name">
-                                            <input
-                                                type="text"
-                                                ref="nameInputRef"
-                                                v-model="sec.name"
-                                                @blur="postSectionEdit('name')"
-                                                @keydown.enter="postSectionEdit('name')"
-                                                @keydown="tabToDescription"
-                                            />
-                                        </div>
-                                    </template>
-                                    <template v-else>
-                                        <span @click="focusNameInput" v-if="sec.name">{{ sec.name }}</span>
-                                        <span class="placeholder-color" @click="focusNameInput" v-else>name</span>
-                                    </template>
-                                </span>
-                                <div class="right-btns">
-                                    <button class="btn" @click="addOptionsModalFlag=true">
-                                        <span>options</span>
-                                        <i class="mdi mdi-plus"/>
-                                        <span class="tooltip">add options to all items</span>
-                                    </button> 
-                                    <button class="btn" @click="addNewItem()">
-                                        <span>item</span>
-                                        <i class="mdi mdi-plus"/>
-                                        <span class="tooltip">add item</span>
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="section-description">
-                                <template v-if="editDescription">
-                                    <div class="text-field description">
+                        <div class="section-name">
+                            <span class="left-btns">
+                                <button class="btn delete" @click="deleteModalFlag[i]=true">
+                                    <i class="mdi mdi-close"/>
+                                    <span class="tooltip">delete section</span>
+                                </button>
+                                <template v-if="editName">
+                                    <div class="text-field name">
                                         <input
                                             type="text"
-                                            ref="descriptionInputRef"
-                                            v-model="sec.description"
-                                            @blur="postSectionEdit('description')"
-                                            @keydown.enter="postSectionEdit('description')"
+                                            ref="nameInputRef"
+                                            v-model="sec.name"
+                                            @blur="postSectionEdit(sec,'name')"
+                                            @keydown.enter="postSectionEdit(sec,'name')"
+                                            @keydown="tabToDescription"
                                         />
                                     </div>
                                 </template>
                                 <template v-else>
-                                    <span @click="focusDescriptionInput" v-if="sec.description">{{ sec.description }}</span>
-                                    <span  class="placeholder-color" @click="focusDescriptionInput" v-else>description</span>
+                                    <span @click="focusNameInput" v-if="sec.name">{{ sec.name }}</span>
+                                    <span class="placeholder-color" @click="focusNameInput" v-else>name</span>
                                 </template>
-                            </div>
-                            <div class="section-items">
-                                <EditItem
-                                    v-if="addItem"
-                                    :item="newItem"
-                                    :section_id="sec._id"
-                                    :menu="localMenu"
-                                    @send-new-item-flag="addItem=false"/>
-                                <EditItem
-                                    ref="item"
-                                    v-for="(item,j) in sec.items"
-                                    :key="item._id"
-                                    :item="item"
-                                    :section_id="sec._id"
-                                    :menu="localMenu"
-                                    :data-index="j"
-                                    :data-id="sec._id"
-                                    @touchstart="onTouchStart(j, sec._id)"
-                                    @touchmove="onTouchMove($event)"
-                                    @touchend="onTouchEnd(sec)"
-                                    draggable="true"
-                                    @dragstart="draggedEl=j"
-                                    @dragover.prevent
-                                    @drop="onItemDrop($event, j,sec)"             
-                                />
-                            </div>
-                            <div class="modalWrapper" v-if="addOptionsModalFlag">
-                                <ModalAddOptions class="modal options" :menu="localMenu" :item="sec" @close-modal="addOptionsModalFlag=false"/>
-                            </div>
-                            <div class="modalWrapper" v-if="deleteModalFlag">
-                                <ModalDelete class="modal delete" :item="sec" itemType="Section" @close-modal="deleteModalFlag=false" @delete-item="getDeleteSection"/>
+                            </span>
+                            <div class="right-btns">
+                                <button class="btn" @click="addOptionsModalFlag[i]=true">
+                                    <span>options</span>
+                                    <i class="mdi mdi-plus"/>
+                                    <span class="tooltip">add options to all items</span>
+                                </button> 
+                                <button class="btn" @click="addNewItem()">
+                                    <span>item</span>
+                                    <i class="mdi mdi-plus"/>
+                                    <span class="tooltip">add item</span>
+                                </button>
                             </div>
                         </div>
-     
+                        <div class="section-description">
+                            <template v-if="editDescription">
+                                <div class="text-field description">
+                                    <input
+                                        type="text"
+                                        ref="descriptionInputRef"
+                                        v-model="sec.description"
+                                        @blur="postSectionEdit(sec,'description')"
+                                        @keydown.enter="postSectionEdit(sec,'description')"
+                                    />
+                                </div>
+                            </template>
+                            <template v-else>
+                                <span @click="focusDescriptionInput" v-if="sec.description">{{ sec.description }}</span>
+                                <span  class="placeholder-color" @click="focusDescriptionInput" v-else>description</span>
+                            </template>
+                        </div>
+                        <div class="section-items">
+                            <EditItem
+                                v-if="addItem"
+                                :item="newItem"
+                                :section_id="sec._id"
+                                :menu="localMenu"
+                                @send-new-item-flag="addItem=false"/>
+                            <EditItem
+                                ref="item"
+                                v-for="(item,j) in sec.items"
+                                :key="item._id"
+                                :item="item"
+                                :section_id="sec._id"
+                                :menu="localMenu"
+                                :data-index="j"
+                                :data-id="sec._id"
+                                @touchstart="onTouchStart(j, sec._id)"
+                                @touchmove="onTouchMove($event)"
+                                @touchend="onTouchEnd(sec)"
+                                draggable="true"
+                                @dragstart="draggedEl=j"
+                                @dragover.prevent
+                                @drop="onItemDrop($event, j,sec)"             
+                            />
+                        </div>
+                        
+                    </div>
+                    <div class="modalWrapper" v-if="addOptionsModalFlag[i]">
+                        <ModalAddOptions class="modal options" :key="sec._id" :menu="localMenu" :item="sec" @close-modal="addOptionsModalFlag[i]=false"/>
+                    </div>
+                    <div class="modalWrapper" v-if="deleteModalFlag[i]">
+                        <ModalDelete class="modal delete" :key="sec._id" :item="localMenu.sections[i]" itemType="Section" @close-modal="deleteModalFlag[i]=false" @delete-item="getDeleteSection"/>
+                    </div>
                     <!-- <EditSection 
                         :section="sec" 
                         :menu="localMenu"
@@ -338,6 +346,7 @@ const stopDrag=(event)=>{
 .container-title button{
     color: black;
 }
+
 .title-text{
   position: absolute;
   left: 50%;
@@ -346,12 +355,6 @@ const stopDrag=(event)=>{
 .btn.delete{
     padding: 3px;
     margin: 0px 4px;
-}
-.modal{
-    position: relative;
-    width: 70%;
-    height: 300px;
-    left: 15%;
 }
 .right-btns{
     font-size:20px;
@@ -394,18 +397,6 @@ const stopDrag=(event)=>{
     .text-field.description input{
         width: 300px;
         font-size: 12px;
-    }
-}
-.modal.delete{
-    height: 35vh;
-    width: 40vw;
-    left: 30vw;
-    top: 40vh;
-}
-@media(max-width: 600px){
-    .modal.options{
-        width: 100vw;
-        left: 0;
     }
 }
 </style>

@@ -41,7 +41,7 @@ const OAR = ref([
     {name:'removes', flag: removesFlag, callback: viewRemoves},
 ]);
 const getDelete=()=>{
-    console.log('get delete')
+    // console.log('get delete')
     deleteModal.value=false;
     deleteItem();
 }
@@ -80,7 +80,7 @@ function postNewItem(){
     }
 }
 const getItemPrice = (np) => {
-    console.log('x',np)
+    // console.log('x',np)
     editPrice.value = false;
     localItem.price = np;
     if(!isNew.value) postItemEdit('price');
@@ -166,7 +166,6 @@ onMounted(()=>{ if(!localItem.name){ isNew.value = true; focusNameInput();}});
             <div class="text-field description" v-if="editDescription">
                 <textarea type="text" placeholder="description" ref="descriptionInputRef"
                     v-model="localItem.description"
-                    @click="console.log('ph')"
                     @blur="isNew ? editDescription=false : postItemEdit('description')"
                     @keydown.enter="isNew ? 
                     ( localItem.name ? postNewItem() : editDescription=false ) :

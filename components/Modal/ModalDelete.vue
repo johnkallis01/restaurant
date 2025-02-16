@@ -1,14 +1,15 @@
 <script setup>
-import { onMounted } from 'vue';
+import { nextTick, onMounted } from 'vue';
 
 const { item, itemType} = defineProps({item: {type: Object, required: true}, itemType:{type:String, required: true}});
 const emit = defineEmits(['close-modal','delete-item']);
 const input = ref('');
 const buttonRef=ref(null);
 const { tabToButton } = useTabToButton(buttonRef);
+const textFieldRef=ref(null);
 onMounted(() => {
     const el = document.querySelector('input');
-    el.focus();
+    el.focus();   
 })
 </script>
 <template>
@@ -20,7 +21,7 @@ onMounted(() => {
             <span class="modal-subtitle"> {{'Are you sure you want to delete '+ item.name + ' and all of its contents?'}}</span>
             <span class="modal-subtitle"> {{'Type "' + item.name +'" to delete'}}</span>
             <div class="input-field">
-                <TextField
+                <TextField ref="textFieldRef"
                     placeHolder="enter name to delete"
                     :req="true"
                     bgColor="azure"

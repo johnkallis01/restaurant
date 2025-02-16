@@ -495,6 +495,11 @@ button:disabled{
   left: 25vw;
   top: 20vh;
 }
+.modal.options{
+  width: 70vw;
+  left: 15vw;
+  height: 50vh;
+}
 .modal-container{
   display: flex;
   flex-direction: column;
@@ -532,9 +537,12 @@ button:disabled{
   box-sizing: border-box; */
 }
 .modal.delete{
-  height: 40vh;
+  height: 25vh;
   top: 35vh;
   width: 40vw;
+  max-width: 400px;
+  min-width: 300px;
+  max-height: 200px;
   left: 35vw;
 }
 .qty{
@@ -648,8 +656,8 @@ button:disabled{
     height: 30vh;
   }
   .modal.delete{
-    height: 20vh;
-    top: 30vh;
+    height: 25vh;
+    top: 40vh;
   }
 }
 @media (max-width: 740px) {
@@ -677,10 +685,10 @@ button:disabled{
     left: 2vw;
   }
   .modal.delete{
-    height: 20vh;
+    height: 25vh;
     top: 40vh;
     width: 70vw;
-    left: 15vw;
+    left: 20vw;
   }
   .modal.options{
     left: 4vw;
@@ -711,7 +719,7 @@ button:disabled{
     padding: 0;
   }
 }
-@media (max-width: 990px){
+@media (max-width: 1000px){
   .item-container{
       width: 280px;
   }
@@ -719,7 +727,7 @@ button:disabled{
     width: 280px;
   }
   .section-items{
-      grid-template-columns: 280px 280px;
+      grid-template-columns: 320px 300px;
       padding-left: 100px;
   }
 }
@@ -786,12 +794,6 @@ button:disabled{
     margin: 0;
   }
 }
-@media(max-width: 430px){
-  .modal.options{
-    width: 100vw;
-    left: 0;
-  }
-}
 @media(max-width: 400px){
   .item-container{
     width: 300px;
@@ -803,6 +805,7 @@ button:disabled{
     width: 290px;
   }
   .modal.delete{
-    height: 25vh;
+    width: 95vw;
+    left: 3vw;
   }
 }
