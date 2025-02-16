@@ -107,12 +107,14 @@ watch(()=>[addOnsFlag.value,removesFlag.value],
 const clickOutsideOARtab = (event) => {clickInsideOK.value && !clickInsideOK.value.contains(event.target) ? resetFlags() : null;}
 useEventListener('click', clickOutsideOARtab);
 onMounted(()=>{ if(!localItem.name){ isNew.value = true; focusNameInput();}});
- watch([optionsModal,deleteModal], (open) => {
-     if(open) document.addEventListener('dragstart', stopDrag, true);
-     else document.removeEventListener('dragstart', stopDrag, true);
- });
- const stopDrag=(event)=>{
-     event.preventDefault();
+watch([optionsModal,deleteModal], (open) => {
+    console.log('edit item watch')
+    console.log(open.includes(true))
+    if(open.includes(true)) document.addEventListener('dragstart', stopDrag, true);
+    else document.removeEventListener('dragstart', stopDrag, true);
+});
+const stopDrag=(event)=>{
+    event.preventDefault();
 }
 </script>
 <template>
