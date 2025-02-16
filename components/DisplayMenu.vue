@@ -141,6 +141,7 @@ function sortItems(items) {
 .disabled button{
     cursor: default;
     border: none;
+    color: black;
 }
 .item-name.disabled{
     font-weight: 600;
