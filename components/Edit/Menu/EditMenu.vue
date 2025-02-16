@@ -54,7 +54,7 @@ const onSectionDrop=(newIndex)=>{
 const deleteModalFlag=ref([]); const addOptionsModalFlag=ref([]);
 const nameInputRef=ref(null); const descriptionInputRef = ref(null);
 const editName=ref(false); const editDescription = ref(false);
-const addItem = ref(false);
+const addItem = ref([]);
 const newItem = ref({
         new: true,
         name: "",
@@ -67,6 +67,7 @@ const newItem = ref({
         _id: uuidv4(),
 });
 function updateMenu(section){
+    console.log('update')
     const sectionIndex = menu.sections.findIndex(sec => sec._id === section._id);
     localMenu.sections[sectionIndex]=section;
     menuStore.updateMenu(localMenu);
@@ -88,8 +89,8 @@ const getDeleteSection=(section)=>{
     localMenu.sections.splice(sectionIndex, 1);
     menuStore.updateMenu(localMenu);
 }
-function addNewItem(){
-    addItem.value=!addItem.value;
+function addNewItem(index){
+    addItem.value[index]=!addItem.value[index];
     newItem.value = {
         name: "",
         price: "000.00",
@@ -104,11 +105,14 @@ const draggedEl=ref(null);
 const onItemDrop=(event, newIndex, section)=>{
     event.stopPropagation(); 
     // console.log('onDrop',draggedEl.value, section)
-    const draggedItem = section.items[draggedEl.value];
-    section.items.splice(draggedEl.value, 1);
-    section.items.splice(newIndex,0,draggedItem);
-    section.items.forEach((item, i)=> item.position=i)
-    updateMenu(section);
+    if(draggedEl.value.section === section._id){
+        const draggedItem = section.items[draggedEl.value.index];
+        section.items.splice(draggedEl.value.index, 1);
+        section.items.splice(newIndex,0,draggedItem);
+        section.items.forEach((item, i)=> item.position=i);
+        updateMenu(section);
+    }
+    ;
     draggedEl.value=null;
 }
 const onTouchStart=(index, section_id)=>{
@@ -168,7 +172,8 @@ const stopDrag=(event)=>{
 onMounted(() => {
     localMenu.sections.forEach(()=>{
         addOptionsModalFlag.value.push(false);
-        deleteModalFlag.value.push(false)
+        deleteModalFlag.value.push(false);
+        addItem.value.push(false);
     }) 
     console.log(deleteModalFlag.value)
     console.log(addOptionsModalFlag.value)
@@ -240,7 +245,7 @@ onMounted(() => {
                                     <i class="mdi mdi-plus"/>
                                     <span class="tooltip">add options to all items</span>
                                 </button> 
-                                <button class="btn" @click="addNewItem()">
+                                <button class="btn" @click="addNewItem(i)">
                                     <span>item</span>
                                     <i class="mdi mdi-plus"/>
                                     <span class="tooltip">add item</span>
@@ -266,11 +271,11 @@ onMounted(() => {
                         </div>
                         <div class="section-items">
                             <EditItem
-                                v-if="addItem"
+                                v-if="addItem[i]"
                                 :item="newItem"
                                 :section_id="sec._id"
                                 :menu="localMenu"
-                                @send-new-item-flag="addItem=false"/>
+                                @send-new-item-flag="addItem[i]=false"/>
                             <EditItem
                                 ref="item"
                                 v-for="(item,j) in sec.items"
@@ -284,7 +289,7 @@ onMounted(() => {
                                 @touchmove="onTouchMove($event)"
                                 @touchend="onTouchEnd(sec)"
                                 draggable="true"
-                                @dragstart="draggedEl=j"
+                                @dragstart="draggedEl={index: j, section: sec._id}"
                                 @dragover.prevent
                                 @drop="onItemDrop($event, j,sec)"             
                             />
