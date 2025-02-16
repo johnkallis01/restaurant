@@ -537,12 +537,12 @@ button:disabled{
   box-sizing: border-box; */
 }
 .modal.delete{
-  height: 25vh;
+  height: 30vh;
   top: 35vh;
   width: 40vw;
   max-width: 400px;
   min-width: 300px;
-  max-height: 200px;
+  max-height: 300px;
   left: 35vw;
 }
 .qty{
