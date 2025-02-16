@@ -98,6 +98,7 @@ function addNewItem(index){
 const onSectionDrop=(newIndex, sec_id)=>{
     console.log('section drop')
     console.log(draggedSectionIndex.value, newIndex, sec_id);
+    if(!draggedSectionIndex.value) return
     if(sec_id!==draggedSectionIndex.value.section){
         const draggedSection = localMenu.sections[draggedSectionIndex.value.index];
         let newMenu=detachObject(menu);
@@ -123,19 +124,25 @@ const onDragItemOver = (event) => {
 }
 const onItemDrop=(event, newIndex, section)=>{
     event.stopPropagation(); 
-    console.log('item onDrop',draggedEl.value, section)
-    console.log(newIndex, section)
+    // console.log(event)
+    // console.log('item onDrop',draggedEl.value, section)
+    // console.log(newIndex, section)
+    if(!draggedEl.value) return;
     if(draggedEl.value.section === section._id){
-        const draggedItem = section.items[draggedEl.value.index];
-        section.items.splice(draggedEl.value.index, 1);
-        section.items.splice(newIndex,0,draggedItem);
-        section.items.forEach((item, i)=> item.position=i);
+        const newItems = [...section.items];
+        const draggedItem = newItems[draggedEl.value.index]
+        newItems.splice(draggedEl.value.index, 1);
+        newItems.splice(newIndex,0,draggedItem);
+        newItems.forEach((item, i)=> item.position=i);
         const sortedSections=localMenu.sections.sort((a,b)=>a.position - b.position);
-        let newMenu=detachObject(localMenu);
-        newMenu.sections=sortedSections;
+        // let newMenu=detachObject(localMenu)
+        
         const sectionIndex=sortedSections.findIndex(sec => sec._id === section._id);
-        newMenu.sections[sectionIndex]=section;
-        menuStore.updateMenu(newMenu);
+        // localMenu.sections=sortedSections;
+        // localMenu.sections[sectionIndex]=section;
+        // console.log(newMenu.sections[sectionIndex])
+        localMenu.sections[sectionIndex].items=newItems;
+        menuStore.updateMenu(localMenu);
         // updateMenu(section);
     }
     draggedEl.value=null;
@@ -179,18 +186,7 @@ const onTouchEnd=(section)=>{
 const focusDescriptionInput = useFocusInput(descriptionInputRef,editDescription);
 const focusNameInput = useFocusInput(nameInputRef, editName);
 const tabToDescription = useTabToInput(focusDescriptionInput);
-watch([addOptionsModalFlag,deleteModalFlag,modalFlag], (open) => {
-     if(open) {
-        document.addEventListener('dragstart', stopDrag, true);
-        // document.addEventListener('touchstart', stopDrag, true);
-        document.addEventListener('touchmove', stopDrag, true);
-     }
-     else{ 
-        document.removeEventListener('dragstart', stopDrag, true);
-        // document.removeEventListener('touchstart', stopDrag, true);
-        document.removeEventListener('touchmove', stopDrag, true);
-    }
- })
+
 const stopDrag=(event)=>{
      event.preventDefault();
 }
@@ -200,9 +196,35 @@ onMounted(() => {
         deleteModalFlag.value.push(false);
         addItem.value.push(false);
     }) 
-    console.log(deleteModalFlag.value)
-    console.log(addOptionsModalFlag.value)
+    // console.log(deleteModalFlag.value)
+    // console.log(addOptionsModalFlag.value)
 })
+const eventListenersAdded=ref(false)
+watchEffect(() => {
+    console.log('watch em')
+    // console.log(o)
+    // [addOptionsModalFlag, deleteModalFlag, modalFlag],
+    // var eventListenersAdded=false;
+     if(addOptionsModalFlag.value.includes(true)||deleteModalFlag.value.includes(true)||modalFlag.value) {
+        console.log('if')
+        
+        document.addEventListener('dragstart', stopDrag, true);
+        document.addEventListener('touchstart', stopDrag, true);
+        document.addEventListener('touchmove', stopDrag, true);
+        eventListenersAdded.value=true;
+     }
+     else{ 
+        console.log('else')
+        if(eventListenersAdded.value){
+            console.log('removing evl')
+            document.removeEventListener('dragstart', stopDrag, true);
+            document.removeEventListener('touchstart', stopDrag, true);
+            document.removeEventListener('touchmove', stopDrag, true);
+            eventListenersAdded.value=false;
+        }
+        
+    }
+ })
 </script>
 <template>
     <div class="menu-container">
