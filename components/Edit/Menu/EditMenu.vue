@@ -43,6 +43,7 @@ const getCloseTimes = (name) => {
 }
 const draggedSectionIndex=ref(null);
 const onSectionDrop=(newIndex)=>{
+    console.log(draggedSectionIndex.value)
     const draggedSection = localMenu.sections[draggedSectionIndex.value];
     localMenu.sections.splice(draggedSectionIndex.value, 1);
     localMenu.sections.splice(newIndex,0,draggedSection);
@@ -102,9 +103,19 @@ function addNewItem(index){
     }
 }
 const draggedEl=ref(null);
+const onDragItemStart=(event, index, section)=>{
+    event.stopPropagation();
+    console.log(index, section)
+    draggedEl.value={index, section}
+}
+const onDragItemOver = (event) => {
+    event.stopPropagation();
+    event.preventDefault();
+}
 const onItemDrop=(event, newIndex, section)=>{
     event.stopPropagation(); 
-    // console.log('onDrop',draggedEl.value, section)
+    console.log('onDrop',draggedEl.value, section)
+    console.log(newIndex, section)
     if(draggedEl.value.section === section._id){
         const draggedItem = section.items[draggedEl.value.index];
         section.items.splice(draggedEl.value.index, 1);
@@ -289,9 +300,9 @@ onMounted(() => {
                                 @touchmove="onTouchMove($event)"
                                 @touchend="onTouchEnd(sec)"
                                 draggable="true"
-                                @dragstart="draggedEl={index: j, section: sec._id}"
-                                @dragover.prevent
-                                @drop="onItemDrop($event, j,sec)"             
+                                @dragstart.stop="onDragItemStart($event, j, sec._id)"
+                                @dragover.stop="onDragItemOver($event)"
+                                @drop.stop="onItemDrop($event, j,sec)"             
                             />
                         </div>
                         
