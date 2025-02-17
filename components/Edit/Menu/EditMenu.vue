@@ -97,6 +97,7 @@ function addNewItem(index){
 }
 const onSectionDrop=(newIndex, sec_id)=>{
     console.log('section drop')
+
     console.log(draggedSectionIndex.value, newIndex, sec_id);
     if(!draggedSectionIndex.value) return
     if(sec_id!==draggedSectionIndex.value.section){
@@ -202,12 +203,8 @@ onMounted(() => {
 const eventListenersAdded=ref(false)
 watchEffect(() => {
     console.log('watch em')
-    // console.log(o)
-    // [addOptionsModalFlag, deleteModalFlag, modalFlag],
-    // var eventListenersAdded=false;
      if(addOptionsModalFlag.value.includes(true)||deleteModalFlag.value.includes(true)||modalFlag.value) {
         console.log('if')
-        
         document.addEventListener('dragstart', stopDrag, true);
         document.addEventListener('touchstart', stopDrag, true);
         document.addEventListener('touchmove', stopDrag, true);
@@ -222,7 +219,6 @@ watchEffect(() => {
             document.removeEventListener('touchmove', stopDrag, true);
             eventListenersAdded.value=false;
         }
-        
     }
  })
 </script>
@@ -258,7 +254,8 @@ watchEffect(() => {
                     <EditSection :section="newSection" :menu="localMenu" @send-new-section-flag="getNewSectionFlag"/>
                 </div>
                 <div class="section-container"
-                    v-for="(sec,i) in localMenu.sections" :key="sec._id">
+                    v-for="(sec,i) in localMenu.sections" :key="sec._id"
+                    >
                     <div class="section-container"
                         @dragstart="draggedSectionIndex={index: i, section: sec._id}"
                         @dragover.prevent

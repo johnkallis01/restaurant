@@ -46,6 +46,24 @@ export const useMenuStore = defineStore('menu', {
        
       }
     },
+    async bulkUpdateMenus(menus){
+      console.log('menus')
+      console.log(menus)
+      const token=useCookie('token');
+      if(token.value){
+        try{
+          await $fetch('/api/menus/batch',{
+            method: 'POST',
+            headers: {authorization: `Bearer ${token.value}`},
+            body: menus,
+          });
+        }catch{
+          console.log('error')
+          // useAuthStore().logout();
+        }
+       
+      }
+    },
     async deleteMenu(id){
      const token=useCookie('token');
       if(token.value){

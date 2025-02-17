@@ -20,10 +20,12 @@ onMounted(fetchMenus);
 </script>
 <template>
   <div class="page-container">
-    <div class="container-title">Edit Menu</div>
+    <div class="container-title">
+      <span class="edit-menu">Edit Menu Order:</span>
+    </div>
     <div class="container-body">
       <div class="reload">reload page to view edits on menus/order page</div>
-      <EditMenu :menu="menu" :menus="menuStore.menus" v-if="menu"/>
+        <EditMenu :menu="menu" :menus="menuStore.menus" v-if="menu"/>
       <div v-else>error</div>
     </div>
   </div>

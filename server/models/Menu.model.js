@@ -6,6 +6,10 @@ const menuSchema = new Schema(
         type: String,
         required: [true, 'name field is required'],
       },
+      position:{
+        type: Number,
+        required: false,
+      },
       days: [
         {
           type: Schema.Types.Mixed,
