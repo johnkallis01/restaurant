@@ -75,7 +75,7 @@ const getEnd = (d)=>{
     margin: 0;
   }  
 }
-@media(max-width: 600px){
+@media(max-width: 450px){
   .day{
     width: 40px;
   }
