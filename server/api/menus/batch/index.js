@@ -21,27 +21,20 @@ export default defineEventHandler(async (event) => {
     }
     if(isAdmin){
         const body = await readBody(event);
-        console.log(body)
-        console.log('after body')
         if (!Array.isArray(body)) {
             return { success: false, message: 'Not an Array' };
           }
         try {
             console.log("update /api/menus/batch")
-            // console.log()
-            const prepareMenus=body.map(menu=>(
-                {
-                    updateOne:{
-                        filter: { _id: menu._id },
-                        update: { $set: { position: menu.position } }
+            const prepareMenus=body.map(menu=>({
+                updateOne:{
+                    filter: { _id: menu._id },
+                    update: { $set: { position: menu.position } }
                 }
         }));
-        console.log('yoooo')
             const response=await Menu.bulkWrite(prepareMenus)
-            console.log('response', response)
+            // console.log('response', response)
             return { response, success: true}
-            // return { res: response, success: true, message: "Menus have been updated"};
-            // return { res: response, message: "Menus "+body[0]._id+"-"+body[body.length-1]+" have been updated"};
         } catch (e) {
             throw createError({ statusCode: 403, message: 'Error! update not recieved' });
         }

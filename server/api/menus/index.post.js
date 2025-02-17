@@ -17,7 +17,7 @@ export default defineEventHandler(async (event) => {
 			const user = await User.findOne({  email });
 			isAdmin = user.isAdmin;
 		}
-		console.log('is admin')
+		// console.log('is admin')
 		
 	}catch (error){
 		throw createError({ statusCode: 401, message: 'Invalid or expired token' });
