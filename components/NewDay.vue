@@ -81,7 +81,6 @@ const getEnd = (d)=>{
   }
   
 }
-
 .times{
   display: flex;
   justify-content: space-evenly;

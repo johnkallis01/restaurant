@@ -105,7 +105,7 @@ function sortItems(items) {
             v-for="(section,i) in sortItems(menu.sections)" :key="section._id"
             v-if="menu">
             <div class="section-name">{{ section.name }}</div>
-            <div class="section-description">{{ section?.description}}</div>
+            <div class="section-description" :class="{'add-margin': order && !section.description.length}">{{ section?.description}}</div>
             <div class="section-items" :class="{'disabled': !order}" ref="sectionItemsRef">
                 <button  class="item-container" :disabled="!order"
                     v-for="(item,j) in sortItems(section.items)" :key="item._id"
@@ -129,6 +129,9 @@ function sortItems(items) {
     </div>
 </template>
 <style scoped>
+.add-margin{
+    margin-top: 5px;
+}
 .item-container:focus{
     box-shadow: 0 0 15px rgba(0, 123, 255, 0.5);
 }

@@ -30,11 +30,9 @@ const onTouchMove = (event) => {
     // console.log('move',target)
     touchDropMenu.value=target;
 };
-const onTouchEnd=(section)=>{
+const onTouchEnd=()=>{
     console.log(touchDropMenu.value.dataset.index)
     if(touchDropMenu.value?.className==='menu-names'){
-        // let stop=0;
-
         let droppedOnIndex=Number(touchDropMenu.value.dataset.index);
         let draggedMenu=menus.value[touchDragMenu.value];
         // console.log(droppedOnSection, droppedOnIndex)
@@ -50,13 +48,6 @@ const onTouchEnd=(section)=>{
         touchDropMenu.value=null;
     }
 }
-// const onDragStart=(index)=>{
-//   // console.log(index, menus.value)
-//   dragMenu.value=index;
-// }
-// const onDragOver=(event) => {
-//   event.preventDefault();
-// }
 const onDropMenu=(index) => {
   // console.log(menus.value)
   if (dragMenu.value === null || dragMenu.value === index) return;
@@ -66,7 +57,6 @@ const onDropMenu=(index) => {
   // console.log(menus.value)
   let slicePoint = dragMenu.value < index ? dragMenu.value : index;
   console.log(slicePoint)
-  // menus.value.splice(newIndex,0,draggedMenu);
   // console.log(menus.value.slice(slicePoint))
   menus.value.slice(slicePoint).forEach((menu, i)=> {
       menu.position=i+slicePoint;
@@ -99,7 +89,7 @@ const sortMenus=(menus)=>{
               :data-index="i"
               @touchstart="touchDragMenu=i"
               @touchmove="onTouchMove($event)"
-              @touchend="onTouchEnd(menu)"
+              @touchend="onTouchEnd"
               @dragstart="dragMenu=i"
               @dragover.prevent
               @drop="onDropMenu(i)"
