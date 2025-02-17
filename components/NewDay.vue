@@ -30,17 +30,23 @@ const getEnd = (d)=>{
           <span v-else>closed</span>
         </Transition>
       </div>
-      <TimeInput :error="errorTime" class="time-input"
+      <div class="time-inputs">
+        <TimeInput :error="errorTime" class="time-input"
           :time="localDay.start" :disabled="!localDay.open" 
           @update:time="getStart"/>
-      <span :class="{'placeholder-color': !localDay.open,'error-text': errorTime && localDay.open}">-</span>
-      <TimeInput :error="errorTime" class="time-input"
-        :time="localDay.end" :disabled="!localDay.open" @update:time="getEnd"/>
+        <span :class="{'placeholder-color': !localDay.open,'error-text': errorTime && localDay.open}">-</span>
+        <TimeInput :error="errorTime" class="time-input"
+          :time="localDay.end" :disabled="!localDay.open" @update:time="getEnd"/>
+      </div>
     </div>
   </div>
 </template>
 
 <style scoped>
+.time-inputs{
+  display: flex;
+  gap: 5px;
+}
 .day-card {
   display: flex;
   justify-content: center;
