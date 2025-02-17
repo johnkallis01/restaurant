@@ -21,26 +21,53 @@ const newMenu = reactive({
 const menuStore=useMenuStore();
 const menus=ref(null);
 const dragMenu=ref(null);
-const {detachObject}=useDetachObject();
-const onDragStart=(index)=>{
-  // console.log(index, menus.value)
-  dragMenu.value=index;
+const touchDragMenu=ref(null);
+const touchDropMenu=ref(null);
+const onTouchMove = (event) => {
+    event.preventDefault(); // Prevent scrolling while dragging
+    const touch = event.touches[0];
+    let target = document.elementFromPoint(touch.clientX, touch.clientY);
+    // console.log('move',target)
+    touchDropMenu.value=target;
+};
+const onTouchEnd=(section)=>{
+    console.log(touchDropMenu.value.dataset.index)
+    if(touchDropMenu.value?.className==='menu-names'){
+        // let stop=0;
+
+        let droppedOnIndex=Number(touchDropMenu.value.dataset.index);
+        let draggedMenu=menus.value[touchDragMenu.value];
+        // console.log(droppedOnSection, droppedOnIndex)
+        menus.value.splice(touchDragMenu.value, 1);
+        menus.value.splice(touchDropMenu.value.dataset.index,0,draggedMenu);
+            // console.log(true)
+        let slicePoint = touchDragMenu.value < touchDropMenu.value.dataset.index ? touchDragMenu.value : touchDropMenu.value.dataset.index;
+        menus.value.slice(slicePoint).forEach((menu, i)=> {
+            menu.position=i+slicePoint;
+        });
+        menuStore.bulkUpdateMenus(menus.value.slice(slicePoint));
+        touchDragMenu.value=null;
+        touchDropMenu.value=null;
+    }
 }
-const onDragOver=(event) => {
-  event.preventDefault();
-}
+// const onDragStart=(index)=>{
+//   // console.log(index, menus.value)
+//   dragMenu.value=index;
+// }
+// const onDragOver=(event) => {
+//   event.preventDefault();
+// }
 const onDropMenu=(index) => {
   // console.log(menus.value)
   if (dragMenu.value === null || dragMenu.value === index) return;
-  const draggedMenu=menus.value[dragMenu.value];
+  let draggedMenu=menus.value[dragMenu.value];
   menus.value.splice(dragMenu.value, 1);
   menus.value.splice(index,0,draggedMenu);
   // console.log(menus.value)
-  const slicePoint = dragMenu.value < index ? dragMenu.value : index;
+  let slicePoint = dragMenu.value < index ? dragMenu.value : index;
   console.log(slicePoint)
   // menus.value.splice(newIndex,0,draggedMenu);
   // console.log(menus.value.slice(slicePoint))
-  const newMenus=detachObject(menus.value)
   menus.value.slice(slicePoint).forEach((menu, i)=> {
       menu.position=i+slicePoint;
   });
@@ -69,8 +96,12 @@ const sortMenus=(menus)=>{
           v-for="(menu,i) in sortMenus(menus)" 
               :key="menu._id"
               draggable="true"
-              @dragstart="onDragStart(i)"
-              @dragover="onDragOver($event)"
+              :data-index="i"
+              @touchstart="touchDragMenu=i"
+              @touchmove="onTouchMove($event)"
+              @touchend="onTouchEnd(menu)"
+              @dragstart="dragMenu=i"
+              @dragover.prevent
               @drop="onDropMenu(i)"
           >{{ menu.name}}</span>
     </div>

@@ -112,6 +112,7 @@ const onSectionDrop=(newIndex, sec_id)=>{
     draggedSectionIndex.value=null;
 }
 const draggedEl=ref(null);
+const droppedOnEl=ref(null);
 const onDragItemStart=(event, index, section)=>{
     console.log('item pick up')
     event.stopPropagation();
@@ -152,7 +153,7 @@ const onTouchStart=(index, section_id)=>{
     draggedEl.value={index,section_id };
     // console.log(draggedEl.value)
 }
-const droppedOnEl=ref(null);
+
 const onTouchMove = (event) => {
     event.preventDefault(); // Prevent scrolling while dragging
     const touch = event.touches[0];
