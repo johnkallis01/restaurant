@@ -4,13 +4,11 @@ useHead({
   title: "John's Restaurant - Daily Sales"
 });
 const cartStore=useCartStore();
-// const localOrders=ref();
 var now = new Date();
 const day=ref(now.getDate());
 const month = ref(now.getMonth()+1);
 const year = ref(now.getFullYear())
 const months=ref(['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']);
-// const {changeToLocal} = useLocalTime();
 const salesTotal=ref(0);
 const localOrders = ref();
 // const todaySales = computed(() => {
@@ -31,12 +29,13 @@ const itemsMap=computed(()=>{
     localOrders.value?.forEach(order=>{
         salesTotal.value+=order.total;
         order.items.forEach(item=>{
-            if(items.has(item.name)) items.set(item.name, items.get(item.name)+1)
-            else items.set(item.name, 1)
+            if(items.has(item.name)) items.set(item.name, items.get(item.name)+1);
+            else items.set(item.name, 1);
         })
     });
     return items;
 });
+//query orders for today's date
 async function fetchOrders(){
     const utcEnd = now.toISOString();
     const utcStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0).toISOString();

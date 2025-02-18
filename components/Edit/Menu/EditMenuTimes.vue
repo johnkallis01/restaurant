@@ -9,15 +9,13 @@ const router = useRouter();
 const newMenuRef=ref(null);
 const hasError = computed(() => localMenu.days.some(day => day.error));
 const hasOpenDay = computed(() => localMenu.days.some(day => day.open));
-const isDisabled = computed(() => hasError.value && !hasOpenDay.value);
+const isDisabled = computed(() => hasError.value || !hasOpenDay.value || !rules['name'].test(localMenu.name));
 async function postMenu(){
   if(!isNew) await menuStore.updateMenu(localMenu)
   else{
     if(localMenu.name){
       try{
         localMenu.position=menuStore.menus.length;
-        // console.log(localMenu)
-        // console.log(menuStore.menus)
         const menu_id = await menuStore.postMenu(localMenu);
         router.push('/edit/menus/'+ menu_id);
       }catch(error){console.log("menu didn't post:", error)}
@@ -25,33 +23,31 @@ async function postMenu(){
     else{console.warn('name req');}
   }
 }
-const getName = (n) => { localMenu.name = n; };
-const getDay = (d) => {localMenu.days[d.position] = d;};
 onMounted(() => { newMenuRef.value.querySelector('input').focus();});
 </script>
 <template>
     <div class="new-menu-container" ref="newMenuRef">
       <div class="new-menu-input">
         <TextField class="menu-name"
-        :is-valid="rules['name'].test(localMenu.name)"
-        :name="localMenu.name||''"
-        place-holder="menu name"
-        bg-color="rgb(247, 249, 252)"
-        :req="true" @send-input="getName"/>
+          :is-valid="rules['name'].test(localMenu.name)"
+          :name="localMenu.name||''"
+          place-holder="menu name"
+          bg-color="azure"
+          :req="true"
+          @send-input="(name)=>localMenu.name=name"/>
       </div>
-      
-		<div class="menu-container-body" v-if="localMenu">
-			<NewDay class="day-row"
-				:day="day" v-for="(day, i) in localMenu.days" :key="i" 
-				@send-day="getDay"/>
-		</div>
-		<div class="new-menu-actions">
-			<button class="btn"
-				@click="postMenu()"
-				:disabled="isDisabled || !hasOpenDay">
-				submit
-			</button>
-		</div>
+      <div class="menu-container-body" v-if="localMenu">
+        <NewDay class="day-row"
+          :day="day" v-for="(day, i) in localMenu.days" :key="i" 
+          @send-day="(d)=>localMenu.days[d.position]=d"/>
+      </div>
+      <div class="new-menu-actions">
+        <button class="btn"
+          @click="postMenu()"
+          :disabled="isDisabled">
+          submit
+        </button>
+      </div>
     </div>
 </template>
 <style scoped>
