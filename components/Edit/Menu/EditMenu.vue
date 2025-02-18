@@ -1,4 +1,5 @@
 <script setup>
+import { Section } from "~/models/Section";
 import { v4 as uuidv4 } from 'uuid';
 const {menu, menus} = defineProps({
      menu: { type: Object, required: true},
@@ -12,13 +13,7 @@ const { detachObject } = useDetachObject();
 const modalFlag=ref(false);
 const showTimes = ref(false);
 const addSection = ref(false);
-const newSection = ref({
-    name: "",
-    description: "",
-    _id: uuidv4(),
-    items: [],
-    options: [],
-});
+const newSection = ref(new Section());
 const getDeleteMenu=()=>{
     // console.log('get delete')
     modalFlag.value=false;
@@ -29,13 +24,7 @@ const getDeleteMenu=()=>{
 }
 function addNewSection(){
     addSection.value=!addSection.value;
-    newSection.value = {
-    name: "",
-    description: "",
-    _id: uuidv4(),
-    items: [],
-    options: [],
-  };
+    newSection.value = new Section();
 }
 const getNewSectionFlag = () => {addSection.value=false;}
 const getCloseTimes = (name) => {
@@ -46,8 +35,8 @@ const draggedSectionIndex=ref(null);
 
 /*section data*/
 const deleteModalFlag=ref([]); const addOptionsModalFlag=ref([]);
-const nameInputRef=ref(null); const descriptionInputRef = ref(null);
-const editName=ref(false); const editDescription = ref(false);
+const nameInputRef=ref([]); const descriptionInputRef = ref([]);
+const editName=ref([]); const editDescription = ref([]);
 const addItem = ref([]);
 const newItem = ref({
         new: true,
@@ -66,19 +55,20 @@ function updateMenu(section){
     localMenu.sections[sectionIndex]=section;
     menuStore.updateMenu(localMenu);
 }
-function postSectionEdit(section,str){
+function postSectionEdit(section,str,index){
     switch(str){
         case 'name':
-            editName.value=false;
+            console.log(editName.value)
+            editName.value[index]=false;
             break;
         case 'description':
-            editDescription.value=false;
+            editDescription.value[index]=false;
             break;
     }
     updateMenu(section);
 }
 const getDeleteSection=(section)=>{
-    const sectionIndex = menu.sections.findIndex(sec => sec._id === section._id);
+    const sectionIndex = localMenu.sections.findIndex(sec => sec._id === section._id);
     deleteModalFlag.value[sectionIndex]=false;
     localMenu.sections.splice(sectionIndex, 1);
     menuStore.updateMenu(localMenu);
@@ -153,7 +143,6 @@ const onTouchStart=(index, section_id)=>{
     draggedEl.value={index,section_id };
     // console.log(draggedEl.value)
 }
-
 const onTouchMove = (event) => {
     event.preventDefault(); // Prevent scrolling while dragging
     const touch = event.touches[0];
@@ -185,21 +174,31 @@ const onTouchEnd=(section)=>{
         droppedOnEl.value=null;
     }
 }
-const focusDescriptionInput = useFocusInput(descriptionInputRef,editDescription);
-const focusNameInput = useFocusInput(nameInputRef, editName);
-const tabToDescription = useTabToInput(focusDescriptionInput);
+const focusNameInput = async (index) => {
+    editName.value[index]=true;
+    await nextTick(() => {
+        nameInputRef.value[index].focus();
+    });
+};
+const focusDescInput = async (index) => {
+    editDescription.value[index]=true;
+    console.log(descriptionInputRef.value)
+    await nextTick(() => {
+        descriptionInputRef.value[index].focus();
+    });
+};
+const setNameRef = (el, index) => { el ? nameInputRef.value[index] = el : null;};
+const setDescRef = (el, index) => { el ? descriptionInputRef.value[index] = el : null;};
 
 const stopDrag=(event)=>{
      event.preventDefault();
 }
 onMounted(() => {
-    localMenu.sections.forEach(()=>{
-        addOptionsModalFlag.value.push(false);
-        deleteModalFlag.value.push(false);
-        addItem.value.push(false);
-    }) 
-    // console.log(deleteModalFlag.value)
-    // console.log(addOptionsModalFlag.value)
+    editDescription.value=Array(localMenu.sections.length).fill(false);
+    editName.value=Array(localMenu.sections.length).fill(false);
+    addItem.value=Array(localMenu.sections.length).fill(false);
+    deleteModalFlag.value=Array(localMenu.sections.length).fill(false);
+    addOptionsModalFlag.value=Array(localMenu.sections.length).fill(false);
 })
 const eventListenersAdded=ref(false)
 watchEffect(() => {
@@ -268,21 +267,21 @@ watchEffect(() => {
                                     <i class="mdi mdi-close"/>
                                     <span class="tooltip">delete section</span>
                                 </button>
-                                <template v-if="editName">
+                                <template v-if="editName[i]">
                                     <div class="text-field name">
                                         <input
                                             type="text"
-                                            ref="nameInputRef"
+                                            :ref="(el) => setNameRef(el, i)"
                                             v-model="sec.name"
-                                            @blur="postSectionEdit(sec,'name')"
-                                            @keydown.enter="postSectionEdit(sec,'name')"
+                                            @blur="postSectionEdit(sec,'name',i)"
+                                            @keydown.enter="postSectionEdit(sec,'name',i)"
                                             @keydown="tabToDescription"
                                         />
                                     </div>
                                 </template>
                                 <template v-else>
-                                    <span @click="focusNameInput" v-if="sec.name">{{ sec.name }}</span>
-                                    <span class="placeholder-color" @click="focusNameInput" v-else>name</span>
+                                    <span @click="focusNameInput(i)" v-if="sec.name">{{ sec.name }}</span>
+                                    <span class="placeholder-color" @click="focusNameInput(editName[i], nameInputRef[i])" v-else>name</span>
                                 </template>
                             </span>
                             <div class="right-btns">
@@ -299,20 +298,20 @@ watchEffect(() => {
                             </div>
                         </div>
                         <div class="section-description">
-                            <template v-if="editDescription">
+                            <template v-if="editDescription[i]">
                                 <div class="text-field description">
                                     <input
                                         type="text"
-                                        ref="descriptionInputRef"
+                                        :ref="(el)=>setDescRef(el, i)"
                                         v-model="sec.description"
-                                        @blur="postSectionEdit(sec,'description')"
-                                        @keydown.enter="postSectionEdit(sec,'description')"
+                                        @blur="postSectionEdit(sec,'description',i)"
+                                        @keydown.enter="postSectionEdit(sec,'description',i)"
                                     />
                                 </div>
                             </template>
                             <template v-else>
-                                <span @click="focusDescriptionInput" v-if="sec.description">{{ sec.description }}</span>
-                                <span  class="placeholder-color" @click="focusDescriptionInput" v-else>description</span>
+                                <span @click="focusDescInput(i)" v-if="sec.description">{{ sec.description }}</span>
+                                <span  class="placeholder-color" @click="focusDescInput(i)" v-else>description</span>
                             </template>
                         </div>
                         <div class="section-items">
