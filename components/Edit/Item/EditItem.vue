@@ -100,16 +100,15 @@ const getDeleteRemove = (index) => {
     menuStore.updateMenu(localMenu);
 }
 watch(()=>[addOnsFlag.value,removesFlag.value],
-    ()=>{
-        addOnsFlag.value||removesFlag.value ? containerRef.value.style.height='100%' : containerRef.value.style.height='80px';
+    (n)=>{
+        console.log(containerRef.value)
+        n.includes(true) ? containerRef.value.style.height='100%' : containerRef.value.style.height='80px';
     }
 )
 const clickOutsideOARtab = (event) => {clickInsideOK.value && !clickInsideOK.value.contains(event.target) ? resetFlags() : null;}
 useEventListener('click', clickOutsideOARtab);
 onMounted(()=>{ if(!localItem.name){ isNew.value = true; focusNameInput();}});
 watch([optionsModal,deleteModal], (open) => {
-    console.log('edit item watch')
-    console.log(open.includes(true))
     if(open.includes(true)) document.addEventListener('dragstart', stopDrag, true);
     else document.removeEventListener('dragstart', stopDrag, true);
 });
@@ -260,5 +259,8 @@ const stopDrag=(event)=>{
 }
 .item-title{
     padding-top: 3px;
+}
+.item-container{
+    height: 80px;
 }
 </style>

@@ -192,6 +192,7 @@ page container
   flex-wrap: wrap;
   padding-left: 80px;
   grid-template-columns: 280px 280px 280px;
+  grid-template-rows: auto;
   align-content: center;
   flex-direction: row;
   justify-content: start;

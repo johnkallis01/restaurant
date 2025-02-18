@@ -1,7 +1,6 @@
 <script setup>
 import { Section } from "~/models/Section";
 import { Item } from "~/models/Item";
-import { v4 as uuidv4 } from 'uuid';
 const {menu, menus} = defineProps({
      menu: { type: Object, required: true},
     menus: {type: Array, required: true}
@@ -34,24 +33,13 @@ const getCloseTimes = (name) => {
 }
 const draggedSectionIndex=ref(null);
 
-/*section data*/
 const deleteModalFlag=ref([]); const addOptionsModalFlag=ref([]);
 const nameInputRef=ref([]); const descriptionInputRef = ref([]);
 const editName=ref([]); const editDescription = ref([]);
 const addItem = ref([]);
 const newItem = ref(new Item())
-//         new: true,
-//         name: "",
-//         price: "000.00",
-//         description: "",
-//         addOns: [],
-//         removes: [],
-//         options: [],
-//         position: 0,
-//         _id: uuidv4(),
-// });
 function updateMenu(section){
-    console.log('update')
+    // console.log('update')
     const sectionIndex = localMenu.sections.findIndex(sec => sec._id === section._id);
     localMenu.sections[sectionIndex]=section;
     menuStore.updateMenu(localMenu);
@@ -59,7 +47,7 @@ function updateMenu(section){
 function postSectionEdit(section,str,index){
     switch(str){
         case 'name':
-            console.log(editName.value)
+            // console.log(editName.value)
             editName.value[index]=false;
             break;
         case 'description':
@@ -77,20 +65,11 @@ const getDeleteSection=(section)=>{
 function addNewItem(index){
     addItem.value[index]=!addItem.value[index];
     newItem.value = new Item();
-    // {
-    //     name: "",
-    //     price: "000.00",
-    //     description: "",
-    //     addOns: [],
-    //     removes: [],
-    //     options: [],
-    //     _id: uuidv4(),
-    // }
 }
 const onSectionDrop=(newIndex, sec_id)=>{
-    console.log('section drop')
+    // console.log('section drop')
 
-    console.log(draggedSectionIndex.value, newIndex, sec_id);
+    // console.log(draggedSectionIndex.value, newIndex, sec_id);
     if(!draggedSectionIndex.value) return
     if(sec_id!==draggedSectionIndex.value.section){
         const draggedSection = localMenu.sections[draggedSectionIndex.value.index];
@@ -100,19 +79,18 @@ const onSectionDrop=(newIndex, sec_id)=>{
         localMenu.sections.forEach((sec, i)=> sec.position=i);
         menuStore.updateMenu(localMenu);
     }
-    
     draggedSectionIndex.value=null;
 }
 const draggedEl=ref(null);
 const droppedOnEl=ref(null);
 const onDragItemStart=(event, index, section)=>{
-    console.log('item pick up')
+    // console.log('item pick up')
     event.stopPropagation();
-    console.log(index, section)
+    // console.log(index, section)
     draggedEl.value={index, section}
 }
 const onDragItemOver = (event) => {
-    console.log('item drag')
+    // console.log('item drag')
     event.stopPropagation();
     event.preventDefault();
 }
@@ -154,12 +132,15 @@ const onTouchMove = (event) => {
 };
 const onTouchEnd=(section)=>{
     // console.log(droppedOnEl)
+    //check that the drop zone is acceptable
     if(droppedOnEl.value?.className){
-        // let stop=0;
-        while(droppedOnEl.value?.className!=='item-container'){
-            droppedOnEl.value=droppedOnEl.value.parentElement;
+        console.log(droppedOnEl.value)
+        let stop=0;
+        while((stop<10) && (droppedOnEl.value?.className!=='item-container')){
+            console.log('check for infinite loop')
+            droppedOnEl.value=droppedOnEl.value?.parentElement;
             // console.log(droppedOnEl.value)
-            // stop++;
+            stop++;
         }
         let droppedOnIndex=Number(droppedOnEl.value.dataset.index);
         let droppedOnSection=droppedOnEl.value.dataset.id;
@@ -176,25 +157,46 @@ const onTouchEnd=(section)=>{
         droppedOnEl.value=null;
     }
 }
-const focusNameInput = async (index) => {
-    editName.value[index]=true;
-    await nextTick(() => {
-        nameInputRef.value[index].focus();
-    });
+//renders the input and focuses it. nextTick to wait for dom update before focus()
+const focusInput = async (index, str) => {
+    switch(str){
+        case 'name':
+            editName.value[index]=true;
+            await nextTick(() => {
+                nameInputRef.value[index].focus();
+            });
+            break;
+        case 'description':
+            editDescription.value[index]=true;
+            await nextTick(() => {
+                descriptionInputRef.value[index].focus();
+            });
+            break;
+    }
 };
-const focusDescInput = async (index) => {
-    editDescription.value[index]=true;
-    console.log(descriptionInputRef.value)
-    await nextTick(() => {
-        descriptionInputRef.value[index].focus();
-    });
-};
+//to tab from the button to the name/description input
+const tabToInput=(event,index, str) => {
+    if(event.key==='Tab'){
+        event.preventDefault();
+        switch(str){
+            case 'name':
+                focusInput(index, str);
+                break;
+            case 'description':
+                focusInput(index, str);
+                break;
+        }
+    }
+}
+//sets name refs in arrays.
+//conditional render blocks access to refs when page is rendered. must be manually done.
 const setNameRef = (el, index) => { el ? nameInputRef.value[index] = el : null;};
 const setDescRef = (el, index) => { el ? descriptionInputRef.value[index] = el : null;};
-
+//stops drag when modals are open. pass to eventlisteners
 const stopDrag=(event)=>{
      event.preventDefault();
 }
+//add false for flag arrays
 onMounted(() => {
     editDescription.value=Array(localMenu.sections.length).fill(false);
     editName.value=Array(localMenu.sections.length).fill(false);
@@ -202,20 +204,25 @@ onMounted(() => {
     deleteModalFlag.value=Array(localMenu.sections.length).fill(false);
     addOptionsModalFlag.value=Array(localMenu.sections.length).fill(false);
 })
-const eventListenersAdded=ref(false)
+const eventListenersAdded=ref(false);
+//watchEffect always fires like onMounted and watchs all given arrays.
+//watch would be needed to be repeated 3 times. once for each array
+//watches the flags for the 3 modals
 watchEffect(() => {
-    console.log('watch em')
+    // console.log('watch em')
      if(addOptionsModalFlag.value.includes(true)||deleteModalFlag.value.includes(true)||modalFlag.value) {
-        console.log('if')
+        // console.log('if')
         document.addEventListener('dragstart', stopDrag, true);
         document.addEventListener('touchstart', stopDrag, true);
         document.addEventListener('touchmove', stopDrag, true);
         eventListenersAdded.value=true;
      }
      else{ 
-        console.log('else')
+        // console.log('else')
+        //blocks the initial fire so event listeners aren't removed
         if(eventListenersAdded.value){
-            console.log('removing evl')
+            // console.log('removing evl')
+            //removes the eventlistners that block drags when modal is open
             document.removeEventListener('dragstart', stopDrag, true);
             document.removeEventListener('touchstart', stopDrag, true);
             document.removeEventListener('touchmove', stopDrag, true);
@@ -265,7 +272,7 @@ watchEffect(() => {
                         draggable="true">
                         <div class="section-name">
                             <span class="left-btns">
-                                <button class="btn delete" @click="deleteModalFlag[i]=true">
+                                <button class="btn delete" @click="deleteModalFlag[i]=true" @keydown="tabToInput($event,i)">
                                     <i class="mdi mdi-close"/>
                                     <span class="tooltip">delete section</span>
                                 </button>
@@ -277,13 +284,12 @@ watchEffect(() => {
                                             v-model="sec.name"
                                             @blur="postSectionEdit(sec,'name',i)"
                                             @keydown.enter="postSectionEdit(sec,'name',i)"
-                                            @keydown="tabToDescription"
                                         />
                                     </div>
                                 </template>
                                 <template v-else>
-                                    <span @click="focusNameInput(i)" v-if="sec.name">{{ sec.name }}</span>
-                                    <span class="placeholder-color" @click="focusNameInput(editName[i], nameInputRef[i])" v-else>name</span>
+                                    <span @click="focusInput(i, 'name')" v-if="sec.name">{{ sec.name }}</span>
+                                    <span class="placeholder-color" @click="focusInput(i, 'name')" v-else>name</span>
                                 </template>
                             </span>
                             <div class="right-btns">
@@ -292,7 +298,7 @@ watchEffect(() => {
                                     <i class="mdi mdi-plus"/>
                                     <span class="tooltip">add options to all items</span>
                                 </button> 
-                                <button class="btn" @click="addNewItem(i)">
+                                <button class="btn" @click="addNewItem(i)" @keydown="tabToInput($event,i)">
                                     <span>item</span>
                                     <i class="mdi mdi-plus"/>
                                     <span class="tooltip">add item</span>
@@ -312,8 +318,8 @@ watchEffect(() => {
                                 </div>
                             </template>
                             <template v-else>
-                                <span @click="focusDescInput(i)" v-if="sec.description">{{ sec.description }}</span>
-                                <span  class="placeholder-color" @click="focusDescInput(i)" v-else>description</span>
+                                <span @click="focusInput(i, 'description')" v-if="sec.description">{{ sec.description }}</span>
+                                <span  class="placeholder-color" @click="focusInput(i, 'description')" v-else>description</span>
                             </template>
                         </div>
                         <div class="section-items">
