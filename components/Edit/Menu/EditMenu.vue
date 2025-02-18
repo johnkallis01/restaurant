@@ -1,5 +1,6 @@
 <script setup>
 import { Section } from "~/models/Section";
+import { Item } from "~/models/Item";
 import { v4 as uuidv4 } from 'uuid';
 const {menu, menus} = defineProps({
      menu: { type: Object, required: true},
@@ -38,17 +39,17 @@ const deleteModalFlag=ref([]); const addOptionsModalFlag=ref([]);
 const nameInputRef=ref([]); const descriptionInputRef = ref([]);
 const editName=ref([]); const editDescription = ref([]);
 const addItem = ref([]);
-const newItem = ref({
-        new: true,
-        name: "",
-        price: "000.00",
-        description: "",
-        addOns: [],
-        removes: [],
-        options: [],
-        position: 0,
-        _id: uuidv4(),
-});
+const newItem = ref(new Item())
+//         new: true,
+//         name: "",
+//         price: "000.00",
+//         description: "",
+//         addOns: [],
+//         removes: [],
+//         options: [],
+//         position: 0,
+//         _id: uuidv4(),
+// });
 function updateMenu(section){
     console.log('update')
     const sectionIndex = localMenu.sections.findIndex(sec => sec._id === section._id);
@@ -75,15 +76,16 @@ const getDeleteSection=(section)=>{
 }
 function addNewItem(index){
     addItem.value[index]=!addItem.value[index];
-    newItem.value = {
-        name: "",
-        price: "000.00",
-        description: "",
-        addOns: [],
-        removes: [],
-        options: [],
-        _id: uuidv4(),
-    }
+    newItem.value = new Item();
+    // {
+    //     name: "",
+    //     price: "000.00",
+    //     description: "",
+    //     addOns: [],
+    //     removes: [],
+    //     options: [],
+    //     _id: uuidv4(),
+    // }
 }
 const onSectionDrop=(newIndex, sec_id)=>{
     console.log('section drop')

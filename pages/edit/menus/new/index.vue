@@ -1,22 +1,23 @@
 <script setup>
 import { useDetachObject } from '~/composables/useDetachObject';
-
+import { Menu } from "~/models/Menu";
 useHead({
   title: "John's Restaurant - Edit Menu"
 });
 definePageMeta({middleware: ['admin','auth']});
-const newMenu = reactive({
-  name:"",
-  days:[
-    {day:{name:"Sunday",position:0},open:false,start:{hour:0,min:0,pm:false},end:{hour:0,min:0,pm:false},error:false},
-    {day:{name:"Monday",position:1},open:false,start:{hour:0,min:0,pm:false},end:{hour:0,min:0,pm:false},error:false},
-    {day:{name:"Tuesday",position:2},open:false,start:{hour:0,min:0,pm:false},end:{hour:0,min:0,pm:false},error:false},
-    {day:{name:"Wednesday",position:3},open:false,start:{hour:0,min:0,pm:false},end:{hour:0,min:0,pm:false},error:false},
-    {day:{name:"Thursday",position:4},open:false,start:{hour:0,min:0,pm:false},end:{hour:0,min:0,pm:false},error:false},
-    {day:{name:"Friday",position:5},open:false,start:{hour:0,min:0,pm:false},end:{hour:0,min:0,pm:false},error:false},
-    {day:{name:"Saturday",position:6},open:false,start:{hour:0,min:0,pm:false},end:{hour:0,min:0,pm:false},error:false}],
-  sections:[],
-});
+const newMenu = reactive(new Menu());
+// const newMenu = reactive({
+//   name:"",
+//   days:[
+//     {day:{name:"Sunday",position:0},open:false,start:{hour:0,min:0,pm:false},end:{hour:0,min:0,pm:false},error:false},
+//     {day:{name:"Monday",position:1},open:false,start:{hour:0,min:0,pm:false},end:{hour:0,min:0,pm:false},error:false},
+//     {day:{name:"Tuesday",position:2},open:false,start:{hour:0,min:0,pm:false},end:{hour:0,min:0,pm:false},error:false},
+//     {day:{name:"Wednesday",position:3},open:false,start:{hour:0,min:0,pm:false},end:{hour:0,min:0,pm:false},error:false},
+//     {day:{name:"Thursday",position:4},open:false,start:{hour:0,min:0,pm:false},end:{hour:0,min:0,pm:false},error:false},
+//     {day:{name:"Friday",position:5},open:false,start:{hour:0,min:0,pm:false},end:{hour:0,min:0,pm:false},error:false},
+//     {day:{name:"Saturday",position:6},open:false,start:{hour:0,min:0,pm:false},end:{hour:0,min:0,pm:false},error:false}],
+//   sections:[],
+// });
 // const menus=useMenuStore().menus;
 const menuStore=useMenuStore();
 const menus=ref(null);
