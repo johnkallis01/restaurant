@@ -115,12 +115,12 @@ watch(()=>[addOnsFlag.value,removesFlag.value],
     }
 )
 //watches for modals to open to remove drag events
-watch(()=>deleteModal,
+watch(deleteModal.value,
     (o) => {
         o ? document.addEventListener('dragstart', stopDrag, true) : document.removeEventListener('dragstart', stopDrag, true);
     }
 )
-watch(()=> optionsModal, 
+watch(optionsModal, 
     (o)=>{
         o ? document.addEventListener('dragstart', stopDrag, true) : document.removeEventListener('dragstart', stopDrag, true);
     }

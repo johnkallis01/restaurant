@@ -1,6 +1,7 @@
 <script setup>
 import { Section } from "~/models/Section";
 import { Item } from "~/models/Item";
+import { watch } from "vue";
 const {menu, menus} = defineProps({
      menu: { type: Object, required: true},
     menus: {type: Array, required: true}
@@ -209,28 +210,33 @@ const eventListenersAdded=ref(false);
 //watchEffect always fires like onMounted and watchs all given arrays.
 //watch would be needed to be repeated 3 times. once for each array
 //watches the flags for the 3 modals
-watchEffect(() => {
-    // console.log('watch em')
-     if(addOptionsModalFlag.value.includes(true)||deleteModalFlag.value.includes(true)||modalFlag.value) {
-        // console.log('if')
+watch(addOptionsModalFlag, (o)=>{
+    if(o.includes(true)){
         document.addEventListener('dragstart', stopDrag, true);
         document.addEventListener('touchstart', stopDrag, true);
         document.addEventListener('touchmove', stopDrag, true);
-        eventListenersAdded.value=true;
+    }
+})
+watch(deleteModalFlag, (o)=>{
+    if(o.includes(true)){
+        document.addEventListener('dragstart', stopDrag, true);
+        document.addEventListener('touchstart', stopDrag, true);
+        document.addEventListener('touchmove', stopDrag, true);
+    }
+})
+watch(modalFlag, (o)=>{
+
+    if(o){
+        document.addEventListener('dragstart', stopDrag, true);
+        document.addEventListener('touchstart', stopDrag, true);
+        document.addEventListener('touchmove', stopDrag, true);
      }
      else{ 
-        // console.log('else')
-        //blocks the initial fire so event listeners aren't removed
-        if(eventListenersAdded.value){
-            // console.log('removing evl')
-            //removes the eventlistners that block drags when modal is open
-            document.removeEventListener('dragstart', stopDrag, true);
-            document.removeEventListener('touchstart', stopDrag, true);
-            document.removeEventListener('touchmove', stopDrag, true);
-            eventListenersAdded.value=false;
-        }
+        document.removeEventListener('dragstart', stopDrag, true);
+        document.removeEventListener('touchstart', stopDrag, true);
+        document.removeEventListener('touchmove', stopDrag, true);
     }
- })
+})
 </script>
 <template>
     <div class="menu-container">

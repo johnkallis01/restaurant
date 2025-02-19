@@ -27,7 +27,6 @@ onMounted(() => {
 })
 </script>
 <template>
-
     <div class="form-container" ref="loginRef">
       <div class="form-title">Login</div>
       <form @submit.prevent="login">
@@ -48,7 +47,6 @@ onMounted(() => {
         </nuxt-link>
       </div>
     </div>
-
 </template>
 <style scoped>
 .form-container{
