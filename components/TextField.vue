@@ -24,6 +24,7 @@ const onInput = (event) => {
     localName.value = event.target.value;
     emit('send-input', localName.value);
 };
+//expose ref 
 const focusInput = useFocusInput(inputRef)
 defineExpose({ focusInput });
 </script>

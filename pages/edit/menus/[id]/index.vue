@@ -4,6 +4,7 @@ useHead({
 });
 definePageMeta({middleware: ['admin','auth']});
 const route = useRoute();
+const pageContainerRef = ref(null);
 const menuStore=useMenuStore();
 const menu = computed(()=>{
   const id = route.params.id;
@@ -19,7 +20,7 @@ async function fetchMenus(){
 onMounted(fetchMenus);
 </script>
 <template>
-  <div class="page-container">
+  <div class="page-container" ref="pageContainerRef">
     <div class="container-title">
       <span class="edit-menu">Edit Menu</span>
     </div>

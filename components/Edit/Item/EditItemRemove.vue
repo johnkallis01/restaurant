@@ -9,46 +9,50 @@ const menuStore = useMenuStore();
 const localMenu=reactive(menu);
 const localRemove=reactive(remove);
 const isNew = ref(false);
-const sectionIndex = menu.sections.findIndex(sec => sec._id === section_id);
-const itemIndex = menu.sections[sectionIndex].items.findIndex(it => it._id === item_id);
-
 const nameInputRef=ref(null);
 const editName = ref(false);
 
 const focusNameInput = useFocusInput(nameInputRef,editName);
-
+//sections and items can move so we call these before all changes
+function getIndexes(){
+    const sectionIndex = menu.sections.findIndex(sec => sec._id === section_id);
+    const itemIndex = menu.sections[sectionIndex].items.findIndex(it => it._id === item_id);
+    const removeIndex = localMenu.sections[sectionIndex].items[itemIndex].removes.findIndex((rem)=> rem._id === localRemove._id);
+    return {sectionIndex, itemIndex, removeIndex};
+}
+//edits existing remove data
 function postEditRemove(){
     console.log('edit')
     editName.value=false;
-    const removeIndex = localMenu.sections[sectionIndex].items[itemIndex].removes.findIndex((rem)=> rem._id === localRemove._id);
+    const {sectionIndex, itemIndex, removeIndex} = getIndexes();
     localMenu.sections[sectionIndex].items[itemIndex].removes[removeIndex] = localRemove;   
     menuStore.updateMenu(localMenu);
 }
-
+//posts the new remove to render and db
 function postNewRemove(){
     editName.value=false;
-    if(localRemove.name){    
+    if(localRemove.name){
+        const {sectionIndex, itemIndex} = getIndexes();
         const contains = localMenu.sections[sectionIndex].items[itemIndex].removes.some(r => r.name === localRemove.name);
-        console.log(contains)
+        // console.log(contains)
         if(!contains){
-        localMenu.sections[sectionIndex].items[itemIndex].removes.push({
-            name: localRemove.name,
-            _id: localRemove._id,
-        });
-        menuStore.updateMenu(localMenu);
-        
+            localMenu.sections[sectionIndex].items[itemIndex].removes.push({
+                name: localRemove.name,
+                _id: localRemove._id,
+            });
+            menuStore.updateMenu(localMenu);
         }
         emit('send-reset-remove');
         focusNameInput();
     }
 }
-watch(()=>editName.value,() => {
-    editName.value ? focusNameInput():null;
-})
+//watches for change in editName flag to render input
+//when opened input is focused
+watch(()=>editName.value,(n) => { n ? focusNameInput():null;})
+//focuses input when component is new
 onMounted(()=>{
     if(!localRemove?.name){
-        isNew.value = true; editName.value=true;
-        focusNameInput();
+        isNew.value = true; editName.value=true; focusNameInput();
     }  
 });
 </script>

@@ -2,6 +2,7 @@
 const emit = defineEmits(['send-day']);
 const {day} = defineProps({day: {type: Object, required: true}});
 const localDay=reactive(day)
+//if closed time is before open time return error
 const errorTime = computed(()=>{
   if(localDay.start.hour > localDay.end.hour) {
     localDay.error=true;
@@ -11,6 +12,7 @@ const errorTime = computed(()=>{
     return false;
   }
 });
+//recive times from child
 const getStart = (d) =>{
   localDay.start=d;
   emit('send-day',localDay);

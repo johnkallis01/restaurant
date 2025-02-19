@@ -2,10 +2,11 @@
 useHead({title: "John's Restaurant - View Menus"});
 const menuStore = useMenuStore();
 const index = ref(0);
+const pageContainerRef=ref(null);
 const { sortByPosition } = useSortByPosition();
 </script>
 <template>
-    <div class="page-container">
+    <div class="page-container" ref="pageContainerRef">
       <div class="container-title">
         <div class="title-buttons">
           <button :class="{'active': index === i }" 

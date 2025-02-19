@@ -93,11 +93,6 @@ page container
   background-color: rgb(247, 249, 252);
   overflow: hidden;
 }
-@media(max-width: 415px){
-  .page-container{
-    width: 105vw;
-  }
-}
 .container-body{
   position: absolute;   
   height: calc(100vh - 70px);

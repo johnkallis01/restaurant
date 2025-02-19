@@ -13,16 +13,9 @@ const getHeight=() => {
     }
 }
 const getHeight2=() => {
-    // console.log('get height2', containerRef.value.offsetHeight)
-    // console.log('get height2', containerRef.value.scrollHeight)
-    console.log(height)
+    // console.log(height)
     if(containerRef.value?.scrollHeight<23) {
-        // console.log(containerRef.value)
         if(titleRef.value) titleRef.value.style.borderRadius='5px';
-        // console.log(height)
-        // console.log(containerRef.value?.offsetHeight)
-        // containerRef.value?.offsetHeight=height;
-        // 
     }
 }
 onMounted(getHeight)

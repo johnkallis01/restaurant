@@ -1,5 +1,7 @@
 <script setup>
 // import { v4 as uuidv4 } from 'uuid';
+//component was gutted when drag events were implemented.
+//now it only handels the new section
 const emit = defineEmits(['send-new-section-flag']);
 const {section, menu} = defineProps({
     section: { type:Object, required: true},

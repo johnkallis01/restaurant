@@ -4,6 +4,7 @@ const emit = defineEmits(['update-price']);
 
 //emit to parent component
 // const submitPrice = () => emit('update-price', formattedPrice.value);
+//remove . from string
 const rawPrice = ref(price.replace('.', ''));
 watch(
   () => price,
@@ -19,7 +20,7 @@ const formattedPrice = computed(()=>{
 });
 const formatPriceInput = (event) => {
     const inputChar = event.data;
-    if(event.inputType === "deleteContentBackward"){
+    if(event.inputType === "deleteContentBackward"){ //backspace
         rawPrice.value = "0"+rawPrice.value.slice(0,-1);
         event.target.value = formattedPrice.value;
         return;

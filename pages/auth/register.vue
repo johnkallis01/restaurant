@@ -48,7 +48,6 @@ async function register(){
       }
     }
 }
-
 const validateInput = (rule, value, inputVar) =>{
   // console.log('val input', rule)
   if(inputVar==='email') value.toLowerCase();

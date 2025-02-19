@@ -1,8 +1,15 @@
 <script setup>
+//component exists within ModalAddOptions.vue
+//emits events to parent to send new data, reset data, and toggle new option
 const emit = defineEmits(['update-options','create-new-option','send-reset-option','toggle','close',]);
+const {option, item, isOpen } = defineProps({
+    option: { type: Object, required: true },
+    item: { type: Object, required: true },
+    disableValBtn: {type: Boolean, required: false, default: false},
+    isOpen: {type: Boolean, required:true},
+});
 const { detachObject } = useDetachObject();
 const { formatPrice } = usePriceFormatter();
-
 const addValBtnRef=ref(null);
 const { tabToButton } = useTabToButton(addValBtnRef);
 const contentInputRef = ref(null);
@@ -15,29 +22,27 @@ const tabToPrice = useTabToInput(focusPriceInput);
 const focusContentInput = useFocusInput(contentInputRef);
 const tabToName=useTabToInput(focusNameInput);
 
-const {option, item, isOpen } = defineProps({
-    option: { type: Object, required: true },
-    item: { type: Object, required: true },
-    disableValBtn: {type: Boolean, required: false, default: false},
-    isOpen: {type: Boolean, required:true},
-});
  const localItem=reactive(item);
  const localOption=reactive(option);
 const newContent = reactive({name: "", price: '000.00'});
 
 const optionsRef=ref(null);
 const isNew = ref(false);
-
+//deletes from display and emits to parent for db write
 const deleteOption = () => {
     const optionIndex = localItem.options.findIndex((op)=> op._id === localOption._id);
     localItem.options.splice(optionIndex, 1);
     emit('update-options', localItem.options);
 }
+//edits the current render
 const postEditOption = () => {
     const optionIndex = localItem.options.findIndex((op)=> op._id === localOption._id);
     localItem.options[optionIndex] = localOption;
     emit('update-options', localItem.options);
 }
+//posts the new option to the modal for current render
+//emits to parent for db write
+//detach deep level data incase cancel button is pushed
 const postNewOption = () => {
     if(localOption.name && localOption.content.length){ 
         const newOp = detachObject(localOption);
@@ -45,6 +50,7 @@ const postNewOption = () => {
         isNew.value=false;
     }
 }
+//deletes option from render and emits to parent for db write
 const deleteOptionValue = (val) => {
     const index = localOption.content.findIndex(op=>op.name===val.name);
     if(index>=0){
@@ -56,6 +62,7 @@ const deleteOptionValue = (val) => {
         } 
     }
 }
+//adds value to option if option has name
 function addValue(){
     // console.log('av',newContent.price)
     if(newContent.name){
@@ -71,15 +78,16 @@ function addValue(){
         emit('update-options', localItem.options);
     }
 }
+//used for existing option
+//toggels add value option and focuses input
 function toggle(){
     editPrice.value=true;
     emit('toggle');
     focusContentInput();
 }
+//opens and closes
 const closeOpenContent = (event) => {
-    if (optionsRef.value && !optionsRef.value.contains(event.target)) {
-    emit("close");
-  }
+    if (optionsRef.value && !optionsRef.value.contains(event.target)) emit("close");
 }
 useEventListener('click', closeOpenContent);
 onMounted(()=>{
@@ -88,6 +96,7 @@ onMounted(()=>{
         focusNameInput();
     }
 });
+//exposes nameRef for tab
 const nameRef=ref(null);
 defineExpose({nameRef});
 </script>
@@ -265,9 +274,4 @@ defineExpose({nameRef});
         padding: 0px;
     }
 }
-/* @media(min-width: 400px){
-    .item-title.value{
-        width: 100%;
-    }
-} */
 </style>

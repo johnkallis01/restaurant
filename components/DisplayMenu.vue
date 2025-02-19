@@ -23,8 +23,6 @@ const setItemHeights=() => {
     //item name height: 20px;
     //item desc lin height: ~15px
     let screenWidth=window?.innerWidth;
-    
-    
     itemHeight.value=[];
     if(order && screenWidth>=600){
         //full width -> 3x >800px

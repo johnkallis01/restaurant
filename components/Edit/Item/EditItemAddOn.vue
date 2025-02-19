@@ -1,45 +1,53 @@
 <script setup>
 const emit = defineEmits(['send-reset-addOn', 'delete-add-on']);
-const {addOn,item_id, section_id, menu} = defineProps(
-{
+const {addOn,item_id, section_id, menu} = defineProps({
     addOn: { type: Object, required: false },
     item_id: { type: String, required: true },
     section_id: { type:String, required: true},
-    menu: { type:Object, required: true},});
-
+    menu: { type:Object, required: true}
+});
 const menuStore = useMenuStore();
 const localMenu=reactive(menu);
 const localAddOn=reactive(addOn);
 const isNew = ref(false);
-const sectionIndex = localMenu.sections.findIndex(sec => sec._id === section_id);
-const itemIndex = localMenu.sections[sectionIndex].items.findIndex(it => it._id === item_id);
-
 const { formatPrice } = usePriceFormatter();
 const { priceInputRef, editPrice, focusPriceInput } = usePriceInput();
 const tabToPrice=useTabToInput(focusPriceInput);
 const editName = ref(false);
 const nameInputRef=ref(null);
 const focusNameInput = useFocusInput(nameInputRef,editName);
+//updates changes made to existing addOn
+function getIndexes(){
+    const sectionIndex = localMenu.sections.findIndex(sec => sec._id === section_id);
+    const itemIndex = localMenu.sections[sectionIndex].items.findIndex(it => it._id === item_id);
+    const addOnIndex = localMenu.sections[sectionIndex].items[itemIndex].addOns.findIndex((addOn)=> localAddOn._id === addOn._id);
+    return {sectionIndex, itemIndex, addOnIndex};
+}
 function postEditAddOn() {
     editName.value=false;
-    const addOnIndex = localMenu.sections[sectionIndex].items[itemIndex].addOns.findIndex((addOn)=> localAddOn._id === addOn._id);
+    const {sectionIndex, itemIndex, addOnIndex} = getIndexes();
     localMenu.sections[sectionIndex].items[itemIndex].addOns[addOnIndex] = localAddOn;  
     menuStore.updateMenu(localMenu);
 } 
 function postNewAddOn(){
     console.log(localAddOn.price)
+    //deletes unnessary data
     delete localAddOn.isNew;
+    //if there is a name add this data to appear on page
+    const {sectionIndex, itemIndex} = getIndexes();
     if(localAddOn.name){
         localMenu.sections[sectionIndex].items[itemIndex].addOns.push({
             name: localAddOn.name,
             price: localAddOn.price,
             _id: localAddOn._id,
         });
+        //tells parent to send a new blank component
         emit('send-reset-addOn');
+        //write to db
         menuStore.updateMenu(localMenu);
-        focusNameInput();
     }
 }
+//recives the price from the custom price component
 const getAddOnPrice = (np) => {
     // console.log('get price')
     // console.log(np)
@@ -47,16 +55,16 @@ const getAddOnPrice = (np) => {
     localAddOn.price = np;
     if(!isNew.value) postEditAddOn();
 }
-watch(()=>editName.value,() => {
-    editName.value ? focusNameInput():null;
+//watches for the input to appear and then focuses the input
+watch(()=>editName.value,(n) => {
+    n ? focusNameInput():null;
 })
+//opens the input when new and focuses
 onMounted(()=>{
     if(localAddOn.isNew){
         isNew.value = true; editName.value=true;
-        
     }
     if(editName.value) focusNameInput();
-    
 });
 </script>
 <template>
@@ -112,67 +120,6 @@ onMounted(()=>{
 .item-title{
     width: 280px;
 }
-/* @media(min-width: 1400px){
-  .section-items{
-      grid-template-columns: 300px 300px 300px 300px;
-      padding-left: 120px;
-  }
-}
-@media (max-width: 990px){
-  .item-container{
-      width: 280px;
-  }
-  .section-items{
-      grid-template-columns: 280px 280px;
-  }
-}
-@media (max-width: 700px){
-  .item-container{
-      width: 250px;
-  }
-  .item-title{
-    width: 230px;
-  }
-  .section-items{
-      grid-template-columns: 250px 250px;
-  }
-}
-@media(max-width: 600px){
-  .section-items{   
-    display: flex;
-    align-content: center;
-    align-items: center;
-    justify-content: center;
-    padding: 0;
-  }
-  .item-container{
-    width: 400px;
-  }
-  .item-a-r-o-titles{
-    width: 80%;
-  }
-}
-@media(max-width: 520px){
-  .item-container{
-    width: 350px;
-  }
-  .item-title{
-    width: 330px;
-    border: 1px solid green;
-  }
-  .button-name{
-    border: 1px solid red;
-  }
-  .item-a-r-o-titles button{
-    width: 90%;
-    margin: 0;
-  }
-}
-@media(max-width: 400px){
-  .item-title{
-    width: 280px;
-  }
-} */
 @media (max-width: 700px){
   .item-title{
     width: 240px;

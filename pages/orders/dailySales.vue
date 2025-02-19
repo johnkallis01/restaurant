@@ -45,7 +45,6 @@ async function fetchOrders(){
         console.log('error fetching orders')
     }
 }
-
 onBeforeMount(fetchOrders);
 </script>
 <template>
@@ -57,3 +56,10 @@ onBeforeMount(fetchOrders);
         </ClientOnly> 
     </div>
 </template>
+<style scoped>
+@media(max-width: 450px){
+  .page-container{
+    width: 105vw;
+  }
+}
+</style>

@@ -4,6 +4,7 @@ useHead({
 });
 definePageMeta({middleware: ['admin','auth']});
 const cartStore=useCartStore();
+const pageContainerRef=ref(null);
 // const reverseOrders = computed(() => cartStore.orders.length ? [...cartStore.orders].reverse(): [])
 const { formatPrice } = usePriceFormatter();
 const ordersRef=ref(null);
@@ -55,7 +56,7 @@ onMounted(fetchOrders);
 const {changeToLocal} = useLocalTime();
 </script>
 <template>
-    <div class="page-container">
+    <div class="page-container" ref="pageContainerRef">
         <div class="container-title">
             <div class="title">All Orders</div>
             <div class="title-buttons">
@@ -96,6 +97,11 @@ const {changeToLocal} = useLocalTime();
     </div>
 </template>
 <style scoped>
+@media(max-width: 450px){
+  .page-container{
+    width: 105vw;
+  }
+}
 .page-container{
     font-size: 12px;
 }

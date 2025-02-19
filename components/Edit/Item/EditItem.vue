@@ -110,10 +110,11 @@ const getDeleteRemove = (index) => {
 //o for open is an array of length 2
 watch(()=>[addOnsFlag.value,removesFlag.value],
     (o)=>{
-        console.log('jjj',o)
+        // console.log('jjj',o)
         o.includes(true) ? containerRef.value.style.height='100%' : containerRef.value.style.height='80px';
     }
 )
+//watches for modals to open to remove drag events
 watch(()=>deleteModal,
     (o) => {
         o ? document.addEventListener('dragstart', stopDrag, true) : document.removeEventListener('dragstart', stopDrag, true);
@@ -121,7 +122,7 @@ watch(()=>deleteModal,
 )
 watch(()=> optionsModal, 
     (o)=>{
-        o.includes(true) ? document.addEventListener('dragstart', stopDrag, true) : document.removeEventListener('dragstart', stopDrag, true);
+        o ? document.addEventListener('dragstart', stopDrag, true) : document.removeEventListener('dragstart', stopDrag, true);
     }
 )
 const clickOutsideOARtab = (event) => {clickInsideOK.value && !clickInsideOK.value.contains(event.target) ? resetFlags() : null;}
@@ -132,9 +133,6 @@ onMounted(()=>{ if(!localItem.name){ isNew.value = true; focusNameInput();}});
 const stopDrag=(event)=>{
     event.preventDefault();
 }
-//watches both flags for change
-//when one is true the event listener is added to stop drag
-
 </script>
 <template>
     <div class="item-container" ref="containerRef">

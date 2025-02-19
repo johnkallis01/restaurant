@@ -4,6 +4,7 @@ definePageMeta({middleware: 'auth'});
 const menuStore = useMenuStore();
 let now = new Date();
 const titleButtonsRef=ref(null);
+const pageContainerRef=ref(null);
 const today = ref({
   day: now.getDay(),
   hour: now.getHours(),
@@ -32,10 +33,10 @@ const fixWidth=() => {
       }
   }
 }
-onMounted(fixWidth)
+onMounted(fixWidth);
 </script>
 <template>
-    <div class="page-container">
+    <div class="page-container" ref="pageContainerRef">
       <div class="container-title">
         <div class="title-buttons" ref="titleButtonsRef">
           <button 

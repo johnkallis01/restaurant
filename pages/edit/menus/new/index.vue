@@ -1,5 +1,4 @@
 <script setup>
-import { useDetachObject } from '~/composables/useDetachObject';
 import { Menu } from "~/models/Menu";
 useHead({
   title: "John's Restaurant - Edit Menu"
@@ -63,28 +62,6 @@ async function fetchMenus(){
 }
 onMounted(fetchMenus);
 const { sortByPosition } = useSortByPosition();
-
-
-const windowWidth = ref(window?.innerWidth);
-const updateWidth = () => { windowWidth.value = window?.innerWidth;};
-onMounted(() => { 
-    nextTick(setPageWidth);
-    window.addEventListener("resize", updateWidth);
-    window.addEventListener("orientationchange", updateWidth);
-    window.addEventListener("change", updateWidth);
-
-});
-onUnmounted(() => {
-    window.removeEventListener("resize", updateWidth);
-    window.removeEventListener("orientationchange", updateWidth);
-    window.removeEventListener("change", updateWidth);
-});
-const setPageWidth=() => {
-  if(pageContainerRef.value && windowWidth.value < 600) pageContainerRef.value.style.width=`${windowWidth.value}px`;
-}
-watch(windowWidth, () => {
-    nextTick(setPageWidth);
-});
 </script>
 <template>
   <div class="page-container" ref="pageContainerRef">
