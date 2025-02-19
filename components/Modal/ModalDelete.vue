@@ -1,6 +1,4 @@
 <script setup>
-import { nextTick, onMounted } from 'vue';
-
 const { item, itemType} = defineProps({item: {type: Object, required: true}, itemType:{type:String, required: true}});
 const emit = defineEmits(['close-modal','delete-item']);
 const input = ref('');
@@ -33,7 +31,7 @@ onMounted(() => {
         <div class="form-actions">
             <button class="btn"
                 :disabled="input.trim()!==item.name.trim()"
-                @click="emit('delete-item', item)" ref="buttonRef">Submit</button>
+                @click="emit('delete-item',item)" ref="buttonRef">Submit</button>
             <button class="btn" @click="emit('close-modal')">Cancel</button>
         </div>
     </div>

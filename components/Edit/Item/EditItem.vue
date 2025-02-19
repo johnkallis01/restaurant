@@ -32,89 +32,109 @@ const tabToPrice = useTabToInput(focusPriceInput);
 const tabToName=useTabToInput(focusNameInput);
 const tabToDescription=useTabToInput(focusDescriptionInput);
 const {addOnsFlag, removesFlag, resetFlags, viewAddOns,viewRemoves } = useAROFlags();
-const sectionIndex=localMenu.sections.findIndex(sec => sec._id === section_id);
 const newAddOn = ref({ name: "", price: "000.00", _id: uuidv4(), isNew: true });
 const newRemove = ref({ name: "", _id: uuidv4(), });
+//array for dynamic tabs display and functions
 const OAR = ref([
     {name:'options', flag: optionsModal, callback: ()=>{resetFlags();optionsModal.value=true;}},
     {name:'addOns', flag: addOnsFlag, callback: viewAddOns},
     {name:'removes', flag: removesFlag, callback: viewRemoves},
 ]);
-const getDelete=()=>{
-    // console.log('get delete')
-    deleteModal.value=false;
+//recieve the delete from modal
+const getDelete=(item)=>{
+    console.log('get delete',item)
+    deleteModal.value = false;
+    console.log(deleteModal.value)
     deleteItem();
 }
+//find the item index. delete it from the local data. send updated menu to database
 function deleteItem(){
+    
+    const sectionIndex=localMenu.sections.findIndex(sec => sec._id === section_id);
     const itemIndex = localMenu.sections[sectionIndex].items.findIndex(it => it._id === item._id);
     localMenu.sections[sectionIndex].items.splice(itemIndex, 1);
     menuStore.updateMenu(localMenu);
 }
+//closes the flag 
 function postItemEdit(str){
     // console.log('post edit')
-    switch(str){
-        case 'name':
-            editName.value=false;
-            break;
-        case 'price':
-            editPrice.value=false;
-            break;
-        case 'description':
-            editDescription.value=false;
-            break;
-    }
+    if(str==='name') editName.value=false;
+    else if (str ==='price') editPrice.value=false;
+    else editDescription.value=false;
     if(!isNew.value){
+        const sectionIndex=localMenu.sections.findIndex(sec => sec._id === section_id);
         const itemIndex = localMenu.sections[sectionIndex].items.findIndex(it => it._id === item._id);
         localMenu.sections[sectionIndex].items[itemIndex]=localItem;
         menuStore.updateMenu(localMenu);
     }
 }
+//sends new item to the database
 function postNewItem(){
     // console.log('post new')
     if(localItem.name){
         isNew.value=false;
+        const sectionIndex=localMenu.sections.findIndex(sec => sec._id === section_id);
         localItem.position=localMenu.sections[sectionIndex].items.length;
         localMenu.sections[sectionIndex].items.push(localItem);
         menuStore.updateMenu(localMenu);
         emit('send-new-item-flag', false);
     }
 }
+//recieves the price from the emit;
 const getItemPrice = (np) => {
     // console.log('x',np)
     editPrice.value = false;
     localItem.price = np;
     if(!isNew.value) postItemEdit('price');
 }
+//resets the values once the render is closed
 const getResetAddOn = () => {newAddOn.value.isNew=true;newAddOn.value.name="";newAddOn.value.price="000.00";newAddOn.value._id=uuidv4();}
 const getResetRemove = () =>{ newRemove.value.name= ""; newRemove.value._id=uuidv4(); }
+//recieves the emit and deletes the addon item
 const getDeleteAddOn = (index) => {
     localItem.addOns.splice(index, 1);
+    const sectionIndex=localMenu.sections.findIndex(sec => sec._id === section_id);
     const itemIndex = localMenu.sections[sectionIndex].items.findIndex(it => it._id === item._id);
     localMenu.sections[sectionIndex].items[itemIndex]=localItem;
     menuStore.updateMenu(localMenu);
 }
+//recieves the emit and deletes the remove item
 const getDeleteRemove = (index) => {
     localItem.removes.splice(index, 1);
+    const sectionIndex=localMenu.sections.findIndex(sec => sec._id === section_id);
     const itemIndex = localMenu.sections[sectionIndex].items.findIndex(it => it._id === item._id);
     localMenu.sections[sectionIndex].items[itemIndex]=localItem;
     menuStore.updateMenu(localMenu);
 }
+//watches for one of the tabs to be open and sets heights accordingly;
+//o for open is an array of length 2
 watch(()=>[addOnsFlag.value,removesFlag.value],
-    (n)=>{
-        console.log(containerRef.value)
-        n.includes(true) ? containerRef.value.style.height='100%' : containerRef.value.style.height='80px';
+    (o)=>{
+        console.log('jjj',o)
+        o.includes(true) ? containerRef.value.style.height='100%' : containerRef.value.style.height='80px';
+    }
+)
+watch(()=>deleteModal,
+    (o) => {
+        o ? document.addEventListener('dragstart', stopDrag, true) : document.removeEventListener('dragstart', stopDrag, true);
+    }
+)
+watch(()=> optionsModal, 
+    (o)=>{
+        o.includes(true) ? document.addEventListener('dragstart', stopDrag, true) : document.removeEventListener('dragstart', stopDrag, true);
     }
 )
 const clickOutsideOARtab = (event) => {clickInsideOK.value && !clickInsideOK.value.contains(event.target) ? resetFlags() : null;}
 useEventListener('click', clickOutsideOARtab);
+//focuses the input if new item
 onMounted(()=>{ if(!localItem.name){ isNew.value = true; focusNameInput();}});
-watch([optionsModal,deleteModal], (open) => {
-    if(open.includes(true)) document.addEventListener('dragstart', stopDrag, true);
-    else document.removeEventListener('dragstart', stopDrag, true);
-});
+//prenvents drag for even listener when modals are open
 const stopDrag=(event)=>{
     event.preventDefault();
 }
+//watches both flags for change
+//when one is true the event listener is added to stop drag
+
 </script>
 <template>
     <div class="item-container" ref="containerRef">
