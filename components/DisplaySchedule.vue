@@ -80,6 +80,7 @@ const sameTimes = computed(() => {
     flex-direction: row;
     gap: 10px;
     margin-left: 10px;
+    margin-top: 10px;
 }
 .days{
     font-size: 14px;

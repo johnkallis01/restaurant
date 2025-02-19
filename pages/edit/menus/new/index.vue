@@ -6,21 +6,9 @@ useHead({
 });
 definePageMeta({middleware: ['admin','auth']});
 const newMenu = reactive(new Menu());
-// const newMenu = reactive({
-//   name:"",
-//   days:[
-//     {day:{name:"Sunday",position:0},open:false,start:{hour:0,min:0,pm:false},end:{hour:0,min:0,pm:false},error:false},
-//     {day:{name:"Monday",position:1},open:false,start:{hour:0,min:0,pm:false},end:{hour:0,min:0,pm:false},error:false},
-//     {day:{name:"Tuesday",position:2},open:false,start:{hour:0,min:0,pm:false},end:{hour:0,min:0,pm:false},error:false},
-//     {day:{name:"Wednesday",position:3},open:false,start:{hour:0,min:0,pm:false},end:{hour:0,min:0,pm:false},error:false},
-//     {day:{name:"Thursday",position:4},open:false,start:{hour:0,min:0,pm:false},end:{hour:0,min:0,pm:false},error:false},
-//     {day:{name:"Friday",position:5},open:false,start:{hour:0,min:0,pm:false},end:{hour:0,min:0,pm:false},error:false},
-//     {day:{name:"Saturday",position:6},open:false,start:{hour:0,min:0,pm:false},end:{hour:0,min:0,pm:false},error:false}],
-//   sections:[],
-// });
-// const menus=useMenuStore().menus;
 const menuStore=useMenuStore();
 const menus=ref(null);
+const pageContainerRef=ref(null);
 const dragMenu=ref(null);
 const touchDragMenu=ref(null);
 const touchDropMenu=ref(null);
@@ -75,9 +63,31 @@ async function fetchMenus(){
 }
 onMounted(fetchMenus);
 const { sortByPosition } = useSortByPosition();
+
+
+const windowWidth = ref(window?.innerWidth);
+const updateWidth = () => { windowWidth.value = window?.innerWidth;};
+onMounted(() => { 
+    nextTick(setPageWidth);
+    window.addEventListener("resize", updateWidth);
+    window.addEventListener("orientationchange", updateWidth);
+    window.addEventListener("change", updateWidth);
+
+});
+onUnmounted(() => {
+    window.removeEventListener("resize", updateWidth);
+    window.removeEventListener("orientationchange", updateWidth);
+    window.removeEventListener("change", updateWidth);
+});
+const setPageWidth=() => {
+  if(pageContainerRef.value && windowWidth.value < 600) pageContainerRef.value.style.width=`${windowWidth.value}px`;
+}
+watch(windowWidth, () => {
+    nextTick(setPageWidth);
+});
 </script>
 <template>
-  <div class="page-container">
+  <div class="page-container" ref="pageContainerRef">
     <div class="container-title" v-if="menus">
       <span class="edit-menu">Edit Menu Order:</span>
       <span class="menu-names"

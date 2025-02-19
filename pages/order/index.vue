@@ -25,7 +25,7 @@ const nowMenus = computed(() => {
 });
 const fixWidth=() => {
   if(titleButtonsRef.value){
-    console.log(titleButtonsRef.value)
+    // console.log(titleButtonsRef.value)
     if(nowMenus.value.length===1){
        titleButtonsRef.value.style.width="100%";
        titleButtonsRef.value.style.justifyContent="center";
