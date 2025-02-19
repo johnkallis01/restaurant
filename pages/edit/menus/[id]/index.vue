@@ -21,7 +21,7 @@ onMounted(fetchMenus);
 <template>
   <div class="page-container">
     <div class="container-title">
-      <span class="edit-menu">Edit Menu Order:</span>
+      <span class="edit-menu">Edit Menu</span>
     </div>
     <div class="container-body">
       <div class="reload">reload page to view edits on menus/order page</div>
@@ -33,5 +33,10 @@ onMounted(fetchMenus);
 <style scoped>
 .reload{
   text-align: center;
+}
+@media(max-width: 450px){
+  .page-container{
+    width: 105vw;
+  }
 }
 </style>

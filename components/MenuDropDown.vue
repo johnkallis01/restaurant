@@ -6,15 +6,13 @@ const fixLastBorderRadius=() => {
     Array.from(dropdownListRef.value)[Array.from(dropdownListRef.value).length-1].style.borderRadius='0 0 4px 4px'
 };
 onMounted(fixLastBorderRadius);
-function sortItems(items) {
-    return items.sort((a,b)=>a.position - b.position)
-}
+const { sortByPosition } = useSortByPosition();
 </script>
 <template>
     <div class="dropdown-menu">
         <span class="dropdown-item" @click="router.push('/edit/menus/new')">New Menu</span>
         <span class="dropdown-item" ref="dropdownListRef"
-            v-for="(menu, index) in sortItems(menus)" 
+            v-for="(menu, index) in sortByPosition(menus)" 
             :key="index" 
             @click="router.push('/edit/menus/'+menu._id)"
         >{{ menu.name }}</span>
@@ -23,7 +21,7 @@ function sortItems(items) {
 <style scoped>
 .dropdown-menu {
     position: absolute;
-    top:  6vh;
+    top:  40px;
     right: 30px;
     text-wrap: nowrap;
     width: fit-content;

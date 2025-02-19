@@ -92,9 +92,7 @@ onUnmounted(() => {
 watch(windowWidth, () => {
     nextTick(setItemHeights);
 });
-function sortItems(items) {
-    return items.sort((a,b)=>a.position - b.position)
-}
+const { sortByPosition } = useSortByPosition();
 </script>
 <template>
     <div class="menu-container">
@@ -102,13 +100,13 @@ function sortItems(items) {
             <DisplaySchedule :menuDays="menu.days" v-if="!order && menu"/>
         </div>
         <div class="section-container"
-            v-for="(section,i) in sortItems(menu.sections)" :key="section._id"
+            v-for="(section,i) in sortByPosition(menu.sections)" :key="section._id"
             v-if="menu">
             <div class="section-name">{{ section.name }}</div>
             <div class="section-description" :class="{'add-margin': order && !section.description.length}">{{ section?.description}}</div>
             <div class="section-items" :class="{'disabled': !order}" ref="sectionItemsRef">
                 <button  class="item-container" :disabled="!order"
-                    v-for="(item,j) in sortItems(section.items)" :key="item._id"
+                    v-for="(item,j) in sortByPosition(section.items)" :key="item._id"
                     @click="displayModal(item, section.options)"
                     :style="{ height: `${itemHeight[findIndex(i,j)]}px` }"
                     >

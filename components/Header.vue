@@ -5,6 +5,7 @@ const cartButtonRef=ref(null);  const dropdownRef=ref(null);
 const loginButton = ref(null); const logoutTimer=ref(null);
 const dropdown = ref(false);  const isAdmin = ref(false);
 const userName = ref();
+const headerRef=ref(null);
 defineExpose({cartButtonRef});
 function logout(){
   authStore.logout();
@@ -15,6 +16,27 @@ const loggedIn = computed(() => {
   isAdmin.value = useCookie('isAdmin');
   return !!token.value;
 });
+
+const windowWidth = ref(window?.innerWidth);
+const updateWidth = () => { windowWidth.value = window?.innerWidth;};
+onMounted(() => { 
+    nextTick(setHeaderWidth);
+    window.addEventListener("resize", updateWidth);
+    window.addEventListener("orientationchange", updateWidth);
+    window.addEventListener("change", updateWidth);
+
+});
+onUnmounted(() => {
+    window.removeEventListener("resize", updateWidth);
+    window.removeEventListener("orientationchange", updateWidth);
+    window.removeEventListener("change", updateWidth);
+});
+const setHeaderWidth=() => {
+  if(headerRef.value) headerRef.value.style.width=`${windowWidth.value}px`;
+}
+watch(windowWidth, () => {
+    nextTick(setHeaderWidth);
+});
 const closeDropdown = (event) => {(dropdownRef.value && !dropdownRef.value.$el?.contains(event.target))? dropdown.value=false:null}
 useEventListener('click',closeDropdown);
 onBeforeMount( () => {userName.value=useCookie('user'); isAdmin.value=useCookie('isAdmin')});
@@ -22,7 +44,7 @@ onMounted(()=>logoutTimer.value = setInterval(authStore.verifyToken, 30000)); //
 onBeforeUnmount(() => logoutTimer.value ? clearInterval(logoutTimer.value):null); //remove eventListener
 </script>
 <template>
-    <header class="header">
+    <header class="header" ref="headerRef">
       <span class="left-btns">
         <ClientOnly>   
           <button @click="cartStore.toggleCart()" ref="cartButtonRef" class="btn cart-btn" v-if="loggedIn">
@@ -56,7 +78,7 @@ onBeforeUnmount(() => logoutTimer.value ? clearInterval(logoutTimer.value):null)
   text-wrap: nowrap;
   background-color: transparent;
 }
-@media (max-width: 600px){
+@media (max-width: 900px){
   .welcome{
     visibility: hidden;
     width: 0;
@@ -66,10 +88,13 @@ onBeforeUnmount(() => logoutTimer.value ? clearInterval(logoutTimer.value):null)
     margin: 0;
     font-size: 12px;
   }
+  header{
+    width: 105vw;
+  }
 }
 .cart-btn{
-  padding: 5px 5px;
-  margin: 5px 3vw;
+  padding: 5px;
+  margin: 5px;
   border-radius: 15px;
   background-color: transparent;
 }

@@ -32,9 +32,9 @@ const onTouchMove = (event) => {
     touchDropMenu.value=target;
 };
 const onTouchEnd=()=>{
-    console.log(touchDropMenu.value.dataset.index)
+    // console.log(touchDropMenu.value.dataset.index)
     if(touchDropMenu.value?.className==='menu-names'){
-        let droppedOnIndex=Number(touchDropMenu.value.dataset.index);
+        // let droppedOnIndex=Number(touchDropMenu.value.dataset.index);
         let draggedMenu=menus.value[touchDragMenu.value];
         // console.log(droppedOnSection, droppedOnIndex)
         menus.value.splice(touchDragMenu.value, 1);
@@ -74,17 +74,14 @@ async function fetchMenus(){
   }
 }
 onMounted(fetchMenus);
-const sortMenus=(menus)=>{
-  if(!menus) return;
-  return menus.sort((a,b)=>a.position-b.position)
-}
+const { sortByPosition } = useSortByPosition();
 </script>
 <template>
   <div class="page-container">
-    <div class="container-title">
+    <div class="container-title" v-if="menus">
       <span class="edit-menu">Edit Menu Order:</span>
       <span class="menu-names"
-          v-for="(menu,i) in sortMenus(menus)" 
+          v-for="(menu,i) in sortByPosition(menus)" 
               :key="menu._id"
               draggable="true"
               :data-index="i"
@@ -104,6 +101,21 @@ const sortMenus=(menus)=>{
   
 </template>
 <style scoped>
+.page-container{
+  background-color: transparent;
+  width: 100vw;
+  left: 0;
+}
+@media(max-width: 415px){
+  .page-container{
+    width: 105vw;
+  }
+  .container-title{
+    width: 105vw;
+    margin-right: 5vw;
+    margin-left: 20px;
+  }
+}
 .new-menu-page{
   display: flex;
   justify-content: flex-start;
@@ -111,7 +123,7 @@ const sortMenus=(menus)=>{
   border-radius: 10px;
   width: 60vw;
   max-width: 600px;
-  background-color: azure;
+  background-color: rgb(247, 249, 252);
 }
 .container-title{
   justify-content: start;
@@ -120,6 +132,7 @@ const sortMenus=(menus)=>{
 }
 .edit-menu{
   padding-left: 5px;
+  text-wrap: nowrap;
 }
 .menu-names{
   padding: 0 5px;
@@ -137,16 +150,13 @@ const sortMenus=(menus)=>{
   .new-menu-page{
     width: 90vw;
     left: 5vw;
-    border-radius: 0px;
     overflow: auto;
     /* border: 1px solid red; */
   }
 }
-
 @media(max-width: 600px) {
   .new-menu-page{
     width: 100vw;
-    border-radius: 0px;
     overflow: auto;
     /* border: 1px solid red; */
   }

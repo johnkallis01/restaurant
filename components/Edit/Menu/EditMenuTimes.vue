@@ -32,7 +32,7 @@ onMounted(() => { newMenuRef.value.querySelector('input').focus();});
           :is-valid="rules['name'].test(localMenu.name)"
           :name="localMenu.name||''"
           place-holder="menu name"
-          bg-color="azure"
+          bg-color="rgb(247, 249, 252)"
           :req="true"
           @send-input="(name)=>localMenu.name=name"/>
       </div>
@@ -77,9 +77,10 @@ onMounted(() => { newMenuRef.value.querySelector('input').focus();});
   display: flex;
   border-top: 2px solid black;
   width: 100%;
-  height: 35px;
+  height: 45px;
 }
 .new-menu-actions button{
-  margin: 0 20px;
+  margin: 7px 20px;
+  height: 30px;
 }
 </style>

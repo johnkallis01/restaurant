@@ -49,7 +49,8 @@ defineExpose({ focusInput });
 <style scoped>
 .floating-text-field{
     position: relative;
-    margin-top: 8px;
+    margin-top: 10px;
+    margin-bottom: 5px;
     width: 230px;
     box-sizing: border-box;
 }

@@ -94,6 +94,7 @@ const onDragItemOver = (event) => {
     event.stopPropagation();
     event.preventDefault();
 }
+const { sortByPosition } = useSortByPosition();
 const onItemDrop=(event, newIndex, section)=>{
     event.stopPropagation(); 
     // console.log(event)
@@ -106,7 +107,7 @@ const onItemDrop=(event, newIndex, section)=>{
         newItems.splice(draggedEl.value.index, 1);
         newItems.splice(newIndex,0,draggedItem);
         newItems.forEach((item, i)=> item.position=i);
-        const sortedSections=localMenu.sections.sort((a,b)=>a.position - b.position);
+        const sortedSections=sortByPosition(localMenu.sections);
         // let newMenu=detachObject(localMenu)
         
         const sectionIndex=sortedSections.findIndex(sec => sec._id === section._id);
@@ -241,7 +242,7 @@ watchEffect(() => {
                 </button>
             </span>
             <span class="title-text">{{ localMenu.name }}</span>
-            <span class="right-btns">
+            <span class="right-btns menu-title">
                 <button class="btn" @click="addNewSection">
                     <i class="mdi mdi-plus"/>
                     <span>section</span>
@@ -380,6 +381,7 @@ watchEffect(() => {
     /* border: 1px solid blue; */
     margin-bottom: 70px;
 }
+
 .menu-schedule{
     display: flex;
     flex-direction: row;
@@ -419,6 +421,12 @@ watchEffect(() => {
     margin-right: 15px;
     padding: 5px;
     gap: 10px;
+}
+@media(max-width: 600px){
+    .right-btns.menu-title{
+        margin-right: 0;
+        gap: 0px;
+    }
 }
 .right-btns button{
     padding: 7px 3px;
