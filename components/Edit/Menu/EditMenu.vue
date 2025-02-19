@@ -206,15 +206,18 @@ onMounted(() => {
     deleteModalFlag.value=Array(localMenu.sections.length).fill(false);
     addOptionsModalFlag.value=Array(localMenu.sections.length).fill(false);
 })
-const eventListenersAdded=ref(false);
-//watchEffect always fires like onMounted and watchs all given arrays.
-//watch would be needed to be repeated 3 times. once for each array
-//watches the flags for the 3 modals
+//watches each flag array for change. o is also an array.
+//add 
 watch(addOptionsModalFlag, (o)=>{
     if(o.includes(true)){
         document.addEventListener('dragstart', stopDrag, true);
         document.addEventListener('touchstart', stopDrag, true);
         document.addEventListener('touchmove', stopDrag, true);
+    }
+    else{ 
+        document.removeEventListener('dragstart', stopDrag, true);
+        document.removeEventListener('touchstart', stopDrag, true);
+        document.removeEventListener('touchmove', stopDrag, true);
     }
 })
 watch(deleteModalFlag, (o)=>{
@@ -222,6 +225,11 @@ watch(deleteModalFlag, (o)=>{
         document.addEventListener('dragstart', stopDrag, true);
         document.addEventListener('touchstart', stopDrag, true);
         document.addEventListener('touchmove', stopDrag, true);
+    }
+    else{ 
+        document.removeEventListener('dragstart', stopDrag, true);
+        document.removeEventListener('touchstart', stopDrag, true);
+        document.removeEventListener('touchmove', stopDrag, true);
     }
 })
 watch(modalFlag, (o)=>{
