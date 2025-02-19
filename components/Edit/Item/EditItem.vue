@@ -274,7 +274,7 @@ const stopDrag=(event)=>{
     height: 38px;
 }
 .item-description textarea{
-    height: 32px;
+    height: 26px;
     scrollbar-width: none;
 }
 .item-title{
