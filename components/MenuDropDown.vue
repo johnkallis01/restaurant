@@ -5,13 +5,16 @@ const router = useRouter();
 const fixLastBorderRadius=() => {
     Array.from(dropdownListRef.value)[Array.from(dropdownListRef.value).length-1].style.borderRadius='0 0 4px 4px'
 };
-onMounted(fixLastBorderRadius)
+onMounted(fixLastBorderRadius);
+function sortItems(items) {
+    return items.sort((a,b)=>a.position - b.position)
+}
 </script>
 <template>
     <div class="dropdown-menu">
         <span class="dropdown-item" @click="router.push('/edit/menus/new')">New Menu</span>
         <span class="dropdown-item" ref="dropdownListRef"
-            v-for="(menu, index) in menus" 
+            v-for="(menu, index) in sortItems(menus)" 
             :key="index" 
             @click="router.push('/edit/menus/'+menu._id)"
         >{{ menu.name }}</span>
