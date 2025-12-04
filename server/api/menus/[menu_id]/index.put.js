@@ -1,5 +1,6 @@
 import User from "~/server/models/User.model";
 import Menu from "~~/server/models/Menu.model";
+
 export default defineEventHandler(async (event) => {
 	const config = useRuntimeConfig();
 	const authHeader = event.req.headers.authorization;

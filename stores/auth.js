@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { decodeJwt, isTokenExpired } from '~/utils/jwt';
+import { isTokenExpired } from '~/utils/jwt';
 
 export const useAuthStore = defineStore('auth', {
     state: () => ({

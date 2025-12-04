@@ -9,10 +9,6 @@ const openDays=computed(()=>menuDays.filter(day => day.open)); //filter out clos
 const sameTimes = computed(() => {
     const outerArr=[];
     const stringArr=[];
-    const daysTimes=ref({
-        names:'',
-        time:{}
-    });
     if(!openDays.value.length) return []; //no days
     let innerArr = [openDays.value[0]];
     stringArr.push({
@@ -48,7 +44,6 @@ const sameTimes = computed(() => {
                     names: innerArr[0].day.name,
                     times: { start: innerArr[0].start, end: innerArr[0].end}
                 });
-                daysTimes.value={ names:'', time:{}};
            // }
         }
     }

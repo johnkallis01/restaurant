@@ -35,10 +35,12 @@ function submitChanges(){
     //when 'submit' is pressed but not 'submit option'
     if(newOption.name && newOption.content.length) getNew(newOption);
     if(section_id){//if item
+        //created from prop
         const sectionIndex = localMenu.sections.findIndex(sec => sec._id === section_id);
         const itemIndex = localMenu.sections[sectionIndex].items.findIndex(it => it._id === localItem._id);
         localMenu.sections[sectionIndex].items[itemIndex].options=detachedItem.options;
     }else{//if section
+        //created from localItem
         const sectionIndex = localMenu.sections.findIndex(sec => sec._id === localItem._id);    
         localMenu.sections[sectionIndex].options=detachedItem.options;
     }

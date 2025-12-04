@@ -31,7 +31,8 @@ defineExpose({ focusInput });
 <template> 
     <div class="floating-text-field">
         <input ref="inputRef"
-            :type="password && !isOpen ? 'password' : 'text'"
+            :type="password ? 'password' : 'text'"
+            :style="password && isOpen ? { fontFamily: 'Segoe UI' } : {}"
             :name="placeHolder"
             :class="{'invalid': isValid===false }"
             placeholder=" "
@@ -39,7 +40,8 @@ defineExpose({ focusInput });
             v-model="localName"
             :aria-label="'Enter '+ placeHolder"
             @input="onInput($event)"
-            > <!-- :style="password && isOpen ? { fontFamily: 'Segoe UI' } : {}" -->
+            > <!--  
+            :type="password && !isOpen ? 'password' : 'text'"-->
         <label :for="placeHolder" :style="{'--label-bg-color': bgColor}">{{capitalizeFirstLetter(placeHolder)}}</label>
         <button type="button" @click="isOpen=!isOpen" v-if="password">
             <i class="mdi mdi-eye-outline" v-if="isOpen"/>

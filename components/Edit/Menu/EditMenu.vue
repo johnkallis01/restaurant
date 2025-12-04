@@ -233,7 +233,6 @@ watch(deleteModalFlag, (o)=>{
     }
 })
 watch(modalFlag, (o)=>{
-
     if(o){
         document.addEventListener('dragstart', stopDrag, true);
         document.addEventListener('touchstart', stopDrag, true);
